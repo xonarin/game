@@ -1,0 +1,53 @@
+@import '../../../assets/styles/vars';
+@import '../../../assets/styles/mixins';
+
+.BetInput {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    height: 28px;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        width: 0;
+        vertical-align: middle;
+    }
+
+    &-Input {
+        position: absolute;
+        width: calc(100% - 27px);
+        top: 50%;
+        left: 0;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-family: 'Rubik', sans-serif;
+        font-size: $font-size-xl;
+        line-height: $line-height-xl;
+        font-weight: 700;
+        color: $color-white;
+        text-transform: uppercase;
+        text-align: center;
+        white-space: nowrap;
+        transform: translateY(-50%);
+    }
+
+    & &-Icon {
+        width: 22px;
+        height: 22px;
+        margin-left: 5px;
+    }
+
+    & &-Pseudo {
+        display: inline-block;
+        min-width: 10px;
+        max-width: calc(100% - 27px);
+        padding: 0 2px;
+        visibility: hidden;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+}

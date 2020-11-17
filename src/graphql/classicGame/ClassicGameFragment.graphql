@@ -1,0 +1,23 @@
+fragment ClassicGame on ClassicGame {
+    minBetAmount
+    id
+    state
+    randomNumber
+    hash
+    fund
+    winnerId
+    winnerUsername
+    winnerAvatar
+    winnerTicket
+    winnerChance
+    timer
+    maxTimer
+    bets {
+        ...ClassicGameBet
+    }
+    players {
+        ...ClassicGamePlayer
+    }
+    culminationDegree
+    remainingCulminationDuration
+}

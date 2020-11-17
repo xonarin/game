@@ -1,0 +1,11 @@
+@import '../../../../assets/styles/vars';
+
+.HitsItems {
+    position: relative;
+    padding: 20px 5px;
+    background-color: lighten($color-bg, 6%);
+
+    .Scroller-Items {
+        width: 100%;
+    }
+}

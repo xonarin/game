@@ -1,0 +1,12 @@
+fragment Message on Message {
+    id
+    chatId
+    chatType
+    sender {
+        id
+        username
+        avatar
+    }
+    message
+    createdAt
+}

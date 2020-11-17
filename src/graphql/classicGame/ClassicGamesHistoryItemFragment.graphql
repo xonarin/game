@@ -1,0 +1,12 @@
+fragment ClassicGamesHistoryItem on ClassicGamesHistoryItem {
+    id
+    randomNumber
+    fund
+    winnerId
+    winnerUsername
+    winnerAvatar
+    winnerTicket
+    winnerBetsPrice
+    winnerChance
+    finishedAt
+}

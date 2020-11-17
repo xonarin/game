@@ -1,0 +1,16 @@
+
+.Chat {
+    & &-PanelTitle { margin-left: 10px; }
+
+    & .Panel-Content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    & &-Messages {
+        flex: 1;
+        min-height: 0;
+    }
+
+    &-MessagesItems { padding: 25px 20px; }
+}

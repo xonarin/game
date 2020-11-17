@@ -1,0 +1,67 @@
+@import '../../../assets/styles/vars';
+
+.CountInput {
+    display: flex;
+    height: 36px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    & &-Button {
+        flex: auto;
+        height: 100%;
+        padding: 0 10px;
+        background-color: lighten($color-bg, 11%);
+        color: $color-gray;
+        font-size: $font-size-s;
+        text-transform: none;
+        opacity: 1;
+        visibility: visible;
+        transition: background-color 0.2s $nice-ease, color 0.2s $nice-ease, opacity 0.2s $nice-ease, visibility 0.2s $nice-ease;
+
+        &:hover { background-color: lighten($color-bg, 13%); }
+
+        &_isActive,
+        &_isActive:hover {
+            background-color: $color-blue;
+            color: $color-white;
+        }
+    }
+
+    &-ChangeContainer {
+        position: relative;
+
+        &_isCustom {
+            .CountInput-Button {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .CountInput-Input {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+
+    &-Input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        outline: none;
+        border: 1px solid transparent;
+        border-radius: 0 5.5px 5.5px 0;
+        padding: 0 12px;
+        background-color: lighten($color-bg, 8%);
+        color: $color-white;
+        font-size: $font-size-s;
+        opacity: 0;
+        visibility: hidden;
+        transition: border-color 0.2s $nice-ease, opacity 0.2s $nice-ease, visibility 0.2s $nice-ease;
+
+        &:focus { border-color: $color-blue; }
+
+        &_isInvalid { border-color: $color-red; }
+    }
+}

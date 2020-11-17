@@ -1,0 +1,31 @@
+
+.ChatHead {
+    display: flex;
+    align-items: center;
+    padding: 0 7px;
+
+    &-ImageContainer {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        transform: skewX(-8deg);
+        overflow: hidden;
+    }
+
+    &-Image {
+        position: absolute;
+        width: 110%;
+        height: 110%;
+        top: -5%;
+        left: -5%;
+        transform: skewX(8deg);
+    }
+
+    &-Main {
+        padding-top: 5px;
+        margin-left: 10px;
+    }
+
+    & &-Title { display: block; }
+}

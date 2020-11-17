@@ -1,0 +1,8 @@
+query Chats($search: String, $chatsOffset: Int, $messagesOffset: Int) {
+    chats(search: $search, offset: $chatsOffset) {
+        items {
+            ...Chat
+        }
+        count
+    }
+}

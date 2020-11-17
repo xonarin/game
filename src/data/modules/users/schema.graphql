@@ -1,0 +1,41 @@
+scalar URL
+
+schema {
+    query: Query
+}
+
+type Query {
+    me: User
+    user(userId: ID!): User
+    fairPlay: FairPlayPayload!
+}
+
+type Mutation {
+    updateClientSeed(clientSeed: String): String!
+    updateServerSeed: UpdateServerSeedPayload!
+}
+
+enum UserRole {
+    Default
+    Moderator
+    Admin
+}
+
+type User {
+    id: ID!
+    role: UserRole!
+    username: String!
+    avatar: URL!
+    money: Float
+}
+
+type FairPlayPayload {
+    clientSeed: String!
+    serverSeedHash: String!
+    nonce: Int!
+}
+
+type UpdateServerSeedPayload {
+    oldServerSeed: String!
+    newServerSeedHash: String!
+}

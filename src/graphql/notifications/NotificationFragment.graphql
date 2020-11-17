@@ -1,0 +1,7 @@
+fragment Notification on Notification {
+    id
+    title
+    message
+    level
+    autoDismiss
+}

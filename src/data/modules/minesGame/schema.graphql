@@ -1,0 +1,36 @@
+
+type Query {
+    minesGameConfiguration: MinesGameConfiguration!
+    activeMinesGame: MinesGame
+}
+
+type Mutation {
+    startMinesGame(input: StartMinesGameInput!): MinesGame!
+    endMinesGame: MinesGame!
+    makeMinesGameStep(cell: Int!): MinesGame!
+}
+
+enum MinesGameStatus {
+    InGame
+    Ended
+}
+
+type MinesGameConfiguration {
+    fieldSize: Int!
+    minBombsCount: Int!
+    coefs: [[Float!]!]!
+}
+
+type MinesGame {
+    id: ID!
+    betAmount: Float!
+    bombsCount: Int!
+    fieldConf: Int!
+    stepsConf: Int!
+    status: MinesGameStatus!
+}
+
+input StartMinesGameInput {
+    betAmount: Float!
+    bombsCount: Int!
+}

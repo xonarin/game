@@ -1,0 +1,15 @@
+fragment Chat on Chat {
+    id
+    type
+    title
+    image
+    updatedAt
+    members {
+        ...User
+    }
+    messages(offset: $messagesOffset) {
+        ...Message
+    }
+    messagesCount
+    unreadMessagesCount
+}

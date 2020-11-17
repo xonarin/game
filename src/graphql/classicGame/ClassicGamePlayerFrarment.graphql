@@ -1,0 +1,9 @@
+fragment ClassicGamePlayer on ClassicGamePlayer {
+    id
+    username
+    avatar
+    chance
+    startDegree
+    endDegree
+    color
+}

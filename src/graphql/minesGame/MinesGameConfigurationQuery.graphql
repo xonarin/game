@@ -1,0 +1,7 @@
+query MinesGameConfiguration {
+    minesGameConfiguration {
+        fieldSize
+        minBombsCount
+        coefs
+    }
+}

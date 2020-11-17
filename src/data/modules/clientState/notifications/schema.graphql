@@ -1,0 +1,45 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    notifications: [Notification!]!
+}
+
+type Mutation {
+    addNotification(input: AddNotificationInput!): Notification!
+    deleteNotification(input: DeleteNotificationInput!): DeletedNotificationPayload!
+    clearNotifications: Boolean!
+}
+
+enum NotificationLevel {
+    Error
+    Warn
+    Info
+    Success
+}
+
+type Notification {
+    id: ID!
+    title: String!
+    message: String!
+    level: NotificationLevel!
+    autoDismiss: Int!
+}
+
+input AddNotificationInput {
+    id: ID!
+    title: String!
+    message: String!
+    level: NotificationLevel!
+    autoDismiss: Int!
+}
+
+input DeleteNotificationInput {
+    notificationId: ID!
+}
+
+type DeletedNotificationPayload {
+    notificationId: ID!
+}

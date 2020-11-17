@@ -1,0 +1,5 @@
+query CurrentClassicGame {
+    currentClassicGame {
+        ...ClassicGame
+    }
+}
