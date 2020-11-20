@@ -7,9 +7,9 @@ import Mines from './Mines';
 const action = ({ user, chats }: AppContextTypes): RouteResult => {
     const chatId = chats.game;
 
-    if (!chatId) {
-        throw new Error('Chat for mines is not defined');
-    }
+    // if (!chatId) {
+    //     throw new Error('Chat for mines is not defined');
+    // }
 
     return {
         title: 'Mines page',

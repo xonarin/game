@@ -7,9 +7,9 @@ import Classic from './Classic';
 const action = ({ user, chats }: AppContextTypes): RouteResult => {
     const chatId = chats.game;
 
-    if (!chatId) {
-        throw new Error('Chat for classic is not defined');
-    }
+    // if (!chatId) {
+    //     throw new Error('Chat for classic is not defined');
+    // }
 
     return {
         title: 'Classic page',

@@ -28,9 +28,9 @@ const LayoutHeader: React.FC = () => {
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>
                 <nav className={cnLayoutHeader('Navigation')}>
-                    <HeaderNavigationItem to="/" text="Все игры" icon="gamepad" iconHover="gamepadWhite" />
+                    <HeaderNavigationItem to="/all-games" text="Все игры" icon="gamepad" iconHover="gamepadWhite" />
                     <HeaderNavigationItem to="/" text="Бонусы" icon="ingots" iconHover="ingotsWhite" />
-                    <HeaderNavigationItem to="/" text="FAQ" icon="faq" iconHover="faqWhite" />
+                    <HeaderNavigationItem to="/faq" text="FAQ" icon="faq" iconHover="faqWhite" />
                 </nav>
                 <div className={cnLayoutHeader('Right')}>
                     <Balance money={me?.money || 0} />
