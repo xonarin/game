@@ -6,7 +6,7 @@ import { cn } from '../../../utils/bem-css-module';
 import Title from '../../Title/Title';
 
 export interface MiddleGameProps {
-    title: string;
+    title?: string;
     className?: string;
     children: React.ReactNode;
 }
@@ -18,11 +18,14 @@ const MiddleGame: React.FC<MiddleGameProps> = ({ title, className, children }) =
 
     return (
         <div className={cnMiddleGame(null, [className])}>
-            <div className={cnMiddleGame('Head')}>
-                <Title className={cnMiddleGame('Title')} font="Rubik" size="xl" upper>
-                    {title}
-                </Title>
-            </div>
+            {title ? (
+                <div className={cnMiddleGame('Head')}>
+                    <Title className={cnMiddleGame('Title')} font="Rubik" size="xl" upper>
+                        {title}
+                    </Title>
+                </div>
+            ) : null}
+
             <div className={cnMiddleGame('Content')}>{children}</div>
         </div>
     );

@@ -21,6 +21,10 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'messages' */ './AllGames'),
         },
         {
+            path: '/faq',
+            load: () => import(/* webpackChunkName: 'messages' */ './Faq'),
+        },
+        {
             path: '/messages/:chatId?',
             load: () => import(/* webpackChunkName: 'messages' */ './messages'),
         },
