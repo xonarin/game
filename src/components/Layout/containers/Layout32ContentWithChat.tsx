@@ -27,7 +27,7 @@ const Layout32ContentWithChat: React.FC<Layout32ContentWithChatProps> = ({
     return (
         <Layout>
             <div className={cnLayout32ContentWithChat('Top')}>
-                <MiddleGame className={cnLayout32ContentWithChat('RightContent')} title={title}>
+                <MiddleGame className={cnLayout32ContentWithChat('RightContent')}>
                     {centerContent}
                 </MiddleGame>
                 <Chat className={cnLayout32ContentWithChat('Chat')} chatId={chatId} />
