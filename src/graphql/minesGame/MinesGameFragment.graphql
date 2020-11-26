@@ -2,6 +2,7 @@ fragment MinesGame on MinesGame {
     id
     betAmount
     bombsCount
+
     fieldConf
     stepsConf
     status

@@ -1,0 +1,10 @@
+query MinesGameHistoryQuery {
+    minesGameHistory {
+        id
+        userId
+        winAmount
+        betAmount
+        bombsCount
+        createdAt
+    }
+}

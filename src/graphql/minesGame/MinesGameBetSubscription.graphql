@@ -1,0 +1,10 @@
+subscription MinesGameBet {
+    minesGameBet {
+        id
+        userId
+        winAmount
+        betAmount
+        bombsCount
+        createdAt
+    }
+}

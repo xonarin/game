@@ -11,6 +11,7 @@ import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
 import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
+import HistoryTable from './HistoryTable/HistoryTable';
 
 export interface MinesProps {
     chatId: string;
@@ -75,17 +76,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                     activeMinesGame={actuallyActiveMinesGame}
                 />
             }
-            bottomContent={
-                <Panel
-                    leftHead={
-                        <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                            Последние игры
-                        </Text>
-                    }
-                >
-                    History
-                </Panel>
-            }
+            bottomContent={<HistoryTable />}
         />
     );
 };

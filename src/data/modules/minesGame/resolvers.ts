@@ -1,13 +1,15 @@
 import { and, IRules } from 'graphql-shield';
 
-import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
+import { Resolver, Resolvers, TypeResolvers, ResolverSubscriber } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
 import {
     MinesGame,
     MinesGameConfiguration,
+    MinesGameHistory,
     Mutation,
     MutationMakeMinesGameStepArgs,
     MutationStartMinesGameArgs,
+    Subscription,
     Query,
 } from '../../../__generated__/graphql';
 import { MinesGame as MinesGameBackend, MinesGameStatus } from '../../models/MinesGame';
@@ -16,16 +18,20 @@ import { checkMakeMinesGameStepArgs, checkStartMinesGameArgs } from './rules';
 import { UserError } from '../../../utils/errors';
 import { countOnes } from '../../../utils/number';
 import { FIELD_SIZE, generateMinesCoefs, getMinesCoef, getMinesCoefs, MIN_BOMBS_COUNT } from '../../../utils/mines';
+import pubsub from '../../pubsub';
 
 export type OriginMinesGameParent = MinesGameBackend;
 
-type QueryType = Pick<Query, 'minesGameConfiguration' | 'activeMinesGame'>;
+type QueryType = Pick<Query, 'minesGameConfiguration' | 'activeMinesGame' | 'minesGameHistory'>;
 type MutationType = Pick<Mutation, 'startMinesGame' | 'endMinesGame' | 'makeMinesGameStep'>;
+type SubscriptionType = Pick<Subscription, 'minesGameBet'>;
 type MinesGameType = Pick<MinesGame, 'id' | 'betAmount' | 'bombsCount' | 'fieldConf' | 'stepsConf' | 'status'>;
 
 interface QueryMapping {
     minesGameConfiguration: Resolver<MinesGameConfiguration>;
     activeMinesGame: Resolver<OriginMinesGameParent | null>;
+    minesGameHistory: Resolver<MinesGameHistory | null>;
+    currentMinesGame: Resolver<OriginMinesGameParent>;
 }
 
 interface MutationMapping {
@@ -33,12 +39,15 @@ interface MutationMapping {
     endMinesGame: Resolver<OriginMinesGameParent>;
     makeMinesGameStep: Resolver<OriginMinesGameParent, MutationMakeMinesGameStepArgs>;
 }
-
+interface SubscriptionMapping {
+    minesGameBet: ResolverSubscriber<OriginMinesGameParent>;
+}
 type MinesGameResolvers = Resolvers<
     {
         Query: TypeResolvers<QueryType, QueryMapping>;
         Mutation: TypeResolvers<MutationType, MutationMapping>;
         MinesGame: TypeResolvers<MinesGameType, {}, OriginMinesGameParent>;
+        Subscription: TypeResolvers<SubscriptionType, SubscriptionMapping>;
     },
     ApolloContext
 >;
@@ -66,6 +75,9 @@ export const resolvers: MinesGameResolvers = {
         activeMinesGame: (_0, _1, { user, repositories }) => {
             return repositories.minesGames.getCurrentGame(user!.id);
         },
+        minesGameHistory: (_0, _1, { repositories }) => {
+            return repositories.minesGames.getMinesGame();
+        },
     },
     Mutation: {
         startMinesGame: async (_0, { input: { betAmount, bombsCount } }, { user, repositories }) => {
@@ -88,10 +100,10 @@ export const resolvers: MinesGameResolvers = {
 
             const madeStepsCount = countOnes(currentGame.stepsConf);
             const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
+            const winAmount = currentGame.betAmount * coef;
+            await repositories.users.giveMoney(user!.id, winAmount);
 
-            await repositories.users.giveMoney(user!.id, currentGame.betAmount * coef);
-
-            return repositories.minesGames.endGame(currentGame.id);
+            return repositories.minesGames.endGame(currentGame.id, winAmount);
         },
         makeMinesGameStep: async (_0, { cell }, { user, repositories }) => {
             const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
@@ -101,6 +113,11 @@ export const resolvers: MinesGameResolvers = {
             }
 
             return repositories.minesGames.makeStep(currentGame.id, cell);
+        },
+    },
+    Subscription: {
+        minesGameBet: {
+            subscribe: () => pubsub.asyncIterator('minesGameBet'),
         },
     },
     MinesGame: {

@@ -246,7 +246,7 @@
         "deploy": "babel-node --extensions \".ts\" tools/run deploy",
         "render": "babel-node --extensions \".ts\" tools/run render",
         "serve": "babel-node --extensions \".ts\" tools/run runServer",
-        "start": "NODE_ICU_DATA=\"$(pwd)/node_modules/full-icu\" babel-node --extensions \".ts\" tools/run start"
+        "start": "babel-node --extensions \".ts\" tools/run start"
     },
     "husky": {
         "hooks": {
