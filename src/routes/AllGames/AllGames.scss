@@ -2,6 +2,7 @@
 .AllGames {
     &-Row {
         display: flex;
+        justify-content: space-between;
         margin-bottom: 30px;
         flex-wrap: wrap;
     }
@@ -13,19 +14,43 @@
 
     &-Game {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0 20px;
+        flex: 0 0 33%;
+        padding: 5px;
+
+        & .Link {
+            position: relative;
+        }
 
         img {
-            width: 160px;
-            height: 130px;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             border-radius: 6px;
         }
     }
 
     &-Title {
-        color: white;
+        color: #fff;
         text-align: center;
+        position: absolute;
+        z-index: 99999;
+        bottom: 0;
+        left: 10px;
+    }
+
+    @media only screen and (min-width: 1400px) {
+        &-Row {
+            justify-content: flex-start;
+        }
+
+        &-Game {
+            flex: 0 0 25%;
+        }
+    }
+
+    @media only screen and (min-width: 1600px) {
+        &-Game {
+            flex: 0 0 20%;
+        }
     }
 }

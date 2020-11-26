@@ -20,4 +20,8 @@
         height: calc(100% - 65px);
         background-color: lighten($color-bg, 3%);
     }
+
+    & .LiveFeedTable.Table {
+        max-width: 100%;
+    }
 }

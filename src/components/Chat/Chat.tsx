@@ -70,6 +70,12 @@ const Chat: React.FC<ChatProps> = ({ chatId, className }) => {
                     Чат
                 </Text>
             }
+            rightHead={
+                <div className={cnChat('Online')}>
+                    <div className={cnChat('OnlinePulse')} />
+                    <div className={cnChat('OnlineCount')}>468</div>
+                </div>
+            }
         >
             <Scrollable className={cnChat('Messages')} disablePadding ref={scrollableRef}>
                 <div className={cnChat('MessagesItems')}>

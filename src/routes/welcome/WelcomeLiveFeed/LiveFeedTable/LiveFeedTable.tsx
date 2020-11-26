@@ -16,6 +16,7 @@ interface LiveFeedItem {
     id: number;
     game: LiveFeedItemGame;
     winner: string;
+    bet: number;
     chance: number;
     fund: number;
     time: string;
@@ -81,7 +82,19 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
             <Column<LiveFeedItem>
                 label={
                     <Text weight="semiBold" upper>
-                        Шанс
+                        Ставка
+                    </Text>
+                }
+                minWidth={110}
+                maxWidth={180}
+                columnKey="bet"
+            >
+                {({ bet }) => <TextIcon text={bet} icon="diamond" font="Rubik" color="white" upper />}
+            </Column>
+            <Column<LiveFeedItem>
+                label={
+                    <Text weight="semiBold" upper>
+                        КОЭФФ
                     </Text>
                 }
                 minWidth={100}
