@@ -1,0 +1,34 @@
+.Sidebar {
+    position: fixed;
+    z-index: 33;
+    bottom: 0;
+    display: flex;
+    background: #090d15;
+    flex-direction: column;
+    width: 100%;
+
+    &-Selector {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    &-Row {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        padding: 20px;
+    }
+
+    &-Message {
+        position: absolute;
+        bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        height: 100px;
+        align-items: center;
+        justify-content: space-around;
+    }
+}

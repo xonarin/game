@@ -8,7 +8,7 @@ import { cn } from '../../utils/bem-css-module';
 import useIsOnPath from '../../hooks/useIsOnPath';
 
 export interface LinkProps {
-    to: string;
+    to?: string;
     isSoft?: boolean;
     external?: boolean;
     newTab?: boolean;

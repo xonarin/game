@@ -1,0 +1,49 @@
+@import '../../../../../assets/styles/vars';
+@import '../../../../../assets/styles/mixins';
+
+.HeaderNavigationItem {
+    display: inline-block;
+    cursor: pointer;
+
+    & &-Text {
+        position: relative;
+        margin-left: 7px;
+        vertical-align: middle;
+        transition: color 0.3s $nice-ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: $color-white;
+            opacity: 0;
+            transition: width 0.4s $nice-ease, opacity 0.3s $nice-ease;
+        }
+    }
+
+    & + & {
+        margin-left: 40px;
+
+        @include mq(max-width 1060px) { margin-left: 30px; }
+    }
+
+    &:hover {
+        .HeaderNavigationItem-Text {
+            color: $color-white;
+
+            &::after {
+                width: 100%;
+                opacity: 1;
+            }
+        }
+
+        .HeaderNavigationItem-Icon {
+            &::before { opacity: 0; }
+            &::after { opacity: 1; }
+        }
+    }
+}

@@ -56,6 +56,7 @@ type IconType =
     | 'letterWhite'
     | 'gem'
     | 'bombColored'
+    | 'close'
     | 'caretLeft'
     | 'caretLeftWhite';
 

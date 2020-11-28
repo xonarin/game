@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Classic.scss';
@@ -11,6 +11,7 @@ import Icon from '../../components/Icon/Icon';
 import BetsTable from './BetsTable/BetsTable';
 import HistoryTable from './HistoryTable/HistoryTable';
 import ClassicGame from './ClassicGame/ClassicGame';
+import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
 
 export interface ClassicProps {
     chatId: string;
@@ -19,6 +20,12 @@ export interface ClassicProps {
 const cnClassic = cn(s, 'Classic');
 
 const Classic: React.FC<ClassicProps> = ({ chatId }) => {
+    const [mobile, setMobile] = useState(false);
+    useEffect(() => {
+        if (window.screen.width < 900) {
+            setMobile(true);
+        }
+    }, [typeof window !== 'undefined']);
     useStyles(s);
 
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
@@ -26,7 +33,9 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
     if (gameLoading || !currentClassicGame) {
         return <div>Loading...</div>;
     }
-
+    if (mobile) {
+        return <LayoutMobile title="Classic" Content={<ClassicGame game={currentClassicGame} />} />;
+    }
     return (
         <Layout31WithChat
             chatId={chatId}
