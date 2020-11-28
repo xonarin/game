@@ -34,7 +34,36 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
         return <div>Loading...</div>;
     }
     if (mobile) {
-        return <LayoutMobile title="Classic" Content={<ClassicGame game={currentClassicGame} />} />;
+        return (
+            <LayoutMobile
+                title="Classic"
+                Content={<ClassicGame game={currentClassicGame} />}
+                bottomContent={
+                    <Panel
+                        className={cnClassic('BetsPanel')}
+                        leftHead={
+                            <Text className={cnClassic('BetsTitle')} font="Rubik" size="l" color="white" upper>
+                                Ставки
+                            </Text>
+                        }
+                        rightHead={<Icon type="guard" />}
+                    >
+                        <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
+                    </Panel>
+                }
+                historyContent={
+                    <Panel
+                        leftHead={
+                            <Text className={cnClassic('HistoryTitle')} font="Rubik" size="l" color="white" upper>
+                                Последние игры
+                            </Text>
+                        }
+                    >
+                        <HistoryTable />
+                    </Panel>
+                }
+            />
+        );
     }
     return (
         <Layout31WithChat
