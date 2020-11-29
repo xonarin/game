@@ -12,7 +12,6 @@ export interface MinesGame extends Model {
     readonly id: string;
     readonly userId: string;
     readonly betAmount: number;
-    readonly winAmount: number;
     readonly bombsCount: number;
     readonly fieldConf: number;
     readonly stepsConf: number;
@@ -24,9 +23,6 @@ export interface MinesGame extends Model {
     readonly updatedAt: Date;
 
     getUser: BelongsToGetAssociationMixin<User>;
-}
-export interface HistoryMinesGame extends MinesGame {
-    readonly winAmount: number;
 }
 
 export type MinesGameStatic = AssociableModelStatic<
@@ -58,10 +54,7 @@ export const initMinesGame = (sequelize: Sequelize): MinesGameStatic => {
             type: DataTypes.DOUBLE(8, 2),
             allowNull: false,
         },
-        winAmount: {
-            type: DataTypes.DOUBLE(8, 2),
-            allowNull: true,
-        },
+
         bombsCount: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,

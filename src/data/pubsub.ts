@@ -18,7 +18,6 @@ import {
     OriginPlacedClassicGameBetPayloadParent,
     OriginUpdatedClassicGameTimerPayloadParent,
 } from './modules/classicGame/resolvers';
-import { OriginMinesGameParent } from './modules/minesGame/resolvers';
 
 export interface PubSubEventPayloads {
     // Chat
@@ -35,9 +34,6 @@ export interface PubSubEventPayloads {
     updatedClassicGameTimer: OriginUpdatedClassicGameTimerPayloadParent;
     switchedToClassicGameStateCulmination: SwitchedToClassicGameStateCulminationPayload;
     switchedToClassicGameStateEnded: OriginClassicGamesHistoryItemParent;
-
-    // minesGame
-    minesGameBet: OriginMinesGameParent;
 }
 
 export type PubSubEvent = keyof PubSubEventPayloads;

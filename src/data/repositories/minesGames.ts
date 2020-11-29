@@ -1,9 +1,9 @@
 /* eslint-disable no-bitwise */
 import { range } from 'lodash';
-import { Transaction, Op } from 'sequelize';
+import { Transaction } from 'sequelize';
 
 import BaseRepository from './base';
-import { MinesGame, MinesGameStatus, HistoryMinesGame } from '../models/MinesGame';
+import { MinesGame, MinesGameStatus } from '../models/MinesGame';
 import { FIELD_SIZE } from '../../utils/mines';
 import { UserError } from '../../utils/errors';
 
@@ -36,16 +36,6 @@ class MinesGamesRepository extends BaseRepository {
         });
     }
 
-    async getMinesGame(): Promise<HistoryMinesGame[]> {
-        return this.db.MinesGame.findAll({
-            where: {
-                winAmount: { [Op.not]: null },
-            },
-            // include: [this.db.MinesGame.User],
-            // order: [['id', 'DESC']],
-        });
-    }
-
     async createGame(userId: string, betAmount: number, bombsCount: number): Promise<MinesGame> {
         const { clientSeed, serverSeed, nonce } = await this.repositories.users.getUserByIdStrict(userId);
 
@@ -73,10 +63,10 @@ class MinesGamesRepository extends BaseRepository {
         });
     }
 
-    async endGame(gameId: string, winAmount: number): Promise<MinesGame> {
+    async endGame(gameId: string): Promise<MinesGame> {
         const game = await this.getGameByIdStrict(gameId);
 
-        return game.update({ status: MinesGameStatus.Ended, winAmount });
+        return game.update({ status: MinesGameStatus.Ended });
     }
 
     async makeStep(gameId: string, cell: number): Promise<MinesGame> {

@@ -3,7 +3,7 @@ import React from 'react';
 import Badge, { BadgeProps } from '../Badge';
 
 export interface ChanceBadgeProps {
-    chance: string;
+    chance: number;
     forceColor?: string;
 }
 

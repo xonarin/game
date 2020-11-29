@@ -1,8 +1,0 @@
-fragment MinesGameHistoryItem on MinesGameHistory {
-    id
-    userId
-    winAmount
-    betAmount
-    bombsCount
-    createdAt
-}

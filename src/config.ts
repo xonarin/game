@@ -22,9 +22,7 @@ export default {
 
     // Database
     databaseUrl:
-        process.env.DATABASE_URL ||
-        process.env.CLEARDB_DATABASE_URL ||
-        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
+        process.env.DATABASE_URL || process.env.CLEARDB_DATABASE_URL || 'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
 
     // Redis
     redisUrl: process.env.REDIS_URL || 'localhost',

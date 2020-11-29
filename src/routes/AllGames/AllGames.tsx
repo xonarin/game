@@ -17,11 +17,11 @@ const cnAllGames = cn(s, 'AllGames');
 
 const items = [
     { id: 1, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 2, game: 'dice' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 3, game: 'knb' as const, winner: 'Donald', chance: 10, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 4, game: 'dice' as const, winner: 'Donald', chance: 83, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 5, game: 'knb' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
+    { id: 2, game: 'dice' as const, winner: 'Donald', chance: 67, bet: 10,  fund: 2500, time: '25.10.2019 в 21:46' },
+    { id: 3, game: 'knb' as const, winner: 'Donald', chance: 10, bet: 10,  fund: 2500, time: '25.10.2019 в 21:46' },
+    { id: 4, game: 'dice' as const, winner: 'Donald', chance: 83, bet: 10,  fund: 2500, time: '25.10.2019 в 21:46' },
+    { id: 5, game: 'knb' as const, winner: 'Donald', chance: 67, bet: 10,  fund: 2500, time: '25.10.2019 в 21:46' },
+    { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10,  fund: 2500, time: '25.10.2019 в 21:46' },
 ];
 
 const AllGames: React.FC<ClassicProps> = ({ chatId }) => {
@@ -81,6 +81,7 @@ const AllGames: React.FC<ClassicProps> = ({ chatId }) => {
                 >
                     <LiveFeedTable items={items} />
                 </Panel>
+                
             }
         />
     );

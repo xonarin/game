@@ -1,13 +1,7 @@
-schema {
-    query: Query
-    mutation: Mutation
-    subscription: Subscription
-}
 
 type Query {
     minesGameConfiguration: MinesGameConfiguration!
     activeMinesGame: MinesGame
-    minesGameHistory: [MinesGameHistory]
 }
 
 type Mutation {
@@ -27,23 +21,9 @@ type MinesGameConfiguration {
     coefs: [[Float!]!]!
 }
 
-type Subscription {
-    minesGameBet: MinesGameHistory
-}
-
-type MinesGameHistory {
-    id: ID!
-    userId: ID!
-    betAmount: Float!
-    winAmount: Float!
-    bombsCount: Float!
-    createdAt: DateTime!
-}
-
 type MinesGame {
     id: ID!
     betAmount: Float!
-    winAmount: Float!
     bombsCount: Int!
     fieldConf: Int!
     stepsConf: Int!
