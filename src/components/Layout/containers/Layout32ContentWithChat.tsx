@@ -16,20 +16,13 @@ export interface Layout32ContentWithChatProps {
 
 const cnLayout32ContentWithChat = cn(s, 'Layout32ContentWithChat');
 
-const Layout32ContentWithChat: React.FC<Layout32ContentWithChatProps> = ({
-    chatId,
-    title,
-    centerContent,
-    bottomContent,
-}) => {
+const Layout32ContentWithChat: React.FC<Layout32ContentWithChatProps> = ({ chatId, centerContent, bottomContent }) => {
     useStyles(s);
 
     return (
         <Layout>
             <div className={cnLayout32ContentWithChat('Top')}>
-                <MiddleGame className={cnLayout32ContentWithChat('RightContent')}>
-                    {centerContent}
-                </MiddleGame>
+                <MiddleGame className={cnLayout32ContentWithChat('RightContent')}>{centerContent}</MiddleGame>
                 <Chat className={cnLayout32ContentWithChat('Chat')} chatId={chatId} />
             </div>
             <div>{bottomContent}</div>
