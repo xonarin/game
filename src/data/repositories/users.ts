@@ -14,7 +14,6 @@ const FREE_REFERRALS = 2;
 const REF_A = 40;
 const REF_D = 10;
 const INITIAL_REFERRAL_INCOME = 10;
-const REFERRAL_INCOME_PERCENT = 3;
 const REFERRALS_LIMIT = 10;
 
 class UsersRepository extends BaseRepository {
@@ -189,12 +188,12 @@ class UsersRepository extends BaseRepository {
 
     async giveIncomeToReferrer(referralId: string, ourProfit: number): Promise<void> {
         const referral = await this.getUserByIdStrict(referralId);
-        const { refId, refStatus } = referral;
+        const { refId } = referral;
 
-        if (refId && refStatus === RefStatus.Active) {
+        if (refId) {
             await this.db.sequelize.transaction(async transaction => {
                 const referrer = await this.getUserByIdStrict(refId, transaction);
-                const incomeAmount = (ourProfit * REFERRAL_INCOME_PERCENT) / 100;
+                const incomeAmount = (ourProfit * referrer.refPercent) / 100;
 
                 await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction });
                 await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount);

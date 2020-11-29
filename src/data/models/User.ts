@@ -45,6 +45,7 @@ export interface User extends Model {
     readonly refId: string | null;
     readonly refStatus: RefStatus | null;
     readonly refMoney: number;
+    readonly refPercent: number;
     readonly clientSeed: string;
     readonly serverSeed: string;
     readonly nonce: number;
@@ -142,6 +143,12 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
                 type: DataTypes.DOUBLE(8, 2),
                 allowNull: false,
                 defaultValue: 0,
+            },
+
+            refPercent: {
+                type: DataTypes.DOUBLE(8, 2),
+                allowNull: false,
+                defaultValue: 3,
             },
 
             clientSeed: {
