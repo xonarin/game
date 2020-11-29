@@ -89,6 +89,12 @@ export const resolvers: MinesGameResolvers = {
             const madeStepsCount = countOnes(currentGame.stepsConf);
             const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
 
+            // Increase turnover
+            const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+            if (coef >= minTurnoverCoef) {
+                await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
+            }
+
             await repositories.users.giveMoney(user!.id, currentGame.betAmount * coef);
 
             return repositories.minesGames.endGame(currentGame.id);
@@ -100,7 +106,20 @@ export const resolvers: MinesGameResolvers = {
                 throw new UserError('NO_ACTIVE_MINES_GAME');
             }
 
-            return repositories.minesGames.makeStep(currentGame.id, cell);
+            const updatedGame = await repositories.minesGames.makeStep(currentGame.id, cell);
+
+            // Increase turnover if game is ended
+            if (updatedGame.status === MinesGameStatus.Ended) {
+                const madeStepsCount = countOnes(updatedGame.stepsConf);
+                const coef = getMinesCoef(updatedGame.bombsCount, madeStepsCount);
+
+                const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+                if (coef >= minTurnoverCoef) {
+                    await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
+                }
+            }
+
+            return updatedGame;
         },
     },
     MinesGame: {
