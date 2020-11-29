@@ -77,7 +77,11 @@ export const resolvers: MinesGameResolvers = {
 
             await repositories.users.withdrawMoney(user!.id, betAmount);
 
-            return repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
+            const createdGame = await repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
+
+            await repositories.users.giveIncomeToReferrer(user!.id, betAmount * 0.05);
+
+            return createdGame;
         },
         endMinesGame: async (_0, _1, { user, repositories }) => {
             const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
