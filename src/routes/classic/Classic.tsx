@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Classic.scss';
@@ -12,6 +12,7 @@ import BetsTable from './BetsTable/BetsTable';
 import HistoryTable from './HistoryTable/HistoryTable';
 import ClassicGame from './ClassicGame/ClassicGame';
 import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
+import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 
 export interface ClassicProps {
     chatId: string;
@@ -21,11 +22,16 @@ const cnClassic = cn(s, 'Classic');
 
 const Classic: React.FC<ClassicProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
-    useEffect(() => {
-        if (window.screen.width < 900) {
+    useIsomorphicLayoutEffect(() => {
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.document !== 'undefined' &&
+            typeof window.document.createElement !== 'undefined' &&
+            window.screen.width < 900
+        ) {
             setMobile(true);
         }
-    }, [typeof window !== 'undefined']);
+    }, [window?.screen?.width]);
     useStyles(s);
 
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
