@@ -13,7 +13,9 @@ export type ClassicGameSettingName =
 
 export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage';
 
-export type SettingName = ClassicGameSettingName | ChatSettingName;
+export type ReferralsSettingName = 'referrals::minTurnoverCoef';
+
+export type SettingName = ClassicGameSettingName | ChatSettingName | ReferralsSettingName;
 
 export class SettingValue {
     private readonly value: string | null;
