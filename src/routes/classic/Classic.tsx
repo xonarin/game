@@ -31,7 +31,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
         ) {
             setMobile(true);
         }
-    }, [window?.screen?.width]);
+    }, [typeof window !== 'undefined' && window?.screen?.width]);
     useStyles(s);
 
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
