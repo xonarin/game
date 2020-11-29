@@ -96,8 +96,12 @@ class UsersRepository extends BaseRepository {
 
     private async calcReferralsCountDelta(referrer: User, transaction?: Transaction): Promise<number> {
         const possibleReferralsCount =
-            Math.floor(
-                (REF_D / 2 - REF_A + Math.sqrt((REF_A - REF_D / 2) ** 2 + 2 * REF_D * referrer.turnover)) / REF_D,
+            Math.max(
+                Math.floor(
+                    (REF_D - 2 * REF_A + Math.sqrt((2 * REF_A - REF_D) ** 2 + 8 * REF_D * referrer.turnover)) /
+                        (2 * REF_D),
+                ),
+                0,
             ) + FREE_REFERRALS;
         const actualReferralsCount = await this.db.User.count({
             where: {
@@ -183,14 +187,14 @@ class UsersRepository extends BaseRepository {
         });
     }
 
-    async giveIncomeToReferrer(referralId: string, amount: number): Promise<void> {
+    async giveIncomeToReferrer(referralId: string, ourProfit: number): Promise<void> {
         const referral = await this.getUserByIdStrict(referralId);
         const { refId, refStatus } = referral;
 
         if (refId && refStatus === RefStatus.Active) {
             await this.db.sequelize.transaction(async transaction => {
                 const referrer = await this.getUserByIdStrict(refId, transaction);
-                const incomeAmount = (amount * REFERRAL_INCOME_PERCENT) / 100;
+                const incomeAmount = (ourProfit * REFERRAL_INCOME_PERCENT) / 100;
 
                 await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction });
                 await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount);
