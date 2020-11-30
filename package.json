@@ -57,6 +57,7 @@
         "react-contenteditable": "^3.3.4",
         "react-dom": "^16.11.0",
         "react-final-form": "^6.4.0",
+        "react-loadingg": "^1.7.2",
         "react-scroll": "^1.8.1",
         "react-spring": "^8.0.27",
         "reflect-metadata": "^0.1.13",
