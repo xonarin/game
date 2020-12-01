@@ -58,7 +58,9 @@ type IconType =
     | 'bombColored'
     | 'close'
     | 'caretLeft'
-    | 'caretLeftWhite';
+    | 'caretLeftWhite'
+    | 'left'
+    | 'right';
 
 export interface IconProps {
     type: IconType;

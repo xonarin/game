@@ -30,6 +30,7 @@ declare module 'react-notifications-component';
 declare module 'react-error-overlay';
 declare module 'react-test-renderer';
 declare module 'terminate';
+declare module 'react-items-carousel';
 declare module 'isomorphic-style-loader/withStyles' {
     // @ts-ignore
     const _default: <T>(s1: string, s2?: string, s3?: string, s4?: string, s5?: string) => (arg0: typeof T) => typeof T;

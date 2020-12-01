@@ -8,7 +8,7 @@ type TextFont = 'OpenSans' | 'Rubik';
 type TextSize = 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl';
 type TextLine = 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl';
 type TextWeight = 'regular' | 'semiBold' | 'bold';
-type TextColor = 'gray' | 'white' | 'blue' | 'green' | 'gold' | 'red' | 'pink' | 'aqua';
+type TextColor = 'gray' | 'white' | 'blue' | 'green' | 'gold' | 'red' | 'pink' | 'aqua' | 'dark-blue';
 
 export interface TextProps {
     font?: TextFont;

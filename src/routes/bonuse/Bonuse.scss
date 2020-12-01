@@ -1,0 +1,68 @@
+@import '../../assets/styles/vars';
+
+.Bonuse {
+    &-Content {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &-Intro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-Text {
+            margin-bottom: 15px;
+        }
+    }
+
+    &-Slider {
+        border-top: rgba(196, 196, 196, 0.05) 2px solid;
+        width: 100%;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    &-WinnerAvatar {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        border-radius: 5px;
+        background-color: #c4c4c4;
+        vertical-align: middle;
+    }
+
+    &-Count {
+        display: flex;
+        height: 60px;
+        margin-bottom: 30px;
+    }
+
+    &-SingleSlide {
+        display: flex;
+    }
+
+    &-WinnerInfo {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    & &-WinnerName {
+        margin-left: 13px;
+        vertical-align: middle;
+    }
+
+    &-PeopleCircles {
+        margin-top: 20px;
+        display: flex;
+
+        :last-child {
+            margin-left: 10px;
+        }
+    }
+}
