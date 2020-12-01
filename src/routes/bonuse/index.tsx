@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
-import Bonuse from './bonuse';
+import Bonuse from './Bonuse';
 
 const action = ({ user }: AppContextTypes): RouteResult => {
     // if (!chatId) {
