@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import { BoxLoading } from 'react-loadingg';
 
 import s from './Classic.scss';
 import { cn } from '../../utils/bem-css-module';
@@ -33,16 +32,13 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
             setMobile(true);
         }
     }, [typeof window !== 'undefined' && window?.screen?.width]);
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        if (typeof window === 'object') setLoading(true);
-    }, [typeof window !== 'object']);
+
     useStyles(s);
 
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
 
-    if (gameLoading || !currentClassicGame || !loading) {
-        return <BoxLoading />;
+    if (gameLoading || !currentClassicGame) {
+        return <div>Loading</div>;
     }
     if (mobile) {
         return (

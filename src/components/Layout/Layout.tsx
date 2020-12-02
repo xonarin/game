@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import { BoxLoading } from 'react-loadingg';
 
 import s from './Layout.scss';
 import { cn } from '../../utils/bem-css-module';
@@ -17,10 +16,6 @@ export interface LayoutProps {
 const cnLayout = cn(s, 'Layout');
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        if (typeof window === 'object') setLoading(true);
-    }, [typeof window !== 'object']);
     useStyles(s);
 
     if (typeof window !== 'undefined' && window.screen.width < 900) {
@@ -34,9 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
         );
     }
-    if (!loading) {
-        return <BoxLoading />;
-    }
+
     return (
         <div className={cnLayout()}>
             <Sidebar />

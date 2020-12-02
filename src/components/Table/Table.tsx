@@ -18,7 +18,7 @@ export interface TableProps<
     rowKey: K;
     rowClassName?: GetRowClassName<T> | string | string[];
     items: T[];
-
+    responsivity: Boolean;
     className?: string;
     children: ColumnElement<T>[];
 }
@@ -32,6 +32,7 @@ const Table = <
     rowKey,
     rowClassName,
     items,
+    responsivity,
     className,
     children,
 }: TableProps<T, K>): React.ReactElement<TableProps<T, K>> => {
@@ -54,8 +55,9 @@ const Table = <
     return (
         <div className={cnTable(null, [className])}>
             <Scrollable className={cnTable('Content')} disablePadding>
-                <div className={cnTable('Head')}>
-                    <div className={cnTable('Anchor')} ref={anchor} />
+                <div className={responsivity ? cnTable('Head-Responsivity') : cnTable('Head')}>
+                    {responsivity ? null : <div className={cnTable('Anchor')} ref={anchor} />}
+
                     {columns.map((column, index) => (
                         <div
                             className={cnTable('HeadCell')}

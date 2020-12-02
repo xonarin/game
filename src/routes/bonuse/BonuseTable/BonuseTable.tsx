@@ -26,7 +26,7 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
     useStyles(s);
 
     return (
-        <SafeTable<BonuseItem, 'id'> className={cnBonuseTable()} rowKey="id" items={items}>
+        <SafeTable<BonuseItem, 'id'> className={cnBonuseTable()} rowKey="id" items={items} responsivity>
             <Column<BonuseItem>
                 label={
                     <Text weight="semiBold" upper>

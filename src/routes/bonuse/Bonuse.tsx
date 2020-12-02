@@ -15,9 +15,9 @@ import BonuseBanner from './BonuseBanner/BonuseBanner';
 
 const cnBonuse = cn(s, 'Bonuse');
 const Bonuse: React.FC = () => {
+    useStyles(s);
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
-    useStyles(s);
     return (
         <LayoutBonuse
             title="Bonuse"

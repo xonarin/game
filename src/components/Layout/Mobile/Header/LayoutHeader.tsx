@@ -1,6 +1,5 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import { BoxLoading } from 'react-loadingg';
 
 import s from './LayoutHeader.scss';
 import { cn } from '../../../../utils/bem-css-module';
@@ -19,9 +18,8 @@ const LayoutHeaderMobile: React.FC = () => {
     const { me, loading } = useMeQuery();
 
     if (loading) {
-        return <BoxLoading />;
+        return <div>Loading</div>;
     }
-
     return (
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>
