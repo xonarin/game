@@ -29,6 +29,10 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'bonuse' */ './bonuse'),
         },
         {
+            path: '/referal',
+            load: () => import(/* webpackChunkName: 'referal' */ './referals'),
+        },
+        {
             path: '/messages/:chatId?',
             load: () => import(/* webpackChunkName: 'messages' */ './messages'),
         },

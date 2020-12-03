@@ -9,7 +9,7 @@ import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/Li
 import { cn } from '../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../components/Layout/containers/Layout32ContentWithChat';
 
-export interface ClassicProps {
+export interface AllGamesProps {
     chatId: string;
 }
 
@@ -24,7 +24,7 @@ const items = [
     { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
 ];
 
-const AllGames: React.FC<ClassicProps> = ({ chatId }) => {
+const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
     useStyles(s);
 
     return (
