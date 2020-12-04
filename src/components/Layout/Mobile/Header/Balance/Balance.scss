@@ -2,15 +2,15 @@
 
 .Balance {
     position: relative;
-    width: 140px;
-    height: 50px;
+    width: 90px;
+    height: 40px;
 
     &-Main {
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 120px;
+        width: 90px;
         height: 100%;
         padding: 0 18px;
 
@@ -18,9 +18,9 @@
             content: '';
             position: absolute;
             display: block;
-            width: 120px;
+            width: 90px;
             height: 40px;
-            top: 8px;
+            top: 0;
             right: 5px;
             border-radius: 5px;
             background: #1c2135;
