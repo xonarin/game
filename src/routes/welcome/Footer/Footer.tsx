@@ -22,22 +22,22 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                 <div className={cnFooter('Main')}>
                     <ul className={cnFooter('Navigation')}>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/">
+                            <Link className={cnFooter('NavigationItem')} to="/faq">
                                 <Text size="xs">О проекте</Text>
                             </Link>
                         </li>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/">
+                            <Link className={cnFooter('NavigationItem')} to="/faq">
                                 <Text size="xs">Вопросы и ответы</Text>
                             </Link>
                         </li>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/">
+                            <Link className={cnFooter('NavigationItem')} to="/faq">
                                 <Text size="xs">Правила</Text>
                             </Link>
                         </li>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/">
+                            <Link className={cnFooter('NavigationItem')} to="/referal">
                                 <Text size="xs">Партнерская программа</Text>
                             </Link>
                         </li>
@@ -60,7 +60,7 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                     </div>
                 </div>
                 <div className={cnFooter('Copyright')}>
-                    <Text size="xs">Ruletka © 2020</Text>
+                    <Text size="xs">Willy © 2020</Text>
                 </div>
             </div>
         </footer>

@@ -16,11 +16,19 @@
         white-space: nowrap;
 
         &-Responsivity {
+            position: relative;
             padding: 0 5px;
             margin-bottom: 15px;
             white-space: nowrap;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
+
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 0;
+                vertical-align: middle;
+            }
         }
     }
 
