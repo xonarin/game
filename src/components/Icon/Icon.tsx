@@ -4,7 +4,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import { cn } from '../../utils/bem-css-module';
 import s from './Icon.scss';
 
-type IconSize = 'xs' | 's' | 'm';
+type IconSize = 'xs' | 's' | 'm' | 'xxl';
 
 type IconType =
     | 'gamepad'
@@ -60,7 +60,14 @@ type IconType =
     | 'caretLeft'
     | 'caretLeftWhite'
     | 'left'
-    | 'right';
+    | 'right'
+    |'balance'
+    |'angryFace'
+    |'checked'
+    |'diagrams'
+    |'link'
+    |'peoples'
+    |'star';
 
 export interface IconProps {
     type: IconType;

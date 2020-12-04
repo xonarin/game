@@ -54,6 +54,13 @@ $icon-types:
     close
     left
     right
+    balance
+    angryFace
+    checked
+    diagrams
+    link
+    peoples
+    star
     caretLeftWhite;
 
 .Icon {
@@ -90,6 +97,11 @@ $icon-types:
     &_size_xs {
         width: 14px;
         height: 14px;
+    }
+
+    &_size_xxl {
+        width: 60px;
+        height: 36px;
     }
 
     @each $type in $icon-types {

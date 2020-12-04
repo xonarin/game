@@ -1,4 +1,4 @@
-import React from 'React';
+import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -60,14 +60,14 @@ const Referals: React.FC = () => {
                                     domein.io/ref69522
                                 </Text>
                             </div>
-                            <Icon type='ingotsWhite' />
+                            <Icon type='link' />
                         </div>
                     </div>
                 </div>
             }
             DiagramsIcon={
                 <div className={cnReferal("Icon")}>
-                    <Icon type='gamepadWhite' />
+                    <Icon size='xxl' type='diagrams' />
                     <Text upper color='white' size='xl'>СТАТИстики</Text>
                 </div>
             }
@@ -75,7 +75,7 @@ const Referals: React.FC = () => {
                 <div className={cnReferal("Diagram-Container")}>
                     <div className={cnReferal("Diagram-Container-Header")}>
                         <div className={cnReferal("Diagram-Container-Header-Title")}>
-                        <Icon type='ingotsWhite' />
+                        <Icon  type='balance' />
                         <Text>
                             ЗАРАБОТАНО:<Text color='green'>3850 ₽</Text>
                         </Text>
@@ -96,7 +96,7 @@ const Referals: React.FC = () => {
                 <div className={cnReferal("Diagram-Container")}>
                 <div className={cnReferal("Diagram-Container-Header")}>
                     <div className={cnReferal("Diagram-Container-Header-Title")}>
-                    <Icon type='ingotsWhite' />
+                    <Icon type='peoples' />
                     <Text>
                         ЗАРАБОТАНО:<Text color='green'>3850 ₽</Text>
                     </Text>
@@ -115,7 +115,7 @@ const Referals: React.FC = () => {
             }
             TableIcons={
                 <div className={cnReferal("Icon")}>
-                    <Icon type='gamepadWhite' />
+                    <Icon size='xxl'  type='star' />
                     <Text upper color='white' size='xl'>РЕФЕРАЛЫ</Text>
                 </div>
             }

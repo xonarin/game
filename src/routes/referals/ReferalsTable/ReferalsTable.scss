@@ -7,6 +7,12 @@
         padding: 20px 13px 13px;
     }
 
+    &-Status {
+        :last-child {
+            margin-left: 5px;
+        }
+    }
+
     & .Table-Head,
     & .Table-Row { padding: 0 10px; }
 

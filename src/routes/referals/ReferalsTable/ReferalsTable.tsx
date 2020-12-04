@@ -107,13 +107,13 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
             >
               {({ status }) => {
                     if(status){
-                        return <div>
-                            <Icon type='cardsWhite'/>
+                        return <div className={cnReferalsTable('Status')}>
+                            <Icon type='checked'/>
                             <Text color='green'>Активен</Text>
                         </div>
                     }
-                    return <div>
-                            <Icon type='automat'/>
+                    return <div className={cnReferalsTable('Status')}>
+                            <Icon type='angryFace'/>
                             <Text color='gray'>Не активен</Text>
                     </div>
 }} 
