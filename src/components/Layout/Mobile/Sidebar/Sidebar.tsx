@@ -24,8 +24,8 @@ const SidebarMobile: React.FC = () => {
                 </div>
             ) : null}
             <div className={cnSidebar('Row')}>
-                <NavigationItem to="/battle" icon="gamepad" iconHover="gamepadWhite" />
-                <NavigationItem to="/" icon="ingots" iconHover="ingotsWhite" />
+                <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
+                <NavigationItem to="/bonuse" icon="ingots" iconHover="ingotsWhite" />
                 <button
                     type="button"
                     className={cnSidebar('Selector')}
@@ -57,7 +57,7 @@ const SidebarMobile: React.FC = () => {
                         </div>
                     ) : null}
                 </div>
-                <NavigationItem to="/" icon="user" iconHover="cardsWhite" />
+                <NavigationItem to="/" icon="user" iconHover="user" />
             </div>
         </aside>
     );

@@ -34,6 +34,33 @@
 
     &-Body {
         overflow: hidden;
+
+        & .Table-Row:nth-child(1) .Badge-Back {
+            background-color: rgba($color-gold-bonuse, 0.3);
+            border-color: $color-gold-bonuse;
+        }
+
+        & .Table-Row:nth-child(1) .Badge-Value {
+            color: $color-gold-bonuse;
+        }
+
+        & .Table-Row:nth-child(2) .Badge-Back {
+            background-color: rgba($color-silver, 0.4);
+            border: 2px solid $color-silver;
+        }
+
+        & .Table-Row:nth-child(2) .Badge-Value {
+            color: $color-silver;
+        }
+
+        & .Table-Row:nth-child(3) .Badge-Back {
+            background-color: rgba($color-bronze, 0.3);
+            border: 2px solid $color-bronze;
+        }
+
+        & .Table-Row:nth-child(3) .Badge-Value {
+            color: $color-bronze;
+        }
     }
 
     &-RowContainer {
