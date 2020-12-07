@@ -10,6 +10,7 @@ import Layout31WithChat from '../../components/Layout/containers/Layout31WithCha
 import Panel from '../../components/Panel/Panel';
 import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
 import Text from '../../components/Text/Text';
+import Icon from '../../components/Icon/Icon';
 import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
 import PreLoader from '../../components/PreLoader/PreLoader';
@@ -66,6 +67,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                             Ставка
                         </Text>
                     }
+                    rightHead={<Icon type="guard" />}
                 >
                     <MinesBetForm
                         fieldSize={fieldSize}

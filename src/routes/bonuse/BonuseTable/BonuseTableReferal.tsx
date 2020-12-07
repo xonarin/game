@@ -12,8 +12,8 @@ import Badge from '../../../components/Badge/Badge';
 interface BonuseItem {
     id: number;
     winner: string;
-    point: number;
-    fund: number;
+    referals: number;
+    percent: number;
 }
 
 export interface BonuseTableProps {
@@ -42,7 +42,7 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
             <Column<BonuseItem>
                 label={
                     <Text weight="semiBold" upper>
-                        Player
+                        Игрок
                     </Text>
                 }
                 minWidth={200}
@@ -60,16 +60,16 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
             <Column<BonuseItem>
                 label={
                     <Text weight="semiBold" upper>
-                        Points
+                        Рефералов
                     </Text>
                 }
                 minWidth={110}
                 maxWidth={180}
                 columnKey="points"
             >
-                {({ point }) => (
+                {({ referals }) => (
                     <Text font="Rubik" color="white" upper>
-                        {point}
+                        {referals}
                     </Text>
                 )}
             </Column>
@@ -77,14 +77,14 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
             <Column<BonuseItem>
                 label={
                     <Text weight="semiBold" upper>
-                        Prize Amount
+                        Отчисления
                     </Text>
                 }
                 minWidth={110}
                 maxWidth={180}
                 columnKey="fund"
             >
-                {({ fund }) => <TextIcon text={fund} icon="diamond" font="Rubik" color="white" upper />}
+                {({ percent }) => <TextIcon text={percent} icon="percentage" font="Rubik" color="white"  upper />}
             </Column>
         </SafeTable>
     );

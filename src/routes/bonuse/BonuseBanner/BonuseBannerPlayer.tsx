@@ -6,9 +6,9 @@ import { cn } from '../../../utils/bem-css-module';
 import Text from '../../../components/Text/Text';
 import TextInBox from '../../../components/TextInBox/TextInBox';
 import Icon from '../../../components/Icon/Icon';
-import BonuseTable from '../BonuseTable/BonuseTable';
+import BonuseTablePlayer from '../BonuseTable/BonuseTablePlayer';
 
-export interface BonuseBannerProps {
+export interface BonuseBannerPlayerProps {
     title: string;
     description: string | React.ReactNode;
     count: string;
@@ -22,7 +22,7 @@ const items = [
     { id: 5, winner: 'Donald', point: 10, fund: 2500 },
     { id: 6, winner: 'Donald', point: 10, fund: 2500 },
 ];
-const BonuseBanner: React.FC<BonuseBannerProps> = ({ title, description, count }) => {
+const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, description, count }) => {
     useStyles(s);
     return (
         <div className={cnBonuseBanner()}>
@@ -46,10 +46,10 @@ const BonuseBanner: React.FC<BonuseBannerProps> = ({ title, description, count }
                     </div>
                     <div className={cnBonuseBanner('Header-Expires')}>
                         <Text size="xs" color="gold">
-                            Expires in:
+                            Истекает через:
                         </Text>
                         <Text size="xs" color="white">
-                            3 DAYS 1 H 59 MIN
+                            3 ДНЯ 1 ЧАС 59 МИНУТ
                         </Text>
                     </div>
                 </div>
@@ -58,21 +58,21 @@ const BonuseBanner: React.FC<BonuseBannerProps> = ({ title, description, count }
                 <div className={cnBonuseBanner('Main-Rating')}>
                     <Icon type="diceWhite" />
                     <Text color="white">
-                        You are on the <Text color="green">12th</Text> line
+                        Вы на <Text color="green">12м</Text> месте
                     </Text>
                 </div>
                 <div className={cnBonuseBanner('Main-Rating')}>
                     <Icon type="diceWhite" />
                     <Text color="white">
-                        Scored <Text color="green">500</Text> points
+                        Набрано <Text color="green">500</Text> баллов
                     </Text>
                 </div>
             </div>
             <div className={cnBonuseBanner('Table')}>
-                <BonuseTable items={items} />
+                <BonuseTablePlayer items={items} />
             </div>
         </div>
     );
 };
 
-export default BonuseBanner;
+export default BonuseBannerPlayer;

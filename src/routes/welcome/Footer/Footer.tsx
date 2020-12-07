@@ -22,7 +22,7 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                 <div className={cnFooter('Main')}>
                     <ul className={cnFooter('Navigation')}>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/faq">
+                            <Link className={cnFooter('NavigationItem')} to="/faq#2">
                                 <Text size="xs">О проекте</Text>
                             </Link>
                         </li>

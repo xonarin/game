@@ -18,14 +18,14 @@ const Sidebar: React.FC = () => {
                 <img src={logoImg} alt="Рулетка" />
             </Link>
             <nav>
-                <SidebarNavigationItem to="/battle" icon="sword" iconHover="swordWhite" />
-                <SidebarNavigationItem to="/" icon="dice" iconHover="diceWhite" />
-                <SidebarNavigationItem to="/classic" icon="automat" iconHover="automatWhite" />
+                <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" />
                 <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite" />
-                <SidebarNavigationItem to="/" icon="scissors" iconHover="scissorsWhite" />
-                <SidebarNavigationItem to="/" icon="wheel" iconHover="wheelWhite" />
-                <SidebarNavigationItem to="/" icon="cards" iconHover="cardsWhite" />
-                <SidebarNavigationItem to="/" icon="cube" iconHover="cubeWhite" />
+                <SidebarNavigationItem to="#" icon="dice" iconHover="diceWhite" />
+                <SidebarNavigationItem to="#" icon="automat" iconHover="automatWhite" />
+                <SidebarNavigationItem to="#" icon="scissors" iconHover="scissorsWhite" />
+                <SidebarNavigationItem to="#" icon="wheel" iconHover="wheelWhite" />
+                <SidebarNavigationItem to="#" icon="cards" iconHover="cardsWhite" />
+                <SidebarNavigationItem to="#" icon="cube" iconHover="cubeWhite" />
             </nav>
         </aside>
     );

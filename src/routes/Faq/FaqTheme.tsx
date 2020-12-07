@@ -29,7 +29,7 @@ function FaqTheme(props: Props) {
     };
     return (
         <>
-            <button type="button" className={cnFaq('question-theme')} onClick={handleClick}>
+            <button id={`${id}`} type="button" className={cnFaq('question-theme')} onClick={handleClick}>
                 {`${id}.  ${theme.title}`}
             </button>
             {toggle

@@ -67,6 +67,7 @@ type IconType =
     |'diagrams'
     |'link'
     |'peoples'
+    |'percentage'
     |'star';
 
 export interface IconProps {
