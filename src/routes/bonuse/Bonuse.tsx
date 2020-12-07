@@ -11,7 +11,8 @@ import TextInBox from '../../components/TextInBox/TextInBox';
 import Button from '../../components/Button/Button';
 import TextIcon from '../../components/TextIcon/TextIcon';
 import PeopleCircles from '../welcome/Banner/PeopleCircles/PeopleCircles';
-import BonuseBanner from './BonuseBanner/BonuseBanner';
+import BonuseBannerPlayer from './BonuseBanner/BonuseBannerPlayer';
+import BonuseBannerReferal from './BonuseBanner/BonuseBannerReferal';
 
 const cnBonuse = cn(s, 'Bonuse');
 const Bonuse: React.FC = () => {
@@ -36,19 +37,22 @@ const Bonuse: React.FC = () => {
                             </TextInBox>{' '}
                             <TextInBox size="xxl" color="white">
                                 0
-                            </TextInBox>{' '}
+                            </TextInBox>
+                            <TextInBox size="xxl" color="white">
+                                0
+                            </TextInBox>
                             <TextInBox size="xxl" color="white">
                                 <Icon type="diamond" size="m" />
                             </TextInBox>
                         </div>
 
-                        <Text color="white" className={cnBonuse('Intro-Text')}>
-                            Every day w play more than 1000 rubies between 100 participants
+                        <Text size="l" color="white" className={cnBonuse('Intro-Text')}>
+                            Каждый месяц мы разыгрываем 10.000 рублей среди игроков
                         </Text>
                         <Text color="white" className={cnBonuse('Intro-Text')}>
-                            Hurry up to take part!
+                            Успей принять участие!
                         </Text>
-                        <Button size="m">Play Now</Button>
+                        <Button size="m">Участвовать</Button>
                         <div className={cnBonuse('PeopleCircles')}>
                             <PeopleCircles />
                             <Text size="m" color="green">
@@ -71,7 +75,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -86,7 +90,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -101,7 +105,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -116,7 +120,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -131,7 +135,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -146,7 +150,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -161,7 +165,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -176,7 +180,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -191,7 +195,7 @@ const Bonuse: React.FC = () => {
                                 <div className={cnBonuse('SingleSlide')}>
                                     <div className={cnBonuse('WinnerAvatar')} />
                                     <div className={cnBonuse('WinnerInfo')}>
-                                        <Text className={cnBonuse('WinnerName')} color="dark-blue" upper>
+                                        <Text className={cnBonuse('WinnerName')} color="blue" upper>
                                             Donald
                                         </Text>
                                         <TextIcon
@@ -209,26 +213,25 @@ const Bonuse: React.FC = () => {
                 </div>
             }
             LeftContent={
-                <BonuseBanner
-                    title="active player"
+                <BonuseBannerPlayer
+                    title="Активный игрок"
                     description={
                         <>
                             {' '}
-                            Every week on Fri. <Text color="white"> 6:00p.m </Text> the 10 most active players who made
-                            the most bets on the total win prizes
+                            Каждые <Text color="white"> 3 дня </Text>  мы разыгрываем призы среди <Text color="white"> 3 </Text> самых активных игроков,
+                            которые сделали больше всех ставок по сумме.
                         </>
                     }
                     count="5000"
                 />
             }
             RightContent={
-                <BonuseBanner
-                    title="bonus partner"
+                <BonuseBannerReferal
+                    title="Бонус-партнёр"
                     description={
                         <>
                             {' '}
-                            Every week on Fri. <Text color="white"> 6:00p.m </Text> the 10 most active players who made
-                            the most bets on the total win prizes
+                            Приглашай людей на сайт и каждые <Text color="white"> 30 дней </Text> и лучшие партнёры по количеству рефералов получат повышенные % отчисления! 
                         </>
                     }
                     count="3000"
