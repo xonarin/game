@@ -1,4 +1,4 @@
-import { col, fn, Op } from 'sequelize';
+import { col, fn, Op, Transaction } from 'sequelize';
 import { DateTime, DurationUnit } from 'luxon';
 
 import BaseRepository from './base';
@@ -12,12 +12,20 @@ class ReferralIncomesRepository extends BaseRepository {
         [RefStatsPeriod.Year]: 'year',
     };
 
-    async writeIncome(referrerId: string, referralId: string, amount: number): Promise<ReferralIncome> {
-        return this.db.ReferralIncome.create({
-            referrerId,
-            referralId,
-            amount,
-        });
+    async writeIncome(
+        referrerId: string,
+        referralId: string,
+        amount: number,
+        transaction?: Transaction,
+    ): Promise<ReferralIncome> {
+        return this.db.ReferralIncome.create(
+            {
+                referrerId,
+                referralId,
+                amount,
+            },
+            { transaction },
+        );
     }
 
     async getIncomeStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {

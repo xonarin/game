@@ -50,6 +50,8 @@ class UsersRepository extends BaseRepository {
             // Add to chat for admin announcements
             const aaChat = await this.repositories.chats.getAdminAnnouncementsChat();
             await aaChat.addMember(user);
+
+            return [user, true];
         }
 
         return [user, false];
@@ -124,13 +126,21 @@ class UsersRepository extends BaseRepository {
                 if (referralsCountDelta > 0) {
                     await user.update({ money: user.money + INITIAL_REFERRAL_INCOME }, { transaction });
                     await referrer.update({ refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOME }, { transaction });
-                    await this.repositories.referralIncomes.writeIncome(referrer.id, user.id, INITIAL_REFERRAL_INCOME);
+                    await this.repositories.referralIncomes.writeIncome(
+                        referrer.id,
+                        user.id,
+                        INITIAL_REFERRAL_INCOME,
+                        transaction,
+                    );
                 }
 
-                return user.update({
-                    refId: referrer.id,
-                    refStatus: referralsCountDelta > 0 ? RefStatus.Active : RefStatus.Frozen,
-                });
+                return user.update(
+                    {
+                        refId: referrer.id,
+                        refStatus: referralsCountDelta > 0 ? RefStatus.Active : RefStatus.Frozen,
+                    },
+                    { transaction },
+                );
             }
 
             return user;
@@ -172,6 +182,7 @@ class UsersRepository extends BaseRepository {
                             user.id,
                             referral.id,
                             INITIAL_REFERRAL_INCOME,
+                            transaction,
                         );
                     }),
                 );
@@ -196,7 +207,7 @@ class UsersRepository extends BaseRepository {
                 const incomeAmount = (ourProfit * referrer.refPercent) / 100;
 
                 await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction });
-                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount);
+                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount, transaction);
             });
         }
     }
