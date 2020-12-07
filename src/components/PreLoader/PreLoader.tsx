@@ -14,7 +14,7 @@ const PreLoader: React.FC = () => {
         <div className={cnPreLoader()}>
             <CircleSpinner
                
-                color="#7dc856" />
+                color="#2f83fd" />
         </div>
     )
 }

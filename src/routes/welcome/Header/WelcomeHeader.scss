@@ -32,4 +32,22 @@
 
         .Button + .Button { margin-left: 15px; }
     }
+
+    &-ButtonsAuth {
+        & span {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &-ButtonsLinkAuth {
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        text-decoration: none;
+    }
 }
