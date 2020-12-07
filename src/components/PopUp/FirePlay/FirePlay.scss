@@ -4,46 +4,54 @@
     display: flex;
     flex-direction: column;
     width: 33%;
+
     &-Header {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         display: flex;
         justify-content: space-between;
-        background: #2D3341;
+        background: #2d3341;
         padding: 25px 15px;
-        :first-child{
+
+        :first-child {
             margin-right: 10px;
         }
-        button{
+
+        button {
             background: none;
             border: none;
             padding: 0;
             margin: 0;
-            &:focus{
+
+            &:focus {
                 outline: none;
             }
         }
     }
-    &-Description{
+
+    &-Description {
         padding: 25px 15px;
         background: #242833;
-        &-Row{
+
+        &-Row {
             margin-bottom: 15px;
         }
     }
-    &-Settings{
-        background: #2D3341;
+
+    &-Settings {
+        background: #2d3341;
         display: flex;
         flex-direction: column;
         padding: 25px 15px;
     }
-    &-Parametres{
+
+    &-Parametres {
         display: flex;
         flex-direction: column;
     }
-  
-    
-    &-Footer{
+
+
+    &-Footer {
         padding: 25px 15px;
         background: #242833;
         border-bottom-left-radius: 5px;
