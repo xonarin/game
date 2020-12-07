@@ -35,10 +35,7 @@ const Referals: React.FC = () => {
                             </Text>
                         </Link>
                         <Link to="/referal">
-                            МОИ РЕФЕРАЛЫ
-                        </Link>
-                        <Link to="/referal">
-                            РЕКЛАМНЫЕ МАТЕРИАЛЫ
+                            МОИ ПРОФИЛЬ
                         </Link>
                     </nav>
                     <div className={cnReferal("Info")}>
