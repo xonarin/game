@@ -60,6 +60,7 @@
         "react-items-carousel": "^2.8.0",
         "react-loadingg": "^1.7.2",
         "react-scroll": "^1.8.1",
+        "react-spinners-kit": "^1.9.1",
         "react-spring": "^8.0.27",
         "recharts": "^1.8.5",
         "reflect-metadata": "^0.1.13",

@@ -68,7 +68,8 @@ type IconType =
     |'link'
     |'peoples'
     |'percentage'
-    |'star';
+    |'star'
+    |'edit';
 
 export interface IconProps {
     type: IconType;

@@ -1,0 +1,35 @@
+.EditbleInput {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &-Input {
+        padding-left: 15px;
+        padding-right: 35px;
+        color: white;
+        position: absolute;
+        width: calc(33%-30px);
+        border-radius: 5px;
+        border: none;
+        height: 45px;
+        background: #242833;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-Edit {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0; 
+        margin-left: calc(100%-30px);
+        height: 45px;
+        display: flex;
+        align-items: center;
+        &:focus {
+            outline: none;
+        }
+      
+    }
+}

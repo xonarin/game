@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './AllGames.scss';
@@ -8,6 +8,7 @@ import Link from '../../components/Link/Link';
 import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
 import { cn } from '../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../components/Layout/containers/Layout32ContentWithChat';
+import PopUp from '../../components/PopUp';
 
 export interface AllGamesProps {
     chatId: string;
@@ -25,6 +26,10 @@ const items = [
 ];
 
 const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
+    const [popup, setPopup] = useState(false)
+    const popUpClose = ()=>{
+        setPopup(false)
+    }
     useStyles(s);
 
     return (
@@ -39,11 +44,13 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                             <h2 className={cnAllGames('Title')}>Classic</h2>
                         </Link>
                     </div>
+
                     <div className={cnAllGames('Game')}>
                         <Link to="/mines">
                             <img src="/mines.185b60b6.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Mines</h2>
                         </Link>
+
                     </div>
                     <div className={cnAllGames('Game')}>
                         <Link to="/classic">
@@ -69,6 +76,8 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                             <h2 className={cnAllGames('Title')}>Mines</h2>
                         </Link>
                     </div>
+                    <button type='button' onClick={()=>setPopup(true)}>PopUp</button>
+                    {popup ? <PopUp close={popUpClose}/>:null}
                 </div>
             }
             bottomContent={

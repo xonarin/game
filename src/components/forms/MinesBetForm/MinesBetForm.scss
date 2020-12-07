@@ -33,7 +33,7 @@
         height: 60px;
         margin-top: 30px;
 
-        &::before { width: calc(100% - 10px); }
+        &::before { width: calc(100% - 10px) !important; }
 
         &:hover::before { transform: translate(-50%, -50%) skewX(-8deg); }
 
