@@ -11,7 +11,7 @@ import MiniProfile from './MiniProfile/MiniProfile';
 import Link from '../../Link/Link';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
 import useUnreadCountQuery from '../../../hooks/graphql/chat/useUnreadCountQuery';
-
+import PreLoader from '../../PreLoader/PreLoader';
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
 const LayoutHeader: React.FC = () => {
@@ -21,7 +21,7 @@ const LayoutHeader: React.FC = () => {
     const { unreadCount } = useUnreadCountQuery();
 
     if (loading) {
-        return <div>Loading...</div>;
+        return  <PreLoader/>
     }
 
     return (

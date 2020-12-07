@@ -9,7 +9,7 @@ import AlarmButton from '../../../Button/containers/AlarmButton/AlarmButton';
 import Link from '../../../Link/Link';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
 import logoImg from './logo.svg';
-
+import PreLoader from '../../../PreLoader/PreLoader';
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
 const LayoutHeaderMobile: React.FC = () => {
@@ -18,7 +18,9 @@ const LayoutHeaderMobile: React.FC = () => {
     const { me, loading } = useMeQuery();
 
     if (loading) {
-        return <div>Loading</div>;
+        return  <PreLoader/>
+     
+    
     }
     return (
         <header className={cnLayoutHeader()}>

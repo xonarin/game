@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 
 import s from './Layout.scss';
 import { cn } from '../../utils/bem-css-module';
@@ -8,6 +9,7 @@ import LayoutHeader from './Header/LayoutHeader';
 import Footer from '../../routes/welcome/Footer/Footer';
 import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';
+import PreLoader from '../PreLoader/PreLoader';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -16,7 +18,20 @@ export interface LayoutProps {
 const cnLayout = cn(s, 'Layout');
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+    const [isLoading, setIsLoading] = useState(true)
+    useEffect(() => {
+        if (typeof window !== 'object') {
+            setIsLoading(true)
+        }else{
+            setIsLoading(false)
+
+        }
+
+    }, [isLoading])
     useStyles(s);
+    if (isLoading) {
+        return  <PreLoader/>
+    }
 
     if (typeof window !== 'undefined' && window.screen.width < 900) {
         return (
@@ -29,7 +44,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
         );
     }
-
     return (
         <div className={cnLayout()}>
             <Sidebar />

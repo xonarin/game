@@ -10,7 +10,7 @@ import usePlaceClassicGameBetMutation from '../../../hooks/graphql/classicGame/u
 import BetField from '../../fields/BetField/BetField';
 import Button from '../../Button/Button';
 import { BetInputRef } from '../../inputs/BetInput/BetInput';
-
+import PreLoader from '../../PreLoader/PreLoader';
 export interface ClassicGameFormValues {
     amount: number;
 }
@@ -51,7 +51,7 @@ const ClassicGameForm: React.FC<ClassicGameFormProps> = ({ minBetAmount, classNa
     const { loading, me } = useMeQuery();
 
     if (loading || !me) {
-        return <div>Loading...</div>;
+        return  <PreLoader/>
     }
 
     return (

@@ -13,7 +13,7 @@ import HistoryTable from './HistoryTable/HistoryTable';
 import ClassicGame from './ClassicGame/ClassicGame';
 import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
-
+import PreLoader from '../../components/PreLoader/PreLoader';
 export interface ClassicProps {
     chatId: string;
 }
@@ -38,7 +38,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
 
     if (gameLoading || !currentClassicGame) {
-        return <div>Loading</div>;
+        return  <PreLoader/>
     }
     if (mobile) {
         return (

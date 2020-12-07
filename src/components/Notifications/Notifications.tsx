@@ -9,7 +9,7 @@ import useNotificationsQuery from '../../hooks/graphql/notifications/useNotifica
 import useDeleteNotificationMutation from '../../hooks/graphql/notifications/useDeleteNotificationMutation';
 import Text from '../Text/Text';
 import TextBlock from '../TextBlock/TextBlock';
-
+import PreLoader from '../PreLoader/PreLoader';
 const cnNotifications = cn(s, 'Notifications');
 
 const Notifications: React.FC = () => {
@@ -45,7 +45,7 @@ const Notifications: React.FC = () => {
     );
 
     if (loading || !notifications) {
-        return <div>Loading...</div>;
+        return  <PreLoader/>
     }
 
     return (

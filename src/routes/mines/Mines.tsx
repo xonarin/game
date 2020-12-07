@@ -12,7 +12,7 @@ import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/Li
 import Text from '../../components/Text/Text';
 import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
-
+import PreLoader from '../../components/PreLoader/PreLoader';
 export interface MinesProps {
     chatId: string;
 }
@@ -47,7 +47,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
     }, [activeMinesGame]);
 
     if (gameLoading || configurationLoading || !minesGameConfiguration) {
-        return <div>Loading...</div>;
+        return  <PreLoader/>
     }
 
     const { fieldSize, minBombsCount, coefs } = minesGameConfiguration;
