@@ -14,6 +14,7 @@ import Icon from '../../components/Icon/Icon';
 import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
 import PreLoader from '../../components/PreLoader/PreLoader';
+import PopUp from '../../components/PopUp';
 export interface MinesProps {
     chatId: string;
 }
@@ -29,7 +30,7 @@ const items = [
     { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
 ];
 
-const Mines: React.FC<MinesProps> = ({ chatId }) => {
+    const Mines: React.FC<MinesProps> = ({ chatId }) => {
     useStyles(s);
 
     const { loading: gameLoading, activeMinesGame } = useActiveMinesGameQuery();
@@ -46,7 +47,10 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
     useEffect(() => {
         setDirty(false);
     }, [activeMinesGame]);
-
+    const [popup, setPopup] = useState(false)
+    const popUpClose = ()=>{
+        setPopup(false)
+    }
     if (gameLoading || configurationLoading || !minesGameConfiguration) {
         return  <PreLoader/>
     }
@@ -67,7 +71,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                             Ставка
                         </Text>
                     }
-                    rightHead={<Icon type="guard" />}
+                    rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={()=>setPopup(true)}><Icon type="guard" /></button>}
                 >
                     <MinesBetForm
                         fieldSize={fieldSize}
@@ -76,6 +80,8 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
+                    {popup ? <PopUp close={popUpClose}/>:null}
+
                 </Panel>
             }
             rightContent={

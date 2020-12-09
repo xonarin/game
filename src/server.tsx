@@ -72,7 +72,7 @@ app.use(bodyParser.json());
 //
 // Enable rate-limit
 // -----------------------------------------------------------------------------
-app.use(rateLimiterMiddleware());
+// app.use(rateLimiterMiddleware());
 
 //
 // Authentication

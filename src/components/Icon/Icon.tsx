@@ -69,7 +69,10 @@ type IconType =
     |'peoples'
     |'percentage'
     |'star'
-    |'edit';
+    |'edit'
+    |'rightWhite'
+    |'qiwi'
+    |'ruble';
 
 export interface IconProps {
     type: IconType;
