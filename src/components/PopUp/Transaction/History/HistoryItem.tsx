@@ -28,7 +28,7 @@ function HistoryItem() {
                 </div>
             </div>
             {toggle ? <div className={cnHistory("Description")}>
-                <Text color='white'>Transaction amount : 50<Icon type='ruble'/></Text>
+                <Text color='white'>Transaction amount : 50<Icon type='rubleWhite' size='xs'/></Text>
                 <Text color='white'>Transaction date : 20.14.2568</Text>
             </div>:null}
             

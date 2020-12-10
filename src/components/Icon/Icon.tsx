@@ -72,13 +72,16 @@ type IconType =
     |'edit'
     |'rightWhite'
     |'qiwi'
-    |'ruble';
+    |'ruble'
+    |'rubleWhite'
+    |'add'
+    |'minus'
+    |'clock';
 
 export interface IconProps {
     type: IconType;
     hover?: IconType | boolean;
     size?: IconSize;
-
     className?: string;
 }
 

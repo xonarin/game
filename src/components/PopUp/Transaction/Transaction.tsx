@@ -21,19 +21,19 @@ const Transaction: React.FC<TransactionProps> = ({ close }) => {
             <div className={cnDeposit('Header')}>
                 <div className={cnDeposit('Types')}>
                     <button className={selectedType === 'deposit' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('deposit')}>
-                        <Icon type='automat' />
+                        <Icon type='add' />
                         <Text>
                             Пополнение
                         </Text>
                     </button>
                     <button className={selectedType === 'withdraw' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('withdraw')}>
-                        <Icon type='automat' />
+                        <Icon type='minus' />
                         <Text>
                             Вывод
                         </Text>
                     </button>
                     <button className={selectedType === 'history' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('history')}>
-                        <Icon type='automat' />
+                        <Icon type='clock' />
                         <Text>
                             История
                         </Text>

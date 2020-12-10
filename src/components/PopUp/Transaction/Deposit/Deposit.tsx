@@ -6,7 +6,13 @@ import Text from '../../../Text/Text';
 import Icon from '../../../Icon/Icon';
 import InputWithIcon from '../../../InputWithIcon/InputWithIcon';
 import OptionSelector from '../../../OptionSelector/OptionSelector';
-
+import qiwi from '../../../../assets/img/qiwi.png'
+import visa from '../../../../assets/img/visa.png'
+import yandex from '../../../../assets/img/yandex.png'
+import mobile from '../../../../assets/img/mobile.png'
+import payeer from '../../../../assets/img/payeer.png'
+import pm from '../../../../assets/img/pm.png'
+import piasterix from '../../../../assets/img/piasterix.png'
 const cnDeposit = cn(s, 'Deposit');
 
 function Deposit() {
@@ -27,7 +33,7 @@ function Deposit() {
 
                 <button type='button' className={selectedMethod === 'qiwi' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("qiwi")} >
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='qiwi'/>
+                        <img src={qiwi} />
                     </div>
                     <Text color='white'>
                         Qiwi
@@ -35,7 +41,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'card' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("card")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={visa} />
                     </div>
                     <Text color='white'>
                         Банк. Карта
@@ -43,7 +49,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'yandex' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("yandex")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={yandex} />
                     </div>
                     <Text color='white'>
                         Яндекс Деньги
@@ -51,7 +57,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'mobile' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("mobile")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={mobile} />
                     </div>
                     <Text color='white'>
                         Моб. платеж
@@ -59,7 +65,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'payeer' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("payeer")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={payeer} />
                     </div>
                     <Text color='white'>
                         Payeer
@@ -67,7 +73,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'perfect' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("perfect")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={pm} />
                     </div>
                     <Text color='white'>
                         Perfect Money
@@ -75,7 +81,7 @@ function Deposit() {
                 </button>
                 <button type='button' className={selectedMethod === 'peasterix' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("peasterix")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                    <img src={piasterix} />
                     </div>
                     <Text color='white'>
                         Piastrix
@@ -86,8 +92,8 @@ function Deposit() {
                 {selectedMethod === 'qiwi' ?
                     <>
                         <div>
-                            <InputWithIcon title=" Номер кошелька" icon='qiwi'/>
-                            <InputWithIcon title=" Сумма пополнения" fixedAmounts icon='ruble'/>
+                            <InputWithIcon title=" Номер кошелька" icon={qiwi} type='qiwi'/>
+                            <InputWithIcon title=" Сумма пополнения" fixedAmounts/>
                             <div className={cnDeposit('Go-To-Payment')}>
                                 Перейти к оплате
                 </div>
@@ -95,7 +101,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 250 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 250 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -116,7 +122,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 100 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 100 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -131,7 +137,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 100 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 100 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -146,7 +152,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 15 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 15 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -160,7 +166,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 500 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 500 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -174,7 +180,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 100 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 100 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}
@@ -188,7 +194,7 @@ function Deposit() {
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
-                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='automat' size='xs' /> − 100 000<Icon type='automat' size='xs' /></Text>
+                                Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='rubleWhite' size='xs' /> − 100 000<Icon type='rubleWhite' size='xs' /></Text>
                             </Text>
                         </div>
                     </> : null}

@@ -7,7 +7,13 @@ import Icon from '../../../Icon/Icon';
 import InputWithIcon from '../../../InputWithIcon/InputWithIcon';
 import OptionSelector from '../../../OptionSelector/OptionSelector';
 import PercentBlock from '../../../PercentBlock/PercentBlock';
-
+import qiwi from '../../../../assets/img/qiwi.png'
+import visa from '../../../../assets/img/visa.png'
+import yandex from '../../../../assets/img/yandex.png'
+import mobile from '../../../../assets/img/mobile.png'
+import payeer from '../../../../assets/img/payeer.png'
+import pm from '../../../../assets/img/pm.png'
+import piasterix from '../../../../assets/img/piasterix.png'
 const cnDeposit = cn(s, 'Deposit');
 
 function Withdraw() {
@@ -28,7 +34,7 @@ function Withdraw() {
 
                 <button type='button' className={selectedMethod === 'qiwi' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("qiwi")} >
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={qiwi}/>
                     </div>
                     <Text color='white'>
                         Qiwi
@@ -36,7 +42,7 @@ function Withdraw() {
                 </button>
                 <button type='button' className={selectedMethod === 'card' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("card")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={visa}/>
                     </div>
                     <Text color='white'>
                         Банк. Карта
@@ -44,7 +50,7 @@ function Withdraw() {
                 </button>
                 <button type='button' className={selectedMethod === 'cardUa' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("cardUa")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={visa}/>
                     </div>
                     <Text color='white'>
                     Банк. Карта (UA)
@@ -52,7 +58,7 @@ function Withdraw() {
                 </button>
                 <button type='button' className={selectedMethod === 'yandex' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("yandex")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={yandex}/>
                     </div>
                     <Text color='white'>
                         Яндекс Деньги
@@ -60,7 +66,7 @@ function Withdraw() {
                 </button>
                 <button type='button' className={selectedMethod === 'mobile' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("mobile")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={mobile}/>
                     </div>
                     <Text color='white'>
                         Моб. платеж
@@ -68,7 +74,7 @@ function Withdraw() {
                 </button>
                 <button type='button' className={selectedMethod === 'payeer' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("payeer")}>
                     <div className={cnDeposit("Method-Icon")}>
-                        <Icon type='balance' />
+                        <img src={payeer}/>
                     </div>
                     <Text color='white'>
                         Payeer
@@ -80,7 +86,7 @@ function Withdraw() {
             {selectedMethod === 'qiwi' ?
                 <>
                     <div>
-                        <InputWithIcon title=" Номер кошелька" />
+                        <InputWithIcon title=" Номер кошелька" icon={qiwi}/>
                         <PercentBlock />
                         <div className={cnDeposit('Go-To-Payment')}>
                             Заказать вывод
@@ -89,7 +95,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 15 750<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -97,7 +103,7 @@ function Withdraw() {
                 <>
                     <div>
 
-                        <InputWithIcon title=" Номер банковской карты"  type='card'/>
+                        <InputWithIcon title=" Номер банковской карты"  type='card' icon={visa}/>
                         <PercentBlock />
 
                         <div className={cnDeposit('Go-To-Payment')}>
@@ -107,7 +113,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 52 500<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 52 500<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -115,7 +121,7 @@ function Withdraw() {
                 <>
                     <div>
 
-                        <InputWithIcon title=" Номер банковской карты" type='card' />
+                        <InputWithIcon title=" Номер банковской карты" type='card' icon={visa}/>
                         <PercentBlock />
 
                         <div className={cnDeposit('Warning-Card')}>
@@ -130,14 +136,14 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 52 500<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 52 500<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
             {selectedMethod === 'yandex' ?
                 <>
                     <div>
-                        <InputWithIcon title=" Сумма пополнения"   type='yandex'/>
+                        <InputWithIcon title=" Сумма пополнения"   type='yandex' icon={visa}/>
                         <PercentBlock />
                         <div className={cnDeposit('Go-To-Payment')}>
                             Заказать вывод
@@ -145,7 +151,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 15 750<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -153,7 +159,7 @@ function Withdraw() {
                 <>
                     <div>
                         <OptionSelector type='mobile' />
-                        <InputWithIcon title=" Номер телефона"  />
+                        <InputWithIcon title=" Номер телефона" icon={mobile} type='mobile'/>
                         <PercentBlock />
                         <div className={cnDeposit('Go-To-Payment')}>
                             Заказать вывод
@@ -161,14 +167,14 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 15 750<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
                 {selectedMethod === 'payeer' ?
                 <>
                     <div>
-                        <InputWithIcon title=" Сумма пополнения"   />
+                        <InputWithIcon title=" Сумма пополнения" icon={payeer} />
                         <PercentBlock />
                         <div className={cnDeposit('Go-To-Payment')}>
                             Заказать вывод
@@ -176,7 +182,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='automat' size='xs' /> − 15 750<Icon type='automat' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
