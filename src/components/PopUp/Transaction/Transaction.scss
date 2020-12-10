@@ -11,7 +11,7 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         background: #2d3341;
-        padding: 25px 15px;
+        padding: 15px 15px;
     }
 
     &-Close {
@@ -46,6 +46,11 @@
         }
 
         &:hover {
+            i{
+                fill: white;
+                color: white;
+                stroke: white;
+            }
             background: #4986f5;
 
             span {
@@ -119,6 +124,10 @@
         }
 
         &-Icon {
+            img{
+                width: 22px;
+                height: 22px;
+            }
             width: 32px;
             height: 32px;
             background: hsla(0, 0%, 100%, .08);

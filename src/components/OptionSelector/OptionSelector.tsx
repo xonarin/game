@@ -4,6 +4,10 @@ import { cn } from '../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';
+import mts from '../../assets/img/mts.png'
+import megafon from '../../assets/img/megafon.png'
+import beeline from '../../assets/img/beeline.png'
+import tele2 from '../../assets/img/tele2.png'
 type SelectorType = 
     |'mobile'
     |'wallet'
@@ -28,25 +32,25 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({ type }) => {
             </div>
             <div className={cnOptionSelector('Options')}>
                 {type === 'mobile' ? <> <button type='button' className={selectedOption === 'mts' ? cnOptionSelector('Option-Active') : cnOptionSelector('Option')} onClick={() => setSelectedOption('mts')}>
-                    <Icon type='automat' />
+                    <img src={mts}/>
                     <Text>
                         MTS
                     </Text>
                 </button>
                     <button type='button' className={selectedOption === 'megafon' ? cnOptionSelector('Option-Active') : cnOptionSelector('Option')} onClick={() => setSelectedOption('megafon')}>
-                        <Icon type='automat' />
+                        <img src={megafon}/>
                         <Text>
                             Megafon
                     </Text>
                     </button>
                     <button type='button' className={selectedOption === 'beeline' ? cnOptionSelector('Option-Active') : cnOptionSelector('Option')} onClick={() => setSelectedOption('beeline')}>
-                        <Icon type='automat' />
+                        <img src={beeline}/>
                         <Text>
                             Beeline
                     </Text>
                     </button>
                     <button type='button' className={selectedOption === 'tele2' ? cnOptionSelector('Option-Active') : cnOptionSelector('Option')} onClick={() => setSelectedOption('tele2')}>
-                        <Icon type='automat' />
+                        <img src={tele2}/>
                         <Text>
                             Tele2
                     </Text>

@@ -41,6 +41,10 @@
         line-height: $line-height-m;
         font-weight: 400;
         color: $color-white;
+        img{
+            height: 17px;
+            width: 17px;
+        }
         :first-child{
             margin-right: 7px;
         }
@@ -73,6 +77,10 @@
         }
         &:focus{
             outline: none;
+        }
+        img{
+            height: 17px;
+            width: 17px;
         }
     }
 }

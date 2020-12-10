@@ -32,6 +32,10 @@
         margin-top: 15px;
 
         &-Icon {
+            img{
+                height: 22px;
+                width: 22px;
+            }
             position: absolute;
             display: flex;
             align-items: center;
