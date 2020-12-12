@@ -20,6 +20,7 @@ type IconType =
     | 'ingotsCut'
     | 'playRedCut'
     | 'guard'
+    | 'guardTwo'
     | 'diamond'
     | 'sword'
     | 'dice'

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import s from './Sidebar.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import NavigationItem from './NavigationItem/HeaderNavigationItem';
 
+import { cn } from '../../../../utils/bem-css-module';
+import NavigationItem from '../../Mobile/Sidebar/NavigationItem/HeaderNavigationItem';
+import s from './Sidebar.scss';
 const cnSidebar = cn(s, 'Sidebar');
 
 const SidebarMobile: React.FC = () => {
@@ -15,12 +15,13 @@ const SidebarMobile: React.FC = () => {
     return (
         <aside className={cnSidebar()}>
             {allToggle ? (
-                <div className={cnSidebar('Row')}>
-                    <NavigationItem to="/battle" icon="sword" iconHover="swordWhite" />
-                    <NavigationItem to="/" icon="dice" iconHover="diceWhite" />
-                    <NavigationItem icon="scissors" iconHover="scissorsWhite" />
-                    <NavigationItem to="/" icon="cards" iconHover="cardsWhite" />
-                    <NavigationItem to="/" icon="cards" iconHover="cardsWhite" />
+                <div className={cnSidebar('Burger')}>
+                    <NavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
+                    <NavigationItem to="/referal" text="Рефералы" icon="gamepad" iconHover="gamepadWhite" />
+                    <NavigationItem to="/profile" text="Профиль" icon="user" iconHover="user" />
+                    <NavigationItem to="/fair-play" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
+                    <NavigationItem to="/fag" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
+                    <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
                 </div>
             ) : null}
             <div className={cnSidebar('Row')}>
@@ -36,7 +37,7 @@ const SidebarMobile: React.FC = () => {
                 >
                     <NavigationItem
                         icon={allToggle ? 'close' : 'plusWhite'}
-                        iconHover={allToggle ? 'plusWhite' : 'scissorsWhite'}
+                        iconHover={allToggle ? 'plusWhite' : 'plusWhite'}
                     />
                 </button>
                 <div>

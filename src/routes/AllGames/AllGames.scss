@@ -2,7 +2,6 @@
 .AllGames {
     &-Row {
         display: flex;
-        justify-content: space-between;
         margin-bottom: 30px;
         flex-wrap: wrap;
     }
@@ -41,10 +40,6 @@
     }
 
     @media only screen and (min-width: 1400px) {
-        &-Row {
-            justify-content: flex-start
-        }
-
         &-Game {
             flex: 0 0 25%;   
         }

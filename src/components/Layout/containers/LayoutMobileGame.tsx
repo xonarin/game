@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import s from './LayoutMobile.scss';
+import s from './LayoutMobileGame.scss';
 import { cn } from '../../../utils/bem-css-module';
 import Layout from '../Layout';
 import MiddleGame from '../MiddleGame/MiddleGame';

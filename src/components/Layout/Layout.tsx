@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         return  <PreLoader/>
     }
 
-    if (typeof window !== 'undefined' && window.screen.width < 900) {
+    if (typeof window !== 'undefined' && window.screen.width < 992) {
         return (
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>

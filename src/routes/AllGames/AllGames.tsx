@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './AllGames.scss';
@@ -8,9 +8,12 @@ import Link from '../../components/Link/Link';
 import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
 import { cn } from '../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../components/Layout/containers/Layout32ContentWithChat';
+import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
+import AllGamesMobile from './Mobile/AllGames';
 
 
 export interface AllGamesProps {
+    title: string,
     chatId: string;
 }
 
@@ -25,10 +28,27 @@ const items = [
     { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
 ];
 
-const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
-   
+const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
+    const [mobile, setMobile] = useState(false);
+    useIsomorphicLayoutEffect(() => {
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.document !== 'undefined' &&
+            typeof window.document.createElement !== 'undefined' &&
+            window.screen.width < 992
+        ) {
+            setMobile(true);
+        }
+    }, [typeof window !== 'undefined' && window?.screen?.width]);
+
     useStyles(s);
 
+    if (mobile) {
+        return (
+                <AllGamesMobile />
+            
+        );
+    }
     return (
         <Layout32ContentWithChat
             chatId={chatId}

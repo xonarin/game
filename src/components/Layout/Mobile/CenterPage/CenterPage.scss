@@ -1,0 +1,77 @@
+@import '../../../../assets/styles/vars';
+@import '../../../../assets/styles/mixins';
+
+.CenterPage {
+    position: relative;
+
+    &-Head {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 340px;
+        height: 80px;
+        top: -5px;
+        left: 50%;
+        border-radius: 5px;
+        transform: translate(-50%, -50%);
+        z-index: 9;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 290px;
+            height: 100%;
+            top: 0;
+            border-radius: 8px;
+            background: grad($grad-blue);
+            z-index: 0;
+        }
+
+        &::before {
+            transform: skewX(-17deg);
+            left: 12px;
+        }
+
+        &::after {
+            transform: skewX(17deg);
+            left: 38px;
+        }
+    }
+
+    & &-Title {
+        position: relative;
+        text-transform: uppercase;
+        z-index: 1;
+    }
+
+    &-Content {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        padding: 70px 30px 20px;
+        background-color: lighten($color-bg, 3%);
+        overflow: hidden;
+    }
+
+    @include mq(max-width 1279px) {
+        &-Head {
+            width: 260px;
+            height: 60px;
+            top: 25px;
+
+            &::before,
+            &::after { width: 210px; }
+        }
+
+        & &-Title .Text { font-size: 20px; }
+    }
+
+    @include mq(max-width 756px ) {
+        &-Content {
+            padding: 10px;
+        }
+    }
+}

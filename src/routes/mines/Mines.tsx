@@ -80,7 +80,7 @@ const items = [
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
-                    {popup ? <PopUp close={popUpClose}/>:null}
+                    {popup ? <PopUp type="firePlay" close={popUpClose}/>:null}
 
                 </Panel>
             }

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Faq.scss';
 import { cn } from '../../utils/bem-css-module';
 import Layout33Content from '../../components/Layout/containers/Layout33Content';
+import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import FaqTheme from './FaqTheme';
+import FaqMobile from './Mobile/Faq';
+
+export interface FaqProps {
+    title: string;
+}
 
 const themes = [
     {
@@ -45,11 +51,30 @@ const themes = [
 ];
 const cnFaq = cn(s, 'Faq');
 
-const Faq: React.FC = () => {
+const Faq: React.FC<FaqProps> = ({ title }) => {
+    const [mobile, setMobile] = useState(false);
+    useIsomorphicLayoutEffect(() => {
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.document !== 'undefined' &&
+            typeof window.document.createElement !== 'undefined' &&
+            window.screen.width < 992
+        ) {
+            setMobile(true);
+        }
+    }, [typeof window !== 'undefined' && window?.screen?.width]);
+
     useStyles(s);
 
+    if (mobile) {
+        return (
+                <FaqMobile />
+            
+        );
+    }
     return (
         <Layout33Content
+        title="Помощь"
             centerContent={
                 <div className={cnFaq('list')}>
                     <h4 className={cnFaq('title')}>Playtime.bet - ПОДРОБНЕЕ О ПРОЕКТЕ!</h4>
