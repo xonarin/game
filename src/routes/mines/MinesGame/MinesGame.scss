@@ -56,8 +56,9 @@
             bottom: 20px;
             transform: none;
         }
+
         @include mq(max-width 900px) {
-           display: none;
+            display: none;
         }
     }
 }

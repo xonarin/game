@@ -68,6 +68,7 @@
 
         & &-Title .Text { font-size: 20px; }
     }
+
     @include mq(max-width 900px) {
         &-Head {
             width: 260px;
