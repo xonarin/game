@@ -9,7 +9,7 @@ import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import PolarWave from '../../../components/PolarWave/PolarWave';
 import ClassicGameCanvas from './ClassicGameCanvas/ClassicGameCanvas';
 import ClassicGameDigits from './ClassicGameDigits/ClassicGameDigits';
-import ClassicGameForm from '../../../components/forms/ClassicGameForm/ClassicGameForm';
+import ClassicGameForm from '../../../components/forms/Web/ClassicGameForm/ClassicGameForm';
 import ClassicGameWinner from './ClassicGameWinner/ClassicGameWinner';
 import ClassicGameFund from './ClassicGameFund/ClassicGameFund';
 import ClassicGameLight from './ClassicGameLight/ClassicGameLight';

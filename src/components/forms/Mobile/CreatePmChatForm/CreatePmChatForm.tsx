@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
 
-import history from '../../../history';
-import MessageField from '../../fields/MessageField/MessageField';
-import useCreatePmChatMutation from '../../../hooks/graphql/chat/useCreatePmChatMutation';
+import history from '../../../../history';
+import useCreatePmChatMutation from '../../../../hooks/graphql/chat/useCreatePmChatMutation';
+import MessageField from '../../../fields/MessageField/MessageField';
 
 export interface CreatePmChatValues {
     message: string;

@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
 
-import { MessageFragment } from '../../../__generated__/graphql';
-import MessageField from '../../fields/MessageField/MessageField';
-import useSendMessageMutation from '../../../hooks/graphql/chat/useSendMessageMutation';
+import { MessageFragment } from '../../../../__generated__/graphql';
+import MessageField from '../../../fields/MessageField/MessageField';
+import useSendMessageMutation from '../../../../hooks/graphql/chat/useSendMessageMutation';
 
 export interface ChatMessageFormValues {
     message: string;

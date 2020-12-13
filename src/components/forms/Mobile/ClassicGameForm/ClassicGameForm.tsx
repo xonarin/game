@@ -4,13 +4,13 @@ import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
 
 import s from './ClassicGameForm.scss';
-import { cn } from '../../../utils/bem-css-module';
-import useMeQuery from '../../../hooks/graphql/users/useMeQuery';
-import usePlaceClassicGameBetMutation from '../../../hooks/graphql/classicGame/usePlaceClassicGameBetMutation';
-import BetField from '../../fields/BetField/BetField';
-import Button from '../../Button/Button';
-import { BetInputRef } from '../../inputs/BetInput/BetInput';
-import PreLoader from '../../PreLoader/PreLoader';
+import { cn } from '../../../../utils/bem-css-module';
+import useMeQuery from '../../../../hooks/graphql/users/useMeQuery';
+import usePlaceClassicGameBetMutation from '../../../../hooks/graphql/classicGame/usePlaceClassicGameBetMutation';
+import BetField from '../../../fields/BetField/BetField';
+import Button from '../../../Button/Button';
+import { BetInputRef } from '../../../inputs/BetInput/BetInput';
+import PreLoader from '../../../PreLoader/PreLoader';
 export interface ClassicGameFormValues {
     amount: number;
 }

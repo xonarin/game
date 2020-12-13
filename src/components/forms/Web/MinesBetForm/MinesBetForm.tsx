@@ -4,15 +4,15 @@ import { Form } from 'react-final-form';
 import { Decorator } from 'final-form';
 
 import s from './MinesBetForm.scss';
-import { cn } from '../../../utils/bem-css-module';
-import { countOnes } from '../../../utils/number';
-import { MinesGameFragment, MinesGameStatus } from '../../../__generated__/graphql';
-import Text from '../../Text/Text';
-import Button from '../../Button/Button';
-import ExtendedBetField from '../../fields/ExtendedBetField/ExtendedBetField';
-import CountField from '../../fields/CountField/CountField';
-import useStartMinesGameMutation from '../../../hooks/graphql/minesGame/useStartMinesGameMutation';
-import useEndMinesGameMutation from '../../../hooks/graphql/minesGame/useEndMinesGameMutation';
+import { cn } from '../../../../utils/bem-css-module';
+import { countOnes } from '../../../../utils/number';
+import { MinesGameFragment, MinesGameStatus } from '../../../../__generated__/graphql';
+import Text from '../../../Text/Text';
+import Button from '../../../Button/Button';
+import ExtendedBetField from '../../../fields/ExtendedBetField/ExtendedBetField';
+import CountField from '../../../fields/CountField/CountField';
+import useStartMinesGameMutation from '../../../../hooks/graphql/minesGame/useStartMinesGameMutation';
+import useEndMinesGameMutation from '../../../../hooks/graphql/minesGame/useEndMinesGameMutation';
 
 export interface MinesBetFormValues {
     betAmount: number;

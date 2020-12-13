@@ -1,0 +1,31 @@
+@import '../../../../../../assets/styles/vars';
+@import '../../../../../../assets/styles/mixins';
+
+.HitsItem {
+    position: relative;
+    width: 20%;
+    border: 1px solid lighten($color-bg, 11%);
+    border-radius: 6px;
+    padding: 4px 7px;
+    background-color: lighten($color-bg, 6%);
+    overflow: hidden;
+    transition: border-color 0.3s $nice-ease, background-color 0.3s $nice-ease;
+
+    & &-Coef,
+    & &-Hit {
+        display: block;
+        transform: color 0.3s $nice-ease;
+    }
+
+    &_isCurrent {
+        border-color: $color-blue;
+        background-color: $color-blue;
+
+        & .HitsItem-Coef,
+        & .HitsItem-Hit { color: $color-white; }
+    }
+
+    @include mq(max-width 1279px) {
+        width: 30%;
+    }
+}

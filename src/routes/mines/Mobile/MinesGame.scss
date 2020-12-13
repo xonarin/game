@@ -1,0 +1,64 @@
+@import '../../../assets/styles/vars';
+@import '../../../assets/styles/mixins';
+
+.MinesGame {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% + 60px);
+    height: calc(100% + 90px);
+    margin: -70px -30px -20px;
+
+    &-Main {
+        position: relative;
+        flex: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 0;
+        border: 1px solid lighten($color-bg, 10%);
+        border-radius: 12px;
+        margin: 25px 20px;
+    }
+
+    &-Field {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-gap: 6px;
+        width: 374px;
+        height: 374px;
+        z-index: 2;
+
+        @include mq(max-width 1600px) {
+            grid-gap: 5px;
+            width: 310px;
+            height: 310px;
+        }
+
+        @include mq(max-width 1279px) {
+            width: 280px;
+            height: 280px;
+        }
+    }
+
+    &-Counters {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 1;
+
+        @include mq(max-width 1279px) {
+            top: unset;
+            bottom: 20px;
+            transform: none;
+        }
+
+        @include mq(max-width 900px) {
+            display: none;
+        }
+    }
+}
