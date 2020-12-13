@@ -142,7 +142,11 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
+<<<<<<< HEAD
                     {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
+=======
+                    {popup ? <PopUp type="firePlay" close={popUpClose}/>:null}
+>>>>>>> afaa3b529d095dbad0a9eea3376fceb77a1c50c5
 
                 </Panel>
             }

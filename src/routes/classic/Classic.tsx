@@ -11,7 +11,7 @@ import Icon from '../../components/Icon/Icon';
 import BetsTable from './BetsTable/BetsTable';
 import HistoryTable from './HistoryTable/HistoryTable';
 import ClassicGame from './ClassicGame/ClassicGame';
-import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
+import LayoutMobileGame from '../../components/Layout/containers/LayoutMobileGame';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import PreLoader from '../../components/PreLoader/PreLoader';
 import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
@@ -39,7 +39,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
             typeof window !== 'undefined' &&
             typeof window.document !== 'undefined' &&
             typeof window.document.createElement !== 'undefined' &&
-            window.screen.width < 900
+            window.screen.width < 992
         ) {
             setMobile(true);
         }
@@ -54,7 +54,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
     }
     if (mobile) {
         return (
-            <LayoutMobile
+            <LayoutMobileGame
                 title="Classic"
                 Content={<ClassicGame game={currentClassicGame} />}
                 bottomContent={

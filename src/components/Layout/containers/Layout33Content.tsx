@@ -4,7 +4,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './Layout33Content.scss';
 import { cn } from '../../../utils/bem-css-module';
 import Layout from '../Layout';
-import MiddleGame from '../MiddleGame/MiddleGame';
+import CenterPage from '../Mobile/CenterPage/CenterPage';
 
 export interface Layout33ContentProps {
     centerContent: React.ReactNode;
@@ -18,7 +18,7 @@ const Layout33Content: React.FC<Layout33ContentProps> = ({ centerContent }) => {
     return (
         <Layout>
             <div className={cnLayout33Content('Top')}>
-                <MiddleGame className={cnLayout33Content('RightContent')}>{centerContent}</MiddleGame>
+                <CenterPage className={cnLayout33Content('RightContent')}>{centerContent}</CenterPage>
             </div>
         </Layout>
     );
