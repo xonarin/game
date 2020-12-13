@@ -15,9 +15,9 @@ import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
 import PreLoader from '../../components/PreLoader/PreLoader';
 import PopUp from '../../components/PopUp';
-import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import LiveFeedTable from '../../components/LiveFeedTable/LiveFeedTable';
+import LayoutMobile from '../../components/Layout/containers/LayoutMobileGame';
 export interface MinesProps {
     chatId: string;
 }
@@ -142,11 +142,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
-<<<<<<< HEAD
                     {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
-=======
-                    {popup ? <PopUp type="firePlay" close={popUpClose}/>:null}
->>>>>>> afaa3b529d095dbad0a9eea3376fceb77a1c50c5
 
                 </Panel>
             }

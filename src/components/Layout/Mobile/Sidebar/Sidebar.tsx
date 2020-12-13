@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { cn } from '../../../../utils/bem-css-module';
+import NavigationItem from '../../Mobile/Sidebar/NavigationItem/HeaderNavigationItem';
+import s from './Sidebar.scss';
 
-
-<<<<<<< HEAD
 export interface SidebarMobileProps{
     open:Function
 }
 
-=======
-import { cn } from '../../../../utils/bem-css-module';
-import NavigationItem from '../../Mobile/Sidebar/NavigationItem/HeaderNavigationItem';
-import s from './Sidebar.scss';
->>>>>>> afaa3b529d095dbad0a9eea3376fceb77a1c50c5
 const cnSidebar = cn(s, 'Sidebar');
 
 const SidebarMobile: React.FC<SidebarMobileProps> = ({open}) => {
