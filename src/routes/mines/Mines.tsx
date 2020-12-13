@@ -8,13 +8,16 @@ import useActiveMinesGameQuery from '../../hooks/graphql/minesGame/useActiveMine
 import useMinesGameConfigurationQuery from '../../hooks/graphql/minesGame/useMinesGameConfigurationQuery';
 import Layout31WithChat from '../../components/Layout/containers/Layout31WithChat';
 import Panel from '../../components/Panel/Panel';
-import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
+import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
 import Text from '../../components/Text/Text';
 import Icon from '../../components/Icon/Icon';
 import MinesGame from './MinesGame/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/MinesBetForm/MinesBetForm';
 import PreLoader from '../../components/PreLoader/PreLoader';
 import PopUp from '../../components/PopUp';
+import LayoutMobile from '../../components/Layout/containers/LayoutMobile';
+import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
+import LiveFeedTable from '../../components/LiveFeedTable/LiveFeedTable';
 export interface MinesProps {
     chatId: string;
 }
@@ -30,7 +33,7 @@ const items = [
     { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
 ];
 
-    const Mines: React.FC<MinesProps> = ({ chatId }) => {
+const Mines: React.FC<MinesProps> = ({ chatId }) => {
     useStyles(s);
 
     const { loading: gameLoading, activeMinesGame } = useActiveMinesGameQuery();
@@ -40,6 +43,17 @@ const items = [
     const [formBombsCount, setFormBombsCount] = useState(
         activeMinesGame?.bombsCount || minesGameConfiguration?.minBombsCount || BOMBS_COUNT_BREAKPOINTS[0],
     );
+    useIsomorphicLayoutEffect(() => {
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.document !== 'undefined' &&
+            typeof window.document.createElement !== 'undefined' &&
+            window.screen.width < 900
+        ) {
+            setMobile(true);
+        }
+    }, [typeof window !== 'undefined' && window?.screen?.width]);
+
 
     useEffect(() => {
         setDirty(true);
@@ -48,17 +62,65 @@ const items = [
         setDirty(false);
     }, [activeMinesGame]);
     const [popup, setPopup] = useState(false)
-    const popUpClose = ()=>{
+    const [mobile, setMobile] = useState(false);
+    const popUpClose = () => {
         setPopup(false)
     }
     if (gameLoading || configurationLoading || !minesGameConfiguration) {
-        return  <PreLoader/>
+        return <PreLoader />
     }
 
     const { fieldSize, minBombsCount, coefs } = minesGameConfiguration;
     const actuallyActiveMinesGame =
         !isDirty || !activeMinesGame || activeMinesGame.status !== MinesGameStatus.Ended ? activeMinesGame : null;
 
+
+    if (mobile) {
+        return (
+            <LayoutMobile
+                title="Mines"
+                Content={<MinesGame
+                    fieldSize={fieldSize}
+                    minBombsCount={minBombsCount}
+                    coefs={coefs}
+                    formBombsCount={formBombsCount}
+                    activeMinesGame={actuallyActiveMinesGame}
+                />}
+                bottomContent={
+                    <Panel
+                        className={cnMines('BetFormPanel')}
+                        leftHead={
+                            <Text className={cnMines('BetFormTitle')} font="Rubik" size="l" color="white" upper>
+                                Ставка
+                        </Text>
+                        }
+                        rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={() => setPopup(true)}><Icon type="guard" /></button>}
+                    >
+                        <MinesBetForm
+                            fieldSize={fieldSize}
+                            minBombsCount={minBombsCount}
+                            coefs={coefs}
+                            activeMinesGame={actuallyActiveMinesGame}
+                            onChangeBombsCount={setFormBombsCount}
+                        />
+                        {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
+
+                    </Panel>
+                }
+                historyContent={
+                    <Panel
+                        leftHead={
+                            <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>
+                                Последние игры
+                            </Text>
+                        }
+                    >
+                        <LiveFeedTableMobile items={items} />
+                    </Panel>
+                }
+            />
+        );
+    }
     return (
         <Layout31WithChat
             chatId={chatId}
@@ -71,7 +133,7 @@ const items = [
                             Ставка
                         </Text>
                     }
-                    rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={()=>setPopup(true)}><Icon type="guard" /></button>}
+                    rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={() => setPopup(true)}><Icon type="guard" /></button>}
                 >
                     <MinesBetForm
                         fieldSize={fieldSize}
@@ -80,7 +142,7 @@ const items = [
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
-                    {popup ? <PopUp close={popUpClose}/>:null}
+                    {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
 
                 </Panel>
             }

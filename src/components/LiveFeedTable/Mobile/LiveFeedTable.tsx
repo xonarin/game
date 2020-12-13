@@ -2,13 +2,13 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './LiveFeedTable.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import Column from '../../../../components/Table/Column/Column';
-import SafeTable from '../../../../components/Table/containers/SafeTable';
-import Text from '../../../../components/Text/Text';
-import Icon, { IconProps } from '../../../../components/Icon/Icon';
-import ChanceBadge from '../../../../components/Badge/containers/ChanceBadge';
-import TextIcon from '../../../../components/TextIcon/TextIcon';
+import { cn } from '../../../utils/bem-css-module';
+import Column from '../../Table/Column/Column';
+import SafeTable from '../../Table/containers/SafeTable';
+import Text from '../../Text/Text';
+import Icon, { IconProps } from '../../Icon/Icon';
+import ChanceBadge from '../../Badge/containers/ChanceBadge';
+import TextIcon from '../../TextIcon/TextIcon';
 
 type LiveFeedItemGame = 'battle' | 'dice' | 'knb';
 
@@ -38,6 +38,66 @@ const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
 
 const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
     useStyles(s);
+    
+    if (typeof window !== 'undefined' && window.screen.width < 600) {
+        return (
+            <SafeTable<LiveFeedItem, 'id'> className={cnLiveFeedTable()} rowKey="id" items={items} responsivity>
+            <Column<LiveFeedItem>
+                label={
+                    <Text weight="semiBold" upper>
+                        Игра
+                    </Text>
+                }
+                minWidth={130}
+                maxWidth={200}
+                columnKey="game"
+            >
+                {({ game }) => (
+                    <>
+                      
+                        <Text className={cnLiveFeedTable('GameName')} font="Rubik" color="white" upper>
+                            {game}
+                        </Text>
+                       
+                    </>
+                )}
+            </Column>
+            <Column<LiveFeedItem>
+                label={
+                    <Text weight="semiBold" upper>
+                        Победитель
+                    </Text>
+                }
+                minWidth={200}
+                columnKey="winner"
+            >
+                {({ winner }) => (
+                    <>
+                        <div className={cnLiveFeedTable('WinnerAvatar')} />
+                        <Text className={cnLiveFeedTable('WinnerName')} color="white" upper>
+                            {winner}
+                        </Text>
+                    </>
+                )}
+            </Column>
+          
+           
+            <Column<LiveFeedItem>
+                label={
+                    <Text weight="semiBold" upper>
+                        Выигрыш
+                    </Text>
+                }
+                minWidth={110}
+                maxWidth={180}
+                columnKey="fund"
+            >
+                {({ fund }) => <TextIcon text={fund} icon="diamond" font="Rubik" color="white" upper />}
+            </Column>
+           
+        </SafeTable>
+        )
+    }
 
     return (
         <SafeTable<LiveFeedItem, 'id'> className={cnLiveFeedTable()} rowKey="id" items={items}>
@@ -79,18 +139,7 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
                     </>
                 )}
             </Column>
-            <Column<LiveFeedItem>
-                label={
-                    <Text weight="semiBold" upper>
-                        Ставка
-                    </Text>
-                }
-                minWidth={110}
-                maxWidth={180}
-                columnKey="bet"
-            >
-                {({ bet }) => <TextIcon text={bet} icon="diamond" font="Rubik" color="white" upper />}
-            </Column>
+          
             <Column<LiveFeedItem>
                 label={
                     <Text weight="semiBold" upper>
@@ -115,22 +164,7 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
             >
                 {({ fund }) => <TextIcon text={fund} icon="diamond" font="Rubik" color="white" upper />}
             </Column>
-            <Column<LiveFeedItem>
-                label={
-                    <Text weight="semiBold" upper>
-                        Время
-                    </Text>
-                }
-                minWidth={120}
-                maxWidth={140}
-                columnKey="time"
-            >
-                {({ time }) => (
-                    <Text color="white" upper>
-                        {time}
-                    </Text>
-                )}
-            </Column>
+           
         </SafeTable>
     );
 };

@@ -7,7 +7,7 @@ import { cn } from '../../../utils/bem-css-module';
 import { useInView } from '../../../hooks/useInView';
 import Title from '../../../components/Title/Title';
 import Icon from '../../../components/Icon/Icon';
-import LiveFeedTable from './LiveFeedTable/LiveFeedTable';
+import LiveFeedTable from '../../../components/LiveFeedTable/LiveFeedTable';
 
 const cnWelcomeLiveFeed = cn(s, 'WelcomeLiveFeed');
 

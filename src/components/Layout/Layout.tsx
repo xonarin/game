@@ -10,6 +10,7 @@ import Footer from '../../routes/welcome/Footer/Footer';
 import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';
 import PreLoader from '../PreLoader/PreLoader';
+import PopUp from './Mobile/PopUp/PopUp';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -19,6 +20,8 @@ const cnLayout = cn(s, 'Layout');
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
+    const [popUp, setPopUp] = useState(false)
+
     useEffect(() => {
         if (typeof window !== 'object') {
             setIsLoading(true)
@@ -29,6 +32,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     }, [isLoading])
     useStyles(s);
+
+    const popUpChange=()=>{
+        setPopUp(!popUp)
+    }
+
     if (isLoading) {
         return  <PreLoader/>
     }
@@ -38,8 +46,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>
                     <LayoutHeaderMobile />
-                    <div className={cnLayout('Content')}>{children}</div>
-                    <SidebarMobile />
+                    {popUp ? <PopUp close={()=>popUpChange()}/>:<div className={cnLayout('Content')}>{children}</div>}
+                    <SidebarMobile open={()=>popUpChange()}/>
                 </div>
             </div>
         );

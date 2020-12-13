@@ -68,4 +68,16 @@
 
         & &-Title .Text { font-size: 20px; }
     }
+    @include mq(max-width 900px) {
+        &-Head {
+            width: 260px;
+            height: 60px;
+            top: -15px;
+
+            &::before,
+            &::after { width: 210px; }
+        }
+
+        & &-Title .Text { font-size: 20px; }
+    }
 }

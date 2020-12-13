@@ -6,6 +6,16 @@
     background: #090d15;
     flex-direction: column;
     width: 100%;
+    z-index: 999999999;
+
+    &-Navigation-Button {
+        background: none;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
 
     &-Selector {
         background: none;

@@ -5,9 +5,13 @@ import s from './Sidebar.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import NavigationItem from './NavigationItem/HeaderNavigationItem';
 
+export interface SidebarMobileProps{
+    open:Function
+}
+
 const cnSidebar = cn(s, 'Sidebar');
 
-const SidebarMobile: React.FC = () => {
+const SidebarMobile: React.FC<SidebarMobileProps> = ({open}) => {
     const [msgToggle, setMsgToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     useStyles(s);
@@ -25,7 +29,9 @@ const SidebarMobile: React.FC = () => {
             ) : null}
             <div className={cnSidebar('Row')}>
                 <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
-                <NavigationItem to="/bonuse" icon="ingots" iconHover="ingotsWhite" />
+                <button type='button' className={cnSidebar('Navigation-Button')} onClick={()=>open()}>
+                    <NavigationItem  icon="ingots" iconHover="ingotsWhite" />
+                </button>
                 <button
                     type="button"
                     className={cnSidebar('Selector')}

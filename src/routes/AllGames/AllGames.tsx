@@ -5,7 +5,7 @@ import s from './AllGames.scss';
 import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
 import Link from '../../components/Link/Link';
-import LiveFeedTable from '../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
+import LiveFeedTable from '../../components/LiveFeedTable/LiveFeedTable';
 import { cn } from '../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../components/Layout/containers/Layout32ContentWithChat';
 
