@@ -2,13 +2,13 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './LiveFeedTable.scss';
-import { cn } from '../../utils/bem-css-module';
-import Column from '../Table/Column/Column';
-import SafeTable from '../Table/containers/SafeTable';
-import Text from '../Text/Text';
-import Icon, { IconProps } from '../Icon/Icon';
-import ChanceBadge from '../Badge/containers/ChanceBadge';
-import TextIcon from '../TextIcon/TextIcon';
+import { cn } from '../../../utils/bem-css-module';
+import Column from '../../Table/Column/Column';
+import SafeTable from '../../Table/containers/SafeTable';
+import Text from '../../Text/Text';
+import Icon, { IconProps } from '../../Icon/Icon';
+import ChanceBadge from '../../Badge/containers/ChanceBadge';
+import TextIcon from '../../TextIcon/TextIcon';
 
 type LiveFeedItemGame = 'battle' | 'dice' | 'knb';
 
