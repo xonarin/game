@@ -1,0 +1,51 @@
+@import '../../../../../assets/styles/vars';
+
+.AnnouncementsWidget {
+    position: relative;
+
+    &-Dropdown {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: 300px;
+        border-radius: 7px;
+        padding: 15px 15px 8px;
+        background-color: lighten($color-bg, 10%);
+        box-shadow: 0 5px 10px 2px rgba($color-black, 0.25);
+        opacity: 0;
+        transform: translateY(-10px);
+        visibility: hidden;
+        z-index: 999;
+        transition: opacity 0.2s $nice-ease, transform 0.4s $nice-ease, visibility 0.4s $nice-ease;
+    }
+
+    & &-DropdownTitle {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    & &-List {
+        max-height: 490px;
+        margin: 0 -7px;
+    }
+
+    & &-Empty {
+        display: block;
+        padding: 20px 0 25px;
+        text-align: center;
+    }
+
+    &_isOpen {
+        .AnnouncementsWidget-ToggleButton .Button-Icon {
+            &::before { opacity: 0; }
+            &::after { opacity: 1; }
+        }
+
+        .AnnouncementsWidget-Dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(15px);
+            transition: opacity 0.4s $nice-ease, transform 0.2s $nice-ease, visibility 0.4s $nice-ease;
+        }
+    }
+}

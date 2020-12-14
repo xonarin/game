@@ -1,0 +1,100 @@
+@import '../../../../assets/styles/vars';
+
+.BonuseBanner {
+    display: flex;
+    flex-direction: column;
+
+    &-Header {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        display: flex;
+        flex-direction: column;
+
+
+        &-Title {
+            margin-bottom: 20px;
+        }
+
+        &-Description {
+            width: 70%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        &-Info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+
+            &-Count {
+                display: flex;
+                height: 60px;
+                margin-bottom: 30px;
+            }
+        }
+
+        &-Expires {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 160px;
+            height: 100%;
+            padding: 0 18px;
+            top: -10px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+      
+
+            &::before {
+                content: '';
+                position: absolute;
+                display: block;
+                width: 85px;
+                height: 40px;
+                top: -8px;
+                left: 0;
+                border-radius: 5px 0 0 5px;
+                border: 1px solid $color-gray;
+                border-right-width: 0;
+                transform: skewX(-10deg);
+                z-index: 1;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                display: block;
+                width: 70px;
+                height: 40px;
+                top: -8px;
+                right: 5px;
+                border-radius: 0 5px 5px 0;
+                border: 1px solid $color-gray;
+                border-left-width: 0;
+                transform: skewX(-10deg);
+                z-index: 1;
+            }
+        }
+    }
+
+    &-Main {
+        display: flex;
+        padding: 25px 0 25px 0;
+        background: #0e1420;
+        align-items: center;
+        justify-content: space-around;
+        border-bottom: 2px solid rgba(196, 196, 196, 0.1);
+
+        &-Rating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            :nth-child(2) {
+                margin-top: 10px;
+            }
+        }
+    }
+}

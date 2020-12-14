@@ -7,7 +7,7 @@ import Text from '../../components/Text/Text';
 import Link from '../../components/Link/Link';
 import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
 import { cn } from '../../utils/bem-css-module';
-import Layout32ContentWithChat from '../../components/Layout/containers/Layout32ContentWithChat';
+import Layout32ContentWithChat from '../../components/Layout/Web/containers/Layout32ContentWithChat';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import AllGamesMobile from './Mobile/AllGames';
 

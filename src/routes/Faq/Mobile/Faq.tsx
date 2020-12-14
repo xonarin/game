@@ -3,7 +3,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Faq.scss';
 import { cn } from '../../../utils/bem-css-module';
-import Layout33Content from '../../../components/Layout/containers/Layout33Content';
+import Layout33Content from '../../../components/Layout/Web/containers/Layout33Content';
 import FaqTheme from './FaqTheme';
 
 const themes = [

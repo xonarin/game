@@ -4,8 +4,8 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Layout.scss';
 import { cn } from '../../utils/bem-css-module';
-import Sidebar from './Sidebar/Sidebar';
-import LayoutHeader from './Header/LayoutHeader';
+import Sidebar from './Web/Sidebar/Sidebar';
+import LayoutHeader from './Web/Header/LayoutHeader';
 import Footer from '../../routes/welcome/Footer/Footer';
 import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';

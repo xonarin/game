@@ -1,0 +1,48 @@
+@import '../../../../../assets/styles/vars';
+@import '../../../../../assets/styles/mixins';
+
+.SidebarNavigationItem {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85px;
+    height: 40px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 80px;
+        height: 40px;
+        top: 50%;
+        left: 50%;
+        border-radius: 5px;
+        background: grad($grad-green);
+        opacity: 0;
+        transform: translate(-50%, -50%) skewX(-8deg);
+        transition: opacity 0.3s $nice-ease;
+        z-index: 1;
+    }
+
+    & &-Icon {
+        position: relative;
+        z-index: 2;
+    }
+
+    &_active {
+        &::before { opacity: 1; }
+
+        .SidebarNavigationItem-Icon {
+            &::before { opacity: 0; }
+            &::after { opacity: 1; }
+        }
+    }
+
+    & + & { margin-top: 25px; }
+
+    &:hover .SidebarNavigationItem-Icon {
+        &::before { opacity: 0; }
+        &::after { opacity: 1; }
+    }
+}

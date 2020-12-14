@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
-import Layout31WithChat from '../../components/Layout/containers/Layout31WithChat';
+import Layout31WithChat from '../../components/Layout/Web/containers/Layout31WithChat';
 
 const action = ({ user, chats }: AppContextTypes): RouteResult => {
     const chatId = chats.game;

@@ -5,7 +5,7 @@ import s from './Referals.scss';
 import Text from '../../components/Text/Text';
 import Link from '../../components/Link/Link';
 import { cn } from '../../utils/bem-css-module';
-import LayoutReferal from '../../components/Layout/containers/LayoutReferal';
+import LayoutReferal from '../../components/Layout/Web/containers/LayoutReferal';
 import Icon from '../../components/Icon/Icon';
 import ReferalsTable from './ReferalsTable/ReferalsTable'
 import Diagram from '../../components/Diagram/Diagram'

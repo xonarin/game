@@ -6,7 +6,7 @@ import { cn } from '../../utils/bem-css-module';
 import { MinesGameStatus } from '../../__generated__/graphql';
 import useActiveMinesGameQuery from '../../hooks/graphql/minesGame/useActiveMinesGameQuery';
 import useMinesGameConfigurationQuery from '../../hooks/graphql/minesGame/useMinesGameConfigurationQuery';
-import Layout31WithChat from '../../components/Layout/containers/Layout31WithChat';
+import Layout31WithChat from '../../components/Layout/Web/containers/Layout31WithChat';
 import Panel from '../../components/Panel/Panel';
 import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
 import Text from '../../components/Text/Text';
@@ -17,7 +17,7 @@ import PreLoader from '../../components/PreLoader/PreLoader';
 import PopUp from '../../components/PopUp';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
-import LayoutMobile from '../../components/Layout/containers/LayoutMobileGame';
+import LayoutMobile from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import MinesGameMobile from './Mobile/MinesGame';
 import MinesBetFormMobile from '../../components/forms/Mobile/MinesBetForm/MinesBetForm';
 export interface MinesProps {
