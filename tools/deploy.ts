@@ -25,9 +25,9 @@ type RemoteDefs = {
 
 // Heroku
 const remote: RemoteDefs = {
-    name: 'xonarplay',
+    name: 'heroku',
     url: 'https://git.heroku.com/xonarplay.git',
-    branch: 'dev',
+    branch: 'master',
     website: 'https://xonarplay.herokuapp.com/',
 };
 
