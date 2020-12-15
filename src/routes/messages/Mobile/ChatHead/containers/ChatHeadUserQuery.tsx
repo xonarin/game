@@ -1,8 +1,8 @@
 import React from 'react';
 
-import useUserQuery from '../../../../hooks/graphql/users/useUserQuery';
+import useUserQuery from '../../../../../hooks/graphql/users/useUserQuery';
 import ChatHead from '../ChatHead';
-import Text from '../../../../components/Text/Text';
+import Text from '../../../../../components/Text/Text';
 
 export interface ChatHeadUserQuery {
     userId: string;

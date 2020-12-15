@@ -2,13 +2,13 @@ import React, { useMemo } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ChatItem.scss';
-import { cn } from '../../../utils/bem-css-module';
-import { ChatFragment, MessageFragment } from '../../../__generated__/graphql';
-import { transformDateToTime } from '../../../utils/strings';
-import Link from '../../../components/Link/Link';
-import Text from '../../../components/Text/Text';
-import { transformMessage } from '../../../utils/message';
-import TextBlock from '../../../components/TextBlock/TextBlock';
+import { cn } from '../../../../utils/bem-css-module';
+import { ChatFragment, MessageFragment } from '../../../../__generated__/graphql';
+import { transformDateToTime } from '../../../../utils/strings';
+import Link from '../../../../components/Link/Link';
+import Text from '../../../../components/Text/Text';
+import { transformMessage } from '../../../../utils/message';
+import TextBlock from '../../../../components/TextBlock/TextBlock';
 
 export interface ChatItemProps extends ChatFragment {
     isSelected?: boolean;

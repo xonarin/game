@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { ChatFragment } from '../../../../__generated__/graphql';
-import Text from '../../../../components/Text/Text';
+import { ChatFragment } from '../../../../../__generated__/graphql';
+import Text from '../../../../../components/Text/Text';
 import ChatHead from '../ChatHead';
 import ChatHeadUserQuery from './ChatHeadUserQuery';
 

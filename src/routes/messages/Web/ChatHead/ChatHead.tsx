@@ -2,8 +2,8 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ChatHead.scss';
-import { cn } from '../../../utils/bem-css-module';
-import Text from '../../../components/Text/Text';
+import { cn } from '../../../../utils/bem-css-module';
+import Text from '../../../../components/Text/Text';
 
 export interface ChatHeadProps {
     title?: string | null;
