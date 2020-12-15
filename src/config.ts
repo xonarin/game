@@ -24,7 +24,7 @@ export default {
     databaseUrl:
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
-        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
+        'mysql://b46dfd07640cd5:95a8b83d@eu-cdbr-west-03.cleardb.net/heroku_838e46d89990477?reconnect=true',
 
     // Redis
     redisUrl: process.env.REDIS_URL || 'localhost',
