@@ -2,8 +2,8 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ClassicGameDigits.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import { addLeadingZeros } from '../../../../utils/strings';
+import { cn } from '../../../../../utils/bem-css-module';
+import { addLeadingZeros } from '../../../../../utils/strings';
 
 export interface ClassicGameDigitsProps {
     seconds: number;

@@ -3,9 +3,9 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import { animated, useSpring } from 'react-spring';
 
 import s from './ClassicGameFund.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import Text from '../../../../components/Text/Text';
-import TextIcon from '../../../../components/TextIcon/TextIcon';
+import { cn } from '../../../../../utils/bem-css-module';
+import Text from '../../../../../components/Text/Text';
+import TextIcon from '../../../../../components/TextIcon/TextIcon';
 
 export interface ClassicGameFundProps {
     fund: number;

@@ -1,19 +1,22 @@
 .Dialog {
     flex: 1;
     height: 100vh;
-    &-Close{
+
+    &-Close {
         background: none;
         border: none;
     }
+
     & .Panel-Content {
         display: flex;
         flex-direction: column;
     }
+
     & &-MessagesList {
         flex: 1;
         min-height: 0;
     }
-    
+
     &-MessagesItems {
         display: flex;
         flex-direction: column;
@@ -21,4 +24,3 @@
         padding: 30px 20px;
     }
 }
-

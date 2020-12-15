@@ -2,14 +2,14 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './BetsTable.scss';
-import { cn } from '../../../utils/bem-css-module';
-import { ClassicGameBetFragment, ClassicGameFragment, ClassicGamePlayerFragment } from '../../../__generated__/graphql';
-import useDeepMemo from '../../../hooks/useDeepMemo';
-import SafeTableSpring from '../../../components/Table/containers/SafeTableSpring';
-import Column from '../../../components/Table/Column/Column';
-import Text from '../../../components/Text/Text';
-import TextIcon from '../../../components/TextIcon/TextIcon';
-import ChanceBadge from '../../../components/Badge/containers/ChanceBadge';
+import { cn } from '../../../../utils/bem-css-module';
+import { ClassicGameBetFragment, ClassicGameFragment, ClassicGamePlayerFragment } from '../../../../__generated__/graphql';
+import useDeepMemo from '../../../../hooks/useDeepMemo';
+import SafeTableSpring from '../../../../components/Table/containers/SafeTableSpring';
+import Column from '../../../../components/Table/Column/Column';
+import Text from '../../../../components/Text/Text';
+import TextIcon from '../../../../components/TextIcon/TextIcon';
+import ChanceBadge from '../../../../components/Badge/containers/ChanceBadge';
 
 export interface BetsTableItem extends ClassicGameBetFragment {
     player: ClassicGamePlayerFragment;

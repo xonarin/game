@@ -8,14 +8,15 @@ import Layout31WithChat from '../../components/Layout/Web/containers/Layout31Wit
 import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
 import Icon from '../../components/Icon/Icon';
-import BetsTable from './BetsTable/BetsTable';
-import HistoryTable from './HistoryTable/HistoryTable';
-import ClassicGame from './ClassicGame/ClassicGame';
+import BetsTable from './Web/BetsTable/BetsTable';
+import HistoryTable from './Web/HistoryTable/HistoryTable';
+import ClassicGame from './Web/ClassicGame/ClassicGame';
 import LayoutMobileGame from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import PreLoader from '../../components/PreLoader/PreLoader';
 import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
 import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
+import HistoryTableMobile from './Mobile/HistoryTable/HistoryTable';
 
 export interface ClassicProps {
     chatId: string;
@@ -72,7 +73,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                 }
                 historyContent={
                    
-                            <LiveFeedTableMobile items={items}/>
+                            <HistoryTableMobile />
                      
                 }
             />
@@ -98,7 +99,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
             rightContent={<ClassicGame game={currentClassicGame} />}
             bottomContent={
                
-                       <LiveFeedTable items={items}/>
+                       <HistoryTable/>
                  
             }
         />

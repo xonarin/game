@@ -7,11 +7,10 @@
     min-height: calc(100vh - 135px);
 
     &-Chats { width: 360px; }
-    &-ChatsMobile{
-       min-height: calc(100vh-155px) !important;
-       max-height: calc(100vh-155px) !important;
 
-     
+    &-ChatsMobile {
+        min-height: calc(100vh-155px) !important;
+        max-height: calc(100vh-155px) !important;
     }
     &-ChatsList { height: 100%; }
 

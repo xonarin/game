@@ -1,0 +1,150 @@
+@import '../../../../assets/styles/vars';
+@import '../../../../assets/styles/mixins';
+
+.ClassicGame {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    max-width: 500px;
+    height: 100%;
+    margin: 0 auto;
+
+    & &-Winner {
+        position: relative;
+        height: 0;
+        padding: 0 20px;
+        margin-bottom: 0;
+        opacity: 0;
+        transition: height 0.5s $nice-ease, padding 0.5s $nice-ease, margin-bottom 0.5s $nice-ease, opacity 0.5s $nice-ease;
+        z-index: 9;
+
+        &_isEnded {
+            height: 65px;
+            padding: 15px 20px;
+            margin-bottom: 65px;
+            opacity: 1;
+        }
+    }
+
+    &-Main {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        margin-bottom: 55px;
+    }
+
+    &-WaveBack {
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &-WaveForward {
+        position: absolute;
+        width: 390px;
+        height: 390px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &-Canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    &-Arrow {
+        position: absolute;
+        top: -15px;
+        left: calc(50% - 16.5px);
+        width: 33px;
+        height: 45px;
+        background-image: url(./arrow.svg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: center;
+        animation: 5s ease-in-out 0s classicGameArrow;
+        animation-iteration-count: infinite;
+        transition: top 0.5s $nice-ease;
+
+        &_isActive {
+            top: 13px;
+            animation: none;
+        }
+    }
+
+    &-Info {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &-Time {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+    & &-Digits { margin-bottom: 13px; }
+
+    & &-ProgressBar {
+        width: 90px;
+        height: 9px;
+        margin-top: 15px;
+    }
+
+    & &-Form {
+        height: 108px;
+        opacity: 1;
+        transition: height 0.5s $nice-ease, opacity 0.5s $nice-ease;
+
+        &_isEnded {
+            height: 0;
+            opacity: 0;
+        }
+    }
+
+    @include mq(max-width 1279px) {
+        & &-Winner {
+            flex-direction: column;
+            align-items: flex-start;
+            height: 110px;
+
+            .ClassicGameWinner-RightInfo { margin-left: 0; }
+
+            &_isEnded { margin-bottom: 65px; }
+        }
+
+        &-Main {
+            width: 280px;
+            height: 280px;
+
+            .ClassicGameLight {
+                width: 350px;
+                height: 350px;
+            }
+        }
+
+        &-Arrow {
+            width: 25px;
+            height: 35px;
+            top: -10px;
+            left: calc(50% - 12.5px);
+
+            &_isActive { top: 7px; }
+        }
+    }
+}
+
+@keyframes classicGameArrow {
+    0%,
+    100% { transform: translateY(0); }
+
+    50% { transform: translateY(10px); }
+}

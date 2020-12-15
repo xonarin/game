@@ -2,7 +2,7 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ClassicGameLight.scss';
-import { cn } from '../../../../utils/bem-css-module';
+import { cn } from '../../../../../utils/bem-css-module';
 
 export interface ClassicGameLightProps {}
 

@@ -8,10 +8,11 @@
         flex-direction: column;
     }
 
-    &-Back{
+    &-Back {
         background: none;
         border: none;
     }
+
     & &-Messages {
         flex: 1;
         min-height: 0;

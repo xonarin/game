@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ClassicGameWinner.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import Text from '../../../../components/Text/Text';
+import { cn } from '../../../../../utils/bem-css-module';
+import Text from '../../../../../components/Text/Text';
 
 export interface ClassicGameWinnerProps {
     randomNumber: string | null;
