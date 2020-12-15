@@ -3,17 +3,23 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import { cn } from '../../../../utils/bem-css-module';
 import NavigationItem from '../../Mobile/Sidebar/NavigationItem/HeaderNavigationItem';
 import s from './Sidebar.scss';
+import Text from '../../../Text/Text';
+import useUnreadCountQuery from '../../../../hooks/graphql/chat/useUnreadCountQuery';
+import Link from '../../../Link/Link';
+import AlarmButton from '../../../Button/containers/AlarmButton/AlarmButton';
 
-export interface SidebarMobileProps{
-    open:Function
+export interface SidebarMobileProps {
+    openPopUp: Function;
+    openChat: Function;
 }
 
 const cnSidebar = cn(s, 'Sidebar');
 
-const SidebarMobile: React.FC<SidebarMobileProps> = ({open}) => {
+const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) => {
     const [msgToggle, setMsgToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     useStyles(s);
+    const { unreadCount } = useUnreadCountQuery();
 
     return (
         <aside className={cnSidebar()}>
@@ -29,8 +35,8 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({open}) => {
             ) : null}
             <div className={cnSidebar('Row')}>
                 <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
-                <button type='button' className={cnSidebar('Navigation-Button')} onClick={()=>open()}>
-                    <NavigationItem  icon="ingots" iconHover="ingotsWhite" />
+                <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => openPopUp()}>
+                    <NavigationItem icon="ingots" iconHover="ingotsWhite" />
                 </button>
                 <button
                     type="button"
@@ -49,17 +55,42 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({open}) => {
                     <button
                         type="button"
                         className={cnSidebar('Selector')}
-                        onClick={() => {
-                            setMsgToggle(!msgToggle);
-                            setAllToggle(false);
-                        }}
+                        
                     >
-                        <NavigationItem icon="message" iconHover="messageWhite" />
+                        <AlarmButton
+                            isAlarm={Boolean(unreadCount && unreadCount > 0)}
+                            icon="message"
+                            iconHover="messageWhite"
+                            onClick={() => {
+                                setMsgToggle(!msgToggle);
+                                setAllToggle(false);
+                            }}
+                        className={cnSidebar('Selector')}
+
+                        />
                     </button>
                     {msgToggle ? (
                         <div className={cnSidebar('Message')}>
-                            <NavigationItem to="/" icon="message" iconHover="messageWhite" />
-                            <NavigationItem to="/" icon="message" iconHover="messageWhite" />
+                            <div className={cnSidebar('Message-Type')}>
+                                <Link
+                                    to="/messages"
+                                    isSoft
+                                    render={isActive => (
+                                        <AlarmButton
+                                            isAlarm={Boolean(unreadCount && unreadCount > 0)}
+                                            icon="message"
+                                            iconHover="messageWhite"
+                                        />
+                                    )}
+                                />
+                                <Text>личный чат {unreadCount} </Text>
+                            </div>
+                            <div className={cnSidebar('Message-Type')}>
+                                <button type="button" onClick={() => openChat()}>
+                                    <NavigationItem icon="message" iconHover="messageWhite" />
+                                </button>
+                                <Text>Общий чат </Text>
+                            </div>
                         </div>
                     ) : null}
                 </div>

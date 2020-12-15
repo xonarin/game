@@ -1,0 +1,53 @@
+
+.ClassicGameLight {
+    position: absolute;
+    width: 400px;
+    height: 420px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 200px;
+        height: 250px;
+        top: 0;
+        left: 0;
+        border-radius: 75px;
+        background-color: rgba(67, 133, 234, 0.2);
+        filter: blur(100px);
+        animation: 20s ease-in-out 0s blueLight;
+        animation-iteration-count: infinite;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 250px;
+        height: 230px;
+        top: 0;
+        right: 0;
+        border-radius: 75px;
+        background-color: rgba(127, 204, 85, 0.2);
+        filter: blur(100px);
+        animation: 20s ease-in-out 0s greenLight;
+        animation-iteration-count: infinite;
+    }
+}
+
+@keyframes blueLight {
+    0%,
+    100% { transform: translateY(0); }
+
+    50% { transform: translateY(170px); }
+}
+
+@keyframes greenLight {
+    0%,
+    100% { transform: translateY(0); }
+
+    50% { transform: translateY(190px); }
+}

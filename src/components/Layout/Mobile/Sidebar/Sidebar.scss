@@ -8,6 +8,12 @@
     width: 100%;
     z-index: 999999999;
 
+    button {
+        &:focus {
+            outline: none;
+        }
+    }
+
     &-Navigation-Button {
         background: none;
         border: none;
@@ -21,6 +27,7 @@
         background: none;
         border: none;
         padding: 0;
+        height: 34px !important;
     }
 
     &-Row {
@@ -40,6 +47,15 @@
         height: 100px;
         align-items: center;
         justify-content: space-around;
+
+        &-Type {
+            display: flex;
+
+            button {
+                background: none;
+                border: none;
+            }
+        }
     }
 
     &-Burger {
@@ -53,8 +69,8 @@
             border-right: 1px solid #181a29;
         }
 
-        & span:after {
-            content: unset!important;
+        & span::after {
+            content: unset !important;
         }
     }
 }
