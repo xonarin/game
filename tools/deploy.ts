@@ -26,9 +26,9 @@ type RemoteDefs = {
 // Heroku
 const remote: RemoteDefs = {
     name: 'heroku',
-    url: 'https://git.heroku.com/xonarplay.git',
+    url: 'https://git.heroku.com/xonargame.git',
     branch: 'master',
-    website: 'https://xonarplay.herokuapp.com/',
+    website: 'https://xonargame.herokuapp.com/',
 };
 
 // Azure Web Apps

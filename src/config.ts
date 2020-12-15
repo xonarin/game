@@ -25,12 +25,12 @@ export default {
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
         // 'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
-        'mysql://b46dfd07640cd5:95a8b83d@eu-cdbr-west-03.cleardb.net/heroku_838e46d89990477?reconnect=true',
+        'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
 
     // Redis
     redisUrl: process.env.REDIS_URL || 
     // 'localhost',
-    'redis://redistogo:e70f3b9880f0101ade0f9e83c472356d@soapfish.redistogo.com:10990/',
+    'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
 
     // Web analytics
     analytics: {
