@@ -37,7 +37,7 @@ const ChatMessageForm: React.FC<ChatMessageFormProps> = ({ chatId, onMutate, isP
 
     return (
         <Form<ChatMessageFormValues> onSubmit={onSubmit}>
-            {({ handleSubmit }) => <MessageField name="message" onSubmit={handleSubmit} isPm={isPm} />}
+            {({ handleSubmit }) => <MessageField name="message" onSubmit={handleSubmit} isPm={isPm} mobile/>}
         </Form>
     );
 };

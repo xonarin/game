@@ -1,11 +1,11 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 
-import { EmojiSize } from '../../../assets/emojis';
-import blankImg from '../../../assets/emojis/blank.gif';
-import emojiStyles from '../../../assets/emojis/emoji.scss';
-import { htmlToText, isEmojiAlt, matchEmojiAlt, textToHtml } from '../../../utils/message';
-import { placeCaretAfter } from '../../../utils/dom';
+import { EmojiSize } from '../../../../assets/emojis';
+import blankImg from '../../../../assets/emojis/blank.gif';
+import emojiStyles from '../../../../assets/emojis/emoji.scss';
+import { htmlToText, isEmojiAlt, matchEmojiAlt, textToHtml } from '../../../../utils/message';
+import { placeCaretAfter } from '../../../../utils/dom';
 
 type DivProps = JSX.IntrinsicElements['div'];
 

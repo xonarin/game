@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './EmojiSelect.scss';
-import { cn } from '../../../../utils/bem-css-module';
-import { EmojiAlt, emojiAlts } from '../../../../assets/emojis';
-import Scrollable from '../../../Scrollable/Scrollable';
-import Text from '../../../Text/Text';
+import { cn } from '../../../../../utils/bem-css-module';
+import { EmojiAlt, emojiAlts } from '../../../../../assets/emojis';
+import Scrollable from '../../../../Scrollable/Scrollable';
+import Text from '../../../../Text/Text';
 import SelectableEmoji from './SelectableEmoji/SelectableEmoji';
-import { placeCaretAfter } from '../../../../utils/dom';
+import { placeCaretAfter } from '../../../../../utils/dom';
 
 export interface EmojiSelectProps {
     editableElement?: React.RefObject<HTMLDivElement>;

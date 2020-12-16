@@ -14,7 +14,7 @@ import Panel from '../../../../components/Panel/Panel';
 import InfiniteScroll from '../../../../components/InfiniteScroll/InfiniteScroll';
 import CreatePmChatForm from '../../../../components/forms/Web/CreatePmChatForm/CreatePmChatForm';
 import ChatMessageForm from '../../../../components/forms/Web/ChatMessageForm/ChatMessageForm';
-import SearchInput from '../../../../components/inputs/SearchInput/SearchInput';
+import SearchInput from '../../../../components/inputs/MessageInput/Mobile/SearchInput/SearchInput';
 import ChatItem from '../ChatItem/ChatItem';
 
 export interface MessagesProps {

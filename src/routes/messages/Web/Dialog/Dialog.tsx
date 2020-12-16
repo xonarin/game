@@ -119,7 +119,7 @@ const Dialog: React.FC<MessagesProps> = ({ chatId, userId }) => {
                 </div>
             </InfiniteScroll>
         ) : (
-            <div>aa</div>
+            <div className={cnDialog('MessagesList')} />
         )}
         {formElem}
     </Panel>

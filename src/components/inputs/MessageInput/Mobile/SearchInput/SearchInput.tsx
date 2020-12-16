@@ -4,8 +4,8 @@ import { debounce } from 'lodash';
 import { FieldInputProps } from 'react-final-form';
 
 import s from './SearchInput.scss';
-import { cn } from '../../../utils/bem-css-module';
-import Icon from '../../Icon/Icon';
+import { cn } from '../../../../../utils/bem-css-module';
+import Icon from '../../../../Icon/Icon';
 
 export interface SearchInputProps {
     value: string;

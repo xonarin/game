@@ -3,14 +3,14 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import { FieldInputProps } from 'react-final-form';
 
 import s from './MessageInput.scss';
-import emojiStyles from '../../../assets/emojis/emoji.scss';
-import { cn } from '../../../utils/bem-css-module';
+import emojiStyles from '../../../../assets/emojis/emoji.scss';
+import { cn } from '../../../../utils/bem-css-module';
 import EmojiContentEditable, { EmojiContentEditableProps } from './EmojiContentEditable';
-import Text, { TextProps } from '../../Text/Text';
-import Button from '../../Button/Button';
+import Text, { TextProps } from '../../../Text/Text';
+import Button from '../../../Button/Button';
 import EmojiSelect from './EmojiSelect/EmojiSelect';
 
-export interface MessageInputProps {
+export interface MessageInputMobileProps {
     value: string;
     onChange: FieldInputProps<unknown>['onChange'];
     onFocus: FieldInputProps<unknown>['onFocus'];
@@ -31,7 +31,7 @@ export interface MessageInputProps {
 
 const cnMessageInput = cn(s, 'MessageInput');
 
-const MessageInput: React.FC<MessageInputProps> = ({
+const MessageInputMobile: React.FC<MessageInputMobileProps> = ({
     value,
     onChange,
     onFocus,
@@ -122,4 +122,4 @@ const MessageInput: React.FC<MessageInputProps> = ({
     );
 };
 
-export default MessageInput;
+export default MessageInputMobile;
