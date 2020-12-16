@@ -2,8 +2,8 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './SelectableEmoji.scss';
-import { cn } from '../../../../../utils/bem-css-module';
-import Emoji, { EmojiProps } from '../../../../Emoji/Emoji';
+import { cn } from '../../../../../../utils/bem-css-module';
+import Emoji, { EmojiProps } from '../../../../../Emoji/Emoji';
 
 export interface SelectableEmojiProps {
     alt: EmojiProps['alt'];
