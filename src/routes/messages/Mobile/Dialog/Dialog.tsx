@@ -121,7 +121,7 @@ const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId,closeDialog }) =
                 </div>
             </InfiniteScroll>
         ) : (
-            <div>aa</div>
+            <div className={cnDialog('MessagesList')} />
         )}
         {formElem}
     </Panel>

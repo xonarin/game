@@ -16,6 +16,7 @@ export interface ChatMessageProps extends MessageFragment {
     showControls?: boolean;
     deleteMessage: (messageId: string) => void;
     warnChat: (userId: string) => void;
+    closeChat:Function
 }
 
 const cnChatMessage = cn(s, 'ChatMessage');
@@ -29,6 +30,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     showControls,
     deleteMessage,
     warnChat,
+    closeChat
 }) => {
     useStyles(s);
 
@@ -60,7 +62,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 </div>
             )}
             {showPm && (
-                <Link to={`/messages?userId=${sender.id}`}>
+                <Link to={`/messages?userId=${sender.id}`} onClick={()=>closeChat()}>
                     <Button className={cnChatMessage('PmButton')} icon="letter" iconHover="letterWhite" clear />
                 </Link>
             )}
