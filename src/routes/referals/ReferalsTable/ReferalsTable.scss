@@ -13,6 +13,12 @@
         }
     }
 
+    &-More {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
     & .Table-Head,
     & .Table-Row { padding: 0 10px; }
 
