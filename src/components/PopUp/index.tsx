@@ -14,12 +14,22 @@ export interface PopUpProps {
     close: Function
     type:popUpType
 }
+
+
 const PopUp:React.FC<PopUpProps>  = ({ close,type }) => {
     useStyles(s);
 
+    const handleClick=()=>{
+        if(e.target.id==="shadow"){
+            close()
+        }
+    }
+
     return (
-        <div className={cnPopUp()}>
+        <div className={cnPopUp()} id="shadow" onClick={(e)=>handleClick(e)}>
+            <div id='content' >
             {type === 'firePlay' ? <FirePlay close={close}/>:<Transaction close={close}/>}
+            </div>
         </div>
     )
 }

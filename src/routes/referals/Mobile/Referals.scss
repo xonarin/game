@@ -1,6 +1,7 @@
-@import '../../assets/styles/vars';
+@import '../../../assets/styles/vars';
 
 .Referal {
+ 
     &-Navigation {
         &-Active {
             border-bottom: 3px solid #a1e47b;
@@ -19,7 +20,7 @@
     }
 
     &-Info {
-        background-image: url('../../assets/img//referalsBG.svg');
+        background-image: url('../../../assets/img//referalsBG.svg');
         background-color: black;
         margin-top: 30px;
         display: flex;
@@ -32,7 +33,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            width: 50%;
+            width: 100%;
 
             :last-child {
                 margin: 20px 0;
@@ -42,7 +43,7 @@
         &-Link {
             display: flex;
             align-items: center;
-            width: 20%;
+            width: 80%;
             padding: 10px 20px;
             background: #2a335c;
             border-radius: 5px;
@@ -54,13 +55,31 @@
             }
         }
     }
+    &-Period{
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        z-index: 100;
+        background: #0f121b;
 
+        button{
+            margin-top: 5px;
+            &:focus{
+                outline: none;
+            }
+        }
+    }
     &-Diagram {
         &-Btn,
         &-Btn-Active {
             border: none;
             background: none;
             margin-right: 15px;
+            width: 76px;
+            height: 26px;
+            &:focus{
+                outline: none;
+            }
         }
 
         &-Btn-Active {
@@ -75,7 +94,7 @@
             border-radius: 5px;
             padding: 10px;
             background: $color-dark-gray;
-
+            margin-bottom: 20px;
             &-Header {
                 display: flex;
                 justify-content: space-between;

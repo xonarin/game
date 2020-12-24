@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ReferalsTable.scss';
-import { cn } from '../../../utils/bem-css-module';
-import SafeTable from '../../../components/Table/containers/SafeTable';
-import Column from '../../../components/Table/Column/Column';
-import Text from '../../../components/Text/Text';
-import Icon from '../../../components/Icon/Icon';
-import Button from '../../../components/Button/Button';
+import { cn } from '../../../../utils/bem-css-module';
+import SafeTable from '../../../../components/Table/containers/SafeTable';
+import Column from '../../../../components/Table/Column/Column';
+import Text from '../../../../components/Text/Text';
+import Icon from '../../../../components/Icon/Icon';
+import Button from '../../../../components/Button/Button';
 
 interface Referal {
     id: number;
@@ -43,7 +43,7 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
     
     return (
         <> 
-            <SafeTable<Referal, 'id'> className={cnReferalsTable()} rowKey="id" items={data} responsivity={false}>
+            <SafeTable<Referal, 'id'> className={cnReferalsTable()} rowKey="id" items={data} responsivity={true}>
                 <Column<Referal>
                     label={
                         <Text weight="semiBold" upper>
@@ -55,46 +55,16 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     columnKey="id"
                 >
                     {({ user }) => (
-                        <>
+                        <div className={cnReferalsTable('Winner')}>
                             <div className={cnReferalsTable('WinnerAvatar')} />
                             <Text className={cnReferalsTable('WinnerName')} color="white" upper>
                                 {user}
                             </Text>
-                        </>
+                        </div>
                     )}
                 </Column>
-                <Column<Referal>
-                    label={
-                        <Text weight="semiBold" upper>
-                            СЫГРАНО ИГР
-                        </Text>
-                    }
-                    minWidth={200}
-                    columnKey="count"
-                >
-                    {({ count }) => (
-                        <Text font="Rubik" color="white" upper>
-                            {count}
-                        </Text>
-                    )}
-                </Column>
-                <Column<Referal>
-                    label={
-                        <Text weight="semiBold" upper>
-                            ДАТА РЕГИСТРАЦИИ
-                        </Text>
-                    }
-                    minWidth={110}
-                    maxWidth={180}
-                    columnKey="points"
-                >
-                    {({ date }) => (
-                        <Text font="Rubik" color="white" upper>
-                            {date}
-                        </Text>
-                    )}
-                </Column>
-
+                
+                
                 <Column<Referal>
                     label={
                         <Text weight="semiBold" upper>
