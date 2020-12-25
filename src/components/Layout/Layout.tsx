@@ -42,6 +42,18 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         setChat(!chat);
     };
 
+
+    const depositPopUp=()=>{
+        if(deposit && popUp){   
+            setPopUp(false)
+            setDeposit(false)
+            return
+        }
+        setDeposit(!deposit);
+        setPopUp(true);
+    }
+
+
     if (isLoading) {
         return <PreLoader />;
     }
@@ -55,22 +67,25 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
                 <div className={cnLayout('Main')}>
                     <LayoutHeaderMobile
                         openPopUp={() => {
-                            console.log("adawd");
-                            
-                            setDeposit(!deposit);
-                            popUpChange();
+                            depositPopUp()
                         }}
                     />
                     {popUp ? (
                         deposit ? (
-                            <DepositPopUp type='transaction' mobile={true} close={() => popUpChange()}/>
+                            <DepositPopUp type="transaction" mobile={true} close={() => popUpChange()} />
                         ) : (
                             <PopUp close={() => popUpChange()} />
                         )
                     ) : (
                         <div className={cnLayout('Content')}>{children}</div>
                     )}
-                    <SidebarMobile openPopUp={() => popUpChange()} openChat={() => chatChange()} />
+                    <SidebarMobile
+                        openPopUp={() => {
+                            setDeposit(false);
+                            setPopUp(true);
+                        }}
+                        openChat={() => chatChange()}
+                    />
                 </div>
             </div>
         );
