@@ -26,19 +26,31 @@ const cnReferalsTable = cn(s, 'ReferalsTable');
 
 const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
     useStyles(s);
-    const [showAll, setShowAll] = useState(false)
+    const [showedItemsCount, setshowedItemsCount] = useState(5)
+    const [hideToggle, setHideToggle] = useState(false)
     const [data, setData] = useState([items.slice(0,6)])
     useEffect(() => {
-        if(showAll){
+        if(showedItemsCount>items.length){
+
             setData(items)
+            setHideToggle(true)
+
         }else{
-            const tmp=items.slice(0,6)
+            setHideToggle(false)
+            const tmp=items.slice(0,showedItemsCount)
             setData(tmp)
         }
-    }, [showAll])
+    }, [showedItemsCount])
 
     const handleChange=()=>{
-        setShowAll(!showAll)
+        console.log(showedItemsCount);
+        
+        if(showedItemsCount>items.length){
+
+            setshowedItemsCount(5)
+            return
+        }
+        setshowedItemsCount(showedItemsCount+5)
     }
     
     return (
@@ -141,7 +153,7 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
             </SafeTable>
             <div className={cnReferalsTable('More')}>
 
-            <Button onClick={handleChange}>{showAll ?  "Hide":'More'  }</Button>
+            <Button onClick={handleChange}>{hideToggle ?  "Hide":'More'  }</Button>
             </div>
         </>
     );

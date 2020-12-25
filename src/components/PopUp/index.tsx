@@ -1,9 +1,11 @@
 import React from 'react'
 import s from './PopUp.scss';
 import { cn } from '../../utils/bem-css-module';
-import FirePlay from './FirePlay/FirePlay';
+import FirePlay from './Web/FirePlay/FirePlay';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import Transaction from './Transaction/Transaction';
+import Transaction from './Web/Transaction/Transaction';
+import FirePlayMobile from './Mobile/FirePlay/FirePlay';
+import TransactionMobile from './Mobile/Transaction/Transaction';
 
 const cnPopUp = cn(s, 'PopUp');
 type popUpType=
@@ -13,18 +15,27 @@ type popUpType=
 export interface PopUpProps {
     close: Function
     type:popUpType
+    mobile?:boolean
 }
 
 
-const PopUp:React.FC<PopUpProps>  = ({ close,type }) => {
+const PopUp:React.FC<PopUpProps>  = ({ close,type,mobile }) => {
     useStyles(s);
 
-    const handleClick=()=>{
+    const handleClick=(e)=>{
         if(e.target.id==="shadow"){
             close()
         }
     }
-
+    if(mobile){
+        return (
+            <div className={cnPopUp("Mobile")} id="shadow" onClick={(e)=>handleClick(e)}>
+                <div id='content' >
+                {type === 'firePlay' ? <FirePlayMobile close={close}/>:<TransactionMobile close={close}/>}
+                </div>
+            </div>
+        )
+    }
     return (
         <div className={cnPopUp()} id="shadow" onClick={(e)=>handleClick(e)}>
             <div id='content' >

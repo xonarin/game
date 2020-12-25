@@ -1,9 +1,9 @@
-@import '../../../assets/styles/vars';
+@import '../../../../assets/styles/vars';
 
 .FirePlay {
     display: flex;
     flex-direction: column;
-    width: 33%;
+    width: 480px;
 
     &-Header {
         border-top-left-radius: 5px;

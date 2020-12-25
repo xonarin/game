@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import s from './HistoryItem.scss';
-import { cn } from '../../../../utils/bem-css-module';
+import { cn } from '../../../../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import Icon from '../../../Icon/Icon';
-import Text from '../../../Text/Text';
+import Icon from '../../../../Icon/Icon';
+import Text from '../../../../Text/Text';
 const cnHistory = cn(s, 'HistoryItem');
 
 function HistoryItem() {

@@ -4,7 +4,10 @@
     position: relative;
     width: 90px;
     height: 40px;
-
+    &-Deposit{
+        background: none;
+        border: none;
+    }
     &-Main {
         position: relative;
         display: flex;

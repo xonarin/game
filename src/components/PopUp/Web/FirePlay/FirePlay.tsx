@@ -1,11 +1,11 @@
 import React from 'react'
-import Icon from '../../Icon/Icon'
-import Text from '../../Text/Text'
+import Icon from '../../../Icon/Icon'
+import Text from '../../../Text/Text'
 import s from './FirePlay.scss';
-import { cn } from '../../../utils/bem-css-module';
-import EditbleInput from '../../inputs/EditbleInput/EditbleInput';
+import { cn } from '../../../../utils/bem-css-module';
+import EditbleInput from '../../../inputs/EditbleInput/EditbleInput';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import Link from '../../Link/Link';
+import Link from '../../../Link/Link';
 export interface FirePlayProps{
     close:Function
 }

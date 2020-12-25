@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Icon from '../../Icon/Icon';
-import Text from '../../Text/Text';
+import Icon from '../../../Icon/Icon';
+import Text from '../../../Text/Text';
 import s from './Transaction.scss';
-import { cn } from '../../../utils/bem-css-module';
+import { cn } from '../../../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import Deposit from './Deposit/Deposit';
 import Withdraw from './Withdraw/Withdraw';

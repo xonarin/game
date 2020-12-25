@@ -81,14 +81,14 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
         return (
             <LayoutMobile
                 title="Mines"
-                Content={<MinesGameMobile
+                Content={popup ? <PopUp close={popUpClose} type='firePlay' mobile={true}/>: <MinesGameMobile
                     fieldSize={fieldSize}
                     minBombsCount={minBombsCount}
                     coefs={coefs}
                     formBombsCount={formBombsCount}
                     activeMinesGame={actuallyActiveMinesGame}
                 />}
-                bottomContent={
+                bottomContent={popup ? null:
                     <Panel
                         className={cnMines('BetFormPanel')}
                         leftHead={
@@ -105,11 +105,12 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                             activeMinesGame={actuallyActiveMinesGame}
                             onChangeBombsCount={setFormBombsCount}
                         />
-                        {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
+                       
 
                     </Panel>
                 }
                 historyContent={
+                    popup ? null:
                     <Panel
                         leftHead={
                             <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>

@@ -6,7 +6,7 @@
     flex-direction: column;
     width: 100%;
     margin-top: 15px;
-
+    position: relative;
     &-Title {
         display: flex;
         align-items: center;
@@ -110,6 +110,34 @@
         }
     
     }
+
+
+
+    &-Amount-Mobile {
+        height: 32px;
+        width: 24%;
+        border: none;
+        background: #313846;
+        border-radius: 5px;
+        &:hover {
+            height: 32px;
+            width: 24%;
+            border: 2px solid #4986f5;
+            background: #313846;
+            border-radius: 5px;
+        }
+    }
+
+    &-Amount-Active-Mobile {
+        height: 32px;
+        width: 24%;
+        border: 2px solid #4986f5;
+        background: #313846;
+        border-radius: 5px;
+      
+    
+    }
+
 
     &-Error {
         position: absolute;
