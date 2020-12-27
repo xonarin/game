@@ -1,0 +1,76 @@
+@import '../../../assets/styles/vars';
+
+.ExtendedBetInput {
+    border-radius: 5px;
+    overflow: hidden;
+
+    &-InputContainer { position: relative; }
+
+    &-Input {
+        width: 100%;
+        height: 44px;
+        outline: none;
+        border: 1px solid transparent;
+        border-radius: 5.5px 5.5px 0 0;
+        padding: 0 108px 0 12px;
+        background-color: lighten($color-bg, 8%);
+        color: $color-white;
+        font-size: $font-size-m;
+        font-weight: 600;
+        transition: border-color 0.2s $nice-ease;
+
+        &:focus { border-color: $color-blue; }
+    }
+
+    &-InputControls {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+    }
+
+    & &-ClearButton {
+        margin-right: 4px;
+        color: $color-gray;
+        font-size: $font-size-l;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s $nice-ease, visibility 0.2s $nice-ease;
+
+        &_isShow {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    & &-MultiplyButton {
+        width: 32px;
+        height: 26px;
+        border-radius: 3px;
+        margin-left: 6px;
+        background-color: lighten($color-bg, 5%);
+        color: $color-gray;
+        font-size: $font-size-xs;
+        transition: background-color 0.2s $nice-ease;
+
+        &:hover { background-color: lighten($color-bg, 3%); }
+    }
+
+    &-AddButtons {
+        display: flex;
+        height: 30px;
+    }
+
+    & &-AddButton {
+        flex: auto;
+        height: 100%;
+        background-color: lighten($color-bg, 11%);
+        color: $color-gray;
+        font-size: $font-size-xs;
+        transition: background-color 0.2s $nice-ease;
+
+        &:hover { background-color: lighten($color-bg, 13%); }
+    }
+}

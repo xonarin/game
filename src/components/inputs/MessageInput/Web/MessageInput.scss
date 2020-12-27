@@ -1,0 +1,83 @@
+@import '../../../../assets/styles/vars';
+@import '../../../../assets/styles/mixins';
+
+.MessageInput {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: lighten($color-bg, 5%);
+
+    //noinspection CssOverwrittenProperties
+    & &-Editable {
+        position: relative;
+        width: 100%;
+        min-height: 60px;
+        max-height: 204px;
+        border: 0 solid transparent;
+        border-width: 22px 0;
+        padding: 0 53px 0 20px;
+        outline: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 2;
+
+        @include typography();
+    }
+
+    & &-Placeholder {
+        position: absolute;
+        top: 22px;
+        left: 20px;
+        opacity: 0.8;
+        transition: opacity 0.2s $nice-ease;
+        z-index: 1;
+    }
+
+    & &-SmileButton {
+        position: absolute;
+        top: 0;
+        right: 20px;
+        padding-top: 17px;
+        opacity: 0.6;
+        transition: opacity 0.3s $nice-ease;
+        z-index: 3;
+
+        &:hover {
+            opacity: 1;
+
+            & + .EmojiSelect {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(-100%);
+                transition: opacity 0.4s $nice-ease, visibility 0.4s $nice-ease, transform 0.4s $nice-ease;
+            }
+        }
+
+        .Button-Icon {
+            width: 26px;
+            height: 26px;
+        }
+    }
+
+    & &-SendButton {
+        position: absolute;
+        right: 20px;
+        top: 12px;
+    }
+
+    &_isFocused {
+        .MessageInput-Placeholder { opacity: 0.4; }
+    }
+
+    &_isNotEmpty {
+        .MessageInput-Placeholder { visibility: hidden; }
+    }
+
+    &_isPm {
+        .MessageInput-Editable { padding-right: 145px; }
+
+        .MessageInput-SmileButton { right: 100px; }
+    }
+}

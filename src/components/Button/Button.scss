@@ -1,0 +1,242 @@
+@import '../../assets/styles/vars';
+@import '../../assets/styles/mixins';
+
+.Button {
+    position: relative;
+    border: none;
+    padding: 0;
+    color: $color-white;
+    background: transparent;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: 600;
+    text-transform: uppercase;
+    outline: none;
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 9;
+    }
+
+    &_clear::before { content: none; }
+
+    &_shape_right::before,
+    &_shape_alphaRight::before,
+    &_shape_alphaRight::after { transform: translate(-50%, -50%) skewX(-8deg); }
+    &_shape_left::before { transform: translate(-50%, -50%) skewX(8deg); }
+
+    &_shape_right,
+    &_shape_left,
+    &_shape_alphaRight {
+        &::before {
+            top: 50%;
+            left: 50%;
+            transition: all 0.3s $nice-ease;
+        }
+
+        &.Button_size_xs::before { border-radius: 3px; }
+
+        &.Button_size_s::before,
+        &.Button_size_m::before { border-radius: 5px; }
+    }
+
+    &_shape_alphaRight {
+        &::before {
+            margin-top: -1px;
+            margin-left: -1px;
+            transition: all 0.3s $nice-ease, margin-top 0s linear, margin-left 0s linear;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            margin-top: 1px;
+            margin-left: 1px;
+            z-index: 8;
+            transition: all 0.3s $nice-ease;
+        }
+
+        &.Button_size_xs::after { border-radius: 3px; }
+
+        &.Button_size_s::after,
+        &.Button_size_m::after { border-radius: 5px; }
+    }
+
+    &_color_blue {
+        color: $color-white;
+
+        &::before { @include grad_mirror($grad-blue); }
+
+        &.Button_shape_alphaRight {
+            &::before { box-shadow: 0 0 30px 0 rgba($color-blue, 0.7); }
+            &::after { background-color: darken($color-blue, 20%); }
+
+            &:hover::before { animation: alphaRightBlueShadow 2s linear 0s infinite; }
+        }
+    }
+
+    &_color_green {
+        color: $color-white;
+
+        &::before { @include grad_mirror($grad-green); }
+
+        &.Button_shape_alphaRight {
+            &::before { box-shadow: 0 0 30px 0 rgba($color-green, 0.7); }
+            &::after { background-color: darken($color-green, 20%); }
+
+            &:hover::before { animation: alphaRightGreenShadow 2s linear 0s infinite; }
+        }
+    }
+
+    &_color_gray {
+        color: #687393;
+
+        &::before { background-color: #191d2d; }
+    }
+
+    &_color_bordered {
+        color: $color-white;
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            border-radius: 5px;
+            background-color: #2b2f36;
+            z-index: 8;
+            transition: all 0.3s $nice-ease;
+            transform: translate(-50%, -50%) skewX(-8deg) scale(0);
+        }
+
+        &::before { border: 1px solid #2b2f36; }
+
+        &.Button_size_xs::before { height: 33px; }
+        &.Button_size_s::before { height: 31px; }
+        &.Button_size_m::before { height: 38px; }
+
+        &:hover::after { transform: translate(-50%, -50%) skewX(-8deg) scale(1.05); }
+    }
+
+    &_size_xs {
+        width: 60px;
+        height: 35px;
+        font-size: $font-size-m;
+        line-height: $line-height-m;
+
+        &.Button_shape_right::before,
+        &.Button_shape_left::before { width: 55px; }
+
+        &.Button_shape_right.Button_color_bordered::after,
+        &.Button_shape_left.Button_color_bordered::after { width: 57px; }
+
+        &.Button_shape_alphaRight::before,
+        &.Button_shape_alphaRight::after {
+            width: 50px;
+            height: 33px;
+        }
+    }
+
+    &_size_s {
+        width: 125px;
+        height: 33px;
+        font-size: $font-size-xs;
+        line-height: $line-height-xs;
+
+        &.Button_shape_right::before,
+        &.Button_shape_left::before { width: 120px; }
+
+        &.Button_shape_right.Button_color_bordered::after,
+        &.Button_shape_left.Button_color_bordered::after { width: 122px; }
+
+        &.Button_shape_alphaRight::before,
+        &.Button_shape_alphaRight::after {
+            width: 117px;
+            height: 31px;
+        }
+    }
+
+    &_size_m {
+        width: 165px;
+        height: 40px;
+        font-size: $font-size-s;
+        line-height: $line-height-s;
+
+        &.Button_shape_right::before,
+        &.Button_shape_left::before { width: 160px; }
+
+        &.Button_shape_right.Button_color_bordered::after,
+        &.Button_shape_left.Button_color_bordered::after { width: 162px; }
+
+        &.Button_shape_alphaRight::before,
+        &.Button_shape_alphaRight::after {
+            width: 157px;
+            height: 38px;
+        }
+    }
+
+    &-Text,
+    &-Icon {
+        position: relative;
+        z-index: 10;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    &_weight_normal .Button-Text { font-weight: 400; }
+    &_weight_semiBold .Button-Text { font-weight: 600; }
+    &_weight_bold .Button-Text { font-weight: 700; }
+
+    &_upper .Button-Text { text-transform: uppercase; }
+
+    &:hover .Button-Icon_withHover {
+        &::before { opacity: 0; }
+        &::after { opacity: 1; }
+    }
+
+    &_shape_right:hover::before,
+    &_shape_alphaRight:hover::before,
+    &_shape_alphaRight:hover::after { transform: translate(-50%, -50%) skewX(-8deg) scale(1.05); }
+    &_shape_left:hover::before { transform: translate(-50%, -50%) skewX(8deg) scale(1.05); }
+
+    &_shape_alphaRight:active {
+        &::before {
+            margin-top: 1px;
+            margin-left: 1px;
+        }
+
+        .Button-Text,
+        .Button-Icon {
+            top: 1px;
+            left: 1px;
+        }
+    }
+
+    &_color_blue:hover::before,
+    &_color_green:hover::before, { background-position: 100% 0; }
+}
+
+@keyframes alphaRightBlueShadow {
+    0%,
+    100% { box-shadow: 0 0 30px 0 rgba($color-blue, 0.7); }
+    50% { box-shadow: 0 0 40px 0 rgba($color-blue, 0.9); }
+}
+
+@keyframes alphaRightGreenShadow {
+    0%,
+    100% { box-shadow: 0 0 30px 0 rgba($color-green, 0.7); }
+    50% { box-shadow: 0 0 40px 0 rgba($color-green, 0.9); }
+}

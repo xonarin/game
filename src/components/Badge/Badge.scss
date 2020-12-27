@@ -1,0 +1,102 @@
+@import '../../assets/styles/vars';
+
+.Badge {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 27px;
+
+    &-Back {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 65px;
+        height: 27px;
+        border: 2px solid #2b71de;
+        border-radius: 3px;
+        background-color: rgba(43, 113, 222, 0.3);
+        transform: translate(-50%, -50%) skewX(-15deg);
+        z-index: 0;
+    }
+
+    & &-Value {
+        position: relative;
+        color: #2b71de;
+        text-transform: uppercase;
+        z-index: 1;
+    }
+
+    &_color_yellow {
+        .Badge-Back {
+            border-color: #bca40f;
+            background-color: rgba(188, 164, 15, 0.3);
+        }
+        .Badge-Value { color: #bca40f; }
+    }
+
+    &_color_pink {
+        .Badge-Back {
+            border-color: #fa42e4;
+            background-color: rgba(250, 66, 228, 0.3);
+        }
+        .Badge-Value { color: #fa42e4; }
+    }
+
+    &_color_red {
+        .Badge-Back {
+            border-color: #ef403f;
+            background-color: rgba(#ef403f, 0.3);
+        }
+        .Badge-Value { color: #ef403f; }
+    }
+
+    &_color_blue {
+        .Badge-Back {
+            border-color: #2b71de;
+            background-color: rgba(43, 113, 222, 0.3);
+        }
+        .Badge-Value { color: #2b71de; }
+    }
+
+    &_color_aqua {
+        .Badge-Back {
+            border-color: #55edff;
+            background-color: rgba(85, 237, 255, 0.3);
+        }
+        .Badge-Value { color: #55edff; }
+    }
+
+    &_color_green {
+        .Badge-Back {
+            border-color: #428727;
+            background-color: rgba(66, 135, 39, 0.3);
+        }
+        .Badge-Value { color: #428727; }
+    }
+
+    &_color_silver {
+        .Badge-Back {
+            border-color: #5c606c;
+            background-color: rgba(92, 96, 108, 0.3);
+        }
+        .Badge-Value { color: #5c606c; }
+    }
+
+    &_color_bronze {
+        .Badge-Back {
+            border-color: #513b37;
+            background-color: rgba(81, 59, 55, 0.3);
+        }
+        .Badge-Value { color: #513b37; }
+    }
+
+    &_color_gold {
+        .Badge-Back {
+            border-color: #a09000;
+            background-color: rgba(160, 144, 0, 0.3);
+        }
+        .Badge-Value { color: #a09000; }
+    }
+}

@@ -1,0 +1,19 @@
+@import '../../../../../assets/styles/vars';
+
+.SearchInput {
+    display: block;
+    padding: 0 10px;
+
+    &-Input {
+        border: none;
+        margin-left: 10px;
+        background: transparent;
+        outline: none;
+        font-size: $font-size-s;
+        line-height: $line-height-s;
+        font-weight: 700;
+        color: $color-gray;
+
+        &::placeholder { color: rgba($color-gray, 0.6); }
+    }
+}

@@ -1,0 +1,30 @@
+@import '../../../../assets/styles/vars';
+
+.LayoutHeader {
+    height: 160px;
+    padding: 20px;
+    background: linear-gradient(270deg, #1b2033 1.56%, #131521 98.33%);
+
+    &-Container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &-Navigation { padding-left: 5px; }
+
+    & &-Logo { margin-left: 30px; }
+
+    &-Buttons { margin-left: 0; }
+
+    & &-Button {
+        display: inline-block;
+
+        & + .LayoutHeader-Button { margin-left: 10px; }
+    }
+
+    & &-InnerButton_isActive .Button-Icon {
+        &::before { opacity: 0; }
+        &::after { opacity: 1; }
+    }
+}

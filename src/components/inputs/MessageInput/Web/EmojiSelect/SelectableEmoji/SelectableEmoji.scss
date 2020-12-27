@@ -1,0 +1,38 @@
+@import '../../../../../../assets/styles/vars';
+
+.SelectableEmoji {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: none;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    background: transparent;
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 30px;
+        height: 30px;
+        top: 50%;
+        left: calc(50% - 2.5px);
+        border-radius: 3px;
+        background-color: lighten($color-bg, 12%);
+        opacity: 0;
+        transform: skewX(-8deg) translate(-50%, -50%) scale(0);
+        z-index: 1;
+    }
+
+    &:hover::before {
+        opacity: 1;
+        transform: skewX(-8deg) translate(-50%, -50%) scale(1);
+    }
+
+    & &-Emoji {
+        position: relative;
+        margin: 0;
+        z-index: 2;
+    }
+}

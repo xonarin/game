@@ -1,0 +1,130 @@
+@import 'vars';
+
+/* UTILS
+   =============================================== */
+
+@function mq-parse-query($query) {
+    $mq: 'only screen ';
+
+    @if length($query) == 1 {
+        @return $mq + 'and (min-width: ' + $query + ')';
+    }
+
+    @if (type-of(nth($query, 1)) == 'string' and type-of(nth($query, 2)) == 'number') {
+        @return $mq + 'and (' + nth($query, 1) + ': ' + nth($query, 2) + ')';
+    }
+
+    @if (type-of(nth($query, 1)) == 'number' and type-of(nth($query, 2)) == 'number') {
+        @return $mq + 'and (min-width: ' + nth($query, 1) + ') and (max-width: ' + nth($query, 2) + ' )';
+    }
+}
+
+// Replace string
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+
+    @return $string;
+}
+
+// Build gradients
+@function grad($colors) {
+    @return linear-gradient(90deg, nth($colors, 1) 0%, nth($colors, 2) 100%);
+}
+
+@function grad_mirror($colors) {
+    @return linear-gradient(90deg, nth($colors, 1) 0%, nth($colors, 2) 45%, lighten(nth($colors, 2), 10%) 50%, nth($colors, 2) 55%, nth($colors, 1) 100%);
+}
+
+/* MIXINS
+   =============================================== */
+
+@mixin hide_scrollbar() {
+    -ms-overflow-style: none;
+    //noinspection CssUnknownProperty
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+}
+
+// Typography, that's all =)
+@mixin typography() {
+    font-size: 100%;
+
+    &_font_OpenSans { font-family: OpenSans, sans-serif; }
+    &_font_Rubik { font-family: Rubik, sans-serif; }
+
+    &_size_xs { font-size: $font-size-xs; }
+    &_size_s { font-size: $font-size-s; }
+    &_size_m { font-size: $font-size-m; }
+    &_size_l { font-size: $font-size-l; }
+    &_size_xl { font-size: $font-size-xl; }
+    &_size_xxl { font-size: $font-size-xxl; }
+
+    &_line_xs { line-height: $line-height-xs; }
+    &_line_s { line-height: $line-height-s; }
+    &_line_m { line-height: $line-height-m; }
+    &_line_l { line-height: $line-height-l; }
+    &_line_xl { line-height: $line-height-xl; }
+    &_line_xxl { line-height: $line-height-xxl; }
+
+    &_weight_regular { font-weight: 400; }
+    &_weight_semiBold { font-weight: 600; }
+    &_weight_bold { font-weight: 700; }
+
+    &_color_gray { color: $color-gray; }
+    &_color_white { color: $color-white; }
+    &_color_blue { color: $color-blue; }
+    &_color_green { color: $color-green; }
+    &_color_gold { color: $color-gold; }
+    &_color_red { color: $color-red; }
+    &_color_pink { color: $color-pink; }
+    &_color_aqua { color: $color-aqua; }
+    &_color_dark-blue { color: $color-dark-blue; }
+    &_italic { font-style: italic; }
+
+    &_upper { text-transform: uppercase; }
+}
+
+// Mirror gradient for transitions
+@mixin grad_mirror($colors) {
+    background: grad_mirror($colors);
+    background-size: 222.22% 100%;
+}
+
+// Media query
+@mixin mq($query) {
+    @media #{mq-parse-query($query)} {
+        @content;
+    }
+}
+
+// Connect fonts
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+    $src: null;
+    $extmods: (
+        eot: '?',
+        svg: '#' + str-replace($name, ' ', '_')
+    );
+    $formats: (
+        otf: 'opentype',
+        ttf: 'truetype'
+    );
+
+    @each $ext in $exts {
+        $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+        $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+        $src: append($src, url(quote($path + '.' + $extmod)) format(quote($format)), comma);
+    }
+
+    @font-face {
+        font-display: fallback;
+        font-family: quote($name);
+        font-style: $style;
+        font-weight: $weight;
+        src: $src;
+    }
+}

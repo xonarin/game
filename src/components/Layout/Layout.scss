@@ -1,0 +1,19 @@
+@import '../../assets/styles/mixins';
+
+.Layout {
+    display: flex;
+
+    &-Main {
+        flex: auto;
+        min-width: 0;
+    }
+
+    &-Content {
+        padding: 0 15px 30px;
+        margin-top: -75px;
+
+        @include mq(max-width 1400px) {
+            padding: 0 10px 50px;
+        }
+    }
+}

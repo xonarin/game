@@ -1,0 +1,21 @@
+
+.StatsItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    & &-Icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    &-Main { margin-left: 15px; }
+
+    & &-Value,
+    & &-Label { display: block; }
+
+    & &-Label {
+        margin-top: 1px;
+        text-transform: uppercase;
+    }
+}

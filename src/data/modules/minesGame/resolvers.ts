@@ -1,0 +1,138 @@
+import { and, IRules } from 'graphql-shield';
+
+import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
+import { ApolloContext } from '../../../interfaces/apollo';
+import {
+    MinesGame,
+    MinesGameConfiguration,
+    Mutation,
+    MutationMakeMinesGameStepArgs,
+    MutationStartMinesGameArgs,
+    Query,
+} from '../../../__generated__/graphql';
+import { MinesGame as MinesGameBackend, MinesGameStatus } from '../../models/MinesGame';
+import { isAuth } from '../rules';
+import { checkMakeMinesGameStepArgs, checkStartMinesGameArgs } from './rules';
+import { UserError } from '../../../utils/errors';
+import { countOnes } from '../../../utils/number';
+import { FIELD_SIZE, generateMinesCoefs, getMinesCoef, getMinesCoefs, MIN_BOMBS_COUNT } from '../../../utils/mines';
+
+export type OriginMinesGameParent = MinesGameBackend;
+
+type QueryType = Pick<Query, 'minesGameConfiguration' | 'activeMinesGame'>;
+type MutationType = Pick<Mutation, 'startMinesGame' | 'endMinesGame' | 'makeMinesGameStep'>;
+type MinesGameType = Pick<MinesGame, 'id' | 'betAmount' | 'bombsCount' | 'fieldConf' | 'stepsConf' | 'status'>;
+
+interface QueryMapping {
+    minesGameConfiguration: Resolver<MinesGameConfiguration>;
+    activeMinesGame: Resolver<OriginMinesGameParent | null>;
+}
+
+interface MutationMapping {
+    startMinesGame: Resolver<OriginMinesGameParent, MutationStartMinesGameArgs>;
+    endMinesGame: Resolver<OriginMinesGameParent>;
+    makeMinesGameStep: Resolver<OriginMinesGameParent, MutationMakeMinesGameStepArgs>;
+}
+
+type MinesGameResolvers = Resolvers<
+    {
+        Query: TypeResolvers<QueryType, QueryMapping>;
+        Mutation: TypeResolvers<MutationType, MutationMapping>;
+        MinesGame: TypeResolvers<MinesGameType, {}, OriginMinesGameParent>;
+    },
+    ApolloContext
+>;
+
+export const rules: IRules = {
+    Query: {
+        activeMinesGame: isAuth,
+    },
+    Mutation: {
+        startMinesGame: and(isAuth, checkStartMinesGameArgs),
+        endMinesGame: isAuth,
+        makeMinesGameStep: and(isAuth, checkMakeMinesGameStepArgs),
+    },
+};
+
+export const resolvers: MinesGameResolvers = {
+    Query: {
+        minesGameConfiguration: () => {
+            return {
+                fieldSize: FIELD_SIZE,
+                minBombsCount: MIN_BOMBS_COUNT,
+                coefs: getMinesCoefs(),
+            };
+        },
+        activeMinesGame: (_0, _1, { user, repositories }) => {
+            return repositories.minesGames.getCurrentGame(user!.id);
+        },
+    },
+    Mutation: {
+        startMinesGame: async (_0, { input: { betAmount, bombsCount } }, { user, repositories }) => {
+            const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
+
+            if (currentGame) {
+                throw new UserError('MINES_GAME_ALREADY_ACTIVE');
+            }
+
+            await repositories.users.withdrawMoney(user!.id, betAmount);
+
+            const createdGame = await repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
+
+            await repositories.users.giveIncomeToReferrer(user!.id, betAmount * 0.05);
+
+            return createdGame;
+        },
+        endMinesGame: async (_0, _1, { user, repositories }) => {
+            const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
+
+            if (!currentGame) {
+                throw new UserError('NO_ACTIVE_MINES_GAME');
+            }
+
+            const madeStepsCount = countOnes(currentGame.stepsConf);
+            const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
+
+            // Increase turnover
+            const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+            if (coef >= minTurnoverCoef) {
+                await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
+            }
+
+            await repositories.users.giveMoney(user!.id, currentGame.betAmount * coef);
+
+            return repositories.minesGames.endGame(currentGame.id);
+        },
+        makeMinesGameStep: async (_0, { cell }, { user, repositories }) => {
+            const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
+
+            if (!currentGame) {
+                throw new UserError('NO_ACTIVE_MINES_GAME');
+            }
+
+            const updatedGame = await repositories.minesGames.makeStep(currentGame.id, cell);
+
+            // Increase turnover if game is ended
+            if (updatedGame.status === MinesGameStatus.Ended) {
+                const madeStepsCount = countOnes(updatedGame.stepsConf);
+                const coef = getMinesCoef(updatedGame.bombsCount, madeStepsCount);
+
+                const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+                if (coef >= minTurnoverCoef) {
+                    await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
+                }
+            }
+
+            return updatedGame;
+        },
+    },
+    MinesGame: {
+        fieldConf: game => {
+            // eslint-disable-next-line no-bitwise
+            return game.status === MinesGameStatus.Ended ? game.fieldConf : game.fieldConf & game.stepsConf;
+        },
+    },
+};
+
+// Pre-generating of mines coefs
+generateMinesCoefs();

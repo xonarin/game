@@ -1,0 +1,22 @@
+scalar URL
+
+schema {
+    query: Query
+    subscription: Subscription
+}
+
+type Query {
+    announcements: [Announcement!]!
+}
+
+type Subscription {
+    updatedAnnouncement: Announcement
+}
+
+type Announcement {
+    id: ID!
+    chatId: ID!
+    text: String!
+    image: URL
+    createdAt: DateTime!
+}

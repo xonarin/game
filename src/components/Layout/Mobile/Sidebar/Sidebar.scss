@@ -1,0 +1,76 @@
+.Sidebar {
+    position: fixed;
+    z-index: 33;
+    bottom: 0;
+    display: flex;
+    background: #090d15;
+    flex-direction: column;
+    width: 100%;
+    z-index: 999999999;
+
+    button {
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-Navigation-Button {
+        background: none;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-Selector {
+        background: none;
+        border: none;
+        padding: 0;
+        height: 34px !important;
+    }
+
+    &-Row {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        padding: 20px;
+    }
+
+    &-Message {
+        position: absolute;
+        bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        height: 100px;
+        align-items: center;
+        justify-content: space-around;
+
+        &-Type {
+            display: flex;
+
+            button {
+                background: none;
+                border: none;
+            }
+        }
+    }
+
+    &-Burger {
+        display: flex;
+        flex-wrap: wrap;
+
+        & > a {
+            flex: 0 0 50%;
+            padding: 17px 15px 17px 20px;
+            border-bottom: 1px solid #181a29;
+            border-right: 1px solid #181a29;
+        }
+
+        & span::after {
+            content: unset !important;
+        }
+    }
+}

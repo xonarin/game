@@ -1,0 +1,11 @@
+
+.Mines {
+    &-BetFormPanel.Panel { height: 100%; }
+
+    &-BetFormTitle.Text,
+    &-HistoryTitle.Text { padding-left: 13px; }
+    &-GuardButtton{
+        border: none;
+        background: none;
+    }
+}

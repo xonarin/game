@@ -1,0 +1,19 @@
+@import '../../../../assets/styles/mixins';
+
+.LayoutBonuse {
+    &-Tables {
+        display: flex;
+        margin-top: 50px;
+        width: 100%;
+
+        &-Left {
+            padding-right: 1%;
+            width: 50%;
+        }
+
+        &-Right {
+            padding-left: 1%;
+            width: 50%;
+        }
+    }
+}

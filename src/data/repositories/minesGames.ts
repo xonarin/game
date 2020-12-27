@@ -1,0 +1,93 @@
+/* eslint-disable no-bitwise */
+import { range } from 'lodash';
+import { Transaction } from 'sequelize';
+
+import BaseRepository from './base';
+import { MinesGame, MinesGameStatus } from '../models/MinesGame';
+import { FIELD_SIZE } from '../../utils/mines';
+import { UserError } from '../../utils/errors';
+
+class MinesGamesRepository extends BaseRepository {
+    async getGameById(gameId: string, transaction?: Transaction): Promise<MinesGame | null> {
+        return this.db.MinesGame.findByPk(gameId, {
+            ...this.sequelizeContext,
+            ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
+            rejectOnEmpty: false,
+        });
+    }
+
+    async getGameByIdStrict(gameId: string, transaction?: Transaction): Promise<MinesGame> {
+        const game = await this.getGameById(gameId, transaction);
+
+        if (!game) {
+            throw new UserError('NO_GAME');
+        }
+
+        return game;
+    }
+
+    async getCurrentGame(userId: string): Promise<MinesGame | null> {
+        return this.db.MinesGame.findOne({
+            where: {
+                userId,
+                status: MinesGameStatus.InGame,
+            },
+            order: [['id', 'DESC']],
+        });
+    }
+
+    async createGame(userId: string, betAmount: number, bombsCount: number): Promise<MinesGame> {
+        const { clientSeed, serverSeed, nonce } = await this.repositories.users.getUserByIdStrict(userId);
+
+        const numbers = await this.repositories.users.generateRandomNumbers(userId, FIELD_SIZE - 1);
+        const pickers = numbers.map((number, index) => Math.floor(number * (FIELD_SIZE - index)));
+
+        const initialBombs = range(FIELD_SIZE);
+        const resultBombs = pickers.reduce<number[]>((acc, picker) => {
+            acc.push(initialBombs.splice(picker, 1)[0]);
+            return acc;
+        }, []);
+        resultBombs.push(initialBombs[0]);
+
+        const pickedBombs = resultBombs.slice(0, bombsCount);
+        const fieldConf = pickedBombs.reduce((acc, bomb) => acc | (1 << bomb), 0);
+
+        return this.db.MinesGame.create({
+            userId,
+            betAmount,
+            bombsCount,
+            fieldConf,
+            clientSeed,
+            serverSeed,
+            nonce,
+        });
+    }
+
+    async endGame(gameId: string): Promise<MinesGame> {
+        const game = await this.getGameByIdStrict(gameId);
+
+        return game.update({ status: MinesGameStatus.Ended });
+    }
+
+    async makeStep(gameId: string, cell: number): Promise<MinesGame> {
+        const stepMask = 1 << cell;
+
+        return this.db.sequelize.transaction(async transaction => {
+            const game = await this.getGameByIdStrict(gameId, transaction);
+
+            if ((game.stepsConf & stepMask) !== 0) {
+                throw new UserError('CELL_ALREADY_STEPPED');
+            }
+
+            return game.update(
+                {
+                    stepsConf: game.stepsConf | stepMask,
+                    status: (game.fieldConf & stepMask) !== 0 ? MinesGameStatus.Ended : MinesGameStatus.InGame,
+                },
+                { transaction },
+            );
+        });
+    }
+}
+
+export default MinesGamesRepository;

@@ -1,0 +1,27 @@
+@import '../../assets/styles/vars';
+
+.Panel {
+    display: flex;
+    flex-direction: column;
+    border-radius: 6px;
+    overflow: hidden;
+
+    &-Head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 65px;
+        height: 65px;
+        padding: 0 15px;
+        background-color: lighten($color-bg, 9%);
+    }
+
+    &-Content {
+        height: calc(100% - 65px);
+        background-color: lighten($color-bg, 3%);
+    }
+
+    & .LiveFeedTable.Table {
+        max-width: 100%;
+    }
+}

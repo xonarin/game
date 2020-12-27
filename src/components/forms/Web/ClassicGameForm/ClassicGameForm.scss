@@ -1,0 +1,99 @@
+@import '../../../../assets/styles/vars';
+@import '../../../../assets/styles/mixins';
+
+.ClassicGameForm {
+    width: 100%;
+
+    &-Main {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 55px;
+        padding-left: 10px;
+        margin-bottom: 18px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: calc(100% - 10px);
+            height: 100%;
+            top: 0;
+            left: 5px;
+            border-radius: 5px;
+            background-color: lighten($color-bg, 6%);
+            transform: skewX(-8deg);
+        }
+    }
+
+    &-BetFieldContainer {
+        position: relative;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 0;
+        height: 100%;
+        padding: 0 10px;
+        cursor: text;
+    }
+
+    &-SubmitButton.Button_shape_right {
+        width: 180px;
+        height: 55px;
+
+        &::before {
+            width: 170px;
+            height: 55px;
+        }
+
+        .Button-Text {
+            font-size: $font-size-m;
+            line-height: $line-height-m;
+        }
+    }
+
+    &-Controls {
+        display: flex;
+
+        .Button_shape_right.Button_color_gray {
+            height: 35px;
+
+            .Button-Text {
+                font-size: $font-size-m;
+                line-height: $line-height-m;
+                text-transform: none;
+                transition: color 0.3s $nice-ease;
+            }
+
+            &::before {
+                width: calc(100% - 4px);
+                height: 35px;
+                background-color: lighten($color-bg, 6%);
+            }
+
+            & + .Button { margin-left: 4px; }
+
+            &:hover .Button-Text { color: $color-white; }
+        }
+    }
+
+    @include mq(max-width 1279px) {
+        &-Main::before { box-shadow: 2px 2px 25px 2px rgba(0, 0, 0, 0.5); }
+
+        &-SubmitButton.Button_shape_right {
+            width: 130px;
+
+            &::before { width: 120px; }
+        }
+
+        &-Controls .Button_shape_right.Button_color_gray {
+            &::before { box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.2); }
+
+            .Button-Text {
+                font-size: $font-size-xs;
+                line-height: $line-height-xs;
+            }
+        }
+    }
+}

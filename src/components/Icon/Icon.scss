@@ -1,0 +1,147 @@
+@import '../../assets/styles/mixins';
+
+$icon-types:
+    gamepad
+    gamepadWhite
+    ingots
+    ingotsWhite
+    play
+    playWhite
+    user
+    lightning
+    rub
+    cardsCut
+    ingotsCut
+    playRedCut
+    guard
+    guardTwo
+    diamond
+    sword
+    dice
+    bomb
+    bombWhite
+    automat
+    scissors
+    wheel
+    cards
+    cube
+    faq
+    swordWhite
+    diceWhite
+    automatWhite
+    scissorsWhite
+    wheelWhite
+    cardsWhite
+    cubeWhite
+    faqWhite
+    plusWhite
+    prize
+    bell
+    message
+    prizeWhite
+    bellWhite
+    messageWhite
+    signOut
+    smile
+    ban
+    delete
+    search
+    send
+    letter
+    letterWhite
+    gem
+    bombColored
+    caretLeft
+    close
+    left
+    right
+    balance
+    angryFace
+    checked
+    diagrams
+    link
+    peoples
+    star
+    caretLeftWhite
+    percentage
+    edit
+    rightWhite
+    qiwi
+    ruble
+    rubleWhite
+    add
+    minus
+    clock;
+
+.Icon {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &_size_m {
+        width: 22px;
+        height: 22px;
+    }
+
+    &_size_s {
+        width: 20px;
+        height: 20px;
+    }
+
+    &_size_xs {
+        width: 14px;
+        height: 14px;
+    }
+
+    &_size_xxl {
+        width: 60px;
+        height: 36px;
+    }
+
+    @each $type in $icon-types {
+        &_type_#{$type}::before {
+            background-image: url('./types/#{$type}.svg');
+        }
+    }
+
+    @each $type in $icon-types {
+        &_hover_#{$type} {
+            &::before {
+                opacity: 1;
+                transition: opacity 0.3s $nice-ease;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                display: block;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                background-image: url('./types/#{$type}.svg');
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                opacity: 0;
+                transition: opacity 0.3s $nice-ease;
+            }
+        }
+    }
+}

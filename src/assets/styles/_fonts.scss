@@ -1,0 +1,9 @@
+@import 'mixins';
+
+/* CUSTOM FONTS
+   =============================================== */
+
+@include font-face('OpenSans', '../../assets/fonts/OpenSans/OpenSans-Regular', 400, normal, eot ttf woff);
+@include font-face('OpenSans', '../../assets/fonts/OpenSans/OpenSans-SemiBold', 600, normal, eot ttf woff);
+@include font-face('OpenSans', '../../assets/fonts/OpenSans/OpenSans-Bold', 700, normal, eot ttf woff);
+@include font-face('Rubik', '../../assets/fonts/Rubik/Rubik-Bold', 700, normal, eot ttf woff);

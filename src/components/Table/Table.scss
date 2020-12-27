@@ -1,0 +1,111 @@
+@import '../../assets/styles/vars';
+@import '../../assets/styles/mixins';
+
+.Table {
+    padding: 20px 10px 15px;
+    background-color: lighten($color-bg, 3%);
+
+    &-Content {
+        width: 100%;
+        height: 100%;
+    }
+
+    &-Head {
+        padding: 0 5px;
+        margin-bottom: 15px;
+        white-space: nowrap;
+
+        &-Responsivity {
+            position: relative;
+            padding: 0 5px;
+            margin-bottom: 15px;
+            white-space: nowrap;
+            display: flex;
+            justify-content: space-around;
+
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 0;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    &-Body {
+        overflow: hidden;
+
+        & .Table-Row:nth-child(1) .Badge-Back {
+            background-color: rgba($color-gold-bonuse, 0.3);
+            border-color: $color-gold-bonuse;
+        }
+
+        & .Table-Row:nth-child(1) .Badge-Value {
+            color: $color-gold-bonuse;
+        }
+
+        & .Table-Row:nth-child(2) .Badge-Back {
+            background-color: rgba($color-silver, 0.4);
+            border: 2px solid $color-silver;
+        }
+
+        & .Table-Row:nth-child(2) .Badge-Value {
+            color: $color-silver;
+        }
+
+        & .Table-Row:nth-child(3) .Badge-Back {
+            background-color: rgba($color-bronze, 0.3);
+            border: 2px solid $color-bronze;
+        }
+
+        & .Table-Row:nth-child(3) .Badge-Value {
+            color: $color-bronze;
+        }
+    }
+
+    &-RowContainer {
+        min-width: 100%;
+        overflow: hidden;
+
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+    }
+
+    &-Row {
+        border-radius: 5px;
+        padding: 5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        &:nth-child(odd) {
+            background-color: lighten($color-bg, 8%);
+        }
+
+        &:nth-child(even) {
+            background-color: lighten($color-bg, 6%);
+        }
+
+        &::after {
+            content: '';
+            display: inline-block;
+            height: 65px;
+            width: 0;
+            vertical-align: middle;
+        }
+
+        & + & {
+            margin-top: 10px;
+        }
+    }
+
+    &-HeadCell,
+    &-RowCell {
+        display: inline-block;
+        padding: 0 5px;
+        vertical-align: middle;
+        white-space: normal;
+    }
+}

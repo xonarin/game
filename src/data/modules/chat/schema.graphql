@@ -1,0 +1,88 @@
+scalar URL
+scalar DateTime
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+enum ChatType {
+    Game
+    Pm
+    AdminAnnouncements
+}
+
+type Query {
+    chats(search: String, offset: Int): ChatsPayload!
+    chat(chatId: ID!): Chat!
+    unreadCount: Int!
+}
+
+type Mutation {
+    sendMessage(input: SendMessageInput!): Message!
+    deleteMessage(input: DeleteMessageInput!): DeletedMessagePayload!
+    warnChat(input: WarnChatInput!): DeletedMessagesBySenderPayload!
+    createPmChat(input: CreatePmChatInput!): Chat!
+    readChat(chatId: ID!): Int!
+}
+
+type Subscription {
+    sentMessage: Message
+    deletedMessage(chatId: ID!): DeletedMessagePayload
+    deletedMessagesBySender(chatId: ID!): DeletedMessagesBySenderPayload
+}
+
+type Chat {
+    id: ID!
+    type: ChatType!
+    title: String
+    image: URL
+    updatedAt: DateTime!
+    members: [User!]!
+    messages(offset: Int): [Message!]!
+    messagesCount: Int!
+    unreadMessagesCount: Int!
+}
+
+type Message {
+    id: ID!
+    chatId: ID!
+    chatType: ChatType!
+    sender: User!
+    message: String!
+    createdAt: DateTime!
+}
+
+type ChatsPayload {
+    items: [Chat!]!
+    count: Int!
+}
+
+input SendMessageInput {
+    chatId: ID!
+    message: String!
+}
+
+input DeleteMessageInput {
+    messageId: ID!
+}
+
+type DeletedMessagePayload {
+    chatId: ID!
+    messageId: ID!
+}
+
+input WarnChatInput {
+    userId: ID!
+}
+
+type DeletedMessagesBySenderPayload {
+    chatIds: [ID!]!
+    senderId: ID!
+}
+
+input CreatePmChatInput {
+    userId: ID!
+    message: String!
+}

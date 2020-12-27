@@ -1,0 +1,30 @@
+@import '../../../../assets/styles/mixins';
+
+.LayoutReferal {
+    &-Container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    &-Icon {
+        margin: 60px 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    &-Diagrams {
+        display: flex;
+        width: 100%;
+
+        &-Left {
+            padding-right: 1%;
+            width: 50%;
+        }
+
+        &-Right {
+            padding-left: 1%;
+            width: 50%;
+        }
+    }
+}

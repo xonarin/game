@@ -1,0 +1,28 @@
+@import '../../../../../assets/styles/vars';
+@import '../../../../../assets/styles/mixins';
+
+.HitsItemsGroup {
+    position: relative;
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        top: 50%;
+        left: 0;
+        margin-top: -0.5px;
+        background-color: lighten($color-bg, 11%);
+    }
+
+    & + & {
+        padding-left: 6.25%;
+
+        @include mq(max-width 1279px) {
+            padding-left: 3.33%;
+        }
+    }
+}

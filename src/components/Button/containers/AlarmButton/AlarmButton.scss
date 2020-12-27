@@ -1,0 +1,43 @@
+@import '../../../../assets/styles/vars';
+
+.AlarmButton {
+    position: relative;
+
+    & &-Button.Button_shape_right {
+        display: block;
+        width: 45px;
+        height: 40px;
+
+        &::before {
+            width: 40px;
+            background-color: #1c2135;
+        }
+
+        .Button-Icon {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &-Alarm {
+        position: absolute;
+        top: 7px;
+        right: 10px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        border: 2px solid #1c2135;
+        background-color: lighten($color-red, 8%);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0);
+        transition: background-color 0.3s $nice-ease, opacity 0.3s $nice-ease, visibility 0.3s $nice-ease, transform 0.3s $nice-ease;
+        z-index: 10;
+
+        &_isActive {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+    }
+}

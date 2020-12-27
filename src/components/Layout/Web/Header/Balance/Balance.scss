@@ -1,0 +1,124 @@
+@import '../../../../../assets/styles/vars';
+
+.Balance {
+    position: relative;
+    width: 140px;
+    height: 50px;
+
+    &-Main {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 120px;
+        height: 100%;
+        padding: 0 18px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 60px;
+            height: 48px;
+            top: 0;
+            left: 0;
+            border-radius: 5px 0 0 5px;
+            border: 1px solid $color-gray;
+            border-right-width: 0;
+            z-index: 1;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 60px;
+            height: 48px;
+            top: 0;
+            right: 5px;
+            border-radius: 0 5px 5px 0;
+            border: 1px solid $color-gray;
+            border-left-width: 0;
+            transform: skewX(-15deg);
+            z-index: 1;
+        }
+    }
+
+    & &-Label {
+        position: relative;
+        display: block;
+        z-index: 2;
+    }
+
+    &-ValueContainer {
+        position: relative;
+    }
+
+    & &-Value {
+        position: relative;
+        z-index: 2;
+
+        .TextIcon-Text { line-height: 14px; }
+
+        .TextIcon-Icon { margin-left: 6px; }
+    }
+
+    & &-Diff {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        line-height: 12px;
+        visibility: hidden;
+        z-index: 3;
+        animation: 0.8s ease-out 0s diff-appear;
+
+        &_type_red { color: $color-red; }
+
+        &_type_green {
+            color: $color-green;
+            animation-direction: reverse;
+        }
+    }
+
+    & &-Button.Button_shape_right {
+        position: absolute;
+        width: 45px;
+        height: 18px;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        z-index: 2;
+
+        &::before {
+            width: 40px;
+            height: 18px;
+            transform: translate(-50%, -50%) skewX(-15px);
+        }
+
+        .Button-Icon {
+            width: 10px;
+            height: 10px;
+            vertical-align: baseline;
+        }
+    }
+}
+
+@keyframes diff-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(100%);
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(150%);
+        visibility: visible;
+    }
+}

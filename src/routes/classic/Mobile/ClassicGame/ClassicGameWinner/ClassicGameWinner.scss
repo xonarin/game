@@ -1,0 +1,54 @@
+@import '../../../../../assets/styles/vars';
+
+.ClassicGameWinner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    border-radius: 5px;
+    padding: 15px 20px;
+    background-color: lighten($color-bg, 1%);
+    white-space: nowrap;
+    overflow: hidden;
+
+    &-Left { min-width: 0; }
+
+    &-Avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 5px;
+    }
+
+    &-LeftInfo {
+        display: inline-block;
+        max-width: calc(100% - 40px);
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+
+    &-Username {
+        display: block;
+        max-width: 100%;
+        margin-bottom: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &-Chance { display: block; }
+
+    &-RightInfo {
+        min-width: 190px;
+        margin-left: 20px;
+    }
+
+    &-Ticket {
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    &-RandomNumber {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

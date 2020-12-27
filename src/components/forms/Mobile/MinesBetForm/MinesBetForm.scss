@@ -1,0 +1,45 @@
+@import '../../../../assets/styles/vars';
+
+.MinesBetForm {
+    padding: 20px;
+
+    &-Fields { position: relative; }
+
+    &-Fields_isDisabled {
+        opacity: 0.5;
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: not-allowed;
+            z-index: 99;
+        }
+    }
+
+    & &-Label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    & &-BetField { margin-bottom: 15px; }
+
+    & &-SubmitButton {
+        width: 100% !important;
+        height: 60px;
+        margin-top: 30px;
+
+        &::before { width: calc(100% - 10px) !important; }
+
+        &:hover::before { transform: translate(-50%, -50%) skewX(-8deg); }
+
+        &_isDisabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}

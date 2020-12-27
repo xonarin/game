@@ -1,0 +1,5 @@
+fragment ClassicGameBet on ClassicGameBet {
+    id
+    userId
+    amount
+}

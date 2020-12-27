@@ -1,0 +1,5 @@
+subscription SwitchedToClassicGameStateEnded {
+    switchedToClassicGameStateEnded {
+        ...ClassicGamesHistoryItem
+    }
+}

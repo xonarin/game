@@ -1,0 +1,45 @@
+
+.Chat {
+    & &-PanelTitle { margin-left: 10px; }
+
+    & .Panel-Content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    & &-Messages {
+        flex: 1;
+        min-height: 0;
+    }
+
+    &-MessagesItems { padding: 25px 20px; }
+
+    &-Online {
+        display: flex;
+        align-items: center;
+    }
+
+    &-OnlinePulse {
+        width: 10px;
+        height: 10px;
+        box-shadow: 0 0 0 0 rgba(164, 214, 90, 0.7);
+        border-radius: 50%;
+        background-color: #a5d65c;
+        cursor: pointer;
+        animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        margin-right: 10px;
+    }
+
+    &-OnlineCount {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 16px;
+        color: #a5d65c;
+    }
+}
+
+@keyframes pulse {
+    to {
+        box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
+    }
+}

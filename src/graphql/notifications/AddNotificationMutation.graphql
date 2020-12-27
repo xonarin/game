@@ -1,0 +1,5 @@
+mutation AddNotification($input: AddNotificationInput!) {
+    addNotification(input: $input) @client {
+        ...Notification
+    }
+}

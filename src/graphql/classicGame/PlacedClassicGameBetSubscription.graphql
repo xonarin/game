@@ -1,0 +1,11 @@
+subscription PlacedClassicGameBet {
+    placedClassicGameBet {
+        fund
+        bet {
+            ...ClassicGameBet
+        }
+        players {
+            ...ClassicGamePlayer
+        }
+    }
+}

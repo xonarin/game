@@ -1,0 +1,5 @@
+subscription DeletedMessagesBySender($chatId: ID!) {
+    deletedMessagesBySender(chatId: $chatId) {
+        senderId
+    }
+}

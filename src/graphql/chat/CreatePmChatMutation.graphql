@@ -1,0 +1,5 @@
+mutation CreatePmChat($input: CreatePmChatInput!, $messagesOffset: Int) {
+    createPmChat(input: $input) {
+        ...Chat
+    }
+}

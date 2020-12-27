@@ -1,0 +1,48 @@
+
+$emoji-alts:
+    smile
+    big_smile
+    cry_smile
+    open_eyes_smile
+    close_eyes_smile
+    drop_smile
+    very_smile
+    angel
+    devil
+    wink;
+
+$emoji-size: 40;
+$emoji-margin: 1;
+$emojis-in-row: 10;
+
+$emoji-sizes: (
+    xs: 12,
+    s: 15,
+    m: 22,
+);
+
+.Emoji {
+    display: inline-block;
+    margin: 0 2px;
+    background-image: url(./emojis.png);
+    background-size: cover;
+
+    @each $size-name, $out-size in $emoji-sizes {
+        &_size_#{$size-name} {
+
+            $size: ($emoji-size + $emoji-margin) * $out-size / $emoji-size;
+
+            width: #{$out-size}px;
+            height: #{$out-size}px;
+
+            @for $index from 0 to length($emoji-alts) {
+                $i: $index % $emojis-in-row;
+                $j: floor($index / $emojis-in-row);
+
+                &.Emoji_alt_#{nth($emoji-alts, $index + 1)} {
+                    background-position: -#{$i * $size}px -#{$j * $size}px;
+                }
+            }
+        }
+    }
+}
