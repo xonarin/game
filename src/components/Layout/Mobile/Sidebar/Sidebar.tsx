@@ -11,11 +11,12 @@ import AlarmButton from '../../../Button/containers/AlarmButton/AlarmButton';
 export interface SidebarMobileProps {
     openPopUp: Function;
     openChat: Function;
+    closePopUp: Function;
 }
 
 const cnSidebar = cn(s, 'Sidebar');
 
-const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) => {
+const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, closePopUp }) => {
     const [msgToggle, setMsgToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     useStyles(s);
@@ -25,16 +26,30 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) =>
         <aside className={cnSidebar()}>
             {allToggle ? (
                 <div className={cnSidebar('Burger')}>
-                    <NavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
-                    <NavigationItem to="/referal" text="Рефералы" icon="gamepad" iconHover="gamepadWhite" />
-                    <NavigationItem to="/profile" text="Профиль" icon="user" iconHover="user" />
-                    <NavigationItem to="/fair-play" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
-                    <NavigationItem to="/fag" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
-                    <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/referal" text="Рефералы" icon="gamepad" iconHover="gamepadWhite" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/profile" text="Профиль" icon="user" iconHover="user" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/fair-play" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="/fag" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
+                    </button>
                 </div>
             ) : null}
             <div className={cnSidebar('Row')}>
-                <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
+                <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                    <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
+                </button>
                 <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => openPopUp()}>
                     <NavigationItem icon="ingots" iconHover="ingotsWhite" />
                 </button>
@@ -52,11 +67,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) =>
                     />
                 </button>
                 <div>
-                    <button
-                        type="button"
-                        className={cnSidebar('Selector')}
-                        
-                    >
+                    <button type="button" className={cnSidebar('Selector')}>
                         <AlarmButton
                             isAlarm={Boolean(unreadCount && unreadCount > 0)}
                             icon="message"
@@ -65,8 +76,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) =>
                                 setMsgToggle(!msgToggle);
                                 setAllToggle(false);
                             }}
-                        className={cnSidebar('Selector')}
-
+                            className={cnSidebar('Selector')}
                         />
                     </button>
                     {msgToggle ? (
@@ -94,7 +104,9 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat }) =>
                         </div>
                     ) : null}
                 </div>
+                <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
                 <NavigationItem to="/" icon="user" iconHover="user" />
+                </button>
             </div>
         </aside>
     );

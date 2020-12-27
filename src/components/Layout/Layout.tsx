@@ -85,6 +85,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
                             setPopUp(true);
                         }}
                         openChat={() => chatChange()}
+                        closePopUp={()=>setPopUp(false)}
                     />
                 </div>
             </div>
