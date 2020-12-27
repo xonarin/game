@@ -1,11 +1,11 @@
 import React from 'react'
-import Icon from '../../Icon/Icon'
-import Text from '../../Text/Text'
+import Icon from '../../../Icon/Icon'
+import Text from '../../../Text/Text'
 import s from './FirePlay.scss';
-import { cn } from '../../../utils/bem-css-module';
-import EditbleInput from '../../inputs/EditbleInput/EditbleInput';
+import { cn } from '../../../../utils/bem-css-module';
+import EditbleInput from '../../../inputs/EditbleInput/EditbleInput';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import Link from '../../Link/Link';
+import Link from '../../../Link/Link';
 export interface FirePlayProps{
     close:Function
 }
@@ -18,7 +18,7 @@ const FirePlay:React.FC<FirePlayProps> = ({close}) => {
         <div className={cnFirePlay()}>
             <div className={cnFirePlay('Header')}>
                 <div>
-                    <Icon type='diceWhite' />
+                    <Icon type='guard' />
                     <Text color='white'>
                         Честная игра
                 </Text>
@@ -69,7 +69,7 @@ const FirePlay:React.FC<FirePlayProps> = ({close}) => {
             </div>
             <div className={cnFirePlay('Footer')}>
                 <Text>
-                    Для того чтобы изменить клиентский или серверный сид нажмите <Icon type='edit'/>
+                    Для смены вашего серверного сида нажмите на иконку <Icon type='edit'/>
                </Text>
             </div>
         </div>

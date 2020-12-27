@@ -6,7 +6,7 @@
     flex-direction: column;
     width: 100%;
     margin-top: 15px;
-
+    position: relative;
     &-Title {
         display: flex;
         align-items: center;
@@ -41,7 +41,7 @@
             align-items: center;
             margin-left: 15px;
             padding-right: 15px;
-            border-right: 1px solid #3a4150;
+            border-right: 1px solid #4986f5;
             height: 30px;
 
         }
@@ -53,7 +53,7 @@
             width: 100%;
             height: 48px;
             background: none;
-            border: 1px solid #343b48;
+            border: 1px solid #4986f5;
             border-radius: 5px;
             padding-left: 58px;
             
@@ -70,7 +70,7 @@
               
                 font-size: $font-size-m;
                 font-weight: 400;
-                color:  #343b48;
+                color:  #5e6b86;
               }
         }
     }
@@ -85,8 +85,9 @@
         height: 32px;
         width: 19%;
         border: none;
-        background: #313846;
+        background: #182339;
         border-radius: 5px;
+        cursor: pointer;
         :last-child{
             margin-left: 7px;
         }
@@ -94,7 +95,7 @@
             height: 32px;
             width: 19%;
             border: 2px solid #4986f5;
-            background: #313846;
+            background: #182339;
             border-radius: 5px;
         }
     }
@@ -103,13 +104,41 @@
         height: 32px;
         width: 19%;
         border: 2px solid #4986f5;
-        background: #313846;
+        background: #182339;
         border-radius: 5px;
         :last-child{
             margin-left: 7px;
         }
     
     }
+
+
+
+    &-Amount-Mobile {
+        height: 32px;
+        width: 24%;
+        border: none;
+        background: #182339;
+        border-radius: 5px;
+        &:hover {
+            height: 32px;
+            width: 24%;
+            border: 2px solid #4986f5;
+            background: #182339;
+            border-radius: 5px;
+        }
+    }
+
+    &-Amount-Active-Mobile {
+        height: 32px;
+        width: 24%;
+        border: 2px solid #4986f5;
+        background: #182339;
+        border-radius: 5px;
+      
+    
+    }
+
 
     &-Error {
         position: absolute;

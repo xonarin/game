@@ -51,7 +51,8 @@ const HitsItems: React.FC<HitsItemsProps> = ({ current, items }) => {
         ];
 
         if ($currentGroup) {
-            $currentGroup.scrollIntoView({ behavior: 'smooth' });
+            $currentGroup.scrollIntoView({ behavior: 'smooth',inline:'start', block: 'nearest',
+        });
         }
     }, [current, maxItemsInGroup]);
 

@@ -10,9 +10,13 @@ import Link from '../../../Link/Link';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
 import logoImg from './logo.svg';
 import PreLoader from '../../../PreLoader/PreLoader';
+export interface LayoutHeaderMobileProps{
+    openPopUp:Function
+}
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
-const LayoutHeaderMobile: React.FC = () => {
+
+const LayoutHeaderMobile: React.FC<LayoutHeaderMobileProps> = ({openPopUp}) => {
     useStyles(s);
 
     const { me, loading } = useMeQuery();
@@ -41,9 +45,10 @@ const LayoutHeaderMobile: React.FC = () => {
                     <AnnouncementsWidget className={cnLayoutHeader('Button')} />
                 </div>
 
-                <img src={logoImg} alt="Рулетка" />
-
-                <Balance money={me?.money || 0} />
+                <Link to="/all-games">
+                    <img src={logoImg} alt="Рулетка" />
+                </Link>
+                <Balance money={me?.money || 0} openPopUp={()=>openPopUp()}/>
             </div>
         </header>
     );

@@ -10,12 +10,12 @@ import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';
 import PreLoader from '../PreLoader/PreLoader';
 import PopUp from './Mobile/PopUp/PopUp';
+import DepositPopUp from '../PopUp';
 import Chat from '../Chat/Mobile/Chat';
 
 export interface LayoutProps {
     children: React.ReactNode;
     fullScreen?: Boolean;
-
 }
 
 const cnLayout = cn(s, 'Layout');
@@ -24,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [popUp, setPopUp] = useState(false);
     const [chat, setChat] = useState(false);
+    const [deposit, setDeposit] = useState(false);
     useEffect(() => {
         if (typeof window !== 'object') {
             setIsLoading(true);
@@ -41,33 +42,50 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         setChat(!chat);
     };
 
+
+    const depositPopUp=()=>{
+        if(deposit && popUp){   
+            setPopUp(false)
+            setDeposit(false)
+            return
+        }
+        setDeposit(!deposit);
+        setPopUp(true);
+    }
+
+
     if (isLoading) {
         return <PreLoader />;
     }
 
     if (typeof window !== 'undefined' && window.screen.width < 992) {
-        
         if (fullScreen || chat) {
-            return (
-                <>
-                    {chat ? (
-                        <Chat chatId='1' closeChat={() => chatChange()} />
-                    ) : (
-                        <div >{children}</div>
-                    )}
-                </>
-            );
+            return <>{chat ? <Chat chatId="1" closeChat={() => chatChange()} /> : <div>{children}</div>}</>;
         }
         return (
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>
-                    <LayoutHeaderMobile />
+                    <LayoutHeaderMobile
+                        openPopUp={() => {
+                            depositPopUp()
+                        }}
+                    />
                     {popUp ? (
-                        <PopUp close={() => popUpChange()} />
+                        deposit ? (
+                            <DepositPopUp type="transaction" mobile={true} close={() => popUpChange()} />
+                        ) : (
+                            <PopUp close={() => popUpChange()} />
+                        )
                     ) : (
                         <div className={cnLayout('Content')}>{children}</div>
                     )}
-                    <SidebarMobile openPopUp={() => popUpChange()} openChat={() => chatChange()} />
+                    <SidebarMobile
+                        openPopUp={() => {
+                            setDeposit(false);
+                            setPopUp(true);
+                        }}
+                        openChat={() => chatChange()}
+                    />
                 </div>
             </div>
         );

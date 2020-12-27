@@ -60,7 +60,7 @@ const PercentBlock: React.FC = () => {
                     </div>
                     <div className={cnPercentBlock("Input")}>
                         <div className={cnPercentBlock("Input-Icon")}>
-                            <Icon type='ruble' />
+                            <Icon type='diamond' />
                         </div>
                         {error ? <div className={cnPercentBlock('Error')}><Text color='red'>{error}</Text></div> : null}
                         <input value={amount} key="amount" onChange={handleChange} className={error ? cnPercentBlock('Input-Error') : undefined} onBlur={checkValue} />
@@ -77,7 +77,7 @@ const PercentBlock: React.FC = () => {
                     </div>
                     <div className={cnPercentBlock("Input")}>
                         <div className={cnPercentBlock("Input-Icon")}>
-                            <Icon type='ruble' />
+                            <Icon type='diamond' />
                         </div>
                         <input value={finalAmount} key="finalAmount" onChange={finalyAmountChange} />
                     </div>

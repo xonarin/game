@@ -45,13 +45,14 @@ const HitsItems: React.FC<HitsItemsProps> = ({ current, items }) => {
 
     useEffect(() => {
         if (!scrollerRef.current) return;
-
+        
         const $currentGroup = scrollerRef.current.getElementsByClassName(cnHitsItemsGroup())[
             current !== 0 ? Math.floor((current - 1) / maxItemsInGroup) : 0
         ];
-
+        $currentGroup.scrollIntoView
         if ($currentGroup) {
-            $currentGroup.scrollIntoView({ behavior: 'smooth' });
+            $currentGroup.scrollIntoView({ behavior: 'smooth',inline:'start', block: 'nearest',
+        });
         }
     }, [current, maxItemsInGroup]);
 

@@ -2,17 +2,17 @@
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-
+    position: relative;
     &-Input {
         padding-left: 15px;
         padding-right: 35px;
         color: white;
         position: absolute;
-        width: calc(33%-30px);
+        width: 100%;
         border-radius: 5px;
         border: none;
         height: 45px;
-        background: #242833;
+        background-color: #151f32;
 
         &:focus {
             outline: none;
@@ -28,6 +28,7 @@
         height: 45px;
         display: flex;
         align-items: center;
+        cursor: pointer;
 
         &:focus {
             outline: none;

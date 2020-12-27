@@ -1,16 +1,16 @@
-@import '../../../assets/styles/vars';
+@import '../../../../assets/styles/vars';
 
 .FirePlay {
     display: flex;
     flex-direction: column;
-    width: 33%;
+    width: 480px;
 
     &-Header {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         display: flex;
         justify-content: space-between;
-        background: #2d3341;
+        background-color: #182339; 
         padding: 25px 15px;
 
         :first-child {
@@ -22,6 +22,7 @@
             border: none;
             padding: 0;
             margin: 0;
+            cursor: pointer;
 
             &:focus {
                 outline: none;
@@ -31,7 +32,7 @@
 
     &-Description {
         padding: 25px 15px;
-        background: #242833;
+        background-color: #151f32;
 
         &-Row {
             margin-bottom: 15px;
@@ -39,7 +40,7 @@
     }
 
     &-Settings {
-        background: #2d3341;
+        background-color: #182339;
         display: flex;
         flex-direction: column;
         padding: 25px 15px;
@@ -53,7 +54,7 @@
 
     &-Footer {
         padding: 25px 15px;
-        background: #242833;
+        background-color: #151f32;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
     }
