@@ -10,7 +10,7 @@
         justify-content: space-between;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-        background: #2d3341;
+        background-color: #182339;
         padding: 15px 15px;
     }
 
@@ -92,7 +92,7 @@
     &-Description {
         display: flex;
         flex-direction: column;
-        background: #272d39;
+        background-color: #151f32;
         overflow-y: scroll;
     }
 
@@ -106,14 +106,14 @@
         display: flex;
         width: 100%;
         flex-direction: column;
-        background: #272d39;
+        background-color: #182339;
         :first-child{
             border-top: none;
         }
     }
 
     &-SelectetedMethod{
-        border:1px solid #3a4150;
+        border: 1px solid #4986f5;
         margin: 0 20px;
         border-radius: 5px;
         padding: 5px;
@@ -127,7 +127,7 @@
         }
     }
     &-PaymentsList{
-        background: #2d3340;
+        background: #151f32;
         margin: 0 20px;
     }
     &-Method {
@@ -137,7 +137,7 @@
         padding-left: 20px;
         display: flex;
         align-items: center;
-        border-top: 1px solid #272d39;
+        width: 100%;
 
         &:focus {
             outline: none;
@@ -175,7 +175,7 @@
         background: none;
         border: none;
         padding-left: 20px;
-        background: #272d39;
+        background-color: #151f32;
         display: flex;
         align-items: center;
 
@@ -231,8 +231,8 @@
     &-Go-To-Payment{
         margin-top: 20px;
        height: 54px;
-        background: #37cc44;
-       color: rgba(0,0,0,.65);
+        background: #4986f5;
+       color: white;
        border-radius: 5px;
        display: flex;
        justify-content: center;

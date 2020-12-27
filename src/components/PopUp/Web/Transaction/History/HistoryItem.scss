@@ -14,7 +14,9 @@
     }
     &-Short-Info{
         display: flex;
+        align-items: center;
         justify-content: space-between;
+        cursor: pointer;
     }
     &-Description{
         display: flex;

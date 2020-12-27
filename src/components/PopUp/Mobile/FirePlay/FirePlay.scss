@@ -15,7 +15,7 @@
         border-top-right-radius: 5px;
         display: flex;
         justify-content: space-between;
-        background: #2d3341;
+        background-color: #182339; 
         padding: 25px 15px;
 
         :first-child {
@@ -36,7 +36,7 @@
 
     &-Description {
         padding: 25px 15px;
-        background: #242833;
+        background-color: #151f32;
 
         &-Row {
             margin-bottom: 15px;
@@ -44,7 +44,7 @@
     }
 
     &-Settings {
-        background: #2d3341;
+        background-color: #182339;
         display: flex;
         flex-direction: column;
         padding: 25px 15px;
@@ -58,7 +58,7 @@
 
     &-Footer {
         padding: 25px 15px;
-        background: #242833;
+        background-color: #151f32;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
     }

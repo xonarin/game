@@ -93,7 +93,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> − 15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -111,7 +111,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 52 500<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> −15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -122,19 +122,13 @@ function Withdraw() {
                         <InputWithIcon title=" Номер банковской карты" type='card' icon={visa}/>
                         <PercentBlock />
 
-                        <div className={cnDeposit('Warning-Card')}>
-                          
-                            <Text >
-                            Конвертация рубля в гривну происходит по курсу ЦБ + комиссии платежного агрегатора
-                            </Text>
-                        </div>
                         <div className={cnDeposit('Go-To-Payment')}>
                             Заказать вывод
                         </div>
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 52 500<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> −15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -149,7 +143,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> − 15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -165,7 +159,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> − 15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}
@@ -180,7 +174,7 @@ function Withdraw() {
                     </div>
                     <div className={cnDeposit('Footer')}>
                         <Text>
-                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>500<Icon type='rubleWhite' size='xs' /> − 15 750<Icon type='rubleWhite' size='xs' /></Text>
+                            Комиссия: <Text color='white'>0%</Text> / Лимит одного пополнения: <Text color='white'>100<Icon type='diamond' size='xs' /> − 15 000<Icon type='diamond' size='xs' /></Text>
                         </Text>
                     </div>
                 </> : null}

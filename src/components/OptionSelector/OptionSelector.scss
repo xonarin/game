@@ -34,13 +34,14 @@
         width: calc(25%-6px);
         margin-top: 15px;
         height: 40px;
-        background: #313846;
+        background: #182339;
         border: none;
         border-radius: 5px;
         font-size: $font-size-m;
         line-height: $line-height-m;
         font-weight: 400;
         color: $color-white;
+        cursor: pointer;
         img{
             height: 17px;
             width: 17px;
@@ -62,7 +63,7 @@
         width: calc(25%-6px);
         margin-top: 15px;
         height: 40px;
-        background: #313846;
+        background: #182339;
         border: 2px solid #4986f5;
         border-radius: 5px;
         font-size: $font-size-m;

@@ -1,7 +1,7 @@
 .History {
     display: flex;
     flex-direction: column;
-    background: #272d39;
+    background: #151f32;
     height: 450px;
     &-Types {
         margin-top: 20px;
@@ -16,6 +16,7 @@
     &-Type {
         background: transparent;
         width: 180px;
+        font-weight: 700;
         text-transform: uppercase;
         cursor: pointer;
         margin: 0 10px;
@@ -23,7 +24,7 @@
         border: 1px solid #363d4c;
         border-radius: 6px;
         
-            color: #828f9a;
+            color: #ffffff;
         
         &:hover{
                 color: white !important;
@@ -37,12 +38,14 @@
         width: 180px;
         text-transform: uppercase;
         font-size: 13px;
+        font-weight: 700;
         cursor: pointer;
         margin: 0 10px;
         height: 44px;
-        border: 1px solid #363d4c;
+        border: 1px solid #4986f5;
         border-radius: 6px;
-        background: #363d4c;
+        background: #4986f5;
+        color: #ffffff;
         &:focus{
             outline: none;
         }

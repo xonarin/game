@@ -149,8 +149,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 250 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 250 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -159,24 +159,16 @@ function Deposit() {
                 {selectedMethod === 1 ? (
                     <>
                         <div>
-                            <OptionSelector type="mobile" />
                             <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
-                            <div className={cnDeposit('Warning')}>
-                                <Icon type="automat" />
-                                <Text>
-                                    Если у вас возникли трудности с оплатой попробуйте{' '}
-                                    <Text color="green">оплатить здесь</Text>
-                                </Text>
-                            </div>
                         </div>
                         <div className={cnDeposit('Footer')}>
                             <Text>
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 100 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 100 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -194,8 +186,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 100 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 100 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -213,8 +205,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 15 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 15 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -231,8 +223,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 500 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 500 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -249,8 +241,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 100 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 100 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>
@@ -267,8 +259,8 @@ function Deposit() {
                                 Комиссия: <Text color="white">0%</Text> / Лимит одного пополнения:{' '}
                                 <Text color="white">
                                     100
-                                    <Icon type="rubleWhite" size="xs" /> − 100 000
-                                    <Icon type="rubleWhite" size="xs" />
+                                    <Icon type="diamond" size="xs" /> − 100 000
+                                    <Icon type="diamond" size="xs" />
                                 </Text>
                             </Text>
                         </div>

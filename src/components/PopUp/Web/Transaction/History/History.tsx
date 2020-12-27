@@ -24,8 +24,8 @@ const History = () => {
                     <HistoryItem />
                 </div>
                 : <div className={cnHistory('EmptyHistory')}>
-                    <Text size='xl'>N/A</Text>
-                    <Text size='xl'>Вы еще не делали заявок</Text>
+                    <Text color='white' size='xl'>N/A</Text>
+                    <Text color='white' size='xl'>Вы еще не делали заявок</Text>
                 </div>}
             <div>
 

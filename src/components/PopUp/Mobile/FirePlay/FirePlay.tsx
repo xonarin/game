@@ -18,7 +18,7 @@ const FirePlayMobile: React.FC<FirePlayProps> = ({ close }) => {
         <div className={cnFirePlay()}>
             <div className={cnFirePlay('Header')}>
                 <div>
-                    <Icon type="diceWhite" />
+                    <Icon type="guard" />
                     <Text color="white">Честная игра</Text>
                 </div>
                 <button type="button" onClick={() => close()}>
@@ -65,7 +65,7 @@ const FirePlayMobile: React.FC<FirePlayProps> = ({ close }) => {
                 </div>
                 <div className={cnFirePlay('Footer')}>
                     <Text>
-                        Для того чтобы изменить клиентский или серверный сид нажмите <Icon type="edit" />
+                        Для смены вашего серверного сида нажмите на иконку <Icon type="edit" />
                     </Text>
                 </div>
             </div>

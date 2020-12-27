@@ -45,8 +45,9 @@ const LayoutHeaderMobile: React.FC<LayoutHeaderMobileProps> = ({openPopUp}) => {
                     <AnnouncementsWidget className={cnLayoutHeader('Button')} />
                 </div>
 
-                <img src={logoImg} alt="Рулетка" />
-
+                <Link to="/all-games">
+                    <img src={logoImg} alt="Рулетка" />
+                </Link>
                 <Balance money={me?.money || 0} openPopUp={()=>openPopUp()}/>
             </div>
         </header>

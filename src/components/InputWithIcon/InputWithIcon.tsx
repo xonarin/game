@@ -65,7 +65,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
             </div>
             <div className={cnInputWithIcon('Input')}>
                 <div className={cnInputWithIcon('Input-Icon')}>
-                    {fixedAmounts ? <Icon type="ruble" /> : <img src={icon} />}
+                    {fixedAmounts ? <Icon type="diamond" /> : <img src={icon} />}
                 </div>
                 {error ? (
                     <div className={cnInputWithIcon('Error')}>
@@ -88,7 +88,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('100')}
                         >
                             <Text color={amount === '100' ? 'white' : undefined}>
-                                100 <Icon type={amount === '100' ? 'rubleWhite' : 'ruble'} size={mobile ? 'xs' :'s'} />
+                                100 <Icon type={amount === '100' ? 'diamond' : 'diamond'} size={mobile ? 'xs' :'s'} />
                             </Text>
                         </button>
                         <button
@@ -96,7 +96,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('1000')}
                         >
                             <Text color={amount === '1000' ? 'white' : undefined}>
-                                1000 <Icon type={amount === '1000' ? 'rubleWhite' : 'ruble'} size={mobile ? 'xs' :'s'} />
+                                1000 <Icon type={amount === '1000' ? 'diamond' : 'diamond'} size={mobile ? 'xs' :'s'} />
                             </Text>
                         </button>
                         <button
@@ -104,7 +104,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('5000')}
                         >
                             <Text color={amount === '5000' ? 'white' : undefined}>
-                                5000 <Icon type={amount === '5000' ? 'rubleWhite' : 'ruble'} size={mobile ? 'xs' :'s'} />
+                                5000 <Icon type={amount === '5000' ? 'diamond' : 'diamond'} size={mobile ? 'xs' :'s'} />
                             </Text>
                         </button>
                         <button
@@ -114,7 +114,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('15000')}
                         >
                             <Text color={amount === '15000' ? 'white' : undefined}>
-                                15000 <Icon type={amount === '15000' ? 'rubleWhite' : 'ruble'} size={mobile ? 'xs' :'s'} />
+                                15000 <Icon type={amount === '15000' ? 'diamond' : 'diamond'} size={mobile ? 'xs' :'s'} />
                             </Text>
                         </button>
                     </div>
@@ -125,7 +125,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('100')}
                         >
                             <Text color={amount === '100' ? 'white' : undefined}>
-                                100 <Icon type={amount === '100' ? 'rubleWhite' : 'ruble'} size={mobile ? 'xs' :'s'} />
+                                100 <Icon type={amount === '100' ? 'diamond' : 'diamond'} size={mobile ? 'xs' :'s'} />
                             </Text>
                         </button>
                         <button
@@ -133,7 +133,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('1000')}
                         >
                             <Text color={amount === '1000' ? 'white' : undefined}>
-                                1000 <Icon type={amount === '1000' ? 'rubleWhite' : 'ruble'} />
+                                1000 <Icon type={amount === '1000' ? 'diamond' : 'diamond'} />
                             </Text>
                         </button>
                         <button
@@ -141,7 +141,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('5000')}
                         >
                             <Text color={amount === '5000' ? 'white' : undefined}>
-                                5000 <Icon type={amount === '5000' ? 'rubleWhite' : 'ruble'} />
+                                5000 <Icon type={amount === '5000' ? 'diamond' : 'diamond'} />
                             </Text>
                         </button>
                         <button
@@ -151,7 +151,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('15000')}
                         >
                             <Text color={amount === '15000' ? 'white' : undefined}>
-                                15000 <Icon type={amount === '15000' ? 'rubleWhite' : 'ruble'} />
+                                15000 <Icon type={amount === '15000' ? 'diamond' : 'diamond'} />
                             </Text>
                         </button>
                         <button
@@ -161,7 +161,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, tit
                             onClick={() => setAmount('50000')}
                         >
                             <Text color={amount === '50000' ? 'white' : undefined}>
-                                50000 <Icon type={amount === '50000' ? 'rubleWhite' : 'ruble'} />
+                                50000 <Icon type={amount === '50000' ? 'diamond' : 'diamond'} />
                             </Text>
                         </button>
                     </div>
