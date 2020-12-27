@@ -1,5 +1,0 @@
-subscription UpdatedAnnouncement {
-    updatedAnnouncement {
-        ...Announcement
-    }
-}

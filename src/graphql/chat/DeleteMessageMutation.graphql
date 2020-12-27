@@ -1,5 +1,0 @@
-mutation DeleteMessage($input: DeleteMessageInput!) {
-    deleteMessage(input: $input) {
-        messageId
-    }
-}

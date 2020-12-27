@@ -1,3 +1,0 @@
-mutation ReadChat($chatId: ID!) {
-    readChat(chatId: $chatId)
-}

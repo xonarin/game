@@ -1,5 +1,0 @@
-subscription DeletedMessage($chatId: ID!) {
-    deletedMessage(chatId: $chatId) {
-        messageId
-    }
-}

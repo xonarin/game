@@ -1,5 +1,0 @@
-mutation WarnChat($input: WarnChatInput!) {
-    warnChat(input: $input) {
-        senderId
-    }
-}

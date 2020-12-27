@@ -1,5 +1,0 @@
-mutation PlaceClassicGameBet($input: PlaceClassicGameBetInput!) {
-    placeClassicGameBet(input: $input) {
-        ...ClassicGameBet
-    }
-}

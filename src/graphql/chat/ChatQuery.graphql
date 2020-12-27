@@ -1,5 +1,0 @@
-query Chat($chatId: ID!, $messagesOffset: Int) {
-    chat(chatId: $chatId) {
-        ...Chat
-    }
-}

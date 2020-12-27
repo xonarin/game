@@ -1,5 +1,0 @@
-query Announcements {
-    announcements {
-        ...Announcement
-    }
-}

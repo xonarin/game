@@ -1,5 +1,0 @@
-mutation DeleteNotification($input: DeleteNotificationInput!) {
-    deleteNotification(input: $input) @client {
-        notificationId
-    }
-}

@@ -1,5 +1,0 @@
-mutation StartMinesGame($input: StartMinesGameInput!) {
-    startMinesGame(input: $input) {
-        ...MinesGame
-    }
-}

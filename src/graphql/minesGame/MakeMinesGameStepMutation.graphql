@@ -1,5 +1,0 @@
-mutation MakeMinesGameStep($cell: Int!) {
-    makeMinesGameStep(cell: $cell) {
-        ...MinesGame
-    }
-}

@@ -1,7 +1,0 @@
-fragment Announcement on Announcement {
-    id
-    chatId
-    text
-    image
-    createdAt
-}
