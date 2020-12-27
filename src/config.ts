@@ -45,8 +45,8 @@ export default {
         jwt: { secret: process.env.JWT_SECRET || 'idontknow' },
 
         vk: {
-            appId: process.env.VK_APP_ID || '7389243',
-            appSecret: process.env.VK_APP_SECRET || 'nSv8gRPyhjkuNiO5cvYf',
+            appId: process.env.VK_APP_ID || '7008761',
+            appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
         },
     },
 };
