@@ -1,28 +1,33 @@
-.HistoryItem{
+.HistoryItem {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 20px;
     border-bottom: 1px solid #2d3341;
     margin-bottom: 10px;
-    &-Service{
+
+    &-Service {
         display: flex;
     }
-    &-Info{
+
+    &-Info {
         display: flex;
         flex-direction: column;
     }
-    &-Short-Info{
+
+    &-Short-Info {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-    &-Description{
+
+    &-Description {
         display: flex;
         flex-direction: column;
         margin-top: 10px;
     }
-    &-Icon{
+
+    &-Icon {
         width: 36px;
         height: 36px;
         background: #363d4c;

@@ -5,6 +5,7 @@
     flex-direction: column;
     width: 95vw;
     height: calc(100vh-140px);
+
     &-Header {
         display: flex;
         justify-content: space-between;
@@ -29,7 +30,6 @@
         width: 100%;
         display: flex;
         justify-content: space-around;
-
     }
 
     &-Type {
@@ -46,15 +46,15 @@
         }
 
         &:hover {
-            i{
+            background: #4986f5;
+
+            i {
                 fill: white;
                 color: white;
                 stroke: white;
             }
-            background: #4986f5;
 
             span {
-
                 color: white !important;
             }
         }
@@ -72,15 +72,13 @@
         padding-right: 15px;
         border-radius: 5px;
         width: 190px;
+        background: #4986f5;
 
         :last-child {
             margin-left: 10px;
         }
 
-        background: #4986f5;
-
         span {
-
             color: white !important;
         }
 
@@ -107,29 +105,34 @@
         width: 100%;
         flex-direction: column;
         background-color: #182339;
-        :first-child{
+
+        :first-child {
             border-top: none;
         }
     }
 
-    &-SelectetedMethod{
+    &-SelectetedMethod {
         border: 1px solid #4986f5;
         margin: 0 20px;
         border-radius: 5px;
         padding: 5px;
         display: flex;
         align-items: center;
-        i{
+
+        i {
             transform: rotate(270deg);
         }
-        button{
+
+        button {
             width: 100%;
         }
     }
-    &-PaymentsList{
+
+    &-PaymentsList {
         background: #151f32;
         margin: 0 20px;
     }
+
     &-Method {
         height: 50px;
         background: none;
@@ -144,23 +147,23 @@
         }
 
         &-Icon {
-            img{
-                width: 22px;
-                height: 22px;
-            }
             width: 32px;
             height: 32px;
-            background: hsla(0, 0%, 100%, .08);
+            background: hsla(0, 0%, 100%, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             border-radius: 5px;
 
+            img {
+                width: 22px;
+                height: 22px;
+            }
         }
-        
     }
-    &-Category-Icon{
+
+    &-Category-Icon {
         background: #4986f5;
         height: 16px;
         width: 16px;
@@ -170,6 +173,7 @@
         align-items: center;
         justify-content: center;
     }
+
     &-Method-Active {
         height: 50px;
         background: none;
@@ -192,7 +196,6 @@
             justify-content: center;
             margin-right: 15px;
             border-radius: 5px;
-
         }
     }
 
@@ -200,8 +203,8 @@
         padding: 10px 20px 20px 20px;
         width: 100%;
     }
-    
-    &-Warning{
+
+    &-Warning {
         height: 54px;
         background: #343b48;
         margin-top: 20px;
@@ -210,12 +213,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        :last-child{
+
+        :last-child {
             width: 70%;
             margin-left: 15px;
         }
     }
-    &-Warning-Card{
+
+    &-Warning-Card {
         height: 54px;
         background: #21262f;
         margin-top: 20px;
@@ -225,22 +230,20 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-       
-
     }
-    &-Go-To-Payment{
+
+    &-Go-To-Payment {
         margin-top: 20px;
-       height: 54px;
+        height: 54px;
         background: #4986f5;
-       color: white;
-       border-radius: 5px;
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       font-size: 15px;
-
+        color: white;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
     }
-    
+
     &-Footer {
         border-top: 1px solid #3a4150;
         padding-top: 20px;
