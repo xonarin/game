@@ -10,13 +10,11 @@ import Link from '../../../Link/Link';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
 import logoImg from './logo.svg';
 import PreLoader from '../../../PreLoader/PreLoader';
-export interface LayoutHeaderMobileProps{
-    openPopUp:Function
-}
+
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
 
-const LayoutHeaderMobile: React.FC<LayoutHeaderMobileProps> = ({openPopUp}) => {
+const LayoutHeaderMobile: React.FC = () => {
     useStyles(s);
 
     const { me, loading } = useMeQuery();
@@ -48,7 +46,7 @@ const LayoutHeaderMobile: React.FC<LayoutHeaderMobileProps> = ({openPopUp}) => {
                 <Link to="/all-games">
                     <img src={logoImg} alt="Рулетка" />
                 </Link>
-                <Balance money={me?.money || 0} openPopUp={()=>openPopUp()}/>
+                <Balance money={me?.money || 0} />
             </div>
         </header>
     );

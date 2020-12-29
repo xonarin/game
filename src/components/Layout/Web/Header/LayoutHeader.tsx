@@ -37,7 +37,7 @@ const LayoutHeader: React.FC = () => {
                     <div className={cnLayoutHeader('Buttons')}>
                         <Link
                             className={cnLayoutHeader('Button')}
-                            to="/"
+                            to="/prize"
                             render={isActive => (
                                 <AlarmButton
                                     className={cnLayoutHeader('InnerButton', { isActive })}
