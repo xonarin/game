@@ -24,7 +24,6 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [popUp, setPopUp] = useState(false);
     const [chat, setChat] = useState(false);
-    const [deposit, setDeposit] = useState(false);
     useEffect(() => {
         if (typeof window !== 'object') {
             setIsLoading(true);
@@ -42,17 +41,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         setChat(!chat);
     };
 
-
-    const depositPopUp=()=>{
-        if(deposit && popUp){   
-            setPopUp(false)
-            setDeposit(false)
-            return
-        }
-        setDeposit(!deposit);
-        setPopUp(true);
-    }
-
+   
 
     if (isLoading) {
         return <PreLoader />;
@@ -66,26 +55,18 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>
                     <LayoutHeaderMobile
-                        openPopUp={() => {
-                            depositPopUp()
-                        }}
                     />
                     {popUp ? (
-                        deposit ? (
-                            <DepositPopUp type="transaction" mobile={true} close={() => popUpChange()} />
-                        ) : (
-                            <PopUp close={() => popUpChange()} />
-                        )
+                        <PopUp close={() => popUpChange()} />
                     ) : (
                         <div className={cnLayout('Content')}>{children}</div>
                     )}
                     <SidebarMobile
                         openPopUp={() => {
-                            setDeposit(false);
                             setPopUp(true);
                         }}
                         openChat={() => chatChange()}
-                        closePopUp={()=>setPopUp(false)}
+                        closePopUp={() => setPopUp(false)}
                     />
                 </div>
             </div>

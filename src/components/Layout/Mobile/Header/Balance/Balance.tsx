@@ -6,16 +6,15 @@ import { cn } from '../../../../../utils/bem-css-module';
 import Text from '../../../../Text/Text';
 import TextIcon from '../../../../TextIcon/TextIcon';
 import PopUp from '../../../../PopUp';
+import Link from '../../../../Link/Link';
 
 export interface BalanceProps {
     money: number;
-    openPopUp:Function
 }
 
 const cnBalance = cn(s, 'Balance');
 
-const Balance: React.FC<BalanceProps> = ({ money,openPopUp }) => {
-    const [popUpToggle, setPopUpToggle] = useState(false)
+const Balance: React.FC<BalanceProps> = ({ money }) => {
     const currentMoneyRef = useRef(money);
     const [diff, setDiff] = useState(0);
     
@@ -33,7 +32,7 @@ const Balance: React.FC<BalanceProps> = ({ money,openPopUp }) => {
     return (
         <div className={cnBalance()}>
             <div className={cnBalance('Main')}>
-                <button className={cnBalance('Deposit')} onClick={()=>openPopUp()}>
+                <Link to="/balance" className={cnBalance('Deposit')} >
 
                 <div className={cnBalance('ValueContainer')}>
                     <TextIcon className={cnBalance('Value')} text={money} icon="diamond" color="white" upper />
@@ -43,7 +42,7 @@ const Balance: React.FC<BalanceProps> = ({ money,openPopUp }) => {
                         </Text>
                     )}
                 </div>
-                </button>
+                </Link>
             </div>
         </div>
     );
