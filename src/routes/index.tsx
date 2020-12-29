@@ -21,7 +21,7 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'all-games' */ './AllGames'),
         },{
             path: '/prize',
-            load: () => import(/* webpackChunkName: 'prize' */ './Prize'),
+            load: () => import(/* webpackChunkName: 'prize' */ './prize'),
         },
         {
             path: '/faq',
