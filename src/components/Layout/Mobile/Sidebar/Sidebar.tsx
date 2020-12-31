@@ -33,16 +33,16 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         <NavigationItem to="/referal" text="Рефералы" icon="gamepad" iconHover="gamepadWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="/profile" text="Профиль" icon="user" iconHover="user" />
+                        <NavigationItem to="#" text="Профиль" icon="user" iconHover="user" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="/fair-play" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
+                        <NavigationItem to="#" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
                         <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="/fag" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
+                        <NavigationItem to="/faq" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
                     </button>
                 </div>
             ) : null}

@@ -7,7 +7,7 @@ import Text from '../../../components/Text/Text';
 import Link from '../../../components/Link/Link';
 import LiveFeedTable from '../../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
 import { cn } from '../../../utils/bem-css-module';
-import Layout33Content from '../../../components/Layout/Web/containers/Layout33Content';
+import Layout33Content from '../../../components/Layout/Mobile/containers/Layout33Content';
 import WelcomeHeader from '../../welcome/Header/WelcomeHeader';
 
 
