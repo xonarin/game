@@ -99,7 +99,15 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
             rightContent={<ClassicGame game={currentClassicGame} />}
             bottomContent={
                
-                       <HistoryTable/>
+                <Panel
+                    leftHead={
+                        <Text className={cnClassic('HistoryTitle')} font="Rubik" size="l" color="white" upper>
+                            Последние игры
+                        </Text>
+                    }
+                >
+                    <HistoryTable />
+                </Panel>
                  
             }
         />
