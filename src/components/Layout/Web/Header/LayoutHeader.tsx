@@ -29,7 +29,7 @@ const LayoutHeader: React.FC = () => {
             <div className={cnLayoutHeader('Container')}>
                 <nav className={cnLayoutHeader('Navigation')}>
                     <HeaderNavigationItem to="/all-games" text="Все игры" icon="gamepad" iconHover="gamepadWhite" />
-                    <HeaderNavigationItem to="/bonuse" text="Бонусы" icon="ingots" iconHover="ingotsWhite" />
+                    <HeaderNavigationItem to="/tournaments" text="Бонусы" icon="ingots" iconHover="ingotsWhite" />
                     <HeaderNavigationItem to="/faq" text="FAQ" icon="faq" iconHover="faqWhite" />
                 </nav>
                 <div className={cnLayoutHeader('Right')}>
@@ -37,7 +37,7 @@ const LayoutHeader: React.FC = () => {
                     <div className={cnLayoutHeader('Buttons')}>
                         <Link
                             className={cnLayoutHeader('Button')}
-                            to="/prize"
+                            to="/bonuse"
                             render={isActive => (
                                 <AlarmButton
                                     className={cnLayoutHeader('InnerButton', { isActive })}
