@@ -15,5 +15,9 @@
         @include mq(max-width 1400px) {
             padding: 0 10px 50px;
         }
+
+        @include mq(max-width 992px) {
+            padding: 0 0 50px;
+        }
     }
 }

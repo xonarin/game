@@ -114,11 +114,10 @@
         & &-Winner {
             flex-direction: column;
             align-items: flex-start;
-            height: 110px;
 
             .ClassicGameWinner-RightInfo { margin-left: 0; }
 
-            &_isEnded { margin-bottom: 65px; }
+            &_isEnded { margin-bottom: 65px; height: 110px;}
         }
 
         &-Main {
