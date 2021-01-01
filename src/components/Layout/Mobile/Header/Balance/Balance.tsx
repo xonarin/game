@@ -5,7 +5,7 @@ import s from './Balance.scss';
 import { cn } from '../../../../../utils/bem-css-module';
 import Text from '../../../../Text/Text';
 import TextIcon from '../../../../TextIcon/TextIcon';
-import PopUp from '../../../../PopUp';
+import Button from '../../../../Button/Button';
 import Link from '../../../../Link/Link';
 
 export interface BalanceProps {
@@ -44,6 +44,9 @@ const Balance: React.FC<BalanceProps> = ({ money }) => {
                 </div>
                 </Link>
             </div>
+            <Link to="/balance" className={cnBalance('DepositPlus')} >
+                <Button className={cnBalance('Button')} icon="plusWhite" />
+            </Link>
         </div>
     );
 };

@@ -2,26 +2,46 @@
 
 .Balance {
     position: relative;
-    width: 90px;
+    width: 105px;
     height: 40px;
     &-Deposit{
         background: none;
         border: none;
+    }
+
+    &-DepositPlus {
+        position: absolute;
+        width: 25px;
+        height: 18px;
+        top: 50%;
+        right: -5px;
+        transform: translateY(-50%);
+        z-index: 2;
+
+        & > button {
+            position: relative!important;
+            width: 25px!important;
+        
+            &::before {
+                width: 25px!important;
+            }
+        }
+
     }
     &-Main {
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 90px;
+        width: 105px;
         height: 100%;
-        padding: 0 18px;
+        padding: 0 10px;
 
         &::after {
             content: '';
             position: absolute;
             display: block;
-            width: 90px;
+            width: 105px;
             height: 40px;
             top: 0;
             right: 5px;
@@ -40,6 +60,8 @@
 
     &-ValueContainer {
         position: relative;
+        text-align: center;
+        left: -5px;
     }
 
     & &-Value {
