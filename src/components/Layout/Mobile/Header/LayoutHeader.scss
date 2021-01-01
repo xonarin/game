@@ -3,8 +3,8 @@
 .LayoutHeader {
     height: 160px;
     padding: 20px;
-    //background: linear-gradient(270deg, #1b2033 1.56%, #131521 98.33%);
-    background: #151724;
+    background: linear-gradient(270deg, #1b2033 1.56%, #131521 98.33%);
+    //background: #151724;
 
     &-Container {
         display: flex;
@@ -16,7 +16,8 @@
         right: 0;
         padding: 20px;
         z-index: 999;
-        background: #151724;
+        background: linear-gradient(270deg, #1b2033 1.56%, #131521 98.33%);
+        //background: #151724;
     }
 
 
