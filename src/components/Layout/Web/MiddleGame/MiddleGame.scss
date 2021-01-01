@@ -69,11 +69,11 @@
         & &-Title .Text { font-size: 20px; }
     }
 
-    @include mq(max-width 900px) {
+    @include mq(max-width 992px) {
         &-Head {
             width: 260px;
             height: 60px;
-            top: -15px;
+            top: -8px;
 
             &::before,
             &::after { width: 210px; }
