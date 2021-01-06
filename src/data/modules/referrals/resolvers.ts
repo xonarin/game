@@ -57,10 +57,9 @@ export const resolvers: ReferralsResolvers = {
         },
         referralsStats: async (_0, { type, period }, { user, repositories }) => {
             if (type === RefStatsType.Income) {
-                const fullAmount = await repositories.referralIncomes.getFullAmount(user!.id);
                 const entries = await repositories.referralIncomes.getIncomeStats(user!.id, period);
                 return {
-                    fullAmount: moneyRound(fullAmount),
+                    fullAmount: moneyRound(user!.refMoney),
                     mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                     entries,
                 };
