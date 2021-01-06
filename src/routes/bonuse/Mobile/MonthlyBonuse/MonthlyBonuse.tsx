@@ -63,7 +63,7 @@ const MonthlyBonuse = () => {
             <div className={cnMonthlyBonuse('Slider')}>
                 {users.map((user, index) => (
                     <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
-                        <div className={cnMonthlyBonuse('WinnerAvatar')} />
+                        <div className={cnMonthlyBonuse('WinnerAvatar')} style={{backgroundImage: `url(${user.avatar})`}} />
                         <div className={cnMonthlyBonuse('WinnerInfo')}>
                             <Text className={cnMonthlyBonuse('WinnerName')} color="blue" upper>
                                 {user.username}
