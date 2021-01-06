@@ -48,6 +48,7 @@ type GraphDataEntry {
 }
 
 type ReferralsStatsPayload {
+    fullAmount: Float!
     mainValue: Float!
     entries: [GraphDataEntry!]!
 }

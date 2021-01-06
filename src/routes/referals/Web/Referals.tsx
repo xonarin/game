@@ -18,7 +18,7 @@ const ReferalsWeb: React.FC = () => {
     const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
     const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
 
-    const { mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
+    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
 
     useStyles(s);
@@ -43,7 +43,7 @@ const ReferalsWeb: React.FC = () => {
                                 Зарабатывайте легко на бонусах без вложений
                         </Text>
                             <Text color="white">
-                                Заработано:  5000 ₽
+                                Заработано: {amountFullAmount} ₽
                         </Text>
                         </div>
 

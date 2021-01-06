@@ -57,16 +57,20 @@ export const resolvers: ReferralsResolvers = {
         },
         referralsStats: async (_0, { type, period }, { user, repositories }) => {
             if (type === RefStatsType.Income) {
+                const fullAmount = await repositories.referralIncomes.getFullAmount(user!.id);
                 const entries = await repositories.referralIncomes.getIncomeStats(user!.id, period);
                 return {
+                    fullAmount: moneyRound(fullAmount),
                     mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                     entries,
                 };
             }
 
             // type === RefStatsType.Count
+            const referralsCount = await repositories.users.getReferralsCount(user!.id);
             const entries = await repositories.users.getReferralsStats(user!.id, period);
             return {
+                fullAmount: referralsCount,
                 mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                 entries,
             };

@@ -20,7 +20,7 @@ const ReferalsMobile: React.FC = () => {
     const [referalsTypeToggle, setReferalsTypeToggle] = useState(false);
     const [amountToggle, setAmountToggle] = useState(false);
 
-    const { mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
+    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
 
     useStyles(s);
@@ -49,7 +49,7 @@ const ReferalsMobile: React.FC = () => {
                             <Text color="white" size="xl">
                                 Зарабатывайте легко на бонусах без вложений
                             </Text>
-                            <Text color="white">Заработано: 5000 ₽</Text>
+                            <Text color="white">Заработано: {amountFullAmount} ₽</Text>
                         </div>
 
                         <div className={cnReferal('Info-Link')}>
