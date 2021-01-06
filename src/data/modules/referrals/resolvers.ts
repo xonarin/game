@@ -16,6 +16,7 @@ import {
 } from '../../../__generated__/graphql';
 import { isAuth } from '../rules';
 import { checkReferralsArgs } from './rules';
+import { moneyRound } from "../../../utils/money";
 
 type QueryType = Pick<Query, 'referrals' | 'referralsStats'>;
 
@@ -58,7 +59,7 @@ export const resolvers: ReferralsResolvers = {
             if (type === RefStatsType.Income) {
                 const entries = await repositories.referralIncomes.getIncomeStats(user!.id, period);
                 return {
-                    mainValue: entries.reduce((acc, entry) => acc + entry.value, 0),
+                    mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                     entries,
                 };
             }
@@ -66,7 +67,7 @@ export const resolvers: ReferralsResolvers = {
             // type === RefStatsType.Count
             const entries = await repositories.users.getReferralsStats(user!.id, period);
             return {
-                mainValue: entries.reduce((acc, entry) => acc + entry.value, 0),
+                mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                 entries,
             };
         },

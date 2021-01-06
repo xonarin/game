@@ -5,6 +5,7 @@ import { ClassicGame } from '../../models/ClassicGame';
 import { MinesGame } from '../../models/MinesGame';
 import { getMinesCoef } from '../../../utils/mines';
 import { countOnes } from '../../../utils/number';
+import { moneyRound } from "../../../utils/money";
 
 const getClassicLiveDataGame = (game: ClassicGame) => {
     return {
@@ -31,7 +32,7 @@ const getMinesLiveDataGame = (game: MinesGame) => {
         avatar: game.user?.avatar || '',
         chance: isWin ? coef : 0,
         bet: game.betAmount,
-        fund: isWin ? game.betAmount * coef : 0,
+        fund: isWin ? moneyRound(game.betAmount * coef) : 0,
         time: game.updatedAt,
     };
 };
