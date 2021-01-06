@@ -1,6 +1,6 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-
+import { DateTime } from 'luxon';
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
@@ -9,6 +9,7 @@ import PeopleCircles from '../../../welcome/Banner/PeopleCircles/PeopleCircles';
 import s from './MonthlyBonuse.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../../components/Text/Text';
+import BonuseTablePlayer from '../BonuseTable/BonuseTablePlayer';
 import useTournamentQuery from '../../../../hooks/graphql/tournaments/useTournamentQuery';
 import { RefTournamentType } from '../../../../__generated__/graphql';
 
@@ -17,7 +18,11 @@ const cnMonthlyBonuse = cn(s, 'MonthlyBonuse');
 const MonthlyBonuse = () => {
     useStyles(s);
 
-    const { users } = useTournamentQuery(RefTournamentType.Monthly);
+    const { finish, users } = useTournamentQuery(RefTournamentType.Monthly);
+    const nowDateTime = DateTime.local();
+    const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
+    const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
+
 
     return (
         <div className={cnMonthlyBonuse('Content')}>
@@ -51,34 +56,32 @@ const MonthlyBonuse = () => {
                 <Text color="white" className={cnMonthlyBonuse('Intro-Text')}>
                     Успей принять участие!
                 </Text>
-                <Button size="m">Участвовать</Button>
-                <div className={cnMonthlyBonuse('PeopleCircles')}>
-                    <Text color="white">участвуют:</Text>
-                    <PeopleCircles />
-                    <Text size="m" color="green">
-                        +583K
-                    </Text>
-                </div>
-            </div>
-            <div className={cnMonthlyBonuse('Slider')}>
-                {users.map((user, index) => (
-                    <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
-                        <div className={cnMonthlyBonuse('WinnerAvatar')} style={{backgroundImage: `url(${user.avatar})`}} />
-                        <div className={cnMonthlyBonuse('WinnerInfo')}>
-                            <Text className={cnMonthlyBonuse('WinnerName')} color="blue" upper>
-                                {user.username}
-                            </Text>
-                            <TextIcon
-                                className={cnMonthlyBonuse('Value')}
-                                text={user.amount}
-                                icon="diamond"
-                                color="white"
-                                upper
-                            />
-                        </div>
+                
+                <div className={cnMonthlyBonuse('Expires')}>
+                        <Text size="xs" color="gold">
+                            Истекает через:
+                        </Text>
+                        <Text size="xs" color="white">
+                            {finishDateTime <= nowDateTime
+                                ? '0 ДНЯ 0 ЧАС 0 МИНУТ'
+                                : `${diffTime.days} ДНЯ ${diffTime.hours} ЧАС ${Math.ceil(
+                                      diffTime.minutes || 0,
+                                  )} МИНУТ`}
+                        </Text>
                     </div>
-                ))}
             </div>
+
+            <BonuseTablePlayer
+                    items={
+                        users?.map((user, index) => ({
+                            id: index + 1,
+                            avatar: user.avatar,
+                            winner: user.username,
+                            point: user.amount,
+                            fund: user.prize,
+                        })) || []
+                    }
+                />
         </div>
     );
 };

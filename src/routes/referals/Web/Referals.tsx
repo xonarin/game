@@ -4,6 +4,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './Referals.scss';
 import Text from '../../../components/Text/Text';
 import Link from '../../../components/Link/Link';
+import Button from '../../../components/Button/Button';
 import { cn } from '../../../utils/bem-css-module';
 import LayoutReferal from '../../../components/Layout/Web/containers/LayoutReferal';
 import Icon from '../../../components/Icon/Icon';
@@ -58,6 +59,8 @@ const ReferalsWeb: React.FC = () => {
                             </div>
                             <Icon type='link' />
                         </div>
+
+                        <Button size="s">Забрать деньги</Button>
                     </div>
                 </div>
             }
