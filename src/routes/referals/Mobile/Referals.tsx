@@ -99,7 +99,7 @@ const ReferalsMobile: React.FC = () => {
                                 </Text>
                             </div>
 
-                            <div>  
+                            <div>
                                 {amountPeriodType === 'week' ? (
                                     <button
                                         type="button"
@@ -273,7 +273,7 @@ const ReferalsMobile: React.FC = () => {
                         </Text>
                     </div>
                 }
-                ReferalTable={<ReferalsTable items={items} />}
+                ReferalTable={<ReferalsTable />}
             ></LayoutReferalMobile>
         );
     }
@@ -378,7 +378,7 @@ const ReferalsMobile: React.FC = () => {
                     </Text>
                 </div>
             }
-            BottomContent={<ReferalsTable items={items} />}
+            BottomContent={<ReferalsTable />}
         />
     );
 };

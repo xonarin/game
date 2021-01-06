@@ -221,12 +221,13 @@ class UsersRepository extends BaseRepository {
     }
 
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
-        return this.db.User.findAll({
+        const results = this.db.User.findAll({
             attributes: [
                 'id',
                 'username',
                 'avatar',
                 ['refStatus', 'status'],
+                [fn('IF', fn('STRCMP', col('refStatus'), 'Active'), 0, 1), 'isActive'],
                 'createdAt',
                 [fn('COUNT', col('referrerIncomes.id')), 'gamesCount'],
                 [fn('SUM', col('referrerIncomes.amount')), 'income'],
@@ -234,12 +235,17 @@ class UsersRepository extends BaseRepository {
             where: {
                 refId: referrerId,
             },
-            include: [this.db.User.ReferrerIncome],
+            include: [{ association: this.db.User.ReferrerIncome, attributes: [] }],
             group: col('User.id'),
             order: [['createdAt', 'DESC']],
-            limit: REFERRALS_LIMIT,
+            //limit: REFERRALS_LIMIT,
             offset,
+            subQuery: false,
+            raw: true,
+            logging: console.log,
         });
+
+        return results;
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {

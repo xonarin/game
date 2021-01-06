@@ -8,53 +8,38 @@ import Column from '../../../../components/Table/Column/Column';
 import Text from '../../../../components/Text/Text';
 import Icon from '../../../../components/Icon/Icon';
 import Button from '../../../../components/Button/Button';
+import useReferralsQuery from '../../../../hooks/graphql/referrals/useReferralsQuery';
+import { getTime } from '../../../../utils/time';
 
 interface Referal {
     id: number;
-    user: string;
-    count: number;
-    date: string;
+    username: string;
+    avatar: string;
+    gamesCount: number;
     income: number;
-    status: Boolean;
+    isActive: boolean;
+    createdAt: string;
 }
 
-export interface ReferalsTableProps {
-    items: Referal[];
-}
+export interface ReferalsTableProps {}
 
 const cnReferalsTable = cn(s, 'ReferalsTable');
 
-const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
+const ReferalsTable: React.FC<ReferalsTableProps> = () => {
+    const { referrals } = useReferralsQuery();
+
     useStyles(s);
-    const [showedItemsCount, setshowedItemsCount] = useState(5)
-    const [hideToggle, setHideToggle] = useState(false)
-    const [data, setData] = useState([items.slice(0,6)])
-    useEffect(() => {
-        if(showedItemsCount>items.length){
 
-            setData(items)
-            setHideToggle(true)
+    const [showAll, setShowAll] = useState(false);
 
-        }else{
-            setHideToggle(false)
-            const tmp=items.slice(0,showedItemsCount)
-            setData(tmp)
-        }
-    }, [showedItemsCount])
+    const handleChange = () => {
+        setShowAll(!showAll);
+    };
 
-    const handleChange=()=>{
-        console.log(showedItemsCount);
-        
-        if(showedItemsCount>items.length){
+    const data = showAll || referrals.length <= 6 ? referrals : [...referrals].slice(0, 6);
 
-            setshowedItemsCount(5)
-            return
-        }
-        setshowedItemsCount(showedItemsCount+5)
-    }
-    
     return (
-        <> 
+        <>
             <SafeTable<Referal, 'id'> className={cnReferalsTable()} rowKey="id" items={data} responsivity={false}>
                 <Column<Referal>
                     label={
@@ -66,11 +51,14 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     maxWidth={200}
                     columnKey="id"
                 >
-                    {({ user }) => (
+                    {({ username, avatar }) => (
                         <>
-                            <div className={cnReferalsTable('WinnerAvatar')} />
+                            <div
+                                className={cnReferalsTable('WinnerAvatar')}
+                                style={{ backgroundImage: `url(${avatar})` }}
+                            />
                             <Text className={cnReferalsTable('WinnerName')} color="white" upper>
-                                {user}
+                                {username}
                             </Text>
                         </>
                     )}
@@ -84,9 +72,9 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     minWidth={200}
                     columnKey="count"
                 >
-                    {({ count }) => (
+                    {({ gamesCount }) => (
                         <Text font="Rubik" color="white" upper>
-                            {count}
+                            {gamesCount}
                         </Text>
                     )}
                 </Column>
@@ -100,9 +88,9 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     maxWidth={180}
                     columnKey="points"
                 >
-                    {({ date }) => (
+                    {({ createdAt }) => (
                         <Text font="Rubik" color="white" upper>
-                            {date}
+                            {getTime(new Date(createdAt))}
                         </Text>
                     )}
                 </Column>
@@ -133,8 +121,8 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     maxWidth={180}
                     columnKey="status"
                 >
-                    {({ status }) => {
-                        if (status) {
+                    {({ isActive }) => {
+                        if (isActive) {
                             return (
                                 <div className={cnReferalsTable('Status')}>
                                     <Icon type="checked" />
@@ -151,10 +139,11 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     }}
                 </Column>
             </SafeTable>
-            <div className={cnReferalsTable('More')}>
-
-            <Button onClick={handleChange}>{hideToggle ?  "Hide":'More'  }</Button>
-            </div>
+            {referrals.length > 6 && (
+                <div className={cnReferalsTable('More')}>
+                    <Button onClick={handleChange}>{showAll ? 'Hide' : 'More'}</Button>
+                </div>
+            )}
         </>
     );
 };

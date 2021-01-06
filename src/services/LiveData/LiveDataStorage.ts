@@ -6,6 +6,7 @@ import { repositories } from '../../data/database';
 import { LiveDataGameParent } from '../../data/modules/liveData/resolvers';
 import { MinesGame } from '../../data/models/MinesGame';
 import { ClassicGame } from '../../data/models/ClassicGame';
+import { getTime } from '../../utils/time';
 
 const redisOptions: RedisOptions = {
     retryStrategy: times => Math.min(times * 50, 2000),
@@ -33,17 +34,6 @@ const getOnline = async () => {
     const online = await redis.get(LiveDataStorageKeys.ONLINE);
 
     return online ? parseInt(online, 10) : 0;
-};
-
-const getTime = (time: Date) => {
-    const date = time.getDate();
-    const month = time.getMonth() + 1;
-    const hour = time.getHours();
-    const minutes = time.getMinutes();
-
-    return `${date < 10 ? `0${date}` : date}.${month < 10 ? `0${month}` : month}.${time.getFullYear()} в ${
-        hour < 10 ? `0${hour}` : hour
-    }:${minutes < 10 ? `0${minutes}` : minutes}`;
 };
 
 const resetGames = async () => {

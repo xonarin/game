@@ -35,6 +35,7 @@ type Referral {
     id: ID!
     username: String!
     avatar: URL!
+    isActive: Boolean!
     status: RefStatus!
     gamesCount: Int!
     income: Float!

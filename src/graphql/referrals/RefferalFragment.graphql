@@ -1,0 +1,9 @@
+fragment Referral on Referral {
+    id
+    username
+    avatar
+    isActive
+    gamesCount
+    income
+    createdAt
+}
