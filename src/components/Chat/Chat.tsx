@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { Form } from 'react-final-form';
+import { FormApi } from 'final-form';
 
 import s from './Chat.scss';
 import { cn } from '../../utils/bem-css-module';
@@ -9,11 +11,14 @@ import ChatMessage from './Message/ChatMessage';
 import Panel from '../Panel/Panel';
 import Text from '../Text/Text';
 import Scrollable from '../Scrollable/Scrollable';
-import ChatMessageForm from '../forms/Web/ChatMessageForm/ChatMessageForm';
+import { ChatMessageFormValues } from '../forms/Web/ChatMessageForm/ChatMessageForm';
 import useDeleteMessageMutation from '../../hooks/graphql/chat/useDeleteMessageMutation';
 import useWarnChatMutation from '../../hooks/graphql/chat/useWarnChatMutation';
 import useScrollableHelper from '../../hooks/useScrollableHelper';
 import { MessageFragment } from '../../__generated__/graphql';
+import useOnlineDataQuery from '../../hooks/graphql/liveData/useOnlineDataQuery';
+import MessageField from '../fields/MessageField/MessageField';
+import useSendMessageMutation from '../../hooks/graphql/chat/useSendMessageMutation';
 
 export interface ChatProps {
     chatId: string;
@@ -38,6 +43,7 @@ const Chat: React.FC<ChatProps> = ({ chatId, className }) => {
     );
 
     const { chat } = useChatQuery(chatId, onSentMessage);
+    const { online } = useOnlineDataQuery();
 
     useEffect(() => {
         if (chat) {
@@ -62,6 +68,23 @@ const Chat: React.FC<ChatProps> = ({ chatId, className }) => {
         [warnChatMutation],
     );
 
+    const sendMessageMutation = useSendMessageMutation();
+    const onSubmit = useCallback(
+        async ({ message }: ChatMessageFormValues, form: FormApi<ChatMessageFormValues>) => {
+            if (!message) return;
+
+            setTimeout(() => form.reset(), 0);
+            setTimeout(
+                () =>
+                    sendMessageMutation({ chatId, message }).then(
+                        result => result?.data && onSentMessage(result.data.sendMessage),
+                    ),
+                0,
+            );
+        },
+        [sendMessageMutation, chatId, onSentMessage],
+    );
+
     return (
         <Panel
             className={cnChat(null, [className])}
@@ -73,26 +96,39 @@ const Chat: React.FC<ChatProps> = ({ chatId, className }) => {
             rightHead={
                 <div className={cnChat('Online')}>
                     <div className={cnChat('OnlinePulse')} />
-                    <div className={cnChat('OnlineCount')}>468</div>
+                    <div className={cnChat('OnlineCount')}>{online?.online}</div>
                 </div>
             }
         >
-            <Scrollable className={cnChat('Messages')} disablePadding ref={scrollableRef}>
-                <div className={cnChat('MessagesItems')}>
-                    {chat &&
-                        chat.messages.map(message => (
-                            <ChatMessage
-                                {...message}
-                                showPm={message.sender.id !== me?.id}
-                                showControls={me?.role === 'Admin'}
-                                deleteMessage={deleteMessage}
-                                warnChat={warnChat}
-                                key={message.id}
-                            />
-                        ))}
-                </div>
-            </Scrollable>
-            <ChatMessageForm chatId={chatId} onMutate={onSentMessage} />
+            <Form<ChatMessageFormValues>
+                onSubmit={onSubmit}
+                mutators={{
+                    onUsernameClick: (args, state, utils) => {
+                        utils.changeValue(state, 'message', value => `${args[0]}, ${value || ''}`);
+                    },
+                }}
+                render={({ form, handleSubmit }) => (
+                    <>
+                        <Scrollable className={cnChat('Messages')} disablePadding ref={scrollableRef}>
+                            <div className={cnChat('MessagesItems')}>
+                                {chat &&
+                                    chat.messages.map(message => (
+                                        <ChatMessage
+                                            {...message}
+                                            showPm={message.sender.id !== me?.id}
+                                            showControls={me?.role === 'Admin'}
+                                            deleteMessage={deleteMessage}
+                                            warnChat={warnChat}
+                                            addUsernameToChat={form.mutators.onUsernameClick}
+                                            key={message.id}
+                                        />
+                                    ))}
+                            </div>
+                        </Scrollable>
+                        <MessageField name="message" onSubmit={handleSubmit} />
+                    </>
+                )}
+            />
         </Panel>
     );
 };

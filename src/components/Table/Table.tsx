@@ -18,7 +18,7 @@ export interface TableProps<
     rowKey: K;
     rowClassName?: GetRowClassName<T> | string | string[];
     items: T[];
-    responsivity: Boolean;
+    responsivity?: Boolean;
     className?: string;
     children: ColumnElement<T>[];
 }

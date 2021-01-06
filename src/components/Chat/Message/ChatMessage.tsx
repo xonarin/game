@@ -16,6 +16,7 @@ export interface ChatMessageProps extends MessageFragment {
     showControls?: boolean;
     deleteMessage: (messageId: string) => void;
     warnChat: (userId: string) => void;
+    addUsernameToChat: (username: string) => void;
 }
 
 const cnChatMessage = cn(s, 'ChatMessage');
@@ -29,6 +30,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     showControls,
     deleteMessage,
     warnChat,
+    addUsernameToChat,
 }) => {
     useStyles(s);
 
@@ -42,7 +44,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             <div className={cnChatMessage('Main')}>
                 <div className={cnChatMessage('Top')}>
                     <Text className={cnChatMessage('Username')} color="white">
-                        {sender.username}
+                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                        <div onClick={() => addUsernameToChat(sender.username)}>{sender.username}</div>
                     </Text>
                     <Text className={cnChatMessage('Time')}>{transformDateToTime(createdAt)}</Text>
                 </div>
