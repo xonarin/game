@@ -28,7 +28,10 @@ const useGamesQuery = (): UseGamesQueryResult => {
 
                     return {
                         ...prev,
-                        games,
+                        games: {
+                            ...prev.games,
+                            items: [games, ...[...prev.games.items].splice(0, prev.games.items.length - 1)],
+                        },
                     };
                 },
             }),

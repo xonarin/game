@@ -1,17 +1,16 @@
 import config from '../../config';
 import pubsub from '../../data/pubsub';
-import { getLiveDataGames } from '../../data/modules/liveData/resolvers';
-import { repositories } from '../../data/database';
 import { getCalculatedOnline } from '../../data/modules/liveData/utils';
+import { getGameFromQueue } from './LiveDataStorage';
+import { LiveDataGameParent } from '../../data/modules/liveData/resolvers';
 
 export default class LiveDataService {
     public initStart = async (): Promise<void> => {
         setInterval(async () => {
-            const items = await getLiveDataGames(repositories);
-            await pubsub.publish('games', {
-                items,
-                count: items.length,
-            });
+            const game = (await getGameFromQueue()) as LiveDataGameParent | null;
+            if (game !== null) {
+                await pubsub.publish('games', game);
+            }
         }, config.app.lastBidDelay);
 
         setInterval(async () => {

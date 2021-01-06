@@ -4,7 +4,7 @@ type Query {
 }
 
 type Subscription {
-    games: GamesPayload!
+    games: LiveDataGame!
     onlineData: OnlinePayload!
 }
 
@@ -21,6 +21,7 @@ type LiveDataGame {
     id: String!
     game: String!
     winner: String!
+    avatar: String!
     chance: Float!
     bet: Float!
     fund: Float!

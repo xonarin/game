@@ -6,6 +6,7 @@ import BaseRepository from './base';
 import { MinesGame, MinesGameStatus } from '../models/MinesGame';
 import { FIELD_SIZE } from '../../utils/mines';
 import { UserError } from '../../utils/errors';
+import { addMinesGame } from '../../services/LiveData/LiveDataStorage';
 
 class MinesGamesRepository extends BaseRepository {
     async getGameById(gameId: string, transaction?: Transaction): Promise<MinesGame | null> {
@@ -13,6 +14,7 @@ class MinesGamesRepository extends BaseRepository {
             ...this.sequelizeContext,
             ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
             rejectOnEmpty: false,
+            include: [this.db.MinesGame.User],
         });
     }
 
@@ -65,8 +67,12 @@ class MinesGamesRepository extends BaseRepository {
 
     async endGame(gameId: string): Promise<MinesGame> {
         const game = await this.getGameByIdStrict(gameId);
+        await game.update({ status: MinesGameStatus.Ended });
 
-        return game.update({ status: MinesGameStatus.Ended });
+        await game.getUser();
+        await addMinesGame(game);
+
+        return game;
     }
 
     async makeStep(gameId: string, cell: number): Promise<MinesGame> {
@@ -79,13 +85,20 @@ class MinesGamesRepository extends BaseRepository {
                 throw new UserError('CELL_ALREADY_STEPPED');
             }
 
-            return game.update(
+            await game.update(
                 {
                     stepsConf: game.stepsConf | stepMask,
                     status: (game.fieldConf & stepMask) !== 0 ? MinesGameStatus.Ended : MinesGameStatus.InGame,
                 },
                 { transaction },
             );
+
+            if (game.status === MinesGameStatus.Ended) {
+                await game.getUser();
+                await addMinesGame(game);
+            }
+
+            return game;
         });
     }
 

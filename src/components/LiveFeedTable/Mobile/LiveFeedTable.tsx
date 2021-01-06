@@ -17,6 +17,7 @@ interface LiveFeedItem {
     id: string;
     game: LiveFeedItemGame;
     winner: string;
+    avatar: string;
     bet: number;
     chance: number;
     fund: number;
@@ -74,9 +75,12 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = () => {
                     minWidth={200}
                     columnKey="winner"
                 >
-                    {({ winner }) => (
+                    {({ winner, avatar }) => (
                         <>
-                            <div className={cnLiveFeedTable('WinnerAvatar')} />
+                            <div
+                                className={cnLiveFeedTable('WinnerAvatar')}
+                                style={{ backgroundImage: `url(${avatar}})` }}
+                            />
                             <Text className={cnLiveFeedTable('WinnerName')} color="white" upper>
                                 {winner}
                             </Text>

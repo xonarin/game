@@ -4,9 +4,9 @@ import { GraphQLDateTime, GraphQLURL } from 'graphql-scalars';
 import { Query, Subscription } from '../../../__generated__/graphql';
 import { Resolver, Resolvers, ResolverSubscriber, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
-import { Repositories } from '../../repositories';
 import pubsub from '../../pubsub';
 import { getCalculatedOnline } from './utils';
+import { getGames } from '../../../services/LiveData/LiveDataStorage';
 
 type QueryType = Pick<Query, 'games' | 'onlineData'>;
 type SubscriptionType = Pick<Subscription, 'games' | 'onlineData'>;
@@ -15,6 +15,7 @@ export type LiveDataGameParent = {
     id: string;
     game: string;
     winner: string;
+    avatar: string;
     chance: number;
     bet: number;
     fund: number;
@@ -36,7 +37,7 @@ interface QueryMapping {
 }
 
 interface SubscriptionMapping {
-    games: ResolverSubscriber<LiveDataGamesPayloadParent>;
+    games: ResolverSubscriber<LiveDataGameParent>;
     onlineData: ResolverSubscriber<OnlinePayloadParent>;
 }
 
@@ -50,62 +51,16 @@ type LiveDataResolvers = Resolvers<
     ApolloContext
 >;
 
-export const getLiveDataGames = async (repositories: Repositories) => {
-    const items: (Omit<LiveDataGameParent, 'time'> & { time: Date })[] = [];
-    const classicGames = await repositories.classicGames.getLastGames(6);
-    const minesGames = await repositories.minesGames.getLastGames(6);
+export const getLiveDataGames = async (): Promise<LiveDataGameParent[]> => {
+    const items = await getGames();
 
-    classicGames.forEach(game => {
-        items.push({
-            id: game.id,
-            game: 'classic',
-            winner: game.winner?.username || '',
-            chance: game.winnerChance || 0,
-            bet: game.winnerBetsPrice || 0,
-            fund: game.fund,
-            time: game.finishedAt || new Date(),
-        });
-    });
-
-    minesGames.forEach(game => {
-        items.push({
-            id: game.id,
-            game: 'mines',
-            // eslint-disable-next-line no-bitwise
-            winner: !(game.fieldConf & game.stepsConf) ? game.user?.username || '' : 'Проиграл',
-            chance: 100,
-            bet: game.betAmount,
-            fund: game.betAmount,
-            time: game.updatedAt,
-        });
-    });
-
-    items.sort((a, b) => {
-        if (a.time > b.time) {
-            return -1;
-        }
-
-        if (a.time < b.time) {
-            return 1;
-        }
-
-        return 0;
-    });
-
-    const outputItems = items.map(item => ({
-        ...item,
-        time: `${item.time.getDate()}.${item.time.getMonth() +
-            1}.${item.time.getFullYear()} в ${item.time.getHours()}:${item.time.getMinutes()}`,
-    }));
-    outputItems.length = 6;
-
-    return outputItems;
+    return items;
 };
 
 export const resolvers: LiveDataResolvers = {
     Query: {
-        games: async (_0, _1, { repositories }) => {
-            const items = await getLiveDataGames(repositories);
+        games: async () => {
+            const items = await getLiveDataGames();
 
             return {
                 items,

@@ -1,6 +1,40 @@
 import { getOnline } from '../../../services/LiveData/LiveDataStorage';
 import { repositories } from '../../database';
 import config from '../../../config';
+import { ClassicGame } from '../../models/ClassicGame';
+import { MinesGame } from '../../models/MinesGame';
+import { getMinesCoef } from '../../../utils/mines';
+import { countOnes } from '../../../utils/number';
+
+const getClassicLiveDataGame = (game: ClassicGame) => {
+    return {
+        id: game.id,
+        game: 'classic',
+        winner: game.winner?.username || '',
+        avatar: game.winner?.avatar || '',
+        chance: game.winnerChance || 0,
+        bet: game.winnerBetsPrice || 0,
+        fund: game.fund,
+        time: game.finishedAt || new Date(),
+    };
+};
+
+const getMinesLiveDataGame = (game: MinesGame) => {
+    // eslint-disable-next-line no-bitwise
+    const isWin = !(game.fieldConf & game.stepsConf);
+    const coef = getMinesCoef(game.bombsCount, countOnes(game.stepsConf)) || 0;
+
+    return {
+        id: game.id,
+        game: 'mines',
+        winner: game.user?.username || '',
+        avatar: game.user?.avatar || '',
+        chance: isWin ? coef : 0,
+        bet: game.betAmount,
+        fund: isWin ? game.betAmount * coef : 0,
+        time: game.updatedAt,
+    };
+};
 
 const getCalculatedOnline = async (): Promise<number> => {
     const online = await getOnline();
@@ -21,4 +55,4 @@ const getCalculatedOnline = async (): Promise<number> => {
     );
 };
 
-export { getCalculatedOnline };
+export { getClassicLiveDataGame, getMinesLiveDataGame, getCalculatedOnline };

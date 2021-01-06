@@ -18,7 +18,7 @@ import {
     OriginPlacedClassicGameBetPayloadParent,
     OriginUpdatedClassicGameTimerPayloadParent,
 } from './modules/classicGame/resolvers';
-import { LiveDataGamesPayloadParent, OnlinePayloadParent } from "./modules/liveData/resolvers";
+import { LiveDataGameParent, OnlinePayloadParent } from "./modules/liveData/resolvers";
 
 export interface PubSubEventPayloads {
     // Chat
@@ -37,7 +37,7 @@ export interface PubSubEventPayloads {
     switchedToClassicGameStateEnded: OriginClassicGamesHistoryItemParent;
 
     // Live Data
-    games: LiveDataGamesPayloadParent;
+    games: LiveDataGameParent;
     onlineData: OnlinePayloadParent;
 }
 
