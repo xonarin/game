@@ -7,12 +7,12 @@ import SafeTable from '../../../../components/Table/containers/SafeTable';
 import Column from '../../../../components/Table/Column/Column';
 import Text from '../../../../components/Text/Text';
 import TextIcon from '../../../../components/TextIcon/TextIcon';
-import Badge from '../../../../components/Badge/Badge';
 
 interface BonuseItem {
     id: number;
+    avatar: string;
     winner: string;
-    referals: number;
+    referrals: number;
     percent: number;
 }
 
@@ -27,7 +27,6 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
 
     return (
         <SafeTable<BonuseItem, 'id'> className={cnBonuseTable()} rowKey="id" items={items} responsivity>
-           
             <Column<BonuseItem>
                 label={
                     <Text weight="semiBold" upper>
@@ -37,10 +36,16 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
                 minWidth={200}
                 columnKey="winner"
             >
-                {({ winner,id }) => (
+                {({ winner, avatar, id }) => (
                     <>
-                        <div className={cnBonuseTable('WinnerId')}><div className={cnBonuseTable('IdContainer')}><Text color='white' size='xs'>{id}</Text></div></div>
-                        <div className={cnBonuseTable('WinnerAvatar')} />
+                        <div className={cnBonuseTable('WinnerId')}>
+                            <div className={cnBonuseTable('IdContainer')}>
+                                <Text color="white" size="xs">
+                                    {id}
+                                </Text>
+                            </div>
+                        </div>
+                        <div className={cnBonuseTable('WinnerAvatar')} style={{ backgroundImage: `url(${avatar})` }} />
                         <Text className={cnBonuseTable('WinnerName')} color="white" upper>
                             {winner}
                         </Text>
@@ -57,9 +62,9 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
                 maxWidth={180}
                 columnKey="points"
             >
-                {({ referals }) => (
+                {({ referrals }) => (
                     <Text font="Rubik" color="white" upper>
-                        {referals}
+                        {referrals}
                     </Text>
                 )}
             </Column>
@@ -74,7 +79,7 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
                 maxWidth={180}
                 columnKey="fund"
             >
-                {({ percent }) => <TextIcon text={percent} icon="percentage" font="Rubik" color="white"  upper />}
+                {({ percent }) => <TextIcon text={percent} icon="percentage" font="Rubik" color="white" upper />}
             </Column>
         </SafeTable>
     );

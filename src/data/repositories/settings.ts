@@ -22,6 +22,10 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
         '2:50,9:10,14:20,18:30,24:50',
         'Фейковый онлайн. Формат через запятую "[до времени]:[плюс онлайн],[до времени]:[плюс онлайн]"',
     ],
+    'tournament::activityLengthDays': ['7', 'Продолжительность турнира по активности'],
+    'tournament::referralsLengthDays': ['30', 'Продолжительность турнира по рефералам'],
+    'tournament::activityPauseDays': ['3', 'Пауза между турнирами по активности'],
+    'tournament::referralsPauseDays': ['3', 'Пауза между турнирами по рефералам'],
 };
 
 class SettingsRepository extends BaseRepository {

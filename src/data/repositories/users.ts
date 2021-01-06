@@ -219,6 +219,19 @@ class UsersRepository extends BaseRepository {
         });
     }
 
+    async getTopReferralUserId(start: Date, finish: Date): Promise<{ refId: string; value: number } | null> {
+        return this.db.User.findOne({
+            attributes: ['refId', [fn('SUM', col('amount')), 'value']],
+            where: {
+                createdAt: { [Op.between]: [start, finish] },
+            },
+            group: col('refId'),
+            order: [[col('value'), 'DESC']],
+            limit: 1,
+            raw: true,
+        });
+    }
+
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
         const results = this.db.User.findAll({
             attributes: [

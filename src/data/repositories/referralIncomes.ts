@@ -28,6 +28,19 @@ class ReferralIncomesRepository extends BaseRepository {
         );
     }
 
+    async getTopUserId(start: Date, finish: Date): Promise<{ referrerId: string; value: number } | null> {
+        return this.db.ReferralIncome.findOne({
+            attributes: ['referrerId', [fn('SUM', col('amount')), 'value']],
+            where: {
+                createdAt: { [Op.between]: [start, finish] },
+            },
+            group: col('referrerId'),
+            order: [[col('value'), 'DESC']],
+            limit: 1,
+            raw: true,
+        });
+    }
+
     async getFullAmount(referrerId: string): Promise<number> {
         return this.db.ReferralIncome.sum('amount', {
             where: {

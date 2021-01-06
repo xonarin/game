@@ -17,7 +17,18 @@ export type ReferralsSettingName = 'referrals::minTurnoverCoef';
 
 export type AppSettingsName = 'app::fakeOnline';
 
-export type SettingName = ClassicGameSettingName | ChatSettingName | ReferralsSettingName | AppSettingsName;
+export type TournamentSettingsName =
+    | 'tournament::activityLengthDays'
+    | 'tournament::referralsLengthDays'
+    | 'tournament::activityPauseDays'
+    | 'tournament::referralsPauseDays';
+
+export type SettingName =
+    | ClassicGameSettingName
+    | ChatSettingName
+    | ReferralsSettingName
+    | AppSettingsName
+    | TournamentSettingsName;
 
 export class SettingValue {
     private readonly value: string | null;

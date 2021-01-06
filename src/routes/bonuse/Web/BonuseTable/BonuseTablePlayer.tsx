@@ -11,6 +11,7 @@ import Badge from '../../../../components/Badge/Badge';
 
 interface BonuseItem {
     id: number;
+    avatar: string;
     winner: string;
     point: number;
     fund: number;
@@ -48,9 +49,9 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
                 minWidth={200}
                 columnKey="winner"
             >
-                {({ winner }) => (
+                {({ winner, avatar }) => (
                     <>
-                        <div className={cnBonuseTable('WinnerAvatar')} />
+                        <div className={cnBonuseTable('WinnerAvatar')} style={{ backgroundImage: `url(${avatar})` }} />
                         <Text className={cnBonuseTable('WinnerName')} color="white" upper>
                             {winner}
                         </Text>

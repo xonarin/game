@@ -9,6 +9,7 @@ import announcements from './modules/announcements/schema.graphql';
 import classicGame from './modules/classicGame/schema.graphql';
 import minesGame from './modules/minesGame/schema.graphql';
 import clientSchema from './modules/clientState/schema';
+import tournamentsSchema from './modules/tournaments/schema.graphql';
 
 export default mergeTypeDefs([
     users,
@@ -18,5 +19,6 @@ export default mergeTypeDefs([
     announcements,
     classicGame,
     minesGame,
+    tournamentsSchema,
     ...clientSchema,
 ]);

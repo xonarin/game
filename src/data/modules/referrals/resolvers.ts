@@ -16,7 +16,7 @@ import {
 } from '../../../__generated__/graphql';
 import { isAuth } from '../rules';
 import { checkReferralsArgs } from './rules';
-import { moneyRound } from "../../../utils/money";
+import { moneyRound } from '../../../utils/money';
 
 type QueryType = Pick<Query, 'referrals' | 'referralsStats'>;
 

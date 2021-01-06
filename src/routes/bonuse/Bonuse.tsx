@@ -12,6 +12,8 @@ import { cn } from '../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import BonuseBannerPlayerMobile from './Mobile/BonuseBanner/BonuseBannerPlayer';
 import BonuseBannerReferalMobile from './Mobile/BonuseBanner/BonuseBannerReferal';
+import useTournamentQuery from "../../hooks/graphql/tournaments/useTournamentQuery";
+import { RefTournamentType } from '../../__generated__/graphql';
 
 const cnBonuse = cn(s, 'Bonuse');
 
@@ -29,7 +31,6 @@ const Bonuse: React.FC = () => {
             setMobile(true);
         }
     }, [typeof window !== 'undefined' && window?.screen?.width]);
-
 
     if (mobile) {
         return (

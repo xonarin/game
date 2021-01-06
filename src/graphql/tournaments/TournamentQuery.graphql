@@ -1,0 +1,13 @@
+query Tournament($type: RefTournamentType!) {
+    tournament(type: $type) {
+        position
+        amount
+        finish
+        users {
+            avatar
+            username
+            amount
+            prize
+        }
+    }
+}

@@ -33,7 +33,8 @@ import { configureLuxon } from './utils/luxon';
 // @ts-ignore
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import config from './config';
-import { decreaseOnline, increaseOnline, resetOnline, resetGames } from "./services/LiveData/LiveDataStorage";
+import './cron';
+import { decreaseOnline, increaseOnline, resetOnline, resetGames } from './services/LiveData/LiveDataStorage';
 
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, 'reason:', reason);
