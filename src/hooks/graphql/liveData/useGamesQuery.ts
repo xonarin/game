@@ -39,7 +39,7 @@ const useGamesQuery = (): UseGamesQueryResult => {
 
     return {
         loading,
-        games: data?.games?.items,
+        games: data?.games.items,
     };
 };
 

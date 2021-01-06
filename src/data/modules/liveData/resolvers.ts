@@ -6,9 +6,10 @@ import { Resolver, Resolvers, ResolverSubscriber, TypeResolvers } from '../../..
 import { ApolloContext } from '../../../interfaces/apollo';
 import { Repositories } from '../../repositories';
 import pubsub from '../../pubsub';
+import { getCalculatedOnline } from './utils';
 
-type QueryType = Pick<Query, 'games'>;
-type SubscriptionType = Pick<Subscription, 'games'>;
+type QueryType = Pick<Query, 'games' | 'onlineData'>;
+type SubscriptionType = Pick<Subscription, 'games' | 'onlineData'>;
 
 export type LiveDataGameParent = {
     id: string;
@@ -25,12 +26,18 @@ export type LiveDataGamesPayloadParent = {
     count: number;
 };
 
+export type OnlinePayloadParent = {
+    online: number;
+};
+
 interface QueryMapping {
     games: Resolver<LiveDataGamesPayloadParent>;
+    onlineData: Resolver<OnlinePayloadParent>;
 }
 
 interface SubscriptionMapping {
     games: ResolverSubscriber<LiveDataGamesPayloadParent>;
+    onlineData: ResolverSubscriber<OnlinePayloadParent>;
 }
 
 type LiveDataResolvers = Resolvers<
@@ -105,10 +112,18 @@ export const resolvers: LiveDataResolvers = {
                 count: items.length,
             };
         },
+        onlineData: async () => {
+            const online = await getCalculatedOnline();
+
+            return { online };
+        },
     },
     Subscription: {
         games: {
             subscribe: () => pubsub.asyncIterator('games'),
+        },
+        onlineData: {
+            subscribe: () => pubsub.asyncIterator('onlineData'),
         },
     },
     URL: GraphQLURL,

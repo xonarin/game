@@ -33,6 +33,7 @@ import { configureLuxon } from './utils/luxon';
 // @ts-ignore
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import config from './config';
+import { decreaseOnline, increaseOnline, resetOnline } from "./services/LiveData/LiveDataStorage";
 
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -137,7 +138,7 @@ app.get('/logout', (_0, res) => {
 // Register API middleware
 // -----------------------------------------------------------------------------
 // https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-express
-
+resetOnline();
 const server = new ApolloServer({
     schema: AppModule,
     uploads: false,
@@ -155,7 +156,16 @@ const server = new ApolloServer({
     validationRules: [depthLimit(5)],
     context: ({ req, res, connection }) => createContext(req, res, connection),
     subscriptions: {
-        onConnect: connectionParams => createWebSocketContext(connectionParams),
+        onConnect: connectionParams => {
+            const context = createWebSocketContext(connectionParams);
+
+            increaseOnline();
+
+            return context;
+        },
+        onDisconnect: () => {
+            decreaseOnline();
+        },
     },
 });
 server.applyMiddleware({ app });

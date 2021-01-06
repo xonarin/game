@@ -50,5 +50,7 @@ export default {
     // App config
     app: {
         lastBidDelay: 3000,
+        onlineDelay: 10000,
+        additionalOnlineK: 0.1,
     },
 };

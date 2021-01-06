@@ -1,9 +1,15 @@
 type Query {
     games: GamesPayload!
+    onlineData: OnlinePayload!
 }
 
 type Subscription {
     games: GamesPayload!
+    onlineData: OnlinePayload!
+}
+
+type OnlinePayload {
+    online: Int!
 }
 
 type GamesPayload {

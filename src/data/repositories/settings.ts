@@ -18,6 +18,10 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     ],
     'classic::commissionPercent': ['5', 'Процент комиссии для классика'],
     'classic::turnsCount': ['5', 'Количество поворотов колеса при определении победителя для классика'],
+    'app::fakeOnline': [
+        '2:50,9:10,14:20,18:30,24:50',
+        'Фейковый онлайн. Формат через запятую "[до времени]:[плюс онлайн],[до времени]:[плюс онлайн]"',
+    ],
 };
 
 class SettingsRepository extends BaseRepository {
