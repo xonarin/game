@@ -1,0 +1,8 @@
+query GamesQuery {
+    games {
+        items {
+            ...LiveDataGameFragment
+        }
+        count
+    }
+}

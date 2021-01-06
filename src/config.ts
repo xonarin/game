@@ -46,4 +46,9 @@ export default {
             appSecret: process.env.VK_APP_SECRET || 'nSv8gRPyhjkuNiO5cvYf',
         },
     },
+
+    // App config
+    app: {
+        lastBidDelay: 3000,
+    },
 };

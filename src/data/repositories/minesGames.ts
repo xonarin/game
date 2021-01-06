@@ -88,6 +88,15 @@ class MinesGamesRepository extends BaseRepository {
             );
         });
     }
+
+    async getLastGames(limit: number = 10): Promise<MinesGame[]> {
+        return this.db.MinesGame.findAll({
+            where: { status: MinesGameStatus.Ended },
+            include: [this.db.MinesGame.User],
+            order: [['id', 'DESC']],
+            limit,
+        });
+    }
 }
 
 export default MinesGamesRepository;

@@ -1,0 +1,8 @@
+subscription GamesSubscription {
+    games {
+        items {
+            ...LiveDataGameFragment
+        }
+        count
+    }
+}

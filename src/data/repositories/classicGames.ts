@@ -81,6 +81,15 @@ class ClassicGamesRepository extends BaseRepository {
             ],
         });
     }
+
+    async getLastGames(limit: number = 10): Promise<ClassicGame[]> {
+        return this.db.ClassicGame.findAll({
+            where: { state: ClassicGameState.Ended },
+            include: [this.db.ClassicGame.Winner],
+            order: [['id', 'DESC']],
+            limit,
+        });
+    }
 }
 
 export default ClassicGamesRepository;

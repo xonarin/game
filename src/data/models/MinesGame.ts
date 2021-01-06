@@ -22,6 +22,8 @@ export interface MinesGame extends Model {
     readonly createdAt: Date;
     readonly updatedAt: Date;
 
+    user?: User;
+
     getUser: BelongsToGetAssociationMixin<User>;
 }
 

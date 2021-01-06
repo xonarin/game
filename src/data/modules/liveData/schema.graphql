@@ -1,0 +1,32 @@
+type Query {
+    games: GamesPayload!
+}
+
+type Subscription {
+    games: GamesPayload!
+}
+
+type GamesPayload {
+    items: [LiveDataGame!]!
+    count: Int!
+}
+
+type LiveDataGame {
+    id: String!
+    game: String!
+    winner: String!
+    chance: Float!
+    bet: Float!
+    fund: Float!
+    time: String!
+}
+
+input AddLiveDataGameInput {
+    id: String!
+    game: String!
+    winner: String!
+    chance: Float!
+    bet: Float!
+    fund: Float!
+    time: String!
+}
