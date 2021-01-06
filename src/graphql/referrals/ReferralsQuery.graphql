@@ -2,7 +2,13 @@ query Referrals($offset: Int) {
     referrals(offset: $offset) {
         count
         items {
-            ...Referral
+            id
+            username
+            avatar
+            isActive
+            gamesCount
+            income
+            createdAt
         }
     }
 }

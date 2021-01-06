@@ -43,7 +43,7 @@ type Referral {
 }
 
 type GraphDataEntry {
-    key: ID!
+    date: String!
     value: Float!
 }
 
