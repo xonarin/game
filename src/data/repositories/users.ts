@@ -14,7 +14,6 @@ const FREE_REFERRALS = 2;
 const REF_A = 40;
 const REF_D = 10;
 const INITIAL_REFERRAL_INCOME = 10;
-const REFERRALS_LIMIT = 10;
 
 class UsersRepository extends BaseRepository {
     static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
@@ -220,13 +219,27 @@ class UsersRepository extends BaseRepository {
         });
     }
 
+    async getTopReferralUserId(start: Date, finish: Date): Promise<{ refId: string; value: number } | null> {
+        return this.db.User.findOne({
+            attributes: ['refId', [fn('SUM', col('amount')), 'value']],
+            where: {
+                createdAt: { [Op.between]: [start, finish] },
+            },
+            group: col('refId'),
+            order: [[col('value'), 'DESC']],
+            limit: 1,
+            raw: true,
+        });
+    }
+
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
-        return this.db.User.findAll({
+        const results = this.db.User.findAll({
             attributes: [
                 'id',
                 'username',
                 'avatar',
                 ['refStatus', 'status'],
+                [fn('IF', fn('STRCMP', col('refStatus'), 'Active'), 0, 1), 'isActive'],
                 'createdAt',
                 [fn('COUNT', col('referrerIncomes.id')), 'gamesCount'],
                 [fn('SUM', col('referrerIncomes.amount')), 'income'],
@@ -234,30 +247,34 @@ class UsersRepository extends BaseRepository {
             where: {
                 refId: referrerId,
             },
-            include: [this.db.User.ReferrerIncome],
+            include: [{ association: this.db.User.ReferrerIncome, attributes: [] }],
             group: col('User.id'),
             order: [['createdAt', 'DESC']],
-            limit: REFERRALS_LIMIT,
             offset,
+            subQuery: false,
+            raw: true,
         });
+
+        return results;
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
         const startDateTime = DateTime.local()
             .startOf(UsersRepository.periodMapping[period])
             .toSQL();
-        const extractFunction = period === RefStatsPeriod.Year ? 'MONTH' : 'DAY';
+        const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
         return this.db.User.findAll({
             attributes: [
-                [fn(extractFunction, col('createdAt')), 'key'],
+                [fn('DATE_FORMAT', col('createdAt'), format), 'date'],
                 [fn('COUNT', '*'), 'value'],
             ],
             where: {
                 refId: referrerId,
                 createdAt: { [Op.gte]: startDateTime },
             },
-            group: col('key'),
+            group: col('date'),
+            raw: true,
         });
     }
 

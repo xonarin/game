@@ -9,23 +9,22 @@ import Text from '../../Text/Text';
 import Icon, { IconProps } from '../../Icon/Icon';
 import ChanceBadge from '../../Badge/containers/ChanceBadge';
 import TextIcon from '../../TextIcon/TextIcon';
+import useGamesQuery from '../../../hooks/graphql/liveData/useGamesQuery';
 
-type LiveFeedItemGame = 'battle' | 'dice' | 'knb';
+type LiveFeedItemGame = string;
 
 interface LiveFeedItem {
-    id: number;
+    id: string;
     game: LiveFeedItemGame;
     winner: string;
+    avatar: string;
     bet: number;
     chance: number;
     fund: number;
     time: string;
 }
 
-export interface LiveFeedTableProps {
-    items: LiveFeedItem[];
-    
-}
+export interface LiveFeedTableProps {}
 
 const cnLiveFeedTable = cn(s, 'LiveFeedTable');
 
@@ -37,11 +36,17 @@ const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
     if (game === 'knb') return 'scissors';
 };
 
-const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
+const LiveFeedTable: React.FC<LiveFeedTableProps> = () => {
     useStyles(s);
 
+    const { loading, games } = useGamesQuery();
+
+    if (loading || games === undefined) {
+        return null;
+    }
+
     return (
-        <SafeTable<LiveFeedItem, 'id'> className={cnLiveFeedTable()} rowKey="id" items={items} >
+        <SafeTable<LiveFeedItem, 'id'> className={cnLiveFeedTable()} rowKey="id" items={games}>
             <Column<LiveFeedItem>
                 label={
                     <Text weight="semiBold" upper>
@@ -71,9 +76,12 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = ({ items }) => {
                 minWidth={200}
                 columnKey="winner"
             >
-                {({ winner }) => (
+                {({ winner, avatar }) => (
                     <>
-                        <div className={cnLiveFeedTable('WinnerAvatar')} />
+                        <div
+                            className={cnLiveFeedTable('WinnerAvatar')}
+                            style={{ backgroundImage: `url(${avatar}})` }}
+                        />
                         <Text className={cnLiveFeedTable('WinnerName')} color="white" upper>
                             {winner}
                         </Text>

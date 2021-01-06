@@ -8,6 +8,7 @@ import MessagesRepository from './messages';
 import ClassicGamesRepository from './classicGames';
 import ClassicGameBetsRepository from './classicGameBets';
 import MinesGamesRepository from './minesGames';
+import TournamentsRepository from './tournaments';
 
 export interface Repositories {
     settings: SettingsRepository;
@@ -18,6 +19,7 @@ export interface Repositories {
     classicGames: ClassicGamesRepository;
     classicGameBets: ClassicGameBetsRepository;
     minesGames: MinesGamesRepository;
+    tournaments: TournamentsRepository;
 }
 
 const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Repositories => {
@@ -31,6 +33,7 @@ const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Re
     repositories.classicGames = new ClassicGamesRepository(db, repositories, sequelizeContext);
     repositories.classicGameBets = new ClassicGameBetsRepository(db, repositories, sequelizeContext);
     repositories.minesGames = new MinesGamesRepository(db, repositories, sequelizeContext);
+    repositories.tournaments = new TournamentsRepository(db, repositories, sequelizeContext);
 
     return repositories;
 };

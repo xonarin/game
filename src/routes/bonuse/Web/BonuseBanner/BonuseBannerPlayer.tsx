@@ -1,5 +1,6 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { DateTime } from 'luxon';
 
 import s from './BonuseBanner.scss';
 import { cn } from '../../../../utils/bem-css-module';
@@ -7,6 +8,8 @@ import Text from '../../../../components/Text/Text';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Icon from '../../../../components/Icon/Icon';
 import BonuseTablePlayer from '../BonuseTable/BonuseTablePlayer';
+import useTournamentQuery from '../../../../hooks/graphql/tournaments/useTournamentQuery';
+import { RefTournamentType } from '../../../../__generated__/graphql';
 
 export interface BonuseBannerPlayerProps {
     title: string;
@@ -14,16 +17,15 @@ export interface BonuseBannerPlayerProps {
     count: string;
 }
 const cnBonuseBanner = cn(s, 'BonuseBanner');
-const items = [
-    { id: 1, winner: 'Donald', point: 10, fund: 2500 },
-    { id: 2, winner: 'Donald', point: 10, fund: 2500 },
-    { id: 3, winner: 'Donald', point: 10, fund: 2500 },
-    { id: 4, winner: 'Donald', point: 10, fund: 2500 },
-    { id: 5, winner: 'Donald', point: 10, fund: 2500 },
-    { id: 6, winner: 'Donald', point: 10, fund: 2500 },
-];
+
 const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, description, count }) => {
     useStyles(s);
+
+    const { position, amount, finish, users } = useTournamentQuery(RefTournamentType.Activity);
+    const nowDateTime = DateTime.local();
+    const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
+    const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
+
     return (
         <div className={cnBonuseBanner()}>
             <div className={cnBonuseBanner('Header')}>
@@ -49,7 +51,11 @@ const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, descript
                             Истекает через:
                         </Text>
                         <Text size="xs" color="white">
-                            3 ДНЯ 1 ЧАС 59 МИНУТ
+                            {finishDateTime <= nowDateTime
+                                ? '0 ДНЯ 0 ЧАС 0 МИНУТ'
+                                : `${diffTime.days} ДНЯ ${diffTime.hours} ЧАС ${Math.ceil(
+                                      diffTime.minutes || 0,
+                                  )} МИНУТ`}
                         </Text>
                     </div>
                 </div>
@@ -58,18 +64,34 @@ const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, descript
                 <div className={cnBonuseBanner('Main-Rating')}>
                     <Icon type="diceWhite" />
                     <Text color="white">
-                        Вы на <Text color="green">12м</Text> месте
+                        {position !== 0 ? (
+                            <>
+                                Вы на <Text color="green">{position}м</Text> месте
+                            </>
+                        ) : (
+                            <>Вы не в игре</>
+                        )}
                     </Text>
                 </div>
                 <div className={cnBonuseBanner('Main-Rating')}>
                     <Icon type="diceWhite" />
                     <Text color="white">
-                        Набрано <Text color="green">500</Text> баллов
+                        Набрано <Text color="green">{amount}</Text> баллов
                     </Text>
                 </div>
             </div>
             <div className={cnBonuseBanner('Table')}>
-                <BonuseTablePlayer items={items} />
+                <BonuseTablePlayer
+                    items={
+                        users?.map((user, index) => ({
+                            id: index + 1,
+                            avatar: user.avatar,
+                            winner: user.username,
+                            point: user.amount,
+                            fund: user.prize,
+                        })) || []
+                    }
+                />
             </div>
         </div>
     );

@@ -8,42 +8,37 @@ import Column from '../../../../components/Table/Column/Column';
 import Text from '../../../../components/Text/Text';
 import Icon from '../../../../components/Icon/Icon';
 import Button from '../../../../components/Button/Button';
+import useReferralsQuery from '../../../../hooks/graphql/referrals/useReferralsQuery';
 
 interface Referal {
     id: number;
-    user: string;
-    count: number;
-    date: string;
+    username: string;
+    avatar: string;
+    gamesCount: number;
     income: number;
-    status: Boolean;
+    isActive: boolean;
+    createdAt: Date;
 }
 
-export interface ReferalsTableProps {
-    items: Referal[];
-}
+export interface ReferalsTableProps {}
 
 const cnReferalsTable = cn(s, 'ReferalsTable');
 
-const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
-    useStyles(s);
-    const [showAll, setShowAll] = useState(false)
-    const [data, setData] = useState([items.slice(0,6)])
-    useEffect(() => {
-        if(showAll){
-            setData(items)
-        }else{
-            const tmp=items.slice(0,6)
-            setData(tmp)
-        }
-    }, [showAll])
+const ReferalsTable: React.FC<ReferalsTableProps> = () => {
+    const { referrals } = useReferralsQuery();
 
-    const handleChange=()=>{
-        setShowAll(!showAll)
-    }
-    
+    useStyles(s);
+    const [showAll, setShowAll] = useState(false);
+
+    const handleChange = () => {
+        setShowAll(!showAll);
+    };
+
+    const data = showAll || referrals.length <= 6 ? referrals : referrals.slice(0, 6);
+
     return (
-        <> 
-            <SafeTable<Referal, 'id'> className={cnReferalsTable()} rowKey="id" items={data} responsivity={true}>
+        <>
+            <SafeTable<Referal, 'id'> className={cnReferalsTable()} rowKey="id" items={data} responsivity>
                 <Column<Referal>
                     label={
                         <Text weight="semiBold" upper>
@@ -54,17 +49,19 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     maxWidth={200}
                     columnKey="id"
                 >
-                    {({ user }) => (
+                    {({ username, avatar }) => (
                         <div className={cnReferalsTable('Winner')}>
-                            <div className={cnReferalsTable('WinnerAvatar')} />
+                            <div
+                                className={cnReferalsTable('WinnerAvatar')}
+                                style={{ backgroundImage: `url(${avatar})` }}
+                            />
                             <Text className={cnReferalsTable('WinnerName')} color="white" upper>
-                                {user}
+                                {username}
                             </Text>
                         </div>
                     )}
                 </Column>
-                
-                
+
                 <Column<Referal>
                     label={
                         <Text weight="semiBold" upper>
@@ -91,8 +88,8 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     maxWidth={180}
                     columnKey="status"
                 >
-                    {({ status }) => {
-                        if (status) {
+                    {({ isActive }) => {
+                        if (isActive) {
                             return (
                                 <div className={cnReferalsTable('Status')}>
                                     <Icon type="checked" />
@@ -109,10 +106,11 @@ const ReferalsTable: React.FC<ReferalsTableProps> = ({ items }) => {
                     }}
                 </Column>
             </SafeTable>
-            <div className={cnReferalsTable('More')}>
-
-            <Button onClick={handleChange}>{showAll ?  "Hide":'More'  }</Button>
-            </div>
+            {referrals.length > 6 && (
+                <div className={cnReferalsTable('More')}>
+                    <Button onClick={handleChange}>{showAll ? 'Hide' : 'More'}</Button>
+                </div>
+            )}
         </>
     );
 };

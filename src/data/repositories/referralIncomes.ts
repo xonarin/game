@@ -28,22 +28,44 @@ class ReferralIncomesRepository extends BaseRepository {
         );
     }
 
+    async getTopUserId(start: Date, finish: Date): Promise<{ referrerId: string; value: number } | null> {
+        return this.db.ReferralIncome.findOne({
+            attributes: ['referrerId', [fn('SUM', col('amount')), 'value']],
+            where: {
+                createdAt: { [Op.between]: [start, finish] },
+            },
+            group: col('referrerId'),
+            order: [[col('value'), 'DESC']],
+            limit: 1,
+            raw: true,
+        });
+    }
+
+    async getFullAmount(referrerId: string): Promise<number> {
+        return this.db.ReferralIncome.sum('amount', {
+            where: {
+                referrerId,
+            },
+        });
+    }
+
     async getIncomeStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
         const startDateTime = DateTime.local()
             .startOf(ReferralIncomesRepository.periodMapping[period])
             .toSQL();
-        const extractFunction = period === RefStatsPeriod.Year ? 'MONTH' : 'DAY';
+        const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
         return this.db.ReferralIncome.findAll({
             attributes: [
-                [fn(extractFunction, col('createdAt')), 'key'],
+                [fn('DATE_FORMAT', col('createdAt'), format), 'date'],
                 [fn('SUM', col('amount')), 'value'],
             ],
             where: {
                 referrerId,
                 createdAt: { [Op.gte]: startDateTime },
             },
-            group: col('key'),
+            group: col('date'),
+            raw: true,
         });
     }
 }

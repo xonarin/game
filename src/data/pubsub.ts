@@ -18,6 +18,7 @@ import {
     OriginPlacedClassicGameBetPayloadParent,
     OriginUpdatedClassicGameTimerPayloadParent,
 } from './modules/classicGame/resolvers';
+import { LiveDataGameParent, OnlinePayloadParent } from "./modules/liveData/resolvers";
 
 export interface PubSubEventPayloads {
     // Chat
@@ -34,6 +35,10 @@ export interface PubSubEventPayloads {
     updatedClassicGameTimer: OriginUpdatedClassicGameTimerPayloadParent;
     switchedToClassicGameStateCulmination: SwitchedToClassicGameStateCulminationPayload;
     switchedToClassicGameStateEnded: OriginClassicGamesHistoryItemParent;
+
+    // Live Data
+    games: LiveDataGameParent;
+    onlineData: OnlinePayloadParent;
 }
 
 export type PubSubEvent = keyof PubSubEventPayloads;

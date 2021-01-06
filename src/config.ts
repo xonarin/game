@@ -49,4 +49,11 @@ export default {
             appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
         },
     },
+
+    // App config
+    app: {
+        lastBidDelay: 3000,
+        onlineDelay: 10000,
+        additionalOnlineK: 0.1,
+    },
 };

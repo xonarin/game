@@ -16,6 +16,7 @@ import { Message } from './Message';
 import { Chat } from './Chat';
 import { ClassicGame } from './ClassicGame';
 import { ClassicGameBet } from './ClassicGameBet';
+import { MinesGame } from './MinesGame';
 
 export enum SocialType {
     Steam = 'Steam',
@@ -73,6 +74,7 @@ export type UserStatic = AssociableModelStatic<
         Message: HasMany<User, Message>;
         WonClassicGame: HasMany<User, ClassicGame>;
         ClassicGameBet: HasMany<User, ClassicGameBet>;
+        MinesGame: HasMany<User, MinesGame>;
     }
 >;
 

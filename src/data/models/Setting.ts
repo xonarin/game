@@ -15,7 +15,20 @@ export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnno
 
 export type ReferralsSettingName = 'referrals::minTurnoverCoef';
 
-export type SettingName = ClassicGameSettingName | ChatSettingName | ReferralsSettingName;
+export type AppSettingsName = 'app::fakeOnline';
+
+export type TournamentSettingsName =
+    | 'tournament::activityLengthDays'
+    | 'tournament::referralsLengthDays'
+    | 'tournament::activityPauseDays'
+    | 'tournament::referralsPauseDays';
+
+export type SettingName =
+    | ClassicGameSettingName
+    | ChatSettingName
+    | ReferralsSettingName
+    | AppSettingsName
+    | TournamentSettingsName;
 
 export class SettingValue {
     private readonly value: string | null;

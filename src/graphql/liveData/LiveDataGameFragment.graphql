@@ -1,0 +1,10 @@
+fragment LiveDataGameFragment on LiveDataGame {
+    id
+    game
+    avatar
+    winner
+    chance
+    bet
+    fund
+    time
+}

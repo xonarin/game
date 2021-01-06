@@ -1,0 +1,27 @@
+schema {
+    query: Query
+}
+
+type Query {
+    tournament(type: RefTournamentType!): TournamentPayload!
+}
+
+enum RefTournamentType {
+    Monthly
+    Activity
+    Referrals
+}
+
+type TournamentPayload {
+    position: Int!
+    amount: Float!
+    finish: DateTime!
+    users: [UserPayload!]!
+}
+
+type UserPayload {
+    avatar: String!
+    username: String!
+    amount: Float!
+    prize: Float!
+}

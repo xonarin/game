@@ -33,7 +33,7 @@ import { checkSendMessageArgs } from './rules';
 import { UserError } from '../../../utils/errors';
 import { withFilter, withFilterByTarget } from '../../../utils/withFilter';
 import { limit } from '../../../utils/graphql-shield/limit';
-import { getBanEndTime } from '../../../utils/chatWarns';
+import { getBanEndTime, warnsMap } from '../../../utils/chatWarns';
 import { buildMessageToAnnouncement } from '../../../utils/announcements';
 
 export type OriginChatParent = ChatBackend;
@@ -177,12 +177,26 @@ export const resolvers: ChatResolvers = {
 
             return payload;
         },
-        warnChat: async (_0, { input: { userId } }, { repositories }) => {
-            await repositories.users.warnChat(userId);
+        warnChat: async (_0, { input: { userId } }, { user: moderator, repositories }) => {
+            const user = await repositories.users.warnChat(userId);
             const chatIds = await repositories.messages.deleteMessagesBySender(userId);
             const payload = { chatIds, senderId: userId };
 
+            const warnCount = user.chatWarns;
+            const banTimeMin = warnsMap[warnCount];
             pubsub.publish('deletedMessagesBySender', payload).then();
+            chatIds.forEach(chatId => {
+                repositories.chats.getChatByIdStrict(chatId).then(chat => {
+                    repositories.messages
+                        .addMessage(
+                            chat.id,
+                            moderator!.id,
+                            `${user.username} нарушил правила чата ${warnCount} раз(а) и забанен на ${banTimeMin} мин.`,
+                        )
+                        .then(sendMessage => pubsub.publish('sentMessage', sendMessage))
+                        .then();
+                });
+            });
 
             return payload;
         },

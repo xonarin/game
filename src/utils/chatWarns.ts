@@ -1,5 +1,5 @@
 // Время в минутах, на которое будет забанен игрок в чате, в зависимости от кол-ва предупреждений
-export const warnsMap = {
+export const warnsMap: Record<number, number> = {
     1: 30,
     2: 2 * 60,
     3: 24 * 60,

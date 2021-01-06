@@ -1,6 +1,7 @@
 import BaseRepository from './base';
 import { ClassicGame, ClassicGameState, HistoryClassicGame } from '../models/ClassicGame';
 import { UserError } from '../../utils/errors';
+import { addClassicGame } from '../../services/LiveData/LiveDataStorage';
 
 class ClassicGamesRepository extends BaseRepository {
     async getGameById(gameId: string): Promise<ClassicGame | null> {
@@ -45,8 +46,7 @@ class ClassicGamesRepository extends BaseRepository {
         finishedAt: Date,
     ): Promise<ClassicGame> {
         const game = await this.getGameByIdStrict(gameId);
-
-        return game.update({
+        await game.update({
             state: ClassicGameState.Ended,
             winnerId,
             winnerTicket,
@@ -54,6 +54,9 @@ class ClassicGamesRepository extends BaseRepository {
             winnerChance,
             finishedAt,
         });
+        await addClassicGame(game);
+
+        return game;
     }
 
     async getHistory(): Promise<HistoryClassicGame[]> {
@@ -61,7 +64,7 @@ class ClassicGamesRepository extends BaseRepository {
             where: { state: ClassicGameState.Ended },
             include: [this.db.ClassicGame.Winner],
             order: [['id', 'DESC']],
-            limit: 10,
+            limit: 6,
         });
     }
 
@@ -79,6 +82,15 @@ class ClassicGamesRepository extends BaseRepository {
                 ['id', 'DESC'],
                 [{ model: gameToBet.target, as: gameToBet.as }, 'id', 'DESC'],
             ],
+        });
+    }
+
+    async getLastGames(limit: number = 6): Promise<ClassicGame[]> {
+        return this.db.ClassicGame.findAll({
+            where: { state: ClassicGameState.Ended },
+            include: [this.db.ClassicGame.Winner],
+            order: [['id', 'DESC']],
+            limit,
         });
     }
 }

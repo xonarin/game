@@ -1,0 +1,10 @@
+query ReferralsStats($type: RefStatsType!, $period: RefStatsPeriod!) {
+    referralsStats(type: $type, period: $period) {
+        fullAmount
+        mainValue
+        entries {
+            date
+            value
+        }
+    }
+}
