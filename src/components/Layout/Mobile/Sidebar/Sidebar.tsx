@@ -51,7 +51,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                     <NavigationItem to="/all-games" icon="gamepad" iconHover="gamepadWhite" />
                 </button>
                 <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => openPopUp()}>
-                    <NavigationItem icon="ingots" iconHover="ingotsWhite" />
+                    <NavigationItem icon="dice" iconHover="diceWhite" />
                 </button>
                 <button
                     type="button"

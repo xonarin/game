@@ -70,7 +70,7 @@ const Bonuse: React.FC = () => {
     }
     return (
         <LayoutBonuse
-            title="Bonuse"
+            title="Турниры"
             TopContent={
                 <MonthlyBonuse />
             }
