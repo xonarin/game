@@ -35,9 +35,9 @@ const BonuseBannerReferal: React.FC<BonuseBannerReferalProps> = ({ title, descri
                 <Text className={cnBonuseBanner('Header-Description')}>{description} </Text>
                 <div className={cnBonuseBanner('Header-CountAndTime')}>
                     <div className={cnBonuseBanner('Header-CountAndTime-Count')}>
-                        {[...count].map(number => {
+                        {[...count].map((number, index) => {
                             return (
-                                <TextInBox size="xxl" color="white">
+                                <TextInBox size="xxl" color="white" key={index}>
                                     {number}
                                 </TextInBox>
                             );

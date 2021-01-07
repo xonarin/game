@@ -89,6 +89,7 @@ class TournamentsRepository extends BaseRepository {
                         [fn('COUNT', col('id')), 'sum'],
                     ],
                     where: {
+                        refId: { [Op.ne]: null },
                         createdAt: { [Op.between]: [tournament.start, tournament.finish] },
                     },
                     group: ['userId'],

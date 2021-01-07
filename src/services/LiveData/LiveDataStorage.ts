@@ -7,7 +7,6 @@ import { LiveDataGameParent } from '../../data/modules/liveData/resolvers';
 import { MinesGame } from '../../data/models/MinesGame';
 import { ClassicGame } from '../../data/models/ClassicGame';
 import { getTime } from '../../utils/time';
-import { User } from '../../data/models/User';
 
 const redisOptions: RedisOptions = {
     retryStrategy: times => Math.min(times * 50, 2000),
@@ -44,8 +43,39 @@ const resetGames = async () => {
 
 const getGames = async () => {
     const items = await redis.lrange(LiveDataStorageKeys.GAMES, 0, -1);
-    if (!items) {
-        return [];
+
+    if (items.length === 0) {
+        const newItems: (Omit<LiveDataGameParent, 'time'> & { time: Date })[] = [];
+        const classicGames = await repositories.classicGames.getLastGames(6);
+        const minesGames = await repositories.minesGames.getLastGames(6);
+
+        classicGames.forEach(async game => {
+            newItems.push(await getClassicLiveDataGame(game));
+        });
+
+        minesGames.forEach(game => {
+            newItems.push(getMinesLiveDataGame(game));
+        });
+
+        newItems.sort((a, b) => {
+            if (a.time > b.time) {
+                return -1;
+            }
+
+            if (a.time < b.time) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        const outputItems = newItems.slice(0, 6).map(item => ({ ...item, time: getTime(item.time) }));
+
+        outputItems.forEach(async el => {
+            await redis.rpush(LiveDataStorageKeys.GAMES, JSON.stringify(el));
+        });
+
+        return outputItems;
     }
 
     return items.map(item => JSON.parse(item));
