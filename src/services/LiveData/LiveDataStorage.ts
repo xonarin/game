@@ -40,38 +40,6 @@ const getOnline = async () => {
 const resetGames = async () => {
     await redis.del(LiveDataStorageKeys.GAMES);
     await redis.del(LiveDataStorageKeys.QUEUE_GAMES);
-
-    const items: (Omit<LiveDataGameParent, 'time'> & { time: Date })[] = [];
-    const classicGames = await repositories.classicGames.getLastGames(6);
-    const minesGames = await repositories.minesGames.getLastGames(6);
-
-    for (const game of classicGames) {
-        items.push(await getClassicLiveDataGame(game));
-    }
-
-    minesGames.forEach(game => {
-        items.push(getMinesLiveDataGame(game));
-    });
-
-    items.sort((a, b) => {
-        if (a.time > b.time) {
-            return -1;
-        }
-
-        if (a.time < b.time) {
-            return 1;
-        }
-
-        return 0;
-    });
-
-    items.length = 6;
-
-    const outputItems = items.map(item => ({ ...item, time: getTime(item.time) }));
-
-    outputItems.forEach(async el => {
-        await redis.rpush(LiveDataStorageKeys.GAMES, JSON.stringify(el));
-    });
 };
 
 const getGames = async () => {
