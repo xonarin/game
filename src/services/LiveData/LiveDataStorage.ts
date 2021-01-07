@@ -7,6 +7,7 @@ import { LiveDataGameParent } from '../../data/modules/liveData/resolvers';
 import { MinesGame } from '../../data/models/MinesGame';
 import { ClassicGame } from '../../data/models/ClassicGame';
 import { getTime } from '../../utils/time';
+import { User } from '../../data/models/User';
 
 const redisOptions: RedisOptions = {
     retryStrategy: times => Math.min(times * 50, 2000),
@@ -44,9 +45,9 @@ const resetGames = async () => {
     const classicGames = await repositories.classicGames.getLastGames(6);
     const minesGames = await repositories.minesGames.getLastGames(6);
 
-    classicGames.forEach(game => {
-        items.push(getClassicLiveDataGame(game));
-    });
+    for (const game of classicGames) {
+        items.push(await getClassicLiveDataGame(game));
+    }
 
     minesGames.forEach(game => {
         items.push(getMinesLiveDataGame(game));
@@ -83,7 +84,7 @@ const getGames = async () => {
 };
 
 const addClassicGame = async (game: ClassicGame) => {
-    const formattedGame = getClassicLiveDataGame(game);
+    const formattedGame = await getClassicLiveDataGame(game);
 
     await redis.rpush(
         LiveDataStorageKeys.QUEUE_GAMES,

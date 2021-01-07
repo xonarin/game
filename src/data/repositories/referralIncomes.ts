@@ -41,14 +41,6 @@ class ReferralIncomesRepository extends BaseRepository {
         });
     }
 
-    async getFullAmount(referrerId: string): Promise<number> {
-        return this.db.ReferralIncome.sum('amount', {
-            where: {
-                referrerId,
-            },
-        });
-    }
-
     async getIncomeStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
         const startDateTime = DateTime.local()
             .startOf(ReferralIncomesRepository.periodMapping[period])

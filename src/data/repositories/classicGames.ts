@@ -54,6 +54,7 @@ class ClassicGamesRepository extends BaseRepository {
             winnerChance,
             finishedAt,
         });
+
         await addClassicGame(game);
 
         return game;

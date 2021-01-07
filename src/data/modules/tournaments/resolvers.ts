@@ -18,21 +18,29 @@ type TournamentsResolvers = Resolvers<
     ApolloContext
 >;
 
+const MonthPrizes: Record<string, number> = {
+    '0': 5000,
+    '1': 3000,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+};
 const activityPrizes: Record<string, number> = {
     '0': 2500,
-    '1': 2500,
-    '2': 2500,
-    '3': 2500,
-    '4': 2500,
-    '5': 2500,
+    '1': 1500,
+    '2': 1000,
+    '3': 0,
+    '4': 0,
+    '5': 0,
 };
 const referralsPrizes: Record<string, number> = {
-    '0': 30,
-    '1': 20,
+    '0': 20,
+    '1': 15,
     '2': 10,
-    '3': 5,
-    '4': 5,
-    '5': 5,
+    '3': 0,
+    '4': 0,
+    '5': 0,
 };
 
 export const resolvers: TournamentsResolvers = {
@@ -50,11 +58,11 @@ export const resolvers: TournamentsResolvers = {
 
             switch (type) {
                 case RefTournamentType.Monthly:
-                    users = allUsers.slice(0, 10).map(item => ({
+                    users = allUsers.slice(0, 10).map((item, index) => ({
                         avatar: item.avatar,
                         username: item.username,
                         amount: item.amount,
-                        prize: 0,
+                        prize: MonthPrizes[index.toString()] || 0,
                     }));
                     break;
                 case RefTournamentType.Activity:

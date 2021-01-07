@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import useStyles from 'isomorphic-style-loader/useStyles';
-
+import { DateTime } from 'luxon';
 import Icon from '../../../../components/Icon/Icon';
+
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
+
 import TextIcon from '../../../../components/TextIcon/TextIcon';
 import PeopleCircles from '../../../welcome/Banner/PeopleCircles/PeopleCircles';
 import s from './MonthlyBonuse.scss';
@@ -20,7 +22,10 @@ const MonthlyBonuse = () => {
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
 
-    const { users } = useTournamentQuery(RefTournamentType.Monthly);
+    const { finish, users } = useTournamentQuery(RefTournamentType.Monthly);
+    const nowDateTime = DateTime.local();
+    const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
+    const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
 
     return (
         <div className={cnMonthlyBonuse('Content')}>
@@ -52,11 +57,16 @@ const MonthlyBonuse = () => {
                 <Text color="white" className={cnMonthlyBonuse('Intro-Text')}>
                     Успей принять участие!
                 </Text>
-                <Button size="m">Участвовать</Button>
-                <div className={cnMonthlyBonuse('PeopleCircles')}>
-                    <PeopleCircles />
-                    <Text size="m" color="green">
-                        +583K
+                <div className={cnMonthlyBonuse('Expires')}>
+                    <Text size="xs" color="gold">
+                        Истекает через:
+                    </Text>
+                    <Text size="xs" color="white">
+                        {finishDateTime <= nowDateTime
+                            ? '0 ДНЯ 0 ЧАС 0 МИНУТ'
+                            : `${diffTime.days} ДНЯ ${diffTime.hours} ЧАС ${Math.ceil(
+                                    diffTime.minutes || 0,
+                                )} МИНУТ`}
                     </Text>
                 </div>
             </div>
@@ -74,7 +84,10 @@ const MonthlyBonuse = () => {
                     >
                         {users.map((user, index) => (
                             <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
-                                <div className={cnMonthlyBonuse('WinnerAvatar')} />
+                                <div
+                                    className={cnMonthlyBonuse('WinnerAvatar')}
+                                    style={{ backgroundImage: `url(${user.avatar})` }}
+                                />
                                 <div className={cnMonthlyBonuse('WinnerInfo')}>
                                     <Text className={cnMonthlyBonuse('WinnerName')} color="blue" upper>
                                         {user.username}

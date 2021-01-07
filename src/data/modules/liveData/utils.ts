@@ -5,14 +5,16 @@ import { ClassicGame } from '../../models/ClassicGame';
 import { MinesGame } from '../../models/MinesGame';
 import { getMinesCoef } from '../../../utils/mines';
 import { countOnes } from '../../../utils/number';
-import { moneyRound } from "../../../utils/money";
+import { moneyRound } from '../../../utils/money';
 
-const getClassicLiveDataGame = (game: ClassicGame) => {
+const getClassicLiveDataGame = async (game: ClassicGame) => {
+    const winner = game.winner || (await game.getWinner());
+
     return {
         id: game.id,
         game: 'classic',
-        winner: game.winner?.username || '',
-        avatar: game.winner?.avatar || '',
+        winner: winner?.username,
+        avatar: winner?.avatar,
         chance: game.winnerChance || 0,
         bet: game.winnerBetsPrice || 0,
         fund: game.fund,

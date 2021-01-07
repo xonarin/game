@@ -10,6 +10,7 @@ import Text from '../../../components/Text/Text';
 import PeopleCircles from './PeopleCircles/PeopleCircles';
 import StatsItem from './StatsItem/StatsItem';
 import TextBlock from '../../../components/TextBlock/TextBlock';
+import useOnlineDataQuery from '../../../hooks/graphql/liveData/useOnlineDataQuery';
 
 const cnWelcomeBanner = cn(s, 'WelcomeBanner');
 
@@ -17,7 +18,7 @@ const WelcomeBanner: React.FC = () => {
     useStyles(s);
 
     const [banner, inView] = useInView({ unobserveOnEnter: true });
-
+    const { online } = useOnlineDataQuery();
     return (
         <section className={cnWelcomeBanner({ inView })} ref={banner}>
             <div className={cnWelcomeBanner('Container')}>
@@ -56,7 +57,7 @@ const WelcomeBanner: React.FC = () => {
                         className={cnWelcomeBanner('StatsItem')}
                         label="Онлайн"
                         icon="lightning"
-                        value="27 650"
+                        value={online?.online}
                     />
                     <StatsItem className={cnWelcomeBanner('StatsItem')} label="Выплачено" icon="rub" value="962 275" />
                 </div>

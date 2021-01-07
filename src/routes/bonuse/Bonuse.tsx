@@ -35,12 +35,12 @@ const Bonuse: React.FC = () => {
     if (mobile) {
         return (
             <LayoutBonuseMobile
-                title={selectedScreen === 'bonuse' ? "Рубины" : selectedScreen === 'player' ? "АКТИВНЫЙ ИГРОК" : "БОНУС-ПАРТНЁР"}
+                title={selectedScreen === 'bonuse' ? "Big Tour" : selectedScreen === 'player' ? "АКТИВНЫЙ ИГРОК" : "БОНУС-ПАРТНЁР"}
                 TopContent={selectedScreen === 'bonuse' ? <MonthlyBonuseMobile /> : selectedScreen === 'player' ? <BonuseBannerPlayerMobile title="Активный игрок"
                     description={
                         <>
                             {' '}
-                        Каждые <Text color="white"> 3 дня </Text>  мы разыгрываем призы среди <Text color="white"> 3 </Text> самых активных игроков,
+                        Каждую <Text color="white"> неделю </Text>  мы разыгрываем призы среди <Text color="white"> 3 </Text> самых активных игроков,
                         которые сделали больше всех ставок по сумме.
                         </>
                     }
@@ -54,11 +54,11 @@ const Bonuse: React.FC = () => {
                         count="3000" />}
                 Navigation={
                     <div className={cnBonuse('Navigation')}>
-                        <button type='button' onClick={() => setSelectedScreen('bonuse')}>
-                            <Text color={selectedScreen === 'bonuse' ? "white" : undefined}>Рубины</Text>
-                        </button>
                         <button type='button' onClick={() => setSelectedScreen('player')}>
                             <Text color={selectedScreen === 'player' ? "white" : undefined}>АКТИВНЫЙ ИГРОК</Text>
+                        </button>
+                        <button type='button' onClick={() => setSelectedScreen('bonuse')}>
+                            <Text color={selectedScreen === 'bonuse' ? "white" : undefined}>Big Tour</Text>
                         </button>
                         <button type='button' onClick={() => setSelectedScreen('referal')}>
                             <Text color={selectedScreen === 'referal' ? "white" : undefined}>БОНУС-ПАРТНЁР</Text>
@@ -70,7 +70,7 @@ const Bonuse: React.FC = () => {
     }
     return (
         <LayoutBonuse
-            title="Bonuse"
+            title="Турниры"
             TopContent={
                 <MonthlyBonuse />
             }
@@ -80,7 +80,7 @@ const Bonuse: React.FC = () => {
                     description={
                         <>
                             {' '}
-                            Каждые <Text color="white"> 3 дня </Text>  мы разыгрываем призы среди <Text color="white"> 3 </Text> самых активных игроков,
+                            Каждую <Text color="white"> неделю </Text>  мы разыгрываем призы среди <Text color="white"> 3 </Text> самых активных игроков,
                             которые сделали больше всех ставок по сумме.
                         </>
                     }
