@@ -1,12 +1,8 @@
 import { col, fn, Op } from 'sequelize';
-import { logger } from 'sequelize/types/lib/utils/logger';
 
 import BaseRepository from './base';
 import { Tournament, TournamentType } from '../models/Tournament';
 import { RefTournamentType } from '../../__generated__/graphql';
-import { User } from '../models/User';
-
-const USERS_LIMIT = 10;
 
 class TournamentsRepository extends BaseRepository {
     createTournament = async (type: TournamentType, start: Date, finish: Date): Promise<Tournament> => {
@@ -93,6 +89,7 @@ class TournamentsRepository extends BaseRepository {
                         [fn('COUNT', col('id')), 'sum'],
                     ],
                     where: {
+                        refId: { [Op.ne]: null },
                         createdAt: { [Op.between]: [tournament.start, tournament.finish] },
                     },
                     group: ['userId'],

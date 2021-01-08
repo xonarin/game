@@ -1,0 +1,68 @@
+@import '../../../../assets/styles/vars';
+@import '../../../../assets/styles/mixins';
+
+.WelcomeCard {
+    position: relative;
+    width: calc(50% - 45px);
+    height: 325px;
+    padding-top: 25px;
+    margin-top: 50px;
+
+    &:nth-child(1),
+    &:nth-child(2) { margin-top: 0; }
+
+    &-Head {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 205px;
+        height: 50px;
+        top: 0;
+        left: 45px;
+        border-radius: 5px;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 172px;
+            height: 100%;
+            top: 0;
+            border-radius: 5px;
+            background-color: lighten($color-bg, 10%);
+            z-index: 0;
+        }
+
+        &::before {
+            transform: skewX(-17deg);
+            left: 7px;
+        }
+
+        &::after {
+            transform: skewX(17deg);
+            left: 26px;
+        }
+    }
+
+    & &-Title {
+        position: relative;
+        text-transform: uppercase;
+        z-index: 1;
+    }
+
+    &-Main {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        border-radius: 5px;
+        padding: 70px 45px 50px;
+        background-color: lighten($color-bg, 5%);
+    }
+
+    & &-Description { width: 70%; }
+
+    @include mq(max-width 1090px) { width: calc(50% - 25px); }
+}

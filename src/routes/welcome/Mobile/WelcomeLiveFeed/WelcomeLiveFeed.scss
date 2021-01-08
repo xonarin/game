@@ -1,0 +1,40 @@
+@import '../../../../assets/styles/vars';
+
+.WelcomeLiveFeed {
+    padding-top: 36px;
+    margin-bottom: 80px;
+
+    &-Head {
+        position: relative;
+        margin-bottom: 40px;
+        text-align: center;
+
+        .Title > .Text > span { color: $color-red; }
+    }
+
+    & &-Icon {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        top: -36px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &-TableContainer {
+        display: flex;
+        justify-content: center;
+        padding: 0 30px;
+    }
+
+    .LiveFeedTable {
+        opacity: 0;
+        transform: translateY(-100%);
+        transition: opacity 1s linear, transform 0.5s $nice-ease;
+    }
+
+    &_inView .LiveFeedTable {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
