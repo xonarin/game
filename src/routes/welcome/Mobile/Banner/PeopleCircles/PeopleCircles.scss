@@ -1,0 +1,30 @@
+
+.PeopleCircles {
+    position: relative;
+    width: 47px;
+    height: 20px;
+
+    > div {
+        position: absolute;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        top: 0;
+        border-radius: 50%;
+
+        &:nth-child(1) {
+            right: 0;
+            background-color: #c4c4c4;
+        }
+
+        &:nth-child(2) {
+            right: 13px;
+            background-color: #9a9a9a;
+        }
+
+        &:nth-child(3) {
+            right: 27px;
+            background-color: #666;
+        }
+    }
+}

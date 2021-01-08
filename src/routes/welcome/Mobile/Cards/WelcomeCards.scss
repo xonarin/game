@@ -1,0 +1,48 @@
+@import '../../../assets/styles/vars';
+
+.WelcomeCards {
+    display: flex;
+    justify-content: center;
+    padding-top: 35px;
+    margin-bottom: 44px;
+
+    &-Container {
+        max-width: 1090px;
+        width: 100%;
+        padding: 0 30px;
+    }
+
+    &-Head {
+        position: relative;
+        margin-bottom: 50px;
+        text-align: center;
+
+        .Title > .Text > span { color: $color-gold; }
+    }
+
+    & &-Icon {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &-Items {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .WelcomeCard {
+        opacity: 0;
+        transform: scale(0);
+        transition: opacity 1s $nice-ease 0.3s, transform 1.3s $nice-ease;
+    }
+
+    &_inView .WelcomeCard {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

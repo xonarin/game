@@ -31,8 +31,8 @@ const cnLiveFeedTable = cn(s, 'LiveFeedTable');
 // @ts-ignore TS не видит, что функция не может вернуть undefined
 // eslint-disable-next-line consistent-return
 const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
-    if (game === 'battle') return 'sword';
-    if (game === 'dice') return 'dice';
+    if (game === 'classic') return 'sword';
+    if (game === 'mines') return 'bomb';
     if (game === 'knb') return 'scissors';
 };
 
@@ -60,6 +60,7 @@ const LiveFeedTable: React.FC<LiveFeedTableProps> = () => {
                 >
                     {({ game }) => (
                         <>
+                            <Icon className={cnLiveFeedTable('GameIcon')} type={getIcon(game)} />
                             <Text className={cnLiveFeedTable('GameName')} font="Rubik" color="white" upper>
                                 {game}
                             </Text>
