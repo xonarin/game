@@ -28,6 +28,7 @@
     }
 
     .LiveFeedTable {
+        max-width: 1030px;
         opacity: 0;
         transform: translateY(-100%);
         transition: opacity 1s linear, transform 0.5s $nice-ease;
