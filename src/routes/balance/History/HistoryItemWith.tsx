@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import s from './HistoryItemWith.scss';
-import { cn } from '../../../../../game/src/utils/bem-css-module';
+import { cn } from '../../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import Icon from '../../../components/Icon/Icon';
 import Text from '../../../components/Text/Text';
