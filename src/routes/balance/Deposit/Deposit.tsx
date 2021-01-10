@@ -31,7 +31,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={qiwi} />
             </div>
-            <Text color="white">Qiwi</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Qiwi
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -44,7 +53,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={visa} />
             </div>
-            <Text color="white">Банк. Карта</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Банк. Карта
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -57,7 +75,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={yandex} />
             </div>
-            <Text color="white">Яндекс Деньги</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Яндекс Деньги
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -70,7 +97,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={mobile} />
             </div>
-            <Text color="white">Моб. платеж</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Моб. платеж
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -83,7 +119,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={payeer} />
             </div>
-            <Text color="white">Payeer</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Payeer
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -96,7 +141,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={pm} />
             </div>
-            <Text color="white">Perfect Money</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Perfect Money
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
         <button
             type="button"
@@ -109,7 +163,16 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={piasterix} />
             </div>
-            <Text color="white">Piastrix</Text>
+            <div className={cnDeposit("Method-Info")}>
+                <Text color='white'>
+                    Piastrix
+                </Text>
+                <div className={cnDeposit("Method-MiniInfo")}>
+                    <Text color='gray' size="xs">
+                        Депозит от 50 руб
+                    </Text>
+                </div>
+            </div>
         </button>,
     ];
     useStyles(s);
@@ -141,7 +204,7 @@ function Deposit() {
                 {selectedMethod === 0 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Номер кошелька" icon={qiwi} type="qiwi" />
+                            
                             <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>

@@ -3,6 +3,7 @@ import s from './History.scss';
 import { cn } from '../../../../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import HistoryItem from './HistoryItem';
+import HistoryItemWith from './HistoryItemWith';
 import Text from '../../../../Text/Text';
 
 
@@ -23,10 +24,13 @@ const History = () => {
                 <div className={cnHistory('Deposits')}>
                     <HistoryItem />
                 </div>
-                : <div className={cnHistory('EmptyHistory')}>
-                    <Text color='white' size='xl'>N/A</Text>
-                    <Text color='white' size='xl'>Вы еще не делали заявок</Text>
-                </div>}
+                : 
+
+                <div className={cnHistory('Deposits')}>
+                    <HistoryItemWith />
+                </div>
+                
+                }
             <div>
 
             </div>

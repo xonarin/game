@@ -3,8 +3,6 @@
     flex-direction: column;
     width: 100%;
     padding: 20px;
-    border-bottom: 1px solid #2d3341;
-    margin-bottom: 10px;
 
     &-Service {
         display: flex;
@@ -19,12 +17,15 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        border-bottom: 1px solid #2d3341;
+        padding-bottom: 10px;
     }
 
     &-Description {
         display: flex;
         flex-direction: column;
         margin-top: 10px;
+        margin-bottom: 20px;
     }
 
     &-Icon {

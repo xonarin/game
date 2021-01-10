@@ -5,7 +5,6 @@ import FirePlay from './Web/FirePlay/FirePlay';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import Transaction from './Web/Transaction/Transaction';
 import FirePlayMobile from './Mobile/FirePlay/FirePlay';
-import TransactionMobile from './Mobile/Transaction/Transaction';
 
 const cnPopUp = cn(s, 'PopUp');
 type popUpType=
@@ -31,7 +30,7 @@ const PopUp:React.FC<PopUpProps>  = ({ close,type,mobile }) => {
         return (
             <div className={cnPopUp("Mobile")} id="shadow" onClick={(e)=>handleClick(e)}>
                 <div id='content' >
-                {type === 'firePlay' ? <FirePlayMobile close={close}/>:<TransactionMobile close={close}/>}
+                {type === 'firePlay' ? <FirePlayMobile close={close}/>:null}
                 </div>
             </div>
         )
