@@ -61,6 +61,10 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                 </div>
                 <div className={cnFooter('Copyright')}>
                     <Text size="xs">Willy © 2020</Text>
+                    <a href="//freekassa.ru/" className={cnFooter('Btn')}>
+                        <img src="//www.free-kassa.ru/img/fk_btn/16.png" alt="Приём оплаты на сайте картами" />
+                    </a>
+                    
                 </div>
             </div>
         </footer>
