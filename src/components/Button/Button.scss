@@ -106,6 +106,12 @@
         &::before { background-color: #191d2d; }
     }
 
+    &_color_orange {
+        color: #191d2d;
+
+        &::before { background-color: #f5e249; }
+    }
+
     &_color_bordered {
         color: $color-white;
 

@@ -54,6 +54,7 @@
 
     &-Deposits {
         display: flex;
+        flex-direction: column;
     }
 
     &-EmptyHistory {

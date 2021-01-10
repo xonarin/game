@@ -35,57 +35,107 @@ function Deposit() {
                     <div className={cnDeposit("Method-Icon")}>
                         <img src={qiwi} />
                     </div>
-                    <Text color='white'>
-                        Qiwi
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Qiwi
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 50 руб
+                            </Text>
+                        </div>
+                    </div>
+
                 </button>
                 <button type='button' className={selectedMethod === 'card' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("card")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={visa} />
+                        <img src={visa} />
                     </div>
-                    <Text color='white'>
-                        Банк. Карта
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Банк. Карта
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
                 <button type='button' className={selectedMethod === 'yandex' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("yandex")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={yandex} />
+                        <img src={yandex} />
                     </div>
-                    <Text color='white'>
-                        Яндекс Деньги
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Яндекс Деньги
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
                 <button type='button' className={selectedMethod === 'mobile' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("mobile")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={mobile} />
+                        <img src={mobile} />
                     </div>
-                    <Text color='white'>
-                        Моб. платеж
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Моб. платеж
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
                 <button type='button' className={selectedMethod === 'payeer' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("payeer")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={payeer} />
+                        <img src={payeer} />
                     </div>
-                    <Text color='white'>
-                        Payeer
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Payeer
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
                 <button type='button' className={selectedMethod === 'perfect' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("perfect")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={pm} />
+                        <img src={pm} />
                     </div>
-                    <Text color='white'>
-                        Perfect Money
-                </Text>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
+                            Perfect Money
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
                 <button type='button' className={selectedMethod === 'peasterix' ? cnDeposit('Method-Active') : cnDeposit('Method')} onClick={() => setSelectedMethod("peasterix")}>
                     <div className={cnDeposit("Method-Icon")}>
-                    <img src={piasterix} />
+                        <img src={piasterix} />
                     </div>
-                    <Text color='white'>
+                    <div className={cnDeposit("Method-Info")}>
+                        <Text color='white'>
                         Piastrix
-                </Text>
+                        </Text>
+                        <div className={cnDeposit("Method-MiniInfo")}>
+                            <Text color='gray' size="xs">
+                                Депозит от 100 руб
+                            </Text>
+                        </div>
+                    </div>
                 </button>
             </div>
             <div className={cnDeposit('Settings')}>

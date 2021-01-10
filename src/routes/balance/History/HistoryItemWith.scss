@@ -3,8 +3,8 @@
     flex-direction: column;
     width: 100%;
     padding: 20px;
-    border-bottom: 1px solid #2d3341;
-    margin-bottom: 10px;
+
+    
     &-Service{
         display: flex;
     }
@@ -14,13 +14,22 @@
     }
     &-Short-Info{
         display: flex;
+        margin-bottom: 20px;
+    }
+
+    &-Short-InfoLeft{
+        display: flex;
         align-items: center;
         justify-content: space-between;
+        cursor: pointer;  
+        width: 100%;
+        margin-right: 20px;
     }
     &-Description{
         display: flex;
         flex-direction: column;
         margin-top: 10px;
+        margin-bottom: 20px;
     }
     &-Icon{
         width: 36px;

@@ -6,7 +6,7 @@ import { cn } from '../../utils/bem-css-module';
 import Icon, { IconProps } from '../Icon/Icon';
 
 type ButtonShape = 'right' | 'left' | 'alphaRight';
-type ButtonColor = 'blue' | 'green' | 'gray' | 'bordered';
+type ButtonColor = 'blue' | 'green' | 'gray' | 'orange' | 'bordered';
 type ButtonSize = 'xs' | 's' | 'm';
 type ButtonWeight = 'normal' | 'semiBold' | 'bold';
 
