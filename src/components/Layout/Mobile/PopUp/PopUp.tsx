@@ -1,14 +1,16 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from './PopUp.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../Text/Text';
 import Icon from '../../../Icon/Icon';
 import LiveFeedTable from '../../../LiveFeedTable/Mobile/LiveFeedTable';
+
 export interface PopUpProps {
-    close: Function,
-    children?: React.ReactNode,
-    type?: String
+    close: Function;
+    children?: React.ReactNode;
+    type?: String;
 }
 
 const cnPopUp = cn(s, 'PopUp');
@@ -26,25 +28,21 @@ const PopUp: React.FC<PopUpProps> = ({ close, children }) => {
 
     return (
         <div className={cnPopUp()}>
-            <div className={cnPopUp("Container")}>
-                <div className={cnPopUp("Header")}>
-                    <div className={cnPopUp("Header-LeftSide")}>
-                        {children}
-                    </div>
-                    <div className={cnPopUp("Header-RightSide")}>
-                        <button type='button' onClick={() => close()}>
-                            <Icon type='close' />
+            <div className={cnPopUp('Container')}>
+                <div className={cnPopUp('Header')}>
+                    <div className={cnPopUp('Header-LeftSide')}>{children}</div>
+                    <div className={cnPopUp('Header-RightSide')}>
+                        <button type="button" onClick={() => close()}>
+                            <Icon type="close" />
                         </button>
                     </div>
-
                 </div>
-                <div className={cnPopUp("Content")}>
+                <div className={cnPopUp('Content')}>
                     <LiveFeedTable items={items} />
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default PopUp
+export default PopUp;

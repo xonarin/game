@@ -1,0 +1,9 @@
+fragment PaymentMethod on PaymentMethod {
+    id
+    name
+    avatar
+    commission
+    minAmount
+    maxAmount
+    enabled
+}

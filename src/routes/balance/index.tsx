@@ -14,7 +14,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
     return {
         title: 'Balance',
         chunks: ['balance'],
-        pageContent: <TransactionMobile  />,
+        pageContent: <TransactionMobile />,
         redirect: user ? undefined : '/',
     };
 };

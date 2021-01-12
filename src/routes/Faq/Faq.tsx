@@ -67,14 +67,11 @@ const Faq: React.FC<FaqProps> = ({ title }) => {
     useStyles(s);
 
     if (mobile) {
-        return (
-                <FaqMobile />
-            
-        );
+        return <FaqMobile />;
     }
     return (
         <Layout33Content
-        title="Помощь"
+            title="Помощь"
             centerContent={
                 <div className={cnFaq('list')}>
                     <h4 className={cnFaq('title')}>Playtime.bet - ПОДРОБНЕЕ О ПРОЕКТЕ!</h4>

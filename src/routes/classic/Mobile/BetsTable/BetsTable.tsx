@@ -3,7 +3,11 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './BetsTable.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import { ClassicGameBetFragment, ClassicGameFragment, ClassicGamePlayerFragment } from '../../../../__generated__/graphql';
+import {
+    ClassicGameBetFragment,
+    ClassicGameFragment,
+    ClassicGamePlayerFragment,
+} from '../../../../__generated__/graphql';
 import useDeepMemo from '../../../../hooks/useDeepMemo';
 import SafeTableSpring from '../../../../components/Table/containers/SafeTableSpring';
 import Column from '../../../../components/Table/Column/Column';

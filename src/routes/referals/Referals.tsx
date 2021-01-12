@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import ReferalsMobile from './Mobile/Referals';
 import ReferalsWeb from './Web/Referals';
 
 const Referals: React.FC = () => {
-    const [mobile, setMobile] = useState(false)
+    const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (
             typeof window !== 'undefined' &&
@@ -16,16 +17,11 @@ const Referals: React.FC = () => {
         }
     }, [typeof window !== 'undefined' && window?.screen?.width]);
 
+    if (mobile) {
+        return <ReferalsMobile />;
+    }
 
-    if(mobile){
-        return(
-          <ReferalsMobile/>
-        )
-    }   
-
-    return (
-       <ReferalsWeb/>
-    );
+    return <ReferalsWeb />;
 };
 
 export default Referals;

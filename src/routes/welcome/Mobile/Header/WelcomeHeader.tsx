@@ -19,7 +19,7 @@ const WelcomeHeader = () => {
                     <img className={cnWelcomeHeader('Logo')} src={logoImg} alt="Рулетка" />
                 </Link>
                 <div className={cnWelcomeHeader('Buttons')}>
-                    <Button  className={cnWelcomeHeader('ButtonsAuth')} weight="normal">
+                    <Button className={cnWelcomeHeader('ButtonsAuth')} weight="normal">
                         <a className={cnWelcomeHeader('ButtonsLinkAuth')} href="/auth/vk">
                             Войти
                         </a>

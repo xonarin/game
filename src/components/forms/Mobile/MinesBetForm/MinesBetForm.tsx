@@ -107,7 +107,7 @@ const MinesBetFormMobile: React.FC<MinesBetFormMobileProps> = ({
                     </div>
                     <Button
                         className={cnMinesBetForm('SubmitButton', { isDisabled: isInGame && step === 0 })}
-                        size='m'
+                        size="m"
                         submit
                     >
                         {isInGame && coef ? `Забрать ${(betAmount * coef).toFixed(2)}` : 'Играть'}

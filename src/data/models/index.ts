@@ -11,6 +11,8 @@ import { initClassicGameBet, ClassicGameBetStatic } from './ClassicGameBet';
 import { initReferralIncome, ReferralIncomeStatic } from './ReferralIncome';
 import { initMinesGame, MinesGameStatic } from './MinesGame';
 import { initTournament, TournamentStatic } from './Tournament';
+import { initPaymentMethod, PaymentMethodStatic } from './PaymentMethod';
+import { initWithdrawMethod, WithdrawMethodStatic } from './WithdrawMethod';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -37,6 +39,8 @@ export interface Database {
     ClassicGameBet: ClassicGameBetStatic;
     MinesGame: MinesGameStatic;
     Tournament: TournamentStatic;
+    PaymentMethod: PaymentMethodStatic;
+    WithdrawMethod: WithdrawMethodStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -52,6 +56,8 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         ClassicGameBet: initClassicGameBet(sequelize),
         MinesGame: initMinesGame(sequelize),
         Tournament: initTournament(sequelize),
+        PaymentMethod: initPaymentMethod(sequelize),
+        WithdrawMethod: initWithdrawMethod(sequelize),
     };
 
     forEach(database, model => {

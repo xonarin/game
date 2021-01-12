@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from '../Transaction.scss';
 import { cn } from '../../../utils/bem-css-module';
-import useStyles from 'isomorphic-style-loader/useStyles';
 import qiwi from '../../../assets/img/qiwi.png';
 import visa from '../../../assets/img/visa.png';
 import yandex from '../../../assets/img/yandex.png';
@@ -12,6 +13,7 @@ import Icon from '../../../components/Icon/Icon';
 import InputWithIcon from '../../../components/InputWithIcon/InputWithIcon';
 import PercentBlock from '../../../components/PercentBlock/PercentBlock';
 import OptionSelector from '../../../components/OptionSelector/OptionSelector';
+
 const cnDeposit = cn(s, 'Deposit');
 
 function Withdraw() {
@@ -110,8 +112,8 @@ function Withdraw() {
                 </button>
                 <div className={cnDeposit('SelectetedMethod')}>
                     {paymentMethods[selectedMethod]}
-                    <Icon type='left'/>
-                    </div>
+                    <Icon type="left" />
+                </div>
                 {selectedMethodToggle ? (
                     <div className={cnDeposit('PaymentsList')}>
                         {paymentMethods.map((method, index) => {

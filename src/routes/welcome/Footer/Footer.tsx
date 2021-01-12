@@ -64,7 +64,6 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                     <a href="//freekassa.ru/" className={cnFooter('Btn')}>
                         <img src="//www.free-kassa.ru/img/fk_btn/16.png" alt="Приём оплаты на сайте картами" />
                     </a>
-                    
                 </div>
             </div>
         </footer>

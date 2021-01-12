@@ -92,7 +92,9 @@ const ChatsMobile: React.FC<MessagesProps> = ({ chatId, userId, openDialog }) =>
     }
     return (
         <div className={cnChats()}>
-            <div className={cnChats("Input")}><SearchInput value={search} onChange={onChangeSearch} onSubmit={onSubmitSearch}/></div> 
+            <div className={cnChats('Input')}>
+                <SearchInput value={search} onChange={onChangeSearch} onSubmit={onSubmitSearch} />
+            </div>
             <InfiniteScroll
                 className={cnChats('ChatsList')}
                 offset={chats ? chats.length : 0}

@@ -30,7 +30,7 @@ const WelcomeHeader = () => {
                             Войти
                         </a>
                     </Button>
-                    <Button  className={cnWelcomeHeader('ButtonsAuth')} weight="normal">
+                    <Button className={cnWelcomeHeader('ButtonsAuth')} weight="normal">
                         <a className={cnWelcomeHeader('ButtonsLinkAuth')} href="/auth/vk">
                             Регистрация
                         </a>

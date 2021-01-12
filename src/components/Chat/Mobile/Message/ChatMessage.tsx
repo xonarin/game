@@ -65,7 +65,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 </div>
             )}
             {showPm && (
-                <Link to={`/messages?userId=${sender.id}`} onClick={()=>closeChat()}>
+                <Link to={`/messages?userId=${sender.id}`} onClick={() => closeChat()}>
                     <Button className={cnChatMessage('PmButton')} icon="letter" iconHover="letterWhite" clear />
                 </Link>
             )}

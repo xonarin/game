@@ -16,15 +16,20 @@ export interface LayoutReferalProps {
 
 const cnLayoutReferal = cn(s, 'LayoutReferal');
 
-const LayoutReferal: React.FC<LayoutReferalProps> = ({ TopContent, LeftContent, RightContent, BottomContent, DiagramsIcon, TableIcons }) => {
+const LayoutReferal: React.FC<LayoutReferalProps> = ({
+    TopContent,
+    LeftContent,
+    RightContent,
+    BottomContent,
+    DiagramsIcon,
+    TableIcons,
+}) => {
     useStyles(s);
 
     return (
         <Layout>
             <div className={cnLayoutReferal('Container')}>
-                <div className={cnLayoutReferal('Top')}>
-                    {TopContent}
-                </div>
+                <div className={cnLayoutReferal('Top')}>{TopContent}</div>
                 <div className={cnLayoutReferal('Icon')}>{DiagramsIcon}</div>
                 <div className={cnLayoutReferal('Diagrams')}>
                     <div className={cnLayoutReferal('Diagrams-Left')}>{LeftContent}</div>
@@ -32,7 +37,6 @@ const LayoutReferal: React.FC<LayoutReferalProps> = ({ TopContent, LeftContent, 
                 </div>
                 <div className={cnLayoutReferal('Icon')}>{TableIcons}</div>
                 <div className={cnLayoutReferal('Bottom')}>{BottomContent}</div>
-
             </div>
         </Layout>
     );

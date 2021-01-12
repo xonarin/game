@@ -13,16 +13,13 @@ import PreLoader from '../../../PreLoader/PreLoader';
 
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
-
 const LayoutHeaderMobile: React.FC = () => {
     useStyles(s);
 
     const { me, loading } = useMeQuery();
 
     if (loading) {
-        return  <PreLoader/>
-     
-    
+        return <PreLoader />;
     }
     return (
         <header className={cnLayoutHeader()}>

@@ -25,13 +25,11 @@ export interface MessagesProps {
 const cnChats = cn(s, 'Chats');
 
 const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
-  
-
     useStyles(s);
 
     const { me } = useMeQuery();
 
-    const { scrollableRef: messagesScrollableRef, scrollTo , isScrolledToBottom } = useScrollableHelper();
+    const { scrollableRef: messagesScrollableRef, scrollTo, isScrolledToBottom } = useScrollableHelper();
     const onSentMessage = useCallback(
         (message: MessageFragment) => {
             if (message.sender.id === me?.id || isScrolledToBottom()) {
@@ -42,15 +40,10 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
     );
 
     const [search, onChangeSearch, submittedSearch, onSubmitSearch] = useSubmitState('');
-    const { chats, chatsCount, chatsFetchMore, chatRefetch } = useChatsQuery(
-        submittedSearch,
-        chatId,
-        onSentMessage,
-    );
+    const { chats, chatsCount, chatsFetchMore, chatRefetch } = useChatsQuery(submittedSearch, chatId, onSentMessage);
 
     const readChatMutation = useReadChatMutation();
 
-   
     useEffect(() => {
         if (!chatId) return;
 
@@ -98,22 +91,22 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
     }
     return (
         <Panel
-        className={cnChats()}
-        leftHead={<SearchInput value={search} onChange={onChangeSearch} onSubmit={onSubmitSearch} />}
-    >
-        <InfiniteScroll
-            className={cnChats('ChatsList')}
-            offset={chats ? chats.length : 0}
-            count={chatsCount || 0}
-            loadMore={chatsFetchMore}
-            disablePadding
+            className={cnChats()}
+            leftHead={<SearchInput value={search} onChange={onChangeSearch} onSubmit={onSubmitSearch} />}
         >
-            {sortedChats.map(chatItem => (
-                <ChatItem {...chatItem} isSelected={chatItem.id === chatId} key={chatItem.id} />
-            ))}
-        </InfiniteScroll>
-    </Panel>
-    )
-}
+            <InfiniteScroll
+                className={cnChats('ChatsList')}
+                offset={chats ? chats.length : 0}
+                count={chatsCount || 0}
+                loadMore={chatsFetchMore}
+                disablePadding
+            >
+                {sortedChats.map(chatItem => (
+                    <ChatItem {...chatItem} isSelected={chatItem.id === chatId} key={chatItem.id} />
+                ))}
+            </InfiniteScroll>
+        </Panel>
+    );
+};
 
-export default Chats
+export default Chats;

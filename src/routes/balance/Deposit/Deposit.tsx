@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import s from '../Transaction.scss';
-import { cn } from '../../../utils/bem-css-module';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
+import s from '../Transaction.scss';
+import { cn } from '../../../utils/bem-css-module';
 import qiwi from '../../../assets/img/qiwi.png';
 import visa from '../../../assets/img/visa.png';
 import yandex from '../../../assets/img/yandex.png';
@@ -14,6 +14,7 @@ import Text from '../../../components/Text/Text';
 import Icon from '../../../components/Icon/Icon';
 import InputWithIcon from '../../../components/InputWithIcon/InputWithIcon';
 import OptionSelector from '../../../components/OptionSelector/OptionSelector';
+
 const cnDeposit = cn(s, 'Deposit');
 
 function Deposit() {
@@ -31,12 +32,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={qiwi} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Qiwi
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Qiwi</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -53,12 +52,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={visa} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Банк. Карта
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Банк. Карта</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -75,12 +72,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={yandex} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Яндекс Деньги
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Яндекс Деньги</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -97,12 +92,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={mobile} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Моб. платеж
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Моб. платеж</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -119,12 +112,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={payeer} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Payeer
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Payeer</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -141,12 +132,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={pm} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Perfect Money
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Perfect Money</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -163,12 +152,10 @@ function Deposit() {
             <div className={cnDeposit('Method-Icon')}>
                 <img src={piasterix} />
             </div>
-            <div className={cnDeposit("Method-Info")}>
-                <Text color='white'>
-                    Piastrix
-                </Text>
-                <div className={cnDeposit("Method-MiniInfo")}>
-                    <Text color='gray' size="xs">
+            <div className={cnDeposit('Method-Info')}>
+                <Text color="white">Piastrix</Text>
+                <div className={cnDeposit('Method-MiniInfo')}>
+                    <Text color="gray" size="xs">
                         Депозит от 50 руб
                     </Text>
                 </div>
@@ -186,12 +173,12 @@ function Deposit() {
                     </div>
                     <Text>Способ оплаты</Text>
                 </button>
-                <div className={cnDeposit("SelectetedMethod")}>
-                {paymentMethods[selectedMethod]} 
-                <Icon type='left'/>
+                <div className={cnDeposit('SelectetedMethod')}>
+                    {paymentMethods[selectedMethod]}
+                    <Icon type="left" />
                 </div>
                 {selectedMethodToggle ? (
-                    <div className={cnDeposit("PaymentsList")}>
+                    <div className={cnDeposit('PaymentsList')}>
                         {paymentMethods.map((method, index) => {
                             if (index !== selectedMethod) {
                                 return method;
@@ -204,8 +191,7 @@ function Deposit() {
                 {selectedMethod === 0 ? (
                     <>
                         <div>
-                            
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>
@@ -223,7 +209,7 @@ function Deposit() {
                 {selectedMethod === 1 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>
@@ -241,7 +227,7 @@ function Deposit() {
                 {selectedMethod === 2 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
 
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
@@ -261,7 +247,7 @@ function Deposit() {
                     <>
                         <div>
                             <OptionSelector type="mobile" />
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>
@@ -279,7 +265,7 @@ function Deposit() {
                 {selectedMethod === 4 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>
@@ -297,7 +283,7 @@ function Deposit() {
                 {selectedMethod === 5 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>
@@ -315,7 +301,7 @@ function Deposit() {
                 {selectedMethod === 6 ? (
                     <>
                         <div>
-                            <InputWithIcon mobile={true} title=" Сумма пополнения" fixedAmounts />
+                            <InputWithIcon mobile title=" Сумма пополнения" fixedAmounts />
                             <div className={cnDeposit('Go-To-Payment')}>Перейти к оплате</div>
                         </div>
                         <div className={cnDeposit('Footer')}>

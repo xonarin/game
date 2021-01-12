@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 import { cn } from '../../../../utils/bem-css-module';
 import NavigationItem from '../../Mobile/Sidebar/NavigationItem/HeaderNavigationItem';
 import s from './Sidebar.scss';
@@ -105,7 +106,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                     ) : null}
                 </div>
                 <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                <NavigationItem to="/" icon="user" iconHover="user" />
+                    <NavigationItem to="/" icon="user" iconHover="user" />
                 </button>
             </div>
         </aside>

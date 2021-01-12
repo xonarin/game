@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 import { ChatType } from '../../__generated__/graphql';
 import history from '../../history';
-
 import s from './Messages.scss';
 import { cn } from '../../utils/bem-css-module';
 import Layout from '../../components/Layout/Layout';
@@ -26,13 +26,12 @@ const Messages: React.FC<MessagesProps> = ({ chatId, userId }) => {
     const [showDialog, setShowDialog] = useState(false);
     const { chats } = useChatsQuery(chatId);
     useEffect(() => {
-        if (!chatId && chats && chats.length > 0 ) {
-
+        if (!chatId && chats && chats.length > 0) {
             if (!userId) {
                 history.push(`/messages/${chats[0].id}`);
                 return;
             }
-            
+
             const existingChat = chats.find(
                 item =>
                     item.type === ChatType.Pm &&
@@ -42,10 +41,9 @@ const Messages: React.FC<MessagesProps> = ({ chatId, userId }) => {
             if (existingChat) {
                 history.push(`/messages/${existingChat.id}`);
                 setShowDialog(true);
-               return
+                return;
             }
             setShowDialog(true);
-
         }
     }, [chatId, chats, userId]);
 

@@ -9,26 +9,26 @@ export interface MessageFieldProps {
     isPm?: boolean;
     emojiSize?: MessageInputProps['emojiSize'];
     onSubmit?: MessageInputProps['onSubmit'];
-    mobile?:Boolean;
+    mobile?: Boolean;
 }
 
-const MessageField: React.FC<MessageFieldProps> = ({ name, isPm, emojiSize, onSubmit,mobile }) => {
-    if(mobile){
-        return(
+const MessageField: React.FC<MessageFieldProps> = ({ name, isPm, emojiSize, onSubmit, mobile }) => {
+    if (mobile) {
+        return (
             <Field<string> name={name}>
-            {({ input }) => (
-                <MessageInputMobile
-                    value={input.value}
-                    onChange={input.onChange}
-                    onFocus={input.onFocus}
-                    onBlur={input.onBlur}
-                    onSubmit={onSubmit}
-                    isPm={isPm}
-                    emojiSize={emojiSize}
-                />
-            )}
-        </Field>
-        )
+                {({ input }) => (
+                    <MessageInputMobile
+                        value={input.value}
+                        onChange={input.onChange}
+                        onFocus={input.onFocus}
+                        onBlur={input.onBlur}
+                        onSubmit={onSubmit}
+                        isPm={isPm}
+                        emojiSize={emojiSize}
+                    />
+                )}
+            </Field>
+        );
     }
     return (
         <Field<string> name={name}>

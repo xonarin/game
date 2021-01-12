@@ -1,1 +1,5 @@
-import './tournaments';
+import tournaments from './tournaments';
+
+export default () => {
+    tournaments();
+};

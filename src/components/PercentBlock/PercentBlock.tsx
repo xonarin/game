@@ -1,92 +1,95 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from './PercentBlock.scss';
 import { cn } from '../../utils/bem-css-module';
-import useStyles from 'isomorphic-style-loader/useStyles';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';
 
 const cnPercentBlock = cn(s, 'PercentBlock');
 const PercentBlock: React.FC = () => {
-    const [amount, setAmount] = useState('')
-    const [error, setError] = useState('')
-    const [finalAmount, setFinalAmount] = useState('')
+    const [amount, setAmount] = useState('');
+    const [error, setError] = useState('');
+    const [finalAmount, setFinalAmount] = useState('');
 
-    const handleChange = (e) => {
+    const handleChange = e => {
         if (Number(e.target.value)) {
-            let amount = Number(e.target.value)
-            setAmount(String(amount))
-            let tmp = amount - amount / 10
-            setFinalAmount(String(tmp))
+            const amount = Number(e.target.value);
+            setAmount(String(amount));
+            const tmp = amount - amount / 10;
+            setFinalAmount(String(tmp));
         }
         if (e.target.value === '') {
-            setAmount('')
-            setFinalAmount('')
-
+            setAmount('');
+            setFinalAmount('');
         }
-    }
+    };
 
-    const finalyAmountChange = (e) => {
+    const finallyAmountChange = e => {
         if (Number(e.target.value)) {
-            let finalAmount = Number(e.target.value)
-            setFinalAmount(String(finalAmount))
-            let tmp = 10 * finalAmount / 9
-            setAmount(String(tmp))
+            const finalAmount = Number(e.target.value);
+            setFinalAmount(String(finalAmount));
+            const tmp = (10 * finalAmount) / 9;
+            setAmount(String(tmp));
         }
         if (e.target.value === '') {
-            setAmount('')
-            setFinalAmount('')
+            setAmount('');
+            setFinalAmount('');
         }
-    }
-    const checkValue = (e) => {
+    };
+    const checkValue = e => {
         if (e.target.value < 100) {
-            setError('Минимальное значение  100 RUB')
-            return
+            setError('Минимальное значение  100 RUB');
+            return;
         }
-        setAmount(e.target.value)
-
-    }
-    useStyles(s)
+        setAmount(e.target.value);
+    };
+    useStyles(s);
     return (
         <div className={cnPercentBlock()}>
             <div className={cnPercentBlock('Inputs')}>
                 <div className={cnPercentBlock('Input-Block')}>
                     <div className={cnPercentBlock('Title')}>
                         <div className={cnPercentBlock('Title-Icon')}>
-                            <Icon type='rightWhite'/>
+                            <Icon type="rightWhite" />
                         </div>
-                        <Text>
-                            Сумма вывода
-                        </Text>
+                        <Text>Сумма вывода</Text>
                     </div>
-                    <div className={cnPercentBlock("Input")}>
-                        <div className={cnPercentBlock("Input-Icon")}>
-                            <Icon type='diamond' />
+                    <div className={cnPercentBlock('Input')}>
+                        <div className={cnPercentBlock('Input-Icon')}>
+                            <Icon type="diamond" />
                         </div>
-                        {error ? <div className={cnPercentBlock('Error')}><Text color='red'>{error}</Text></div> : null}
-                        <input value={amount} key="amount" onChange={handleChange} className={error ? cnPercentBlock('Input-Error') : undefined} onBlur={checkValue} />
+                        {error ? (
+                            <div className={cnPercentBlock('Error')}>
+                                <Text color="red">{error}</Text>
+                            </div>
+                        ) : null}
+                        <input
+                            value={amount}
+                            key="amount"
+                            onChange={handleChange}
+                            className={error ? cnPercentBlock('Input-Error') : undefined}
+                            onBlur={checkValue}
+                        />
                     </div>
                 </div>
                 <div className={cnPercentBlock('Input-Block')}>
                     <div className={cnPercentBlock('Title')}>
                         <div className={cnPercentBlock('Title-Icon')}>
-                            <Icon type='rightWhite'  />
+                            <Icon type="rightWhite" />
                         </div>
-                        <Text>
-                        К получению
-                        </Text>
+                        <Text>К получению</Text>
                     </div>
-                    <div className={cnPercentBlock("Input")}>
-                        <div className={cnPercentBlock("Input-Icon")}>
-                            <Icon type='diamond' />
+                    <div className={cnPercentBlock('Input')}>
+                        <div className={cnPercentBlock('Input-Icon')}>
+                            <Icon type="diamond" />
                         </div>
-                        <input value={finalAmount} key="finalAmount" onChange={finalyAmountChange} />
+                        <input value={finalAmount} key="finalAmount" onChange={finallyAmountChange} />
                     </div>
-
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default PercentBlock
+export default PercentBlock;

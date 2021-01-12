@@ -8,8 +8,9 @@ import liveData from './modules/liveData/schema.graphql';
 import announcements from './modules/announcements/schema.graphql';
 import classicGame from './modules/classicGame/schema.graphql';
 import minesGame from './modules/minesGame/schema.graphql';
+import tournaments from './modules/tournaments/schema.graphql';
+import payments from './modules/payments/schema.graphql';
 import clientSchema from './modules/clientState/schema';
-import tournamentsSchema from './modules/tournaments/schema.graphql';
 
 export default mergeTypeDefs([
     users,
@@ -19,6 +20,7 @@ export default mergeTypeDefs([
     announcements,
     classicGame,
     minesGame,
-    tournamentsSchema,
+    tournaments,
+    payments,
     ...clientSchema,
 ]);

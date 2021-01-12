@@ -17,7 +17,7 @@ const ChatHead: React.FC<ChatHeadProps> = ({ title, image }) => {
 
     return (
         <div className={cnMessagesUser()}>
-             <div className={cnMessagesUser('Main')}>
+            <div className={cnMessagesUser('Main')}>
                 <Text className={cnMessagesUser('Title')} color="white" upper>
                     {title || 'Чат'}
                 </Text>
@@ -30,7 +30,6 @@ const ChatHead: React.FC<ChatHeadProps> = ({ title, image }) => {
                     <img className={cnMessagesUser('Image')} src={image} alt={title || 'Чат'} />
                 </div>
             )}
-           
         </div>
     );
 };

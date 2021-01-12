@@ -15,7 +15,7 @@ export interface BalanceProps {
 const cnBalance = cn(s, 'Balance');
 
 const Balance: React.FC<BalanceProps> = ({ money }) => {
-    const [depositToggle, setDepositToggle] = useState(false)
+    const [depositToggle, setDepositToggle] = useState(false);
     useStyles(s);
 
     const currentMoneyRef = useRef(money);
@@ -29,8 +29,8 @@ const Balance: React.FC<BalanceProps> = ({ money }) => {
         setTimeout(() => setDiff(newDiff));
     }, [money]);
     const popUpClose = () => {
-        setDepositToggle(false)
-    }
+        setDepositToggle(false);
+    };
     return (
         <div className={cnBalance()}>
             <div className={cnBalance('Main')}>
@@ -46,7 +46,7 @@ const Balance: React.FC<BalanceProps> = ({ money }) => {
                     )}
                 </div>
             </div>
-            <Button className={cnBalance('Button')} icon="plusWhite" onClick={()=>setDepositToggle(true)}/>
+            <Button className={cnBalance('Button')} icon="plusWhite" onClick={() => setDepositToggle(true)} />
             {depositToggle ? <PopUp close={popUpClose} /> : null}
         </div>
     );

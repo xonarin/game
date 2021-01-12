@@ -22,7 +22,13 @@ export interface MinesGamePropsMobile {
 
 const cnMinesGameMobile = cn(s, 'MinesGame');
 
-const MinesGameMobile: React.FC<MinesGamePropsMobile> = ({ fieldSize, minBombsCount, coefs, formBombsCount, activeMinesGame }) => {
+const MinesGameMobile: React.FC<MinesGamePropsMobile> = ({
+    fieldSize,
+    minBombsCount,
+    coefs,
+    formBombsCount,
+    activeMinesGame,
+}) => {
     useStyles(s);
 
     const { bombsCount, fieldConf, stepsConf, status } = activeMinesGame || {

@@ -51,7 +51,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
     const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
 
     if (gameLoading || !currentClassicGame) {
-        return  <PreLoader/>
+        return <PreLoader />;
     }
     if (mobile) {
         return (
@@ -71,11 +71,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                         <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
                     </Panel>
                 }
-                historyContent={
-                   
-                            <HistoryTableMobile />
-                     
-                }
+                historyContent={<HistoryTableMobile />}
             />
         );
     }
@@ -98,7 +94,6 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
             }
             rightContent={<ClassicGame game={currentClassicGame} />}
             bottomContent={
-               
                 <Panel
                     leftHead={
                         <Text className={cnClassic('HistoryTitle')} font="Rubik" size="l" color="white" upper>
@@ -108,7 +103,6 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                 >
                     <HistoryTable />
                 </Panel>
-                 
             }
         />
     );

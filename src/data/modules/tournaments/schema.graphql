@@ -15,7 +15,7 @@ enum RefTournamentType {
 type TournamentPayload {
     position: Int!
     amount: Float!
-    finish: DateTime!
+    finish: DateTime
     users: [UserPayload!]!
 }
 

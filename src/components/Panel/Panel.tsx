@@ -7,14 +7,14 @@ import { cn } from '../../utils/bem-css-module';
 export interface PanelProps {
     leftHead: React.ReactNode;
     rightHead?: React.ReactNode;
-    centerHead?:React.ReactNode;
+    centerHead?: React.ReactNode;
     className?: string;
     children: React.ReactNode;
 }
 
 const cnPanel = cn(s, 'Panel');
 
-const Panel: React.FC<PanelProps> = ({ leftHead,centerHead, rightHead, className, children }) => {
+const Panel: React.FC<PanelProps> = ({ leftHead, centerHead, rightHead, className, children }) => {
     useStyles(s);
 
     return (

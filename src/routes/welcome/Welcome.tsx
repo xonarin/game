@@ -14,9 +14,8 @@ import MobileWelcomeGames from './Mobile/Games/WelcomeGames';
 import MobileWelcomeLiveFeed from './Mobile/WelcomeLiveFeed/WelcomeLiveFeed';
 import MobileFooter from './Mobile/Footer/Footer';
 import PreLoader from '../../components/PreLoader/PreLoader';
-
-
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
+
 export interface WelcomeProps {
     refId?: string;
 }
@@ -58,7 +57,6 @@ const Welcome: React.FC<WelcomeProps> = ({ refId }) => {
     if (mobile) {
         return (
             <>
-
                 <MobileWelcomeHeader />
                 <MobileWelcomeBanner />
                 <MobileWelcomeGames />

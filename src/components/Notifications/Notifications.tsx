@@ -10,6 +10,7 @@ import useDeleteNotificationMutation from '../../hooks/graphql/notifications/use
 import Text from '../Text/Text';
 import TextBlock from '../TextBlock/TextBlock';
 import PreLoader from '../PreLoader/PreLoader';
+
 const cnNotifications = cn(s, 'Notifications');
 
 const Notifications: React.FC = () => {
@@ -45,7 +46,7 @@ const Notifications: React.FC = () => {
     );
 
     if (loading || !notifications) {
-        return  <PreLoader/>
+        return <PreLoader />;
     }
 
     return (

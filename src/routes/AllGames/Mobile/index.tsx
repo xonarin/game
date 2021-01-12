@@ -5,8 +5,6 @@ import { RouteResult } from '../../../router';
 import AllGamesMobile from './AllGames';
 
 const action = ({ user }: AppContextTypes): RouteResult => {
-
-
     // if (!chatId) {
     //     throw new Error('Chat for classic is not defined');
     // }

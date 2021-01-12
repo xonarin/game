@@ -1,7 +1,7 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import s from '../CenterPage/CenterPage.scss';
+import s from './CenterPage.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Title from '../../../Title/Title';
 

@@ -85,7 +85,7 @@ const BonuseTable: React.FC<BonuseTableProps> = ({ items }) => {
                 maxWidth={180}
                 columnKey="fund"
             >
-                {({ percent }) => <TextIcon text={percent} icon="percentage" font="Rubik" color="white"  upper />}
+                {({ percent }) => <TextIcon text={percent} icon="percentage" font="Rubik" color="white" upper />}
             </Column>
         </SafeTable>
     );

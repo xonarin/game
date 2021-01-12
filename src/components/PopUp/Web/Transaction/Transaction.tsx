@@ -1,56 +1,56 @@
 import React, { useState } from 'react';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
 import Icon from '../../../Icon/Icon';
 import Text from '../../../Text/Text';
-import s from './Transaction.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import useStyles from 'isomorphic-style-loader/useStyles';
-import Deposit from './Deposit/Deposit';
-import Withdraw from './Withdraw/Withdraw';
 import History from './History/History';
+import Payment from './Payment/Payment';
+import s from './Transaction.scss';
 
 export interface TransactionProps {
-    close: Function
+    close: () => void;
 }
-const cnDeposit = cn(s, 'Deposit');
+
+type SelectedTypeType = 'deposit' | 'withdraw' | 'history';
+
+const cnTransaction = cn(s, 'Transaction');
+
+const types: [SelectedTypeType, React.ReactNode][] = [
+    ['deposit', 'Пополнение'],
+    ['withdraw', 'Вывод'],
+    ['history', 'История'],
+];
 
 const Transaction: React.FC<TransactionProps> = ({ close }) => {
-    const [selectedType, setSelectedType] = useState("deposit")
-    useStyles(s)
+    const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposit');
+    useStyles(s);
+
     return (
-        <div className={cnDeposit()}>
-            <div className={cnDeposit('Header')}>
-                <div className={cnDeposit('Types')}>
-                    <button className={selectedType === 'deposit' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('deposit')}>
-                        <Icon type='add' />
-                        <Text>
-                            Пополнение
-                        </Text>
-                    </button>
-                    <button className={selectedType === 'withdraw' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('withdraw')}>
-                        <Icon type='minus' />
-                        <Text>
-                            Вывод
-                        </Text>
-                    </button>
-                    <button className={selectedType === 'history' ? cnDeposit('Type-Active') : cnDeposit('Type')} onClick={() => setSelectedType('history')}>
-                        <Icon type='clock' />
-                        <Text>
-                            История
-                        </Text>
-                    </button>
+        <div className={cnTransaction()}>
+            <div className={cnTransaction('Header')}>
+                <div className={cnTransaction('Types')}>
+                    {types.map(([type, label]) => (
+                        <button
+                            key={type}
+                            type="button"
+                            className={cnTransaction('Type', { active: selectedType === type })}
+                            onClick={() => setSelectedType(type)}
+                        >
+                            <Icon type="add" />
+                            <Text>{label}</Text>
+                        </button>
+                    ))}
                 </div>
-                <button type='button' onClick={() => close()} className={cnDeposit('Close')}>
-                    <Icon type='close' />
+
+                <button type="button" onClick={close} className={cnTransaction('Close')}>
+                    <Icon type="close" />
                 </button>
             </div>
-           {selectedType === 'deposit' ? <Deposit/> : selectedType === 'withdraw' ? <Withdraw/>:<History/>}
 
-                      
-
-                
-            
+            {selectedType !== 'history' ? <Payment type={selectedType} /> : <History />}
         </div>
-    )
-}
+    );
+};
 
-export default Transaction
+export default Transaction;

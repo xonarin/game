@@ -10,12 +10,11 @@ export interface LayoutBonuseProps {
     title: string;
     TopContent: React.ReactNode;
     Navigation: React.ReactNode;
-
 }
 
 const cnLayoutBonuseMobile = cn(s, 'LayoutBonuseMobile');
 
-const LayoutBonuse: React.FC<LayoutBonuseProps> = ({ title, TopContent, Navigation  }) => {
+const LayoutBonuse: React.FC<LayoutBonuseProps> = ({ title, TopContent, Navigation }) => {
     useStyles(s);
 
     return (

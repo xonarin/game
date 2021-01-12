@@ -33,8 +33,8 @@ import { configureLuxon } from './utils/luxon';
 // @ts-ignore
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import config from './config';
-import './cron';
 import { decreaseOnline, increaseOnline, resetOnline, resetGames } from './services/LiveData/LiveDataStorage';
+import initCron from './cron';
 
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -305,6 +305,9 @@ serverSync.then(async () => {
     };
 
     await repositories.chats.createAdminAnnouncementsChatIfNotExists();
+
+    // Init Cron only after DB!!!
+    initCron();
 
     app.server.listen(port, () => {
         console.info(

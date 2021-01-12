@@ -6,14 +6,14 @@ import { cn } from '../../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../../components/Layout/Web/containers/Layout32ContentWithChat';
 const cnPrize = cn(s, 'Prize');
 export interface PrizeWebProps{
-    chatId:string
+    chatId:string;
 }
 const PrizeWeb:React.FC<PrizeWebProps> = ({chatId}) => {
     const [selectedTab, setSelectedTab] = useState('freeCoins');
     const [showPrize, setShowPrize] = useState(false)
-    const [promoCode, setPromoCode] = useState('')
-    const [promoCodeAmount, setPromoCodeAmount] = useState("")   
-    const [activateAmount, setActivateAmount] = useState("") 
+    const [, setPromoCode] = useState('')
+    const [promoCodeAmount, setPromoCodeAmount] = useState("")
+    const [activateAmount, setActivateAmount] = useState("")
     useStyles(s);
 
     return (
@@ -90,14 +90,35 @@ const PrizeWeb:React.FC<PrizeWebProps> = ({chatId}) => {
                             )}
                         </div>
                         <div className={cnPrize('Info-Action')}>
-                            {selectedTab==="freeCoins"   ? <>{showPrize ? <Text color="white">Вы получили: 10 diamond</Text>:<button className={cnPrize('Btn')} onClick={()=>setShowPrize(true)}>Получить</button>} 
-                            </>:selectedTab==='activePromocode' ? <div className={cnPrize('Active-Promocode')}><input type="text" placeholder='Введите промокод'  onChange={(e)=>setPromoCode(e.target.value)}/><button>Активировать</button></div> : <div className={cnPrize('Create-Promocode')}><div className={cnPrize('Create-Promocode-Inputs')}><input type="text" value={promoCodeAmount} onChange={(e)=>Number(e.target.value) || e.target.value===""  ? setPromoCodeAmount(e.target.value) : null } placeholder='Сумма промокода'/> <input type="text" value={activateAmount} onChange={(e)=>Number(e.target.value) || e.target.value===""  ? setActivateAmount(e.target.value) : null } placeholder='Активаций'/></div><button>Создать</button></div> }
-                           
+                            { selectedTab === "freeCoins"
+                                ? showPrize
+                                    ? (<Text color="white">Вы получили: 10 diamond</Text>)
+                                    : (<button className={cnPrize('Btn')} onClick={()=>setShowPrize(true)}>Получить</button>)
+                                : selectedTab === 'activePromocode' ? (
+                                    <div className={cnPrize('Active-Promocode')}>
+                                        <input type="text" placeholder='Введите промокод' onChange={(e)=>setPromoCode(e.target.value)}/>
+                                        <button>Активировать</button>
+                                    </div>
+                                    ) : (
+                                        <div className={cnPrize('Create-Promocode')}>
+                                            <div className={cnPrize('Create-Promocode-Inputs')}>
+                                                <input type="text" value={promoCodeAmount}
+                                                       onChange={(e)=>Number(e.target.value) || e.target.value==="" ? setPromoCodeAmount(e.target.value) : null }
+                                                       placeholder='Сумма промокода'/>
+
+                                                <input type="text" value={activateAmount}
+                                                       onChange={(e)=>Number(e.target.value) || e.target.value==="" ? setActivateAmount(e.target.value) : null }
+                                                       placeholder='Активаций'/>
+                                            </div>
+
+                                            <button>Создать</button>
+                                        </div>
+                                )}
                         </div>
                     </div>
                 </div>
             }
-            bottomContent={<div></div>}
+            bottomContent={<div />}
         />
     )
 }

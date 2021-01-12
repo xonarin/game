@@ -1,0 +1,14 @@
+type Query {
+    availablePaymentMethods: [PaymentMethod!]!
+    availableWithdrawMethods: [PaymentMethod!]!
+}
+
+type PaymentMethod {
+    id: ID!
+    name: String!
+    avatar: URL!
+    commission: Float!
+    minAmount: Float!
+    maxAmount: Float!
+    enabled: Boolean!
+}

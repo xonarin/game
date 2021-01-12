@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-import Icon from '../../../../components/Icon/Icon';
 
+import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
-
 import TextIcon from '../../../../components/TextIcon/TextIcon';
 import PeopleCircles from '../../../welcome/Banner/PeopleCircles/PeopleCircles';
 import s from './MonthlyBonuse.scss';
@@ -64,9 +63,7 @@ const MonthlyBonuse = () => {
                     <Text size="xs" color="white">
                         {finishDateTime <= nowDateTime
                             ? '0 ДНЯ 0 ЧАС 0 МИНУТ'
-                            : `${diffTime.days} ДНЯ ${diffTime.hours} ЧАС ${Math.ceil(
-                                    diffTime.minutes || 0,
-                                )} МИНУТ`}
+                            : `${diffTime.days} ДНЯ ${diffTime.hours} ЧАС ${Math.ceil(diffTime.minutes || 0)} МИНУТ`}
                     </Text>
                 </div>
             </div>

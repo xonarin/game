@@ -20,6 +20,7 @@ import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
 import LayoutMobile from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import MinesGameMobile from './Mobile/MinesGame';
 import MinesBetFormMobile from '../../components/forms/Mobile/MinesBetForm/MinesBetForm';
+
 export interface MinesProps {
     chatId: string;
 }
@@ -56,70 +57,83 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
         }
     }, [typeof window !== 'undefined' && window?.screen?.width]);
 
-
     useEffect(() => {
         setDirty(true);
     }, [formBombsCount]);
     useEffect(() => {
         setDirty(false);
     }, [activeMinesGame]);
-    const [popup, setPopup] = useState(false)
+    const [popup, setPopup] = useState(false);
     const [mobile, setMobile] = useState(false);
     const popUpClose = () => {
-        setPopup(false)
-    }
+        setPopup(false);
+    };
     if (gameLoading || configurationLoading || !minesGameConfiguration) {
-        return <PreLoader />
+        return <PreLoader />;
     }
 
     const { fieldSize, minBombsCount, coefs } = minesGameConfiguration;
     const actuallyActiveMinesGame =
         !isDirty || !activeMinesGame || activeMinesGame.status !== MinesGameStatus.Ended ? activeMinesGame : null;
 
-
     if (mobile) {
         return (
             <LayoutMobile
                 title="Mines"
-                Content={popup ? <PopUp close={popUpClose} type='firePlay' mobile={true}/>: <MinesGameMobile
-                    fieldSize={fieldSize}
-                    minBombsCount={minBombsCount}
-                    coefs={coefs}
-                    formBombsCount={formBombsCount}
-                    activeMinesGame={actuallyActiveMinesGame}
-                />}
-                bottomContent={popup ? null:
-                    <Panel
-                        className={cnMines('BetFormPanel')}
-                        leftHead={
-                            <Text className={cnMines('BetFormTitle')} font="Rubik" size="l" color="white" upper>
-                                Ставка
-                        </Text>
-                        }
-                        rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={() => setPopup(true)}><Icon type="guard" /></button>}
-                    >
-                        <MinesBetFormMobile
+                Content={
+                    popup ? (
+                        <PopUp close={popUpClose} type="firePlay" mobile />
+                    ) : (
+                        <MinesGameMobile
                             fieldSize={fieldSize}
                             minBombsCount={minBombsCount}
                             coefs={coefs}
+                            formBombsCount={formBombsCount}
                             activeMinesGame={actuallyActiveMinesGame}
-                            onChangeBombsCount={setFormBombsCount}
                         />
-                       
-
-                    </Panel>
+                    )
+                }
+                bottomContent={
+                    popup ? null : (
+                        <Panel
+                            className={cnMines('BetFormPanel')}
+                            leftHead={
+                                <Text className={cnMines('BetFormTitle')} font="Rubik" size="l" color="white" upper>
+                                    Ставка
+                                </Text>
+                            }
+                            rightHead={
+                                <button
+                                    type="button"
+                                    className={cnMines('GuardButtton')}
+                                    onClick={() => setPopup(true)}
+                                >
+                                    <Icon type="guard" />
+                                </button>
+                            }
+                        >
+                            <MinesBetFormMobile
+                                fieldSize={fieldSize}
+                                minBombsCount={minBombsCount}
+                                coefs={coefs}
+                                activeMinesGame={actuallyActiveMinesGame}
+                                onChangeBombsCount={setFormBombsCount}
+                            />
+                        </Panel>
+                    )
                 }
                 historyContent={
-                    popup ? null:
-                    <Panel
-                        leftHead={
-                            <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                                Последние игры
-                            </Text>
-                        }
-                    >
-                        <LiveFeedTableMobile items={items} />
-                    </Panel>
+                    popup ? null : (
+                        <Panel
+                            leftHead={
+                                <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>
+                                    Последние игры
+                                </Text>
+                            }
+                        >
+                            <LiveFeedTableMobile items={items} />
+                        </Panel>
+                    )
                 }
             />
         );
@@ -136,7 +150,11 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                             Ставка
                         </Text>
                     }
-                    rightHead={<button type='button' className={cnMines('GuardButtton')} onClick={() => setPopup(true)}><Icon type="guard" /></button>}
+                    rightHead={
+                        <button type="button" className={cnMines('GuardButtton')} onClick={() => setPopup(true)}>
+                            <Icon type="guard" />
+                        </button>
+                    }
                 >
                     <MinesBetForm
                         fieldSize={fieldSize}
@@ -145,8 +163,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                         activeMinesGame={actuallyActiveMinesGame}
                         onChangeBombsCount={setFormBombsCount}
                     />
-                    {popup ? <PopUp close={popUpClose} type='firePlay' /> : null}
-
+                    {popup ? <PopUp close={popUpClose} type="firePlay" /> : null}
                 </Panel>
             }
             rightContent={

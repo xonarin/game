@@ -5,11 +5,10 @@ import { RouteResult } from '../../router';
 import Referals from './Referals';
 
 const action = ({ user }: AppContextTypes): RouteResult => {
-    
     return {
         title: 'Referals',
         chunks: ['referal'],
-        pageContent: <Referals  />,
+        pageContent: <Referals />,
         redirect: user ? undefined : '/',
     };
 };

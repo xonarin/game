@@ -15,7 +15,7 @@ export interface UseTournamentQueryResult {
     users?: TournamentQuery['tournament']['users'];
 }
 
-const useTournametQuery = (type: RefTournamentType): UseTournamentQueryResult => {
+const useTournamentQuery = (type: RefTournamentType): UseTournamentQueryResult => {
     const { data, loading } = useQuery<TournamentQuery, TournamentQueryVariables>(TournamentDocument, {
         variables: { type },
     });
@@ -29,4 +29,4 @@ const useTournametQuery = (type: RefTournamentType): UseTournamentQueryResult =>
     };
 };
 
-export default useTournametQuery;
+export default useTournamentQuery;

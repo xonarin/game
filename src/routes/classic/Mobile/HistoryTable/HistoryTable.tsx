@@ -87,8 +87,6 @@ const HistoryTableMobile: React.FC = () => {
             >
                 {({ fund }) => <TextIcon text={fund} icon="diamond" color="white" upper />}
             </Column>
-            
-            
         </SafeTableSpring>
     );
 };

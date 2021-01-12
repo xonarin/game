@@ -1,0 +1,9 @@
+query AvailablePaymentAndWithdrawMethods {
+    availablePaymentMethods {
+        ...PaymentMethod
+    }
+
+    availableWithdrawMethods {
+        ...PaymentMethod
+    }
+}

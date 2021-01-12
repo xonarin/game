@@ -1,19 +1,40 @@
 import { GraphQLScalarType } from 'graphql';
+import { GraphQLDateTime, GraphQLURL } from 'graphql-scalars';
 
 import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
-import { Query, TournamentPayload, QueryTournamentArgs, RefTournamentType } from '../../../__generated__/graphql';
+import {
+    Query,
+    TournamentPayload,
+    QueryTournamentArgs,
+    RefTournamentType,
+    UserPayload,
+} from '../../../__generated__/graphql';
 
 type QueryType = Pick<Query, 'tournament'>;
+type TournamentPayloadType = Pick<TournamentPayload, 'amount' | 'finish' | 'position' | 'users'>;
+
+interface TournamentPayloadParent {
+    position: number;
+    amount: number;
+    finish?: Date | null;
+    users: UserPayload[];
+}
+
 interface QueryMapping {
-    tournament: Resolver<TournamentPayload, QueryTournamentArgs>;
+    tournament: Resolver<TournamentPayloadParent, QueryTournamentArgs>;
+}
+
+interface TournamentPayloadMapping {
+    finish?: Date | null;
 }
 
 type TournamentsResolvers = Resolvers<
     {
         Query: TypeResolvers<QueryType, QueryMapping>;
-        URL: GraphQLScalarType;
+        TournamentPayload: TypeResolvers<TournamentPayloadType, TournamentPayloadMapping, TournamentPayloadParent>;
         DateTime: GraphQLScalarType;
+        URL: GraphQLScalarType;
     },
     ApolloContext
 >;
@@ -26,6 +47,7 @@ const MonthPrizes: Record<string, number> = {
     '4': 0,
     '5': 0,
 };
+
 const activityPrizes: Record<string, number> = {
     '0': 2500,
     '1': 1500,
@@ -34,6 +56,7 @@ const activityPrizes: Record<string, number> = {
     '4': 0,
     '5': 0,
 };
+
 const referralsPrizes: Record<string, number> = {
     '0': 20,
     '1': 15,
@@ -84,7 +107,7 @@ export const resolvers: TournamentsResolvers = {
                 default:
             }
 
-            const userIndex = allUsers.findIndex(item => item.userId === user!.id);;
+            const userIndex = allUsers.findIndex(item => item.userId === user!.id);
 
             return {
                 position: userIndex + 1,
@@ -94,4 +117,11 @@ export const resolvers: TournamentsResolvers = {
             };
         },
     },
+
+    TournamentPayload: {
+        finish: parent => parent.finish,
+    },
+
+    DateTime: GraphQLDateTime,
+    URL: GraphQLURL,
 };

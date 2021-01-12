@@ -18,19 +18,15 @@ import Message from '../../Mobile/Message/Message';
 import ChatHeadOptional from '../../Mobile/ChatHead/containers/ChatHeadOptional';
 import Icon from '../../../../components/Icon/Icon';
 
-
 export interface MessagesProps {
     chatId?: string;
     userId?: string;
-    closeDialog:Function
+    closeDialog: Function;
 }
 
 const cnDialog = cn(s, 'Dialog');
 
-const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId,closeDialog }) => {
-
-    
-
+const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId, closeDialog }) => {
     useStyles(s);
 
     const { me } = useMeQuery();
@@ -46,11 +42,7 @@ const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId,closeDialog }) =
     );
 
     const [search, onChangeSearch, submittedSearch, onSubmitSearch] = useSubmitState('');
-    const { chats, chat, chatFetchMore, chatRefetch } = useChatsQuery(
-        submittedSearch,
-        chatId,
-        onSentMessage,
-    );
+    const { chats, chat, chatFetchMore, chatRefetch } = useChatsQuery(submittedSearch, chatId, onSentMessage);
 
     const readChatMutation = useReadChatMutation();
 
@@ -93,8 +85,6 @@ const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId,closeDialog }) =
         }
     }, [chatId, chats, userId]);
 
-  
-
     let formElem = null;
     if (userId) {
         formElem = <CreatePmChatForm userId={userId} />;
@@ -102,30 +92,38 @@ const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId,closeDialog }) =
         formElem = <ChatMessageForm chatId={chatId} onMutate={onSentMessage} isPm />;
     }
     return (
-        <Panel className={cnDialog()} leftHead={<button type='button' className={cnDialog("Close")} onClick={()=>closeDialog()}><Icon type='left'/></button>} rightHead={<ChatHeadOptional chat={chat} userId={userId} />}>
-        {chat ? (
-            <InfiniteScroll
-                className={cnDialog('MessagesList')}
-                offset={chat.messages.length}
-                count={chat.messagesCount}
-                loadMore={chatFetchMore}
-                toTop
-                onScroll={onScrollMessages}
-                disablePadding
-                ref={messagesScrollableRef}
-            >
-                <div className={cnDialog('MessagesItems')}>
-                    {chat.messages.map(message => (
-                        <Message {...message} isMine={message.sender.id === me?.id} key={message.id} />
-                    ))}
-                </div>
-            </InfiniteScroll>
-        ) : (
-            <div className={cnDialog('MessagesList')} />
-        )}
-        {formElem}
-    </Panel>
-    )
-}
+        <Panel
+            className={cnDialog()}
+            leftHead={
+                <button type="button" className={cnDialog('Close')} onClick={() => closeDialog()}>
+                    <Icon type="left" />
+                </button>
+            }
+            rightHead={<ChatHeadOptional chat={chat} userId={userId} />}
+        >
+            {chat ? (
+                <InfiniteScroll
+                    className={cnDialog('MessagesList')}
+                    offset={chat.messages.length}
+                    count={chat.messagesCount}
+                    loadMore={chatFetchMore}
+                    toTop
+                    onScroll={onScrollMessages}
+                    disablePadding
+                    ref={messagesScrollableRef}
+                >
+                    <div className={cnDialog('MessagesItems')}>
+                        {chat.messages.map(message => (
+                            <Message {...message} isMine={message.sender.id === me?.id} key={message.id} />
+                        ))}
+                    </div>
+                </InfiniteScroll>
+            ) : (
+                <div className={cnDialog('MessagesList')} />
+            )}
+            {formElem}
+        </Panel>
+    );
+};
 
-export default DialogMobile
+export default DialogMobile;

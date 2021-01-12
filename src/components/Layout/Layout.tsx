@@ -10,7 +10,6 @@ import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';
 import PreLoader from '../PreLoader/PreLoader';
 import PopUp from './Mobile/PopUp/PopUp';
-import DepositPopUp from '../PopUp';
 import Chat from '../Chat/Mobile/Chat';
 
 export interface LayoutProps {
@@ -41,8 +40,6 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         setChat(!chat);
     };
 
-   
-
     if (isLoading) {
         return <PreLoader />;
     }
@@ -54,8 +51,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         return (
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>
-                    <LayoutHeaderMobile
-                    />
+                    <LayoutHeaderMobile />
                     {popUp ? (
                         <PopUp close={() => popUpChange()} />
                     ) : (

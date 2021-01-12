@@ -17,7 +17,6 @@ import ChatMessageForm from '../../../../components/forms/Web/ChatMessageForm/Ch
 import Message from '../../Web/Message/Message';
 import ChatHeadOptional from '../../Web/ChatHead/containers/ChatHeadOptional';
 
-
 export interface MessagesProps {
     chatId?: string;
     userId?: string;
@@ -26,9 +25,6 @@ export interface MessagesProps {
 const cnDialog = cn(s, 'Dialog');
 
 const Dialog: React.FC<MessagesProps> = ({ chatId, userId }) => {
-
-    
-
     useStyles(s);
 
     const { me } = useMeQuery();
@@ -44,11 +40,7 @@ const Dialog: React.FC<MessagesProps> = ({ chatId, userId }) => {
     );
 
     const [search, onChangeSearch, submittedSearch, onSubmitSearch] = useSubmitState('');
-    const { chats, chat, chatFetchMore, chatRefetch } = useChatsQuery(
-        submittedSearch,
-        chatId,
-        onSentMessage,
-    );
+    const { chats, chat, chatFetchMore, chatRefetch } = useChatsQuery(submittedSearch, chatId, onSentMessage);
 
     const readChatMutation = useReadChatMutation();
 
@@ -91,8 +83,6 @@ const Dialog: React.FC<MessagesProps> = ({ chatId, userId }) => {
         }
     }, [chatId, chats, userId]);
 
-  
-
     let formElem = null;
     if (userId) {
         formElem = <CreatePmChatForm userId={userId} />;
@@ -101,29 +91,29 @@ const Dialog: React.FC<MessagesProps> = ({ chatId, userId }) => {
     }
     return (
         <Panel className={cnDialog()} leftHead={<ChatHeadOptional chat={chat} userId={userId} />}>
-        {chat ? (
-            <InfiniteScroll
-                className={cnDialog('MessagesList')}
-                offset={chat.messages.length}
-                count={chat.messagesCount}
-                loadMore={chatFetchMore}
-                toTop
-                onScroll={onScrollMessages}
-                disablePadding
-                ref={messagesScrollableRef}
-            >
-                <div className={cnDialog('MessagesItems')}>
-                    {chat.messages.map(message => (
-                        <Message {...message} isMine={message.sender.id === me?.id} key={message.id} />
-                    ))}
-                </div>
-            </InfiniteScroll>
-        ) : (
-            <div className={cnDialog('MessagesList')} />
-        )}
-        {formElem}
-    </Panel>
-    )
-}
+            {chat ? (
+                <InfiniteScroll
+                    className={cnDialog('MessagesList')}
+                    offset={chat.messages.length}
+                    count={chat.messagesCount}
+                    loadMore={chatFetchMore}
+                    toTop
+                    onScroll={onScrollMessages}
+                    disablePadding
+                    ref={messagesScrollableRef}
+                >
+                    <div className={cnDialog('MessagesItems')}>
+                        {chat.messages.map(message => (
+                            <Message {...message} isMine={message.sender.id === me?.id} key={message.id} />
+                        ))}
+                    </div>
+                </InfiniteScroll>
+            ) : (
+                <div className={cnDialog('MessagesList')} />
+            )}
+            {formElem}
+        </Panel>
+    );
+};
 
-export default Dialog
+export default Dialog;

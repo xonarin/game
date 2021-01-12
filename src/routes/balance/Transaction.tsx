@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from './Transaction.scss';
 import { cn } from '../../utils/bem-css-module';
-import useStyles from 'isomorphic-style-loader/useStyles';
 import Deposit from './Deposit/Deposit';
 import Withdraw from './Withdraw/Withdraw';
 import History from './History/History';

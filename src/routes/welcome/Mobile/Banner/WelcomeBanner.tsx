@@ -24,7 +24,7 @@ const WelcomeBanner: React.FC = () => {
             <div className={cnWelcomeBanner('Container')}>
                 <main className={cnWelcomeBanner('Main')}>
                     <div className={cnWelcomeBanner('Text')}>
-                        <Title className={cnWelcomeBanner('Title')} size='xl' color="white">
+                        <Title className={cnWelcomeBanner('Title')} size="xl" color="white">
                             Играйте, соревнуйтесь и зарабатывайте!
                         </Title>
                         <TextBlock className={cnWelcomeBanner('TextBlock')}>

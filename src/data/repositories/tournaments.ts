@@ -1,19 +1,19 @@
 import { col, fn, Op } from 'sequelize';
+import { ValuesType } from 'utility-types';
 
 import BaseRepository from './base';
 import { Tournament, TournamentType } from '../models/Tournament';
 import { RefTournamentType } from '../../__generated__/graphql';
+import { User } from '../models/User';
 
 class TournamentsRepository extends BaseRepository {
-    createTournament = async (type: TournamentType, start: Date, finish: Date): Promise<Tournament> => {
-        const tournament = await this.db.Tournament.create({
+    createTournament = (type: TournamentType, start: Date, finish: Date): Promise<Tournament> => {
+        return this.db.Tournament.create({
             type,
             start,
             finish,
             isFinished: false,
         });
-
-        return tournament;
     };
 
     getActiveTournament = async (type: RefTournamentType): Promise<Tournament | null> => {
@@ -110,15 +110,18 @@ class TournamentsRepository extends BaseRepository {
             default:
         }
 
-        const users = await this.db.User.findAll({
+        const users: Pick<User, 'id' | 'username' | 'avatar'>[] = await this.db.User.findAll({
             attributes: ['id', 'username', 'avatar'],
             where: {
                 id: { [Op.in]: Object.keys(results) },
             },
             raw: true,
         });
-        const usersObject: Record<string, typeof users> = {};
-        users.forEach(user => (usersObject[user.id] = user));
+
+        const usersObject: Record<string, ValuesType<typeof users>> = {};
+        users.forEach(user => {
+            usersObject[user.id] = user;
+        });
 
         return Object.entries(results)
             .map(([userId, amount]) => ({

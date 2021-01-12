@@ -28,7 +28,7 @@ export default {
         'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
 
     // Redis
-    redisUrl: process.env.REDIS_URL || 
+    redisUrl: process.env.REDIS_URL ||
     // 'localhost',
     'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
 
@@ -47,6 +47,12 @@ export default {
         vk: {
             appId: process.env.VK_APP_ID || '7008761',
             appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
+        },
+
+        fk: {
+            merchantId: process.env.FK_MERCHANT_ID || '253080',
+            secret: process.env.FK_SECRET || 'pbicjr2m',
+            secret2: process.env.FK_SECRET2 || 'g0cj8gw8',
         },
     },
 
