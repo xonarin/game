@@ -17,6 +17,8 @@ import { Chat } from './Chat';
 import { ClassicGame } from './ClassicGame';
 import { ClassicGameBet } from './ClassicGameBet';
 import { MinesGame } from './MinesGame';
+import { UserPayment } from './UserPayment';
+import { UserWithdraw } from './UserWithdraw';
 
 export enum SocialType {
     Steam = 'Steam',
@@ -75,6 +77,8 @@ export type UserStatic = AssociableModelStatic<
         WonClassicGame: HasMany<User, ClassicGame>;
         ClassicGameBet: HasMany<User, ClassicGameBet>;
         MinesGame: HasMany<User, MinesGame>;
+        UserPayment: HasMany<User, UserPayment>;
+        UserWithdraw: HasMany<User, UserWithdraw>;
     }
 >;
 
@@ -203,6 +207,8 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
         User.Message = User.hasMany(database.Message, { as: 'messages', foreignKey: 'senderId' });
         User.WonClassicGame = User.hasMany(database.ClassicGame, { as: 'wonClassicGames', foreignKey: 'winnerId' });
         User.ClassicGameBet = User.hasMany(database.ClassicGameBet, { as: 'classicGameBets', foreignKey: 'userId' });
+        User.UserPayment = User.hasMany(database.UserPayment, { as: 'payments', foreignKey: 'userId' });
+        User.UserWithdraw = User.hasMany(database.UserWithdraw, { as: 'withdraws', foreignKey: 'userId' });
     };
 
     return User;

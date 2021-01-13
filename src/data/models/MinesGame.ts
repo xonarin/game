@@ -47,6 +47,7 @@ export const initMinesGame = (sequelize: Sequelize): MinesGameStatic => {
 
         userId: {
             type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
             get(this: MinesGame) {
                 return ((this.getDataValue('userId') as unknown) as number).toString();
             },

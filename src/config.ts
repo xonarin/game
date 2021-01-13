@@ -28,9 +28,10 @@ export default {
         'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
 
     // Redis
-    redisUrl: process.env.REDIS_URL ||
-    // 'localhost',
-    'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
+    redisUrl:
+        process.env.REDIS_URL ||
+        // 'localhost',
+        'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
 
     // Web analytics
     analytics: {

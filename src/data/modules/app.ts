@@ -19,7 +19,7 @@ import minesGameTypeDefs from './minesGame/schema.graphql';
 import { rules as minesGameRules, resolvers as minesGameResolvers } from './minesGame/resolvers';
 import { resolvers as tournamentsResolvers } from './tournaments/resolvers';
 import tournamentsTypeDefs from './tournaments/schema.graphql';
-import { resolvers as paymentsResolvers } from './payments/resolvers';
+import { rules as paymentRules, resolvers as paymentsResolvers } from './payments/resolvers';
 import paymentsTypeDefs from './payments/schema.graphql';
 import shieldConfig from '../../utils/graphql-shield/config';
 
@@ -55,6 +55,7 @@ const schema = applyMiddleware(
     shield(announcementsRules, shieldConfig),
     shield(classicGameRules, shieldConfig),
     shield(minesGameRules, shieldConfig),
+    shield(paymentRules, shieldConfig),
 );
 
 export default schema;

@@ -14,10 +14,20 @@ export interface InputWithIconProps {
     icon?: string;
     type?: string;
     mobile?: boolean;
+
+    value: string;
+    onChange: (value: string) => void;
 }
 
-const InputWithIcon: React.FC<InputWithIconProps> = ({ fixedAmounts = false, title, icon, type, mobile }) => {
-    const [amount, setAmount] = useState(fixedAmounts ? '500' : '');
+const InputWithIcon: React.FC<InputWithIconProps> = ({
+    fixedAmounts = false,
+    title,
+    icon,
+    type,
+    mobile,
+    value: amount,
+    onChange: setAmount,
+}) => {
     const [error, setError] = useState('');
     useStyles(s);
     const handleChange = e => {

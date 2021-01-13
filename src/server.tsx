@@ -34,6 +34,7 @@ import { configureLuxon } from './utils/luxon';
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import config from './config';
 import { decreaseOnline, increaseOnline, resetOnline, resetGames } from './services/LiveData/LiveDataStorage';
+import initPayments from './routes/payment';
 import initCron from './cron';
 
 process.on('unhandledRejection', (reason, p) => {
@@ -86,6 +87,7 @@ app.use(
         getToken: req => req.cookies[config.auth.tokenKey],
     }),
 );
+
 // Error handler for express-jwt
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     // eslint-disable-line no-unused-vars
@@ -107,6 +109,7 @@ app.get(
         session: false,
     }),
 );
+
 app.get(
     '/auth/vk/return',
     passport.authenticate('vkontakte', {
@@ -129,11 +132,15 @@ app.get(
         res.redirect('/');
     },
 );
+
 // Logout endpoint
 app.get('/logout', (_0, res) => {
     res.clearCookie(config.auth.tokenKey);
     res.redirect('/');
 });
+
+// FK interaction
+initPayments(app);
 
 // LiveData
 resetOnline();

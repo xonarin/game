@@ -1,6 +1,11 @@
+
 type Query {
     availablePaymentMethods: [PaymentMethod!]!
     availableWithdrawMethods: [PaymentMethod!]!
+}
+
+type Mutation {
+    makeDeposit(amount: Float!, method: ID!): String!
 }
 
 type PaymentMethod {

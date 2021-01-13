@@ -74,12 +74,14 @@ class UsersRepository extends BaseRepository {
         return user;
     }
 
-    async giveMoney(userId: string, amount: number): Promise<User> {
-        return this.db.sequelize.transaction(async transaction => {
-            const user = await this.getUserByIdStrict(userId, transaction);
+    async giveMoney(userId: string, amount: number, transaction?: Transaction): Promise<User> {
+        const f = async (tr: Transaction) => {
+            const user = await this.getUserByIdStrict(userId, tr);
 
-            return user.update({ money: user.money + amount }, { transaction });
-        });
+            return user.update({ money: user.money + amount }, { transaction: tr });
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
     async withdrawMoney(userId: string, amount: number): Promise<User> {

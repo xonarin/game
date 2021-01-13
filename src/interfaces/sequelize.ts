@@ -6,5 +6,5 @@ import { KeysByType } from './common';
 export type SerializedModel<TModel extends Model> = Omit<TModel, keyof Model | KeysByType<TModel, Function>>;
 
 export type SequelizeContext = {
-    [P in typeof EXPECTED_OPTIONS_KEY]: unknown;
+    [EXPECTED_OPTIONS_KEY]: unknown;
 };

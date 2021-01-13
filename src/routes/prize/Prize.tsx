@@ -9,7 +9,6 @@ export interface AllGamesProps {
     chatId: string;
 }
 
-
 const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
     const [mobile, setMobile] = useState(false);
 
@@ -24,15 +23,10 @@ const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
         }
     }, [typeof window !== 'undefined' && window?.screen?.width]);
 
-
     if (mobile) {
-        return (
-            <PrizeMobile chatId={chatId}/>
-        )
+        return <PrizeMobile chatId={chatId} />;
     }
-    return (
-      <PrizeWeb chatId={chatId}/>
-    );
+    return <PrizeWeb chatId={chatId} />;
 };
 
 export default AllGames;
