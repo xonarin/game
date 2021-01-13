@@ -14,8 +14,6 @@ import ClassicGame from './Web/ClassicGame/ClassicGame';
 import LayoutMobileGame from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import PreLoader from '../../components/PreLoader/PreLoader';
-import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
-import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
 import HistoryTableMobile from './Mobile/HistoryTable/HistoryTable';
 
 export interface ClassicProps {

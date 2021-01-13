@@ -19,20 +19,20 @@ const Deposit: React.FC<DepositProps> = ({ paymentMethod }) => {
     useStyles(s);
 
     const [amount, setAmount] = useState('500');
-    const makeDeposit = useDoDepositMutation();
+    const doDeposit = useDoDepositMutation();
 
     const onClick = useCallback(async () => {
         if (!paymentMethod || Number.isNaN(+amount)) {
             return;
         }
 
-        const { data } = await makeDeposit(+amount, paymentMethod.id);
+        const { data } = await doDeposit(+amount, paymentMethod.id);
         if (!data) {
             return;
         }
 
-        window.location.href = data.makeDeposit;
-    }, [amount, makeDeposit, paymentMethod]);
+        window.location.href = data.doDeposit;
+    }, [amount, doDeposit, paymentMethod]);
 
     return (
         <>

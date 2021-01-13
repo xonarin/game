@@ -51,7 +51,7 @@ const themes = [
 ];
 const cnFaq = cn(s, 'Faq');
 
-const Faq: React.FC<FaqProps> = ({ title }) => {
+const Faq: React.FC<FaqProps> = () => {
     const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (

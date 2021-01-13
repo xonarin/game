@@ -5,6 +5,7 @@ import {
     CancelWithdrawMutation,
     MutationCancelWithdrawArgs,
 } from '../../../__generated__/graphql';
+import updateMeBalance from '../users/updateMeBalance';
 
 export interface UseCancelWithdrawMutationResult {
     (id: string): Promise<FetchResult<CancelWithdrawMutation>>;
@@ -17,14 +18,18 @@ const useCancelWithdrawMutation = (): UseCancelWithdrawMutationResult => {
                 return;
             }
 
+            const { cancelWithdraw: withdraw } = data;
+
             cache.modify({
-                id: `Withdraw_${data.cancelWithdraw.id}`,
+                id: `Withdraw_${withdraw.id}`,
                 fields: {
                     status: () => {
-                        return data.cancelWithdraw.status;
+                        return withdraw.status;
                     },
                 },
             });
+
+            updateMeBalance(cache, withdraw.amount);
         },
     });
 

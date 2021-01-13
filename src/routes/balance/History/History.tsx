@@ -5,7 +5,6 @@ import s from './History.scss';
 import { cn } from '../../../utils/bem-css-module';
 import HistoryItem from './HistoryItem';
 import HistoryItemWith from './HistoryItemWith';
-import Text from '../../../components/Text/Text';
 
 const cnHistory = cn(s, 'History');
 

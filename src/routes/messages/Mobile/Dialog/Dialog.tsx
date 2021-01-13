@@ -41,7 +41,7 @@ const DialogMobile: React.FC<MessagesProps> = ({ chatId, userId, closeDialog }) 
         [isScrolledToBottom, me, scrollTo],
     );
 
-    const [search, onChangeSearch, submittedSearch, onSubmitSearch] = useSubmitState('');
+    const [submittedSearch] = useSubmitState('');
     const { chats, chat, chatFetchMore, chatRefetch } = useChatsQuery(submittedSearch, chatId, onSentMessage);
 
     const readChatMutation = useReadChatMutation();

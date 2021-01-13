@@ -28,7 +28,6 @@ const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ withdraw }) =
         <div className={cnWithdrawHistoryItem()}>
             <div className={cnWithdrawHistoryItem('Short-Info')}>
                 <div className={cnWithdrawHistoryItem('Short-InfoLeft')} onClick={() => setToggle(old => !old)}>
-
                     <div className={cnWithdrawHistoryItem('Service')}>
                         <div className={cnWithdrawHistoryItem('Icon')}>
                             <img src={withdraw.method.avatar} alt={withdraw.method.name} />

@@ -125,10 +125,34 @@ class PaymentsRepository extends BaseRepository {
         return this.db.UserWithdraw.findAll({ where: { status } });
     }
 
-    createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
-        // TODO check prerequisites
+    async createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
+        const withdraws = await this.getWithdrawsByUserId(userId);
 
-        return this.db.UserWithdraw.create({ userId, methodId, purse, sum: amount });
+        const minDeposit = await this.repositories.settings.getSettingAsNumber('payments::minDepositToWithdraw');
+        const payments = await this.getPaymentsByUserId(userId);
+
+        const successDepositSum = payments
+            .filter(payment => payment.status === 'FINISHED')
+            .map(payment => payment.sum)
+            .reduce((a, b) => a + b, 0);
+
+        if (successDepositSum < minDeposit) {
+            throw new UserError('NOT_ENOUGH_DEPOSITS');
+        }
+
+        if (!withdraws.some(withdraw => withdraw.status === WithdrawStatus.SUCCESS)) {
+            const minBet = await this.repositories.settings.getSettingAsNumber('payments::minBetToWithdraw');
+            const user = await this.repositories.users.getUserByIdStrict(userId);
+
+            if (user.turnover < minBet) {
+                throw new UserError('NOT_ENOUGH_BETS');
+            }
+        }
+
+        return this.db.sequelize.transaction(async transaction => {
+            await this.repositories.users.withdrawMoney(userId, amount, transaction);
+            return this.db.UserWithdraw.create({ userId, methodId, purse, sum: amount }, { transaction });
+        });
     }
 
     async cancelWithdraw(withdrawId: string, userId: string): Promise<UserWithdraw> {
@@ -142,7 +166,10 @@ class PaymentsRepository extends BaseRepository {
             throw new UserError('CANNOT_CANCEL_WITHDRAW');
         }
 
-        return withdraw.update({ status: WithdrawStatus.CANCELLED });
+        return this.db.sequelize.transaction(async transaction => {
+            await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
+            return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
+        });
     }
 }
 

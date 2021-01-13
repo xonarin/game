@@ -47,7 +47,7 @@ const Balance: React.FC<BalanceProps> = ({ money }) => {
                 </div>
             </div>
             <Button className={cnBalance('Button')} icon="plusWhite" onClick={() => setDepositToggle(true)} />
-            {depositToggle ? <PopUp close={popUpClose} /> : null}
+            {depositToggle ? <PopUp type="transaction" close={popUpClose} /> : null}
         </div>
     );
 };

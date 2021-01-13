@@ -37,11 +37,11 @@ const withdrawCheck = async (withdraw: UserWithdraw) => {
             return;
 
         case 'Completed':
-            withdraw.update({ status: WithdrawStatus.SUCCESS });
+            await withdraw.update({ status: WithdrawStatus.SUCCESS });
             break;
 
         case 'Canceled':
-            withdraw.update({ status: WithdrawStatus.CANCELLED });
+            await repositories.payments.cancelWithdraw(withdraw.id, withdraw.userId);
             break;
 
         default:
@@ -77,7 +77,7 @@ const withdrawCashOut = async (withdraw: UserWithdraw) => {
         return;
     }
 
-    withdraw.update({ paymentId, status: WithdrawStatus.IN_PROGRESS });
+    await withdraw.update({ paymentId, status: WithdrawStatus.IN_PROGRESS });
 };
 
 const checkInProgressWithdraws = async () => {

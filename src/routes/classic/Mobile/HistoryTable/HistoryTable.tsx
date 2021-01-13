@@ -10,7 +10,6 @@ import Column from '../../../../components/Table/Column/Column';
 import Text from '../../../../components/Text/Text';
 import ChanceBadge from '../../../../components/Badge/containers/ChanceBadge';
 import TextIcon from '../../../../components/TextIcon/TextIcon';
-import Icon from '../../../../components/Icon/Icon';
 import useClassicGamesHistory from '../../../../hooks/graphql/classicGame/useClassicGamesHistoryQuery';
 
 const transformDate = (dateString: string): string => {

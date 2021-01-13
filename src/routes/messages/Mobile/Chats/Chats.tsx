@@ -10,7 +10,6 @@ import useChatsQuery from '../../../../hooks/graphql/chat/useChatsQuery';
 import useSubmitState from '../../../../hooks/useSubmitState';
 import useScrollableHelper from '../../../../hooks/useScrollableHelper';
 import useReadChatMutation from '../../../../hooks/graphql/chat/useReadChatMutation';
-import Panel from '../../../../components/Panel/Panel';
 import InfiniteScroll from '../../../../components/InfiniteScroll/InfiniteScroll';
 import CreatePmChatForm from '../../../../components/forms/Web/CreatePmChatForm/CreatePmChatForm';
 import ChatMessageForm from '../../../../components/forms/Web/ChatMessageForm/ChatMessageForm';
@@ -30,7 +29,7 @@ const ChatsMobile: React.FC<MessagesProps> = ({ chatId, userId, openDialog }) =>
 
     const { me } = useMeQuery();
 
-    const { scrollableRef: messagesScrollableRef, scrollTo, isScrolledToBottom } = useScrollableHelper();
+    const { scrollTo, isScrolledToBottom } = useScrollableHelper();
     const onSentMessage = useCallback(
         (message: MessageFragment) => {
             if (message.sender.id === me?.id || isScrolledToBottom()) {

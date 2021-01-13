@@ -23,12 +23,15 @@ export type TournamentSettingsName =
     | 'tournament::activityPauseDays'
     | 'tournament::referralsPauseDays';
 
+export type PaymentsSettings = 'payments::minBetToWithdraw';
+
 export type SettingName =
     | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName
     | AppSettingsName
-    | TournamentSettingsName;
+    | TournamentSettingsName
+    | PaymentsSettings;
 
 export class SettingValue {
     private readonly value: string | null;

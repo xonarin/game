@@ -18,7 +18,7 @@ export interface BonuseBannerReferalMobileProps {
 }
 const cnBonuseBannerMobile = cn(s, 'BonuseBanner');
 
-const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ title, description, count }) => {
+const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ description, count }) => {
     useStyles(s);
 
     const { position, amount, finish, users } = useTournamentQuery(RefTournamentType.Referrals);

@@ -9,13 +9,11 @@ interface Props {
     id: number;
     theme: {
         title: string;
-        questions: [
-            {
-                id: number;
-                title: string;
-                answer: string;
-            },
-        ];
+        questions: {
+            id: number;
+            title: string;
+            answer: string;
+        }[];
     };
 }
 const cnFaq = cn(s, 'Faq');

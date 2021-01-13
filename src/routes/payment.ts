@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import { Express } from 'express';
 
 import config from '../config';
 import { md5Hash } from '../utils/crypto';

@@ -29,7 +29,7 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
 
     const { me } = useMeQuery();
 
-    const { scrollableRef: messagesScrollableRef, scrollTo, isScrolledToBottom } = useScrollableHelper();
+    const { scrollTo, isScrolledToBottom } = useScrollableHelper();
     const onSentMessage = useCallback(
         (message: MessageFragment) => {
             if (message.sender.id === me?.id || isScrolledToBottom()) {
@@ -89,6 +89,7 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
     } else if (chatId) {
         formElem = <ChatMessageForm chatId={chatId} onMutate={onSentMessage} isPm />;
     }
+
     return (
         <Panel
             className={cnChats()}

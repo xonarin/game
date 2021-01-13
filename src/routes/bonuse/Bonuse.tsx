@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
+import { cn } from '../../utils/bem-css-module';
 import LayoutBonuse from '../../components/Layout/Web/containers/LayoutBonuse';
 import LayoutBonuseMobile from '../../components/Layout/Mobile/containers/LayoutBonuseMobile';
 import Text from '../../components/Text/Text';
@@ -9,12 +10,9 @@ import BonuseBannerReferal from './Web/BonuseBanner/BonuseBannerReferal';
 import MonthlyBonuse from './Web/MonthlyBonuse/MonthlyBonuse';
 import MonthlyBonuseMobile from './Mobile/MonthlyBonuse/MonthlyBonuse';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
-import s from './Bonuse.scss';
-import { cn } from '../../utils/bem-css-module';
 import BonuseBannerPlayerMobile from './Mobile/BonuseBanner/BonuseBannerPlayer';
 import BonuseBannerReferalMobile from './Mobile/BonuseBanner/BonuseBannerReferal';
-import useTournamentQuery from '../../hooks/graphql/tournaments/useTournamentQuery';
-import { RefTournamentType } from '../../__generated__/graphql';
+import s from './Bonuse.scss';
 
 const cnBonuse = cn(s, 'Bonuse');
 
