@@ -6,10 +6,8 @@ import { AssociableModelStatic } from './index';
 export enum WithdrawStatus {
     WAIT_APPROVE = 'WAIT_APPROVE',
     APPROVED = 'APPROVED',
-    REJECTED = 'REJECTED',
     IN_PROGRESS = 'IN_PROGRESS',
     SUCCESS = 'SUCCESS',
-    FAILURE = 'FAILURE',
     CANCELLED = 'CANCELLED',
 }
 

@@ -2,17 +2,13 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './AllGames.scss';
-import Panel from '../../../components/Panel/Panel';
-import Text from '../../../components/Text/Text';
 import Link from '../../../components/Link/Link';
-import LiveFeedTable from '../../../routes/welcome/WelcomeLiveFeed/LiveFeedTable/LiveFeedTable';
 import { cn } from '../../../utils/bem-css-module';
 import Layout33Content from '../../../components/Layout/Mobile/containers/Layout33Content';
-import WelcomeHeader from '../../welcome/Header/WelcomeHeader';
 
 const cnAllGames = cn(s, 'AllGames');
 
-const AllGamesMobile: React.FC = ({}) => {
+const AllGamesMobile: React.FC = () => {
     useStyles(s);
 
     return (

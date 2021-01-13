@@ -1,0 +1,9 @@
+fragment Payment on Payment {
+    id
+    method {
+        ...PaymentMethod
+    }
+    amount
+    status
+    createdAt
+}

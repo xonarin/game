@@ -18,7 +18,7 @@ export interface AllGamesProps {
 
 const cnAllGames = cn(s, 'AllGames');
 
-const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
+const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (

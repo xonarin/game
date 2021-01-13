@@ -4,15 +4,17 @@ import {
     AvailablePaymentAndWithdrawMethodsDocument,
     AvailablePaymentAndWithdrawMethodsQuery,
     AvailablePaymentAndWithdrawMethodsQueryVariables,
+    PaymentMethod,
+    WithdrawMethod,
 } from '../../../__generated__/graphql';
 
-interface AvailablePaymentAndWithdrawMethodsQueryResult {
+interface UseAvailablePaymentAndWithdrawMethodsQueryResult {
     loading: boolean;
-    availablePaymentMethods?: AvailablePaymentAndWithdrawMethodsQuery['availablePaymentMethods'];
-    availableWithdrawMethods?: AvailablePaymentAndWithdrawMethodsQuery['availableWithdrawMethods'];
+    availablePaymentMethods?: PaymentMethod[];
+    availableWithdrawMethods?: WithdrawMethod[];
 }
 
-const useAvailablePaymentAndWithdrawMethodsQuery = (): AvailablePaymentAndWithdrawMethodsQueryResult => {
+const useAvailablePaymentAndWithdrawMethodsQuery = (): UseAvailablePaymentAndWithdrawMethodsQueryResult => {
     const { loading, data } = useQuery<
         AvailablePaymentAndWithdrawMethodsQuery,
         AvailablePaymentAndWithdrawMethodsQueryVariables

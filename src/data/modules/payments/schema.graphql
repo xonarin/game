@@ -1,7 +1,10 @@
 
 type Query {
     availablePaymentMethods: [PaymentMethod!]!
-    availableWithdrawMethods: [PaymentMethod!]!
+    availableWithdrawMethods: [WithdrawMethod!]!
+
+    payments: [Payment!]!
+    withdraws: [Withdraw!]!
 }
 
 type Mutation {
@@ -16,4 +19,42 @@ type PaymentMethod {
     minAmount: Float!
     maxAmount: Float!
     enabled: Boolean!
+}
+
+type WithdrawMethod {
+    id: ID!
+    name: String!
+    avatar: URL!
+    commission: Float!
+    minAmount: Float!
+    maxAmount: Float!
+    enabled: Boolean!
+}
+
+enum PaymentStatus {
+    IN_PROGRESS, FINISHED
+}
+
+type Payment {
+    id: ID!
+    method: PaymentMethod
+    amount: Float!
+    status: PaymentStatus!
+    createdAt: DateTime!
+}
+
+enum WithdrawStatus {
+    WAIT_APPROVE,
+    APPROVED,
+    IN_PROGRESS,
+    SUCCESS,
+    CANCELLED,
+}
+
+type Withdraw {
+    id: ID!
+    method: WithdrawMethod!
+    amount: Float!
+    status: WithdrawStatus!
+    createdAt: DateTime!
 }

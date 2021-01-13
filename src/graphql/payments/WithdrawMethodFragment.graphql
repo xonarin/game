@@ -1,0 +1,9 @@
+fragment WithdrawMethod on WithdrawMethod {
+    id
+    name
+    avatar
+    commission
+    minAmount
+    maxAmount
+    enabled
+}

@@ -9,7 +9,7 @@ import Button from '../../../components/Button/Button';
 
 const cnHistory = cn(s, 'HistoryItem');
 
-function HistoryItem() {
+function DepositHistoryItem() {
     const [toggle, setToggle] = useState(false);
     useStyles(s);
 
@@ -148,4 +148,4 @@ function HistoryItem() {
     );
 }
 
-export default HistoryItem;
+export default DepositHistoryItem;

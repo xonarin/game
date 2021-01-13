@@ -1,39 +1,33 @@
-.HistoryItem{
+.DepositHistoryItem {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 20px;
 
-    
-    &-Service{
+    &-Service {
         display: flex;
     }
-    &-Info{
+
+    &-Info {
         display: flex;
         flex-direction: column;
     }
-    &-Short-Info{
-        display: flex;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #2d3341;
-        padding-bottom: 10px;
-    }
 
-    &-Short-InfoLeft{
+    &-Short-Info {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        cursor: pointer;  
-        width: 100%;
-        margin-right: 20px;
+        cursor: pointer;
     }
-    &-Description{
+
+    &-Description {
         display: flex;
         flex-direction: column;
         margin-top: 10px;
         margin-bottom: 20px;
     }
-    &-Icon{
+
+    &-Icon {
         width: 36px;
         height: 36px;
         background: #363d4c;
@@ -42,5 +36,11 @@
         justify-content: center;
         border-radius: 5px;
         margin-right: 10px;
+        overflow: hidden;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
     }
 }

@@ -5,6 +5,7 @@ import { PaymentMethod } from '../models/PaymentMethod';
 import { WithdrawMethod } from '../models/WithdrawMethod';
 import { PaymentStatus, UserPayment } from '../models/UserPayment';
 import { UserError } from '../../utils/errors';
+import { UserWithdraw } from '../models/UserWithdraw';
 
 class PaymentsRepository extends BaseRepository {
     getAvailablePaymentMethods(): Promise<PaymentMethod[]> {
@@ -37,6 +38,14 @@ class PaymentsRepository extends BaseRepository {
         return user;
     }
 
+    async getWithdrawMethodById(withdrawMethodId: string, transaction?: Transaction): Promise<PaymentMethod | null> {
+        return this.db.WithdrawMethod.findByPk(withdrawMethodId, {
+            ...this.sequelizeContext,
+            ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
+            rejectOnEmpty: false,
+        });
+    }
+
     async getPaymentById(paymentId: string, transaction?: Transaction): Promise<UserPayment | null> {
         return this.db.UserPayment.findByPk(paymentId, {
             ...this.sequelizeContext,
@@ -53,6 +62,10 @@ class PaymentsRepository extends BaseRepository {
         }
 
         return user;
+    }
+
+    getPaymentsByUserId(userId: string): Promise<UserPayment[]> {
+        return this.db.UserPayment.findAll({ where: { userId } });
     }
 
     finishPayment(paymentId: string, methodId: string): Promise<void> {
@@ -72,6 +85,10 @@ class PaymentsRepository extends BaseRepository {
         const payment: UserPayment = await this.db.UserPayment.create({ userId, methodId, sum: amount });
 
         return payment.id;
+    }
+
+    getWithdrawsByUserId(userId: string): Promise<UserWithdraw[]> {
+        return this.db.UserWithdraw.findAll({ where: { userId } });
     }
 }
 

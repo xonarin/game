@@ -4,6 +4,6 @@ query AvailablePaymentAndWithdrawMethods {
     }
 
     availableWithdrawMethods {
-        ...PaymentMethod
+        ...WithdrawMethod
     }
 }

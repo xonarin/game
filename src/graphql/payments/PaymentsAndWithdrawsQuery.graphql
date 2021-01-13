@@ -1,0 +1,9 @@
+query PaymentsAndWithdraws {
+    payments {
+        ...Payment
+    }
+
+    withdraws {
+        ...Withdraw
+    }
+}

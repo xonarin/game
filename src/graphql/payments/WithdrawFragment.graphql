@@ -1,0 +1,9 @@
+fragment Withdraw on Withdraw {
+    id
+    method {
+        ...WithdrawMethod
+    }
+    amount
+    status
+    createdAt
+}
