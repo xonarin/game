@@ -8,7 +8,7 @@ export interface WithdrawMethod extends Model {
     readonly avatar: string;
     readonly commission: number;
     readonly minAmount: number;
-    readonly maxAmount: number | null;
+    readonly maxAmount: number;
     readonly enabled: boolean;
 }
 

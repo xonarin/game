@@ -1,0 +1,5 @@
+mutation CancelWithdraw($id: ID!) {
+    cancelWithdraw(id: $id) {
+        ...Withdraw
+    }
+}

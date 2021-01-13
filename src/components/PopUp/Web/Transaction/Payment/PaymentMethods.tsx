@@ -2,14 +2,16 @@ import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import { cn } from '../../../../../utils/bem-css-module';
-import { PaymentMethod } from '../../../../../__generated__/graphql';
+import { PaymentMethod, WithdrawMethod } from '../../../../../__generated__/graphql';
 import Icon from '../../../../Icon/Icon';
 import Text from '../../../../Text/Text';
 import s from './Payment.scss';
 import Scrollable from '../../../../Scrollable/Scrollable';
 
+type PaymentMethodType = PaymentMethod | WithdrawMethod;
+
 export interface PaymentMethodsProps {
-    readonly methods?: PaymentMethod[];
+    readonly methods?: PaymentMethodType[];
     readonly selectedMethod?: string;
     readonly setSelectedMethod: (value: string) => void;
 }

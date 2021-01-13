@@ -8,7 +8,9 @@ type Query {
 }
 
 type Mutation {
-    makeDeposit(amount: Float!, method: ID!): String!
+    doDeposit(amount: Float!, method: ID!): String!
+    doWithdraw(amount: Float!, method: ID!, purse: String!): Withdraw!
+    cancelWithdraw(id: ID!): Withdraw!
 }
 
 type PaymentMethod {

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import Icon from '../../../Icon/Icon';
 import Text from '../../../Text/Text';
 import { cn } from '../../../../utils/bem-css-module';
-import History from './History/History';
+import History, { HistoryRef } from './History/History';
 import Payment from './Payment/Payment';
 import s from './Transaction.scss';
 
@@ -25,6 +25,22 @@ const types: [SelectedTypeType, React.ReactNode][] = [
 const Transaction: React.FC<TransactionProps> = ({ close }) => {
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposit');
     useStyles(s);
+
+    const historyRef = useRef<HistoryRef | null>(null);
+
+    const openWithdrawHistory = useCallback(() => {
+        setSelectedType('history');
+
+        const o = () => {
+            if (historyRef.current) {
+                historyRef.current.openWithdrawHistory();
+            } else {
+                setTimeout(o, 10);
+            }
+        };
+
+        o();
+    }, []);
 
     return (
         <div className={cnTransaction()}>
@@ -48,7 +64,11 @@ const Transaction: React.FC<TransactionProps> = ({ close }) => {
                 </button>
             </div>
 
-            {selectedType !== 'history' ? <Payment type={selectedType} /> : <History />}
+            {selectedType !== 'history' ? (
+                <Payment type={selectedType} openWithdrawHistory={openWithdrawHistory} />
+            ) : (
+                <History ref={historyRef} />
+            )}
         </div>
     );
 };

@@ -13,6 +13,7 @@ export type PaymentTypeType = 'deposit' | 'withdraw';
 
 export interface PaymentProps {
     type: PaymentTypeType;
+    openWithdrawHistory: () => void;
 }
 
 const cnPayment = cn(s, 'Payment');
@@ -23,7 +24,7 @@ const PaymentType: React.FC = ({ children }) => (
     </div>
 );
 
-const Payment: React.FC<PaymentProps> = ({ type }) => {
+const Payment: React.FC<PaymentProps> = ({ type, openWithdrawHistory }) => {
     useStyles(s);
 
     const { availablePaymentMethods, availableWithdrawMethods } = useAvailablePaymentAndWithdrawMethodsQuery();
@@ -67,7 +68,10 @@ const Payment: React.FC<PaymentProps> = ({ type }) => {
                     />
 
                     <PaymentType>
-                        <Withdraw paymentMethod={selectedWithdrawPaymentMethod} />
+                        <Withdraw
+                            paymentMethod={selectedWithdrawPaymentMethod}
+                            openWithdrawHistory={openWithdrawHistory}
+                        />
                     </PaymentType>
                 </>
             )}

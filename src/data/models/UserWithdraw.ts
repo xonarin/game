@@ -15,10 +15,10 @@ export interface UserWithdraw extends Model {
     readonly id: string;
     readonly userId: string;
     readonly methodId: string;
+    readonly purse: string;
     readonly sum: number;
     readonly status: WithdrawStatus;
     readonly createdAt: Date;
-    readonly updatedAt: Date;
 
     user?: User;
 
@@ -62,6 +62,11 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
             },
         },
 
+        purse: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+
         sum: {
             type: DataTypes.DOUBLE(8, 2),
             allowNull: false,
@@ -69,7 +74,7 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
 
         status: {
             type: DataTypes.ENUM(...Object.values(WithdrawStatus)),
-            defaultValue: WithdrawStatus.IN_PROGRESS,
+            defaultValue: WithdrawStatus.WAIT_APPROVE,
             allowNull: false,
         },
     }) as UserWithdrawStatic;

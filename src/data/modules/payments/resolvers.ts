@@ -9,10 +9,14 @@ import {
     Query,
     PaymentMethod,
     Mutation,
-    MutationMakeDepositArgs,
     WithdrawMethod,
     Payment,
     Withdraw,
+    MutationDoDepositArgs,
+    WithdrawStatus,
+    PaymentStatus,
+    MutationDoWithdrawArgs,
+    MutationCancelWithdrawArgs,
 } from '../../../__generated__/graphql';
 import { PaymentMethod as PaymentMethodBackend } from '../../models/PaymentMethod';
 import { repositories } from '../../database';
@@ -25,7 +29,7 @@ import { UserPayment } from '../../models/UserPayment';
 import { UserWithdraw } from '../../models/UserWithdraw';
 
 type QueryType = Pick<Query, 'availablePaymentMethods' | 'availableWithdrawMethods' | 'payments' | 'withdraws'>;
-type MutationType = Pick<Mutation, 'makeDeposit'>;
+type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw'>;
 
 type PaymentMethodType = Pick<
     PaymentMethod,
@@ -43,10 +47,14 @@ type WithdrawType = Pick<Withdraw, 'id' | 'method' | 'amount' | 'status' | 'crea
 interface QueryMapping {
     readonly availablePaymentMethods: Resolver<PaymentMethodBackend[]>;
     readonly availableWithdrawMethods: Resolver<WithdrawMethodBackend[]>;
+    readonly payments: Resolver<UserPayment[]>;
+    readonly withdraws: Resolver<UserWithdraw[]>;
 }
 
 interface MutationMapping {
-    makeDeposit: Resolver<string, MutationMakeDepositArgs>;
+    readonly doDeposit: Resolver<string, MutationDoDepositArgs>;
+    readonly doWithdraw: Resolver<UserWithdraw, MutationDoWithdrawArgs>;
+    readonly cancelWithdraw: Resolver<UserWithdraw, MutationCancelWithdrawArgs>;
 }
 
 type PaymentsResolvers = Resolvers<
@@ -69,7 +77,9 @@ export const rules: IRules = {
         withdraws: isAuth,
     },
     Mutation: {
-        makeDeposit: isAuth,
+        doDeposit: isAuth,
+        doWithdraw: isAuth,
+        cancelWithdraw: isAuth,
     },
 };
 
@@ -82,7 +92,7 @@ export const resolvers: PaymentsResolvers = {
         withdraws: (_0, _1, { user }) => repositories.payments.getWithdrawsByUserId(user!.id),
     },
     Mutation: {
-        makeDeposit: async (_0, { amount, method }, { user }) => {
+        doDeposit: async (_0, { amount, method }, { user }) => {
             const paymentMethod = await repositories.payments.getPaymentMethodByIdStrict(method);
 
             if (!paymentMethod.enabled) {
@@ -103,14 +113,30 @@ export const resolvers: PaymentsResolvers = {
                 s: sign,
             })}`;
         },
+        doWithdraw: async (_0, { amount, method, purse }, { user }) => {
+            const paymentMethod = await repositories.payments.getPaymentMethodByIdStrict(method);
+
+            if (!paymentMethod.enabled) {
+                throw new UserError('NO_WITHDRAW_METHOD');
+            }
+
+            if (amount < paymentMethod.minAmount || amount > paymentMethod.maxAmount) {
+                throw new UserError('BAD_AMOUNT');
+            }
+
+            return repositories.payments.createWithdraw(user!.id, method, purse, amount);
+        },
+        cancelWithdraw: (_0, { id }, { user }) => repositories.payments.cancelWithdraw(id, user!.id),
     },
     Payment: {
         method: parent => repositories.payments.getPaymentMethodById(parent.methodId),
         amount: parent => parent.sum,
+        status: parent => (parent.status as string) as PaymentStatus,
     },
     Withdraw: {
-        method: parent => repositories.payments.getWithdrawMethodById(parent.methodId),
+        method: parent => repositories.payments.getWithdrawMethodByIdStrict(parent.methodId),
         amount: parent => parent.sum,
+        status: parent => (parent.status as string) as WithdrawStatus,
     },
     DateTime: GraphQLDateTime,
     URL: GraphQLURL,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import { cn } from '../../../../../utils/bem-css-module';
@@ -7,6 +7,7 @@ import Text from '../../../../Text/Text';
 import Button from '../../../../Button/Button';
 import { Withdraw, WithdrawStatus } from '../../../../../__generated__/graphql';
 import s from './WithdrawHistoryItem.scss';
+import useCancelWithdrawMutation from '../../../../../hooks/graphql/payments/useCancelWithdrawMutation';
 
 export interface WithdrawHistoryItemProps {
     withdraw: Withdraw;
@@ -20,12 +21,14 @@ const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ withdraw }) =
 
     const time = new Date(withdraw.createdAt).toLocaleString();
 
-    // TODO cancel button
+    const cancelWithdraw = useCancelWithdrawMutation();
+    const onClick = useCallback(() => cancelWithdraw(withdraw.id), [cancelWithdraw, withdraw.id]);
 
     return (
         <div className={cnWithdrawHistoryItem()}>
             <div className={cnWithdrawHistoryItem('Short-Info')}>
                 <div className={cnWithdrawHistoryItem('Short-InfoLeft')} onClick={() => setToggle(old => !old)}>
+
                     <div className={cnWithdrawHistoryItem('Service')}>
                         <div className={cnWithdrawHistoryItem('Icon')}>
                             <img src={withdraw.method.avatar} alt={withdraw.method.name} />
@@ -50,7 +53,9 @@ const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ withdraw }) =
 
                 <div className={cnWithdrawHistoryItem('Status')}>
                     {withdraw.status === WithdrawStatus.WaitApprove && (
-                        <Button className={cnWithdrawHistoryItem('Status')}>Отменить</Button>
+                        <Button className={cnWithdrawHistoryItem('Status')} onClick={onClick}>
+                            Отменить
+                        </Button>
                     )}
 
                     {[WithdrawStatus.Approved, WithdrawStatus.InProgress].includes(withdraw.status) && (

@@ -7,7 +7,7 @@ import Icon from '../../../../Icon/Icon';
 import InputWithIcon from '../../../../InputWithIcon/InputWithIcon';
 import { PaymentMethod } from '../../../../../__generated__/graphql';
 import s from './Payment.scss';
-import useMakeDepositMutation from '../../../../../hooks/graphql/payments/useMakeDepositMutation';
+import useDoDepositMutation from '../../../../../hooks/graphql/payments/useDoDepositMutation';
 
 interface DepositProps {
     paymentMethod?: PaymentMethod;
@@ -19,7 +19,7 @@ const Deposit: React.FC<DepositProps> = ({ paymentMethod }) => {
     useStyles(s);
 
     const [amount, setAmount] = useState('500');
-    const makeDeposit = useMakeDepositMutation();
+    const makeDeposit = useDoDepositMutation();
 
     const onClick = useCallback(async () => {
         if (!paymentMethod || Number.isNaN(+amount)) {

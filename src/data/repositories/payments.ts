@@ -5,18 +5,20 @@ import { PaymentMethod } from '../models/PaymentMethod';
 import { WithdrawMethod } from '../models/WithdrawMethod';
 import { PaymentStatus, UserPayment } from '../models/UserPayment';
 import { UserError } from '../../utils/errors';
-import { UserWithdraw } from '../models/UserWithdraw';
+import { UserWithdraw, WithdrawStatus } from '../models/UserWithdraw';
 
 class PaymentsRepository extends BaseRepository {
     getAvailablePaymentMethods(): Promise<PaymentMethod[]> {
         return this.db.PaymentMethod.findAll({
             where: { enabled: true },
+            order: ['id'],
         });
     }
 
     getAvailableWithdrawMethods(): Promise<WithdrawMethod[]> {
         return this.db.WithdrawMethod.findAll({
             where: { enabled: true },
+            order: ['id'],
         });
     }
 
@@ -46,6 +48,16 @@ class PaymentsRepository extends BaseRepository {
         });
     }
 
+    async getWithdrawMethodByIdStrict(withdrawMethodId: string, transaction?: Transaction): Promise<WithdrawMethod> {
+        const user = await this.getWithdrawMethodById(withdrawMethodId, transaction);
+
+        if (!user) {
+            throw new UserError('NO_WITHDRAW_METHOD');
+        }
+
+        return user;
+    }
+
     async getPaymentById(paymentId: string, transaction?: Transaction): Promise<UserPayment | null> {
         return this.db.UserPayment.findByPk(paymentId, {
             ...this.sequelizeContext,
@@ -65,7 +77,13 @@ class PaymentsRepository extends BaseRepository {
     }
 
     getPaymentsByUserId(userId: string): Promise<UserPayment[]> {
-        return this.db.UserPayment.findAll({ where: { userId } });
+        return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+    }
+
+    async createPayment(userId: string, methodId: string, amount: number): Promise<string> {
+        const payment: UserPayment = await this.db.UserPayment.create({ userId, methodId, sum: amount });
+
+        return payment.id;
     }
 
     finishPayment(paymentId: string, methodId: string): Promise<void> {
@@ -81,14 +99,46 @@ class PaymentsRepository extends BaseRepository {
         });
     }
 
-    async createPayment(userId: string, methodId: string, amount: number): Promise<string> {
-        const payment: UserPayment = await this.db.UserPayment.create({ userId, methodId, sum: amount });
+    async getWithdrawById(withdrawId: string, transaction?: Transaction): Promise<UserWithdraw | null> {
+        return this.db.UserWithdraw.findByPk(withdrawId, {
+            ...this.sequelizeContext,
+            ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
+            rejectOnEmpty: false,
+        });
+    }
 
-        return payment.id;
+    async getWithdrawByIdStrict(paymentId: string, transaction?: Transaction): Promise<UserWithdraw> {
+        const user = await this.getWithdrawById(paymentId, transaction);
+
+        if (!user) {
+            throw new UserError('NO_WITHDRAW');
+        }
+
+        return user;
     }
 
     getWithdrawsByUserId(userId: string): Promise<UserWithdraw[]> {
-        return this.db.UserWithdraw.findAll({ where: { userId } });
+        return this.db.UserWithdraw.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+    }
+
+    createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
+        // TODO check prerequisites
+
+        return this.db.UserWithdraw.create({ userId, methodId, purse, sum: amount });
+    }
+
+    async cancelWithdraw(withdrawId: string, userId: string): Promise<UserWithdraw> {
+        const withdraw = await this.getWithdrawByIdStrict(withdrawId);
+
+        if (withdraw.userId !== userId) {
+            throw new UserError('NO_WITHDRAW');
+        }
+
+        if (withdraw.status !== WithdrawStatus.WAIT_APPROVE) {
+            throw new UserError('CANNOT_CANCEL_WITHDRAW');
+        }
+
+        return withdraw.update({ status: WithdrawStatus.CANCELLED });
     }
 }
 

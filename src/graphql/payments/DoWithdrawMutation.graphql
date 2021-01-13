@@ -1,0 +1,5 @@
+mutation DoWithdraw($amount: Float!, $method: ID!, $purse: String!) {
+    doWithdraw(amount: $amount, method: $method, purse: $purse) {
+        ...Withdraw
+    }
+}

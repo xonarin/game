@@ -1,0 +1,3 @@
+mutation DoDeposit($amount: Float!, $method: ID!) {
+    doDeposit(amount: $amount, method: $method)
+}

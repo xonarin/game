@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import { cn } from '../../../../../utils/bem-css-module';
@@ -7,13 +7,23 @@ import WithdrawHistoryItem from './WithdrawHistoryItem';
 import usePaymentsAndWithdrawsQuery from '../../../../../hooks/graphql/payments/usePaymentsAndWithdrawsQuery';
 import s from './History.scss';
 
+export interface HistoryRef {
+    openWithdrawHistory: () => void;
+}
+
 type SelectedTypeType = 'deposits' | 'withdraws';
 
 const cnHistory = cn(s, 'History');
 
-const History = () => {
+const History = forwardRef<HistoryRef>((_0, ref) => {
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposits');
     useStyles(s);
+
+    useImperativeHandle(ref, () => ({
+        openWithdrawHistory: () => {
+            setSelectedType('withdraws');
+        },
+    }));
 
     const { payments, withdraws } = usePaymentsAndWithdrawsQuery();
 
@@ -53,6 +63,6 @@ const History = () => {
             </div>
         </div>
     );
-};
+});
 
 export default History;
