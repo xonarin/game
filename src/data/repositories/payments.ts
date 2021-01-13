@@ -121,6 +121,10 @@ class PaymentsRepository extends BaseRepository {
         return this.db.UserWithdraw.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
     }
 
+    getWithdrawsByStatus(status: WithdrawStatus): Promise<UserWithdraw[]> {
+        return this.db.UserWithdraw.findAll({ where: { status } });
+    }
+
     createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
         // TODO check prerequisites
 

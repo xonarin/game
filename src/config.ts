@@ -54,6 +54,8 @@ export default {
             merchantId: process.env.FK_MERCHANT_ID || '253080',
             secret: process.env.FK_SECRET || 'pbicjr2m',
             secret2: process.env.FK_SECRET2 || 'g0cj8gw8',
+            walletId: process.env.FK_WALLET_ID || 'F101281784',
+            apiKey: process.env.FK_API_KEY || 'B733D6F3C6F167DD948E4DA95B3A091F',
         },
     },
 

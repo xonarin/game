@@ -15,6 +15,7 @@ export interface UserWithdraw extends Model {
     readonly id: string;
     readonly userId: string;
     readonly methodId: string;
+    readonly paymentId: string;
     readonly purse: string;
     readonly sum: number;
     readonly status: WithdrawStatus;
@@ -60,6 +61,11 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
             get(this: UserWithdraw) {
                 return ((this.getDataValue('methodId') as unknown) as number).toString();
             },
+        },
+
+        paymentId: {
+            type: DataTypes.STRING,
+            unique: true,
         },
 
         purse: {

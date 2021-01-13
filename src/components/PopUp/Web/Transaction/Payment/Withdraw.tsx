@@ -6,12 +6,12 @@ import Text from '../../../../Text/Text';
 import Icon from '../../../../Icon/Icon';
 import InputWithIcon from '../../../../InputWithIcon/InputWithIcon';
 import PercentBlock from '../../../../PercentBlock/PercentBlock';
-import { PaymentMethod } from '../../../../../__generated__/graphql';
-import s from './Payment.scss';
+import { WithdrawMethod } from '../../../../../__generated__/graphql';
 import useDoWithdrawMutation from '../../../../../hooks/graphql/payments/useDoWithdrawMutation';
+import s from './Payment.scss';
 
 interface WithdrawProps {
-    paymentMethod?: PaymentMethod;
+    paymentMethod?: WithdrawMethod;
     openWithdrawHistory: () => void;
 }
 

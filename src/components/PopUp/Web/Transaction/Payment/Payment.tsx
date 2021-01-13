@@ -43,7 +43,7 @@ const Payment: React.FC<PaymentProps> = ({ type, openWithdrawHistory }) => {
     }, [availablePaymentMethods, availableWithdrawMethods]);
 
     const selectedDepositPaymentMethod = availablePaymentMethods?.find(({ id }) => id === selectedDepositMethod);
-    const selectedWithdrawPaymentMethod = availablePaymentMethods?.find(({ id }) => id === selectedWithdrawMethod);
+    const selectedWithdrawPaymentMethod = availableWithdrawMethods?.find(({ id }) => id === selectedWithdrawMethod);
 
     return (
         <div className={cnPayment()}>

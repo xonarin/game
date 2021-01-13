@@ -114,7 +114,7 @@ export const resolvers: PaymentsResolvers = {
             })}`;
         },
         doWithdraw: async (_0, { amount, method, purse }, { user }) => {
-            const paymentMethod = await repositories.payments.getPaymentMethodByIdStrict(method);
+            const paymentMethod = await repositories.payments.getWithdrawMethodByIdStrict(method);
 
             if (!paymentMethod.enabled) {
                 throw new UserError('NO_WITHDRAW_METHOD');
