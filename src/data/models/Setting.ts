@@ -23,7 +23,7 @@ export type TournamentSettingsName =
     | 'tournament::activityPauseDays'
     | 'tournament::referralsPauseDays';
 
-export type PaymentsSettings = 'payments::minBetToWithdraw';
+export type PaymentsSettings = 'payments::minBetToWithdraw' | 'payments::minDepositToWithdraw';
 
 export type SettingName =
     | ClassicGameSettingName

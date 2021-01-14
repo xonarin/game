@@ -27,6 +27,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'tournament::activityPauseDays': ['3', 'Пауза между турнирами по активности'],
     'tournament::referralsPauseDays': ['3', 'Пауза между турнирами по рефералам'],
     'payments::minBetToWithdraw': ['100', 'Минимальная суммарная ставка для вывода'],
+    'payments::minDepositToWithdraw': ['50', 'Минимальная сумма депозита для вывода'],
 };
 
 class SettingsRepository extends BaseRepository {
