@@ -4,14 +4,14 @@ import config from '../config';
 import { md5Hash } from '../utils/crypto';
 import { repositories } from '../data/database';
 
-const freeKassaIps = [
-    '136.243.38.147',
-    '136.243.38.149',
-    '136.243.38.150',
-    '136.243.38.151',
-    '136.243.38.189',
-    '136.243.38.108',
-];
+// const freeKassaIps = [
+//     '136.243.38.147',
+//     '136.243.38.149',
+//     '136.243.38.150',
+//     '136.243.38.151',
+//     '136.243.38.189',
+//     '136.243.38.108',
+// ];
 
 const initPayments = (app: Express) => {
     app.post('/api/v1/kassa/notify', async (req, res, next) => {
@@ -25,7 +25,8 @@ const initPayments = (app: Express) => {
 
         const realSign = md5Hash(`${merchantId}:${amount}:${config.auth.fk.secret2}:${merchantOrderId}`);
         if (
-            !(freeKassaIps.includes(req.ip) || __DEV__) ||
+            // Turned off due to errors with determining Free-Kassa IP
+            // !(freeKassaIps.includes(req.ip) || __DEV__) ||
             merchantId !== config.auth.fk.merchantId ||
             sign !== realSign
         ) {
