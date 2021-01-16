@@ -5,8 +5,11 @@ import config from '../config';
 import { repositories } from '../data/database';
 import { UserWithdraw, WithdrawStatus } from '../data/models/UserWithdraw';
 import { md5Hash } from '../utils/crypto';
+import Locker from '../utils/locker';
 
 const { walletId, apiKey } = config.auth.fk;
+
+const timeout = (secs: number = 1) => new Promise(resolve => setTimeout(resolve, secs * 1000));
 
 const withdrawCheck = async (withdraw: UserWithdraw) => {
     const { paymentId } = withdraw;
@@ -80,18 +83,61 @@ const withdrawCashOut = async (withdraw: UserWithdraw) => {
     await withdraw.update({ paymentId, status: WithdrawStatus.IN_PROGRESS });
 };
 
+const withdrawCheckLock = new Locker();
+const checkInProgressWithdrawsLock = new Locker();
 const checkInProgressWithdraws = async () => {
-    (await repositories.payments.getWithdrawsByStatus(WithdrawStatus.IN_PROGRESS)).forEach(withdrawCheck);
+    await checkInProgressWithdrawsLock.lock();
+
+    try {
+        const withdraws = await repositories.payments.getWithdrawsByStatus(WithdrawStatus.IN_PROGRESS);
+
+        await Promise.all(
+            withdraws.map(async withdraw => {
+                await withdrawCheckLock.lock();
+
+                try {
+                    await withdrawCheck(withdraw);
+                } finally {
+                    await timeout();
+                    withdrawCheckLock.unlock();
+                }
+            }),
+        );
+    } finally {
+        checkInProgressWithdrawsLock.unlock();
+    }
 };
 
+const withdrawCashOutLock = new Locker();
+const checkApprovedWithdrawsLock = new Locker();
 const checkApprovedWithdraws = async () => {
-    (await repositories.payments.getWithdrawsByStatus(WithdrawStatus.APPROVED)).forEach(withdrawCashOut);
+    // Separated lock to prevent duplicated cash outs from different cron calls
+    await checkApprovedWithdrawsLock.lock();
+
+    try {
+        const withdraws = await repositories.payments.getWithdrawsByStatus(WithdrawStatus.APPROVED);
+
+        await Promise.all(
+            withdraws.map(async withdraw => {
+                await withdrawCashOutLock.lock();
+
+                try {
+                    await withdrawCashOut(withdraw);
+                } finally {
+                    await timeout();
+                    withdrawCashOutLock.unlock();
+                }
+            }),
+        );
+    } finally {
+        checkApprovedWithdrawsLock.unlock();
+    }
 };
 
 const withdrawTask = async () => {
     try {
-        await checkInProgressWithdraws();
         await checkApprovedWithdraws();
+        await checkInProgressWithdraws();
     } catch (e) {
         console.error(e);
     }
