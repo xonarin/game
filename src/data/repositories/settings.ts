@@ -26,6 +26,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'tournament::referralsLengthDays': ['30', 'Продолжительность турнира по рефералам'],
     'tournament::activityPauseDays': ['3', 'Пауза между турнирами по активности'],
     'tournament::referralsPauseDays': ['3', 'Пауза между турнирами по рефералам'],
+    'payments::defaultDepositCommission': ['5', 'Процент комиссии по-умолчанию для неизвестных способов оплаты'],
     'payments::minBetToWithdraw': ['100', 'Минимальная суммарная ставка для вывода'],
     'payments::minDepositToWithdraw': ['50', 'Минимальная сумма депозита для вывода'],
 };

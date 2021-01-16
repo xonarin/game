@@ -81,7 +81,14 @@ class PaymentsRepository extends BaseRepository {
     }
 
     async createPayment(userId: string, methodId: string, amount: number): Promise<string> {
-        const payment: UserPayment = await this.db.UserPayment.create({ userId, methodId, sum: amount });
+        const { commission } = await this.getPaymentMethodByIdStrict(methodId);
+
+        const payment: UserPayment = await this.db.UserPayment.create({
+            userId,
+            methodId,
+            sum: amount,
+            commission,
+        });
 
         return payment.id;
     }
@@ -94,8 +101,19 @@ class PaymentsRepository extends BaseRepository {
                 return;
             }
 
-            await this.repositories.users.giveMoney(payment.userId, payment.sum, transaction);
-            await payment.update({ methodId, status: PaymentStatus.FINISHED }, { transaction });
+            const method = await this.getPaymentMethodById(payment.methodId);
+            const commissionPercent =
+                method?.commission ??
+                (await this.repositories.settings.getSettingAsNumber('payments::defaultDepositCommission'));
+
+            const commission = (commissionPercent * payment.sum) / 100;
+            const finalSum = payment.sum - commission;
+
+            await this.repositories.users.giveMoney(payment.userId, finalSum, transaction);
+            await payment.update(
+                { methodId, status: PaymentStatus.FINISHED, commission: commissionPercent },
+                { transaction },
+            );
         });
     }
 

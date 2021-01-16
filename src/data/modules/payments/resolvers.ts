@@ -6,17 +6,17 @@ import * as queryString from 'querystring';
 import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
 import {
-    Query,
-    PaymentMethod,
     Mutation,
-    WithdrawMethod,
-    Payment,
-    Withdraw,
-    MutationDoDepositArgs,
-    WithdrawStatus,
-    PaymentStatus,
-    MutationDoWithdrawArgs,
     MutationCancelWithdrawArgs,
+    MutationDoDepositArgs,
+    MutationDoWithdrawArgs,
+    Payment,
+    PaymentMethod,
+    PaymentStatus,
+    Query,
+    Withdraw,
+    WithdrawMethod,
+    WithdrawStatus
 } from '../../../__generated__/graphql';
 import { PaymentMethod as PaymentMethodBackend } from '../../models/PaymentMethod';
 import { repositories } from '../../database';
@@ -130,7 +130,7 @@ export const resolvers: PaymentsResolvers = {
     },
     Payment: {
         method: parent => repositories.payments.getPaymentMethodById(parent.methodId),
-        amount: parent => parent.sum,
+        amount: parent => parent.sum - (parent.sum * parent.commission) / 100,
         status: parent => (parent.status as string) as PaymentStatus,
     },
     Withdraw: {

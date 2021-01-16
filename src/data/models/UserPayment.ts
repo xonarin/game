@@ -13,6 +13,7 @@ export interface UserPayment extends Model {
     readonly userId: string;
     readonly methodId: string;
     readonly sum: number;
+    readonly commission: number;
     readonly status: PaymentStatus;
     readonly createdAt: Date;
     readonly updatedAt: Date;
@@ -61,6 +62,11 @@ export const initUserPayment = (sequelize: Sequelize): UserPaymentStatic => {
 
         sum: {
             type: DataTypes.DOUBLE(8, 2),
+            allowNull: false,
+        },
+
+        commission: {
+            type: DataTypes.DOUBLE(5, 2),
             allowNull: false,
         },
 

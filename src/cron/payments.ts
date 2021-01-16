@@ -53,16 +53,20 @@ const withdrawCheck = async (withdraw: UserWithdraw) => {
 };
 
 const withdrawCashOut = async (withdraw: UserWithdraw) => {
-    const { purse, sum: amount, methodId: currency } = withdraw;
-    const sign = md5Hash(`${walletId}${currency}${amount}${purse}${apiKey}`);
+    const { purse, sum: amount, methodId } = withdraw;
+
+    const method = await repositories.payments.getWithdrawMethodByIdStrict(methodId);
+    const finalAmount = amount - (amount * method.commission) / 100;
+
+    const sign = md5Hash(`${walletId}${methodId}${finalAmount}${purse}${apiKey}`);
 
     const query = new URLSearchParams({
         action: 'cashout',
         wallet_id: walletId,
         purse,
-        amount: String(amount),
+        amount: String(finalAmount),
         desc: 'Cash out',
-        currency,
+        currency: methodId,
         sign,
     });
 
