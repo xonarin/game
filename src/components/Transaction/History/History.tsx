@@ -1,10 +1,10 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import { cn } from '../../../../../utils/bem-css-module';
+import { cn } from '../../../utils/bem-css-module';
 import DepositHistoryItem from './DepositHistoryItem';
 import WithdrawHistoryItem from './WithdrawHistoryItem';
-import usePaymentsAndWithdrawsQuery from '../../../../../hooks/graphql/payments/usePaymentsAndWithdrawsQuery';
+import usePaymentsAndWithdrawsQuery from '../../../hooks/graphql/payments/usePaymentsAndWithdrawsQuery';
 import s from './History.scss';
 
 export interface HistoryRef {

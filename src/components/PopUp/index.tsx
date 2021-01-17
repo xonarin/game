@@ -4,7 +4,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './PopUp.scss';
 import { cn } from '../../utils/bem-css-module';
 import FirePlay from './Web/FirePlay/FirePlay';
-import Transaction from './Web/Transaction/Transaction';
+import { Transaction } from '../Transaction/Transaction';
 import FirePlayMobile from './Mobile/FirePlay/FirePlay';
 
 const cnPopUp = cn(s, 'PopUp');

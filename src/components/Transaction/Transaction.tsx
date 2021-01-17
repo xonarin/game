@@ -1,12 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import Icon from '../../../Icon/Icon';
-import Text from '../../../Text/Text';
-import { cn } from '../../../../utils/bem-css-module';
+import Icon from '../Icon/Icon';
+import Text from '../Text/Text';
+import { cn } from '../../utils/bem-css-module';
 import History, { HistoryRef } from './History/History';
-import Payment from './Payment/Payment';
 import s from './Transaction.scss';
+import DepositForm from './Payment/DepositForm';
+import Withdraw from './Payment/Withdraw';
 
 export interface TransactionProps {
     close: () => void;
@@ -22,7 +23,7 @@ const types: [SelectedTypeType, React.ReactNode][] = [
     ['history', 'История'],
 ];
 
-const Transaction: React.FC<TransactionProps> = ({ close }) => {
+export const Transaction: React.FC<TransactionProps> = ({ close }) => {
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposit');
     useStyles(s);
 
@@ -64,13 +65,9 @@ const Transaction: React.FC<TransactionProps> = ({ close }) => {
                 </button>
             </div>
 
-            {selectedType !== 'history' ? (
-                <Payment type={selectedType} openWithdrawHistory={openWithdrawHistory} />
-            ) : (
-                <History ref={historyRef} />
-            )}
+            {selectedType === 'deposit' && <DepositForm />}
+            {selectedType === 'withdraw' && <Withdraw openWithdrawHistory={openWithdrawHistory} />}
+            {selectedType === 'history' && <History ref={historyRef} />}
         </div>
     );
 };
-
-export default Transaction;

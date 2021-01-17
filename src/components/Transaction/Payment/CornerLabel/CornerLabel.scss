@@ -1,0 +1,17 @@
+
+.CornerLabel {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+
+    &-Icon {
+        background: #4986f5;
+        height: 16px;
+        width: 16px;
+        margin-right: 10px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

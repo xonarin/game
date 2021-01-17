@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import { cn } from '../../../../../utils/bem-css-module';
-import Icon from '../../../../Icon/Icon';
-import Text from '../../../../Text/Text';
+import { cn } from '../../../utils/bem-css-module';
+import Icon from '../../Icon/Icon';
+import Text from '../../Text/Text';
 import s from './DepositHistoryItem.scss';
-import { Payment } from '../../../../../__generated__/graphql';
+import { Payment } from '../../../__generated__/graphql';
 
 export interface DepositHistoryItemProps {
     readonly payment: Payment;

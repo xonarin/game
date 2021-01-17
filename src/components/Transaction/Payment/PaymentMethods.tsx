@@ -1,43 +1,37 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import { cn } from '../../../../../utils/bem-css-module';
-import { PaymentMethod, WithdrawMethod } from '../../../../../__generated__/graphql';
-import Icon from '../../../../Icon/Icon';
-import Text from '../../../../Text/Text';
 import s from './Payment.scss';
-import Scrollable from '../../../../Scrollable/Scrollable';
+import { cn } from '../../../utils/bem-css-module';
+import { PaymentMethod, WithdrawMethod } from '../../../__generated__/graphql';
+import Text from '../../Text/Text';
+import Scrollable from '../../Scrollable/Scrollable';
+import CornerLabel from './CornerLabel/CornerLabel';
 
 type PaymentMethodType = PaymentMethod | WithdrawMethod;
 
-export interface PaymentMethodsProps {
-    readonly methods?: PaymentMethodType[];
-    readonly selectedMethod?: string;
-    readonly setSelectedMethod: (value: string) => void;
+export interface PaymentMethodsProps<T extends PaymentMethodType> {
+    readonly methods?: T[];
+    readonly value?: T;
+    readonly onChange: (value: T) => void;
 }
 
 const cnPayment = cn(s, 'Payment');
 
-const PaymentMethods: React.FC<PaymentMethodsProps> = ({ methods, selectedMethod, setSelectedMethod }) => {
+const PaymentMethods = <T extends PaymentMethodType>({ methods, value, onChange }: PaymentMethodsProps<T>) => {
     useStyles(s);
 
     return (
         <div className={cnPayment('Methods')}>
-            <div className={cnPayment('Method')}>
-                <div className={cnPayment('Category-Icon')}>
-                    <Icon type="rightWhite" />
-                </div>
-
-                <Text>Способ оплаты</Text>
-            </div>
+            <CornerLabel className={cnPayment('MethodsTitle')}>Способ оплаты</CornerLabel>
 
             <Scrollable disablePadding>
                 {methods?.map(method => (
                     <button
                         key={method.id}
                         type="button"
-                        className={cnPayment('Method', { active: selectedMethod === method.id })}
-                        onClick={() => setSelectedMethod(method.id)}
+                        className={cnPayment('Method', { active: value?.id === method.id })}
+                        onClick={() => onChange(method)}
                     >
                         <div className={cnPayment('Method-Icon')}>
                             <img src={method.avatar} alt={method.name} />

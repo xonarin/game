@@ -1,4 +1,4 @@
-@import '../../../../../assets/styles/vars';
+@import '../../../assets/styles/vars';
 
 .Payment {
     display: flex;
@@ -21,6 +21,10 @@
 
         :first-child {
             border-top: none;
+        }
+
+        &Title {
+            padding-left: 20px;
         }
     }
 
@@ -84,45 +88,6 @@
         }
     }
 
-    &-Category-Icon {
-        background: #4986f5;
-        height: 16px;
-        width: 16px;
-        margin-right: 10px;
-        border-radius: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    &-Warning {
-        height: 54px;
-        background: #343b48;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        :last-child {
-            width: 70%;
-            margin-left: 15px;
-        }
-    }
-
-    &-Warning-Card {
-        height: 54px;
-        background: #21262f;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
     &-GoToPayment {
         font-weight: 700;
         margin-top: 20px;
@@ -143,5 +108,44 @@
         border-top: 1px solid #3a4150;
         padding-top: 20px;
         text-align: center;
+    }
+
+    &-FixedAmounts {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-Amount {
+        height: 32px;
+        width: 19%;
+        border: none;
+        background: #182339;
+        border-radius: 5px;
+        cursor: pointer;
+
+        :last-child {
+            margin-left: 7px;
+        }
+
+        &:hover {
+            height: 32px;
+            width: 19%;
+            border: 2px solid #4986f5;
+            background: #182339;
+            border-radius: 5px;
+        }
+    }
+
+    &-Amount_active {
+        height: 32px;
+        width: 19%;
+        border: 2px solid #4986f5;
+        background: #182339;
+        border-radius: 5px;
+
+        :last-child {
+            margin-left: 7px;
+        }
     }
 }

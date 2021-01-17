@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
-import { cn } from '../../../../../utils/bem-css-module';
-import Icon from '../../../../Icon/Icon';
-import Text from '../../../../Text/Text';
-import Button from '../../../../Button/Button';
-import { Withdraw, WithdrawStatus } from '../../../../../__generated__/graphql';
+import { cn } from '../../../utils/bem-css-module';
+import Icon from '../../Icon/Icon';
+import Text from '../../Text/Text';
+import Button from '../../Button/Button';
+import { Withdraw, WithdrawStatus } from '../../../__generated__/graphql';
 import s from './WithdrawHistoryItem.scss';
-import useCancelWithdrawMutation from '../../../../../hooks/graphql/payments/useCancelWithdrawMutation';
+import useCancelWithdrawMutation from '../../../hooks/graphql/payments/useCancelWithdrawMutation';
 
 export interface WithdrawHistoryItemProps {
     withdraw: Withdraw;
