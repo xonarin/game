@@ -11,11 +11,12 @@ import useCancelWithdrawMutation from '../../../hooks/graphql/payments/useCancel
 
 export interface WithdrawHistoryItemProps {
     withdraw: Withdraw;
+    mobile: boolean;
 }
 
 const cnWithdrawHistoryItem = cn(s, 'WithdrawHistoryItem');
 
-const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ withdraw }) => {
+const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ mobile, withdraw }) => {
     const [toggle, setToggle] = useState(false);
     useStyles(s);
 
@@ -25,7 +26,7 @@ const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ withdraw }) =
     const onClick = useCallback(() => cancelWithdraw(withdraw.id), [cancelWithdraw, withdraw.id]);
 
     return (
-        <div className={cnWithdrawHistoryItem()}>
+        <div className={cnWithdrawHistoryItem({ mobile })}>
             <div className={cnWithdrawHistoryItem('Short-Info')}>
                 <div className={cnWithdrawHistoryItem('Short-InfoLeft')} onClick={() => setToggle(old => !old)}>
                     <div className={cnWithdrawHistoryItem('Service')}>

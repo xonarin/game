@@ -2,7 +2,8 @@ import React from 'react';
 
 import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
-import TransactionMobile from './Transaction';
+import Layout from '../../components/Layout/Layout';
+import { Transaction } from '../../components/Transaction/Transaction';
 
 const action = ({ user, chats }: AppContextTypes): RouteResult => {
     const chatId = chats.game;
@@ -14,7 +15,11 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
     return {
         title: 'Balance',
         chunks: ['balance'],
-        pageContent: <TransactionMobile />,
+        pageContent: (
+            <Layout>
+                <Transaction mobile />
+            </Layout>
+        ),
         redirect: user ? undefined : '/',
     };
 };

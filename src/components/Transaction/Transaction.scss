@@ -88,4 +88,21 @@
             }
         }
     }
+
+    &_mobile {
+        width: 100%;
+        max-height: none;
+
+        .Transaction-Close {
+            display: none;
+        }
+
+        .Transaction-Type {
+            white-space: nowrap;
+
+            :last-child {
+                margin-left: 4px;
+            }
+        }
+    }
 }

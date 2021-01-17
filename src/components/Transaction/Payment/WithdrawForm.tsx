@@ -8,15 +8,17 @@ import Text from '../../Text/Text';
 import InputWithIcon from '../../inputs/InputWithIcon/InputWithIcon';
 import useDoWithdrawMutation from '../../../hooks/graphql/payments/useDoWithdrawMutation';
 import useAvailablePaymentAndWithdrawMethodsQuery from '../../../hooks/graphql/payments/useAvailablePaymentAndWithdrawMethodsQuery';
-import PaymentMethods from './PaymentMethods';
+import { PaymentMethods } from './PaymentMethods';
 import Scrollable from '../../Scrollable/Scrollable';
 import TextIcon from '../../TextIcon/TextIcon';
 import { WithdrawMethod } from '../../../__generated__/graphql';
 import { composeValidators, minMaxValidator, requiredValidator } from '../../../utils/validators';
 import AmountWithCommissionInput from './AmountWithCommissionInput/AmountWithCommissionInput';
 import CornerLabel from './CornerLabel/CornerLabel';
+import { PaymentMethodsMobile } from './PaymentMethodsMobile';
 
 export interface WithdrawFormProps {
+    readonly mobile: boolean;
     readonly openWithdrawHistory: () => void;
 }
 
@@ -28,7 +30,7 @@ interface WithdrawFormValues {
 
 const cnPayment = cn(s, 'Payment');
 
-export const WithdrawForm: React.FC<WithdrawFormProps> = ({ openWithdrawHistory }) => {
+export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdrawHistory }) => {
     useStyles(s);
 
     const { availableWithdrawMethods } = useAvailablePaymentAndWithdrawMethodsQuery();
@@ -46,23 +48,41 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ openWithdrawHistory 
         <Form<WithdrawFormValues> onSubmit={onSubmit}>
             {({ handleSubmit, values: { method } }) => (
                 <form className={cnPayment()} onSubmit={handleSubmit}>
-                    <Field
-                        name="method"
-                        validate={requiredValidator()}
-                        initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
-                    >
-                        {({ input }) => (
-                            <PaymentMethods<WithdrawMethod>
-                                methods={availableWithdrawMethods}
-                                value={input.value}
-                                onChange={input.onChange}
-                            />
-                        )}
-                    </Field>
+                    {!mobile && (
+                        <Field
+                            name="method"
+                            validate={requiredValidator()}
+                            initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
+                        >
+                            {({ input }) => (
+                                <PaymentMethods<WithdrawMethod>
+                                    methods={availableWithdrawMethods}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                />
+                            )}
+                        </Field>
+                    )}
 
                     <div className={cnPayment('Settings')}>
                         <Scrollable disablePadding>
                             <div>
+                                {mobile && (
+                                    <Field
+                                        name="method"
+                                        validate={requiredValidator()}
+                                        initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
+                                    >
+                                        {({ input }) => (
+                                            <PaymentMethodsMobile<WithdrawMethod>
+                                                methods={availableWithdrawMethods}
+                                                value={input.value}
+                                                onChange={input.onChange}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+
                                 <CornerLabel>Номер кошелька</CornerLabel>
 
                                 <Field name="wallet" validate={requiredValidator()}>

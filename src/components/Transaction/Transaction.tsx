@@ -2,28 +2,29 @@ import React, { useCallback, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Transaction.scss';
-import Icon from '../Icon/Icon';
+import Icon, { IconProps } from '../Icon/Icon';
 import Text from '../Text/Text';
 import { cn } from '../../utils/bem-css-module';
-import History, { HistoryRef } from './History/History';
-import DepositForm from './Payment/DepositForm';
+import { History, HistoryRef } from './History/History';
+import { DepositForm } from './Payment/DepositForm';
 import { WithdrawForm } from './Payment/WithdrawForm';
 
 export interface TransactionProps {
-    close: () => void;
+    mobile?: boolean;
+    close?: () => void;
 }
 
 type SelectedTypeType = 'deposit' | 'withdraw' | 'history';
 
 const cnTransaction = cn(s, 'Transaction');
 
-const types: [SelectedTypeType, React.ReactNode][] = [
-    ['deposit', 'Пополнение'],
-    ['withdraw', 'Вывод'],
-    ['history', 'История'],
+const types: [SelectedTypeType, IconProps['type'], React.ReactNode][] = [
+    ['deposit', 'add', 'Пополнение'],
+    ['withdraw', 'minus', 'Вывод'],
+    ['history', 'clock', 'История'],
 ];
 
-export const Transaction: React.FC<TransactionProps> = ({ close }) => {
+export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close }) => {
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposit');
     useStyles(s);
 
@@ -44,17 +45,17 @@ export const Transaction: React.FC<TransactionProps> = ({ close }) => {
     }, []);
 
     return (
-        <div className={cnTransaction()}>
+        <div className={cnTransaction({ mobile })}>
             <div className={cnTransaction('Header')}>
                 <div className={cnTransaction('Types')}>
-                    {types.map(([type, label]) => (
+                    {types.map(([type, icon, label]) => (
                         <button
                             key={type}
                             type="button"
                             className={cnTransaction('Type', { active: selectedType === type })}
                             onClick={() => setSelectedType(type)}
                         >
-                            <Icon type="add" />
+                            <Icon type={icon} />
                             <Text>{label}</Text>
                         </button>
                     ))}
@@ -65,9 +66,9 @@ export const Transaction: React.FC<TransactionProps> = ({ close }) => {
                 </button>
             </div>
 
-            {selectedType === 'deposit' && <DepositForm />}
-            {selectedType === 'withdraw' && <WithdrawForm openWithdrawHistory={openWithdrawHistory} />}
-            {selectedType === 'history' && <History ref={historyRef} />}
+            {selectedType === 'deposit' && <DepositForm mobile={mobile} />}
+            {selectedType === 'withdraw' && <WithdrawForm mobile={mobile} openWithdrawHistory={openWithdrawHistory} />}
+            {selectedType === 'history' && <History mobile={mobile} ref={historyRef} />}
         </div>
     );
 };

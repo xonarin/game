@@ -18,7 +18,7 @@ export interface PaymentMethodsProps<T extends PaymentMethodType> {
 
 const cnPayment = cn(s, 'Payment');
 
-const PaymentMethods = <T extends PaymentMethodType>({ methods, value, onChange }: PaymentMethodsProps<T>) => {
+export const PaymentMethods = <T extends PaymentMethodType>({ methods, value, onChange }: PaymentMethodsProps<T>) => {
     useStyles(s);
 
     return (
@@ -41,7 +41,7 @@ const PaymentMethods = <T extends PaymentMethodType>({ methods, value, onChange 
                             <Text color="white">{method.name}</Text>
                             <div className={cnPayment('Method-MiniInfo')}>
                                 <Text color="gray" size="xs">
-                                    Депозит от {method.minAmount} руб
+                                    {method.commission}% / {method.minAmount}&nbsp;руб — {method.maxAmount}&nbsp;руб
                                 </Text>
                             </div>
                         </div>
@@ -51,5 +51,3 @@ const PaymentMethods = <T extends PaymentMethodType>({ methods, value, onChange 
         </div>
     );
 };
-
-export default PaymentMethods;

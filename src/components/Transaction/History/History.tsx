@@ -12,11 +12,15 @@ export interface HistoryRef {
     openWithdrawHistory: () => void;
 }
 
+export interface HistoryProps {
+    mobile: boolean;
+}
+
 type SelectedTypeType = 'deposits' | 'withdraws';
 
 const cnHistory = cn(s, 'History');
 
-const History = forwardRef<HistoryRef>((_0, ref) => {
+export const History = forwardRef<HistoryRef, HistoryProps>(({ mobile }, ref) => {
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposits');
     useStyles(s);
 
@@ -34,8 +38,8 @@ const History = forwardRef<HistoryRef>((_0, ref) => {
     );
 
     const withdrawsRender = useMemo(
-        () => withdraws?.map(withdraw => <WithdrawHistoryItem key={withdraw.id} withdraw={withdraw} />),
-        [withdraws],
+        () => withdraws?.map(withdraw => <WithdrawHistoryItem key={withdraw.id} withdraw={withdraw} mobile={mobile} />),
+        [mobile, withdraws],
     );
 
     return (
@@ -67,5 +71,3 @@ const History = forwardRef<HistoryRef>((_0, ref) => {
         </div>
     );
 });
-
-export default History;

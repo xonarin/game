@@ -17,6 +17,7 @@ export interface TextIconProps {
     text: TextProps['children'];
     icon: IconProps['type'];
     iconSize?: IconProps['size'];
+    noGap?: boolean;
 
     className?: string;
 }
@@ -34,6 +35,7 @@ const TextIcon: React.FC<TextIconProps> = ({
     text,
     icon,
     iconSize = 'xs',
+    noGap = false,
     className,
 }) => {
     useStyles(s);
@@ -52,7 +54,7 @@ const TextIcon: React.FC<TextIconProps> = ({
             >
                 {text}
             </Text>
-            <Icon className={cnTextIcon('Icon')} type={icon} size={iconSize} />
+            <Icon className={cnTextIcon('Icon', { noGap })} type={icon} size={iconSize} />
         </span>
     );
 };

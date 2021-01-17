@@ -2,19 +2,24 @@ import React, { useCallback } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { Form, Field } from 'react-final-form';
 
+import s from './Payment.scss';
 import { cn } from '../../../utils/bem-css-module';
 import Text from '../../Text/Text';
 import InputWithIcon from '../../inputs/InputWithIcon/InputWithIcon';
 import useDoDepositMutation from '../../../hooks/graphql/payments/useDoDepositMutation';
 import Scrollable from '../../Scrollable/Scrollable';
-import PaymentMethods from './PaymentMethods';
+import { PaymentMethods } from './PaymentMethods';
 import useAvailablePaymentAndWithdrawMethodsQuery from '../../../hooks/graphql/payments/useAvailablePaymentAndWithdrawMethodsQuery';
 import TextIcon from '../../TextIcon/TextIcon';
 import { PaymentMethod } from '../../../__generated__/graphql';
 import { composeValidators, minMaxValidator, requiredValidator } from '../../../utils/validators';
 import CornerLabel from './CornerLabel/CornerLabel';
 import { AmountInput } from '../../inputs/AmountInput';
-import s from './Payment.scss';
+import { PaymentMethodsMobile } from './PaymentMethodsMobile';
+
+export interface DepositFormProps {
+    mobile: boolean;
+}
 
 interface DepositFormValues {
     readonly method?: PaymentMethod;
@@ -28,10 +33,10 @@ const fixedAmountsArray = [100, 1000, 5000, 15000, 50000];
 interface AmountFieldProps {
     minAmount?: number;
     maxAmount?: number;
-    mobile?: boolean;
+    mobile: boolean;
 }
 
-const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile = false }) => (
+const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile }) => (
     <Field
         name="amount"
         validate={composeValidators(requiredValidator(), minMaxValidator(minAmount, maxAmount))}
@@ -56,6 +61,7 @@ const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile 
                                 color={input.value === amount ? 'white' : undefined}
                                 icon="diamond"
                                 iconSize={mobile ? 'xs' : 's'}
+                                noGap={mobile}
                             />
                         </button>
                     ))}
@@ -65,7 +71,7 @@ const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile 
     </Field>
 );
 
-const DepositForm: React.FC = () => {
+export const DepositForm: React.FC<DepositFormProps> = ({ mobile }) => {
     useStyles(s);
 
     const { availablePaymentMethods } = useAvailablePaymentAndWithdrawMethodsQuery();
@@ -88,25 +94,47 @@ const DepositForm: React.FC = () => {
         <Form<DepositFormValues> onSubmit={onSubmit}>
             {({ handleSubmit, values: { method } }) => (
                 <form className={cnPayment()} onSubmit={handleSubmit}>
-                    <Field
-                        name="method"
-                        validate={requiredValidator()}
-                        initialValue={availablePaymentMethods && availablePaymentMethods[0]}
-                    >
-                        {({ input }) => (
-                            <PaymentMethods<PaymentMethod>
-                                methods={availablePaymentMethods}
-                                value={input.value}
-                                onChange={input.onChange}
-                            />
-                        )}
-                    </Field>
+                    {!mobile && (
+                        <Field
+                            name="method"
+                            validate={requiredValidator()}
+                            initialValue={availablePaymentMethods && availablePaymentMethods[0]}
+                        >
+                            {({ input }) => (
+                                <PaymentMethods<PaymentMethod>
+                                    methods={availablePaymentMethods}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                />
+                            )}
+                        </Field>
+                    )}
 
                     <div className={cnPayment('Settings')}>
                         <Scrollable disablePadding>
                             <div>
+                                {mobile && (
+                                    <Field
+                                        name="method"
+                                        validate={requiredValidator()}
+                                        initialValue={availablePaymentMethods && availablePaymentMethods[0]}
+                                    >
+                                        {({ input }) => (
+                                            <PaymentMethodsMobile<PaymentMethod>
+                                                methods={availablePaymentMethods}
+                                                value={input.value}
+                                                onChange={input.onChange}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+
                                 <CornerLabel>Сумма пополнения</CornerLabel>
-                                <AmountField minAmount={method?.minAmount} maxAmount={method?.maxAmount} />
+                                <AmountField
+                                    minAmount={method?.minAmount}
+                                    maxAmount={method?.maxAmount}
+                                    mobile={mobile}
+                                />
 
                                 <button type="submit" className={cnPayment('GoToPayment')}>
                                     Перейти к оплате
@@ -133,5 +161,3 @@ const DepositForm: React.FC = () => {
         </Form>
     );
 };
-
-export default DepositForm;
