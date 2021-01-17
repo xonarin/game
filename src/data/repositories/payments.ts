@@ -76,7 +76,11 @@ class PaymentsRepository extends BaseRepository {
         return user;
     }
 
-    getPaymentsByUserId(userId: string): Promise<UserPayment[]> {
+    getPaymentsByUserId(userId: string, status?: PaymentStatus): Promise<UserPayment[]> {
+        if (status) {
+            return this.db.UserPayment.findAll({ where: { userId, status }, order: [['createdAt', 'DESC']] });
+        }
+
         return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
     }
 

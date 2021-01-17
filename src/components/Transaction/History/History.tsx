@@ -1,11 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
+import s from './History.scss';
 import { cn } from '../../../utils/bem-css-module';
 import DepositHistoryItem from './DepositHistoryItem';
 import WithdrawHistoryItem from './WithdrawHistoryItem';
 import usePaymentsAndWithdrawsQuery from '../../../hooks/graphql/payments/usePaymentsAndWithdrawsQuery';
-import s from './History.scss';
+import Scrollable from '../../Scrollable/Scrollable';
 
 export interface HistoryRef {
     openWithdrawHistory: () => void;
@@ -57,10 +58,12 @@ const History = forwardRef<HistoryRef>((_0, ref) => {
                 </button>
             </div>
 
-            <div className={cnHistory('Deposits')}>
-                {selectedType === 'deposits' && paymentsRender}
-                {selectedType === 'withdraws' && withdrawsRender}
-            </div>
+            <Scrollable disablePadding>
+                <div className={cnHistory('Deposits')}>
+                    {selectedType === 'deposits' && paymentsRender}
+                    {selectedType === 'withdraws' && withdrawsRender}
+                </div>
+            </Scrollable>
         </div>
     );
 });

@@ -13,8 +13,8 @@ import Scrollable from '../../Scrollable/Scrollable';
 import TextIcon from '../../TextIcon/TextIcon';
 import { WithdrawMethod } from '../../../__generated__/graphql';
 import { composeValidators, minMaxValidator, requiredValidator } from '../../../utils/validators';
-import CornerLabel from './CornerLabel/CornerLabel';
 import AmountWithCommissionInput from './AmountWithCommissionInput/AmountWithCommissionInput';
+import CornerLabel from './CornerLabel/CornerLabel';
 
 export interface WithdrawFormProps {
     readonly openWithdrawHistory: () => void;
@@ -75,6 +75,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ openWithdrawHistory 
 
                                 <Field
                                     name="amount"
+                                    initialValue={100}
                                     validate={composeValidators(
                                         requiredValidator(),
                                         minMaxValidator(method?.minAmount, method?.maxAmount),

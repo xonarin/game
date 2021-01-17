@@ -16,7 +16,7 @@ import {
     Query,
     Withdraw,
     WithdrawMethod,
-    WithdrawStatus
+    WithdrawStatus,
 } from '../../../__generated__/graphql';
 import { PaymentMethod as PaymentMethodBackend } from '../../models/PaymentMethod';
 import { repositories } from '../../database';
@@ -25,7 +25,7 @@ import { isAuth } from '../rules';
 import { UserError } from '../../../utils/errors';
 import { md5Hash } from '../../../utils/crypto';
 import config from '../../../config';
-import { UserPayment } from '../../models/UserPayment';
+import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw } from '../../models/UserWithdraw';
 
 type QueryType = Pick<Query, 'availablePaymentMethods' | 'availableWithdrawMethods' | 'payments' | 'withdraws'>;
@@ -88,7 +88,7 @@ export const resolvers: PaymentsResolvers = {
         availablePaymentMethods: () => repositories.payments.getAvailablePaymentMethods(),
         availableWithdrawMethods: () => repositories.payments.getAvailableWithdrawMethods(),
 
-        payments: (_0, _1, { user }) => repositories.payments.getPaymentsByUserId(user!.id),
+        payments: (_0, _1, { user }) => repositories.payments.getPaymentsByUserId(user!.id, UserPaymentStatus.FINISHED),
         withdraws: (_0, _1, { user }) => repositories.payments.getWithdrawsByUserId(user!.id),
     },
     Mutation: {

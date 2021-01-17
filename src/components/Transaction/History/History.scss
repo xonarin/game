@@ -1,29 +1,19 @@
 .History {
     display: flex;
     flex-direction: column;
+    min-height: 0;
     background: #151f32;
-    height: 450px;
-    overflow-y: scroll;
 
     &-Types {
-        margin-top: 20px;
         display: flex;
         justify-content: center;
+        min-height: 0;
+        margin-top: 20px;
         margin-bottom: 20px;
 
         :first-child {
             margin-right: 15px;
         }
-    }
-
-    &::-webkit-scrollbar {
-        width: 3px;
-        height: 8px;
-        background-color: #151f32;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: #4986f5;
     }
 
     &-Type {
@@ -68,6 +58,7 @@
     &-Deposits {
         display: flex;
         flex-direction: column;
+        height: 350px;
     }
 
     &-EmptyHistory {

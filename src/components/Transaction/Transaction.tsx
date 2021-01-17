@@ -1,11 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
+import s from './Transaction.scss';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';
 import { cn } from '../../utils/bem-css-module';
 import History, { HistoryRef } from './History/History';
-import s from './Transaction.scss';
 import DepositForm from './Payment/DepositForm';
 import { WithdrawForm } from './Payment/WithdrawForm';
 
