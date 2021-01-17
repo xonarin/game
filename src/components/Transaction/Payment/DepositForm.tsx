@@ -73,11 +73,8 @@ const DepositForm: React.FC = () => {
 
     const onSubmit: (values: DepositFormValues) => void = useCallback(
         async ({ method, amount }) => {
-            if (!method) {
-                return;
-            }
+            const { data } = await doDeposit(amount, method!.id);
 
-            const { data } = await doDeposit(amount, method.id);
             if (!data) {
                 return;
             }

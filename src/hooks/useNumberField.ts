@@ -1,12 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FieldInputProps } from 'react-final-form';
 
+type ChangeHandlerType = React.ChangeEvent<HTMLInputElement> | string | number;
+
 type UseNumberFieldResult = [
     string,
-    (event: React.ChangeEvent<HTMLInputElement>) => void,
+    (event: ChangeHandlerType) => void,
     (event: React.FocusEvent<HTMLInputElement>) => void,
     (event: React.FocusEvent<HTMLInputElement>) => void,
 ];
+
+const getEventValue = (event: ChangeHandlerType) => {
+    switch (typeof event) {
+        case 'string':
+            return event;
+
+        case 'number':
+            return `${event}`;
+
+        default:
+            return event.currentTarget.value;
+    }
+};
 
 const reNumberInput = /^(\d+\.?\d*)?$/g;
 
@@ -25,8 +40,8 @@ const useNumberField = (
     }, [value]);
 
     const handleChange = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            const currentValue = event.currentTarget.value.replace(/,/g, '.');
+        (event: ChangeHandlerType) => {
+            const currentValue = getEventValue(event).replace(/,/g, '.');
 
             setRawValue(currentValue);
 

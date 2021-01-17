@@ -7,7 +7,7 @@ import { cn } from '../../utils/bem-css-module';
 import History, { HistoryRef } from './History/History';
 import s from './Transaction.scss';
 import DepositForm from './Payment/DepositForm';
-import Withdraw from './Payment/Withdraw';
+import { WithdrawForm } from './Payment/WithdrawForm';
 
 export interface TransactionProps {
     close: () => void;
@@ -66,7 +66,7 @@ export const Transaction: React.FC<TransactionProps> = ({ close }) => {
             </div>
 
             {selectedType === 'deposit' && <DepositForm />}
-            {selectedType === 'withdraw' && <Withdraw openWithdrawHistory={openWithdrawHistory} />}
+            {selectedType === 'withdraw' && <WithdrawForm openWithdrawHistory={openWithdrawHistory} />}
             {selectedType === 'history' && <History ref={historyRef} />}
         </div>
     );
