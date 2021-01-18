@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -12,6 +12,8 @@ import ReferalsTable from './ReferalsTable/ReferalsTable'
 import Diagram from '../../../components/Diagram/Diagram'
 import useReferralsStats from '../../../hooks/graphql/referrals/useReferralsStats';
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
+import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
+import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
 
 const cnReferal = cn(s, 'Referal');
 
@@ -21,6 +23,10 @@ const ReferalsWeb: React.FC = () => {
 
     const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
+
+    const domain = useMemo(() => typeof window !== 'undefined' && window?.location?.host, [typeof window !== 'undefined']);
+    const { referralLink } = useReferralLinkQuery(domain || 'domain.io');
+    const getReferralMoney = useGetReferralMoneyMutation();
 
     useStyles(s);
 
@@ -54,13 +60,13 @@ const ReferalsWeb: React.FC = () => {
                                     Реферальная ссылка
                                 </Text>
                                 <Text color='white'>
-                                    domein.io/ref69522
+                                    {referralLink}
                                 </Text>
                             </div>
                             <Icon type='link' />
                         </div>
 
-                        <Button size="s">Забрать деньги</Button>
+                        <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>
                 </div>
             }
@@ -87,7 +93,7 @@ const ReferalsWeb: React.FC = () => {
                         </div>
                     </div>
                     <div className={cnReferal("Diagram-Container-Content")}>
-                            <Diagram items={amountStats} color="#82ca9d"/>
+                        <Diagram items={amountStats} color="#82ca9d"/>
                     </div>
                 </div>
             }
@@ -97,7 +103,7 @@ const ReferalsWeb: React.FC = () => {
                     <div className={cnReferal("Diagram-Container-Header-Title")}>
                     <Icon type='peoples' />
                     <Text>
-                        ЗАРАБОТАНО:<Text color='green'>{countValue}</Text>
+                        ЗАРАБОТАНО: <Text color='green'>{countValue}</Text>
                     </Text>
                     </div>
 

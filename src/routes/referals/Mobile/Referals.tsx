@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -12,6 +12,8 @@ import Diagram from '../../../components/Diagram/Diagram';
 import LayoutReferalMobile from '../../../components/Layout/Mobile/containers/LayoutReferalMobile';
 import useReferralsStats from "../../../hooks/graphql/referrals/useReferralsStats";
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
+import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
+import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
 
 const cnReferal = cn(s, 'Referal');
 
@@ -23,6 +25,10 @@ const ReferalsMobile: React.FC = () => {
 
     const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
+
+    const domain = useMemo(() => typeof window !== 'undefined' && window?.location?.host, [typeof window !== 'undefined']);
+    const { referralLink } = useReferralLinkQuery(domain || 'domain.io');
+    const getReferralMoney = useGetReferralMoneyMutation();
 
     useStyles(s);
 
@@ -56,12 +62,12 @@ const ReferalsMobile: React.FC = () => {
                         <div className={cnReferal('Info-Link')}>
                             <div className={cnReferal('Info-Link-Main')}>
                                 <Text color="white">Реферальная ссылка</Text>
-                                <Text color="white">domein.io/ref69522</Text>
+                                <Text color="white">{referralLink}</Text>
                             </div>
                             <Icon type="link" />
                         </div>
 
-                        <Button size="s">Забрать деньги</Button>
+                        <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>
                 </div>
             }

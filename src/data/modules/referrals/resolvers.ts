@@ -5,8 +5,11 @@ import { and, IRules } from 'graphql-shield';
 import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
 import {
+    GetReferralMoneyMutationVariables,
     GraphDataEntry,
+    Mutation,
     Query,
+    QueryReferralLinkArgs,
     QueryReferralsArgs,
     QueryReferralsStatsArgs,
     Referral,
@@ -18,16 +21,23 @@ import { isAuth } from '../rules';
 import { checkReferralsArgs } from './rules';
 import { moneyRound } from '../../../utils/money';
 
-type QueryType = Pick<Query, 'referrals' | 'referralsStats'>;
+type QueryType = Pick<Query, 'referrals' | 'referralsStats' | 'referralLink'>;
+type MutationType = Pick<Mutation, 'getReferralMoney'>;
 
 interface QueryMapping {
     referrals: Resolver<ReferralsPayload, QueryReferralsArgs>;
     referralsStats: Resolver<ReferralsStatsPayload, QueryReferralsStatsArgs>;
+    referralLink: Resolver<string, QueryReferralLinkArgs>;
+}
+
+interface MutationMapping {
+    getReferralMoney: Resolver<string, GetReferralMoneyMutationVariables>;
 }
 
 type ReferralsResolvers = Resolvers<
     {
         Query: TypeResolvers<QueryType, QueryMapping>;
+        Mutation: TypeResolvers<MutationType, MutationMapping>;
         Referral: TypeResolvers<Referral, {}, Referral>;
         GraphData: TypeResolvers<GraphDataEntry, {}, GraphDataEntry>;
         ReferralsStatsPayload: TypeResolvers<ReferralsStatsPayload, {}, ReferralsStatsPayload>;
@@ -41,6 +51,10 @@ export const rules: IRules = {
     Query: {
         referrals: and(isAuth, checkReferralsArgs),
         referralsStats: isAuth,
+        referralLink: isAuth,
+    },
+    Mutation: {
+        getReferralMoney: isAuth,
     },
 };
 
@@ -73,6 +87,14 @@ export const resolvers: ReferralsResolvers = {
                 mainValue: moneyRound(entries.reduce((acc, entry) => acc + entry.value, 0)),
                 entries,
             };
+        },
+        referralLink: async (_0, { domain }, { user }) => `${domain}/ref${user!.id}`,
+    },
+    Mutation: {
+        getReferralMoney: async (_0, _1, { user, repositories }) => {
+            const newUser = await repositories.users.getReferralMoney(user!.id);
+
+            return newUser.refMoney;
         },
     },
     URL: GraphQLURL,

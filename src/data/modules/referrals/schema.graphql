@@ -8,6 +8,12 @@ schema {
 type Query {
     referrals(offset: Int): ReferralsPayload!
     referralsStats(type: RefStatsType!, period: RefStatsPeriod!): ReferralsStatsPayload!
+
+    referralLink(domain: String!): String!
+}
+
+type Mutation {
+    getReferralMoney: Float!
 }
 
 enum RefStatsType {

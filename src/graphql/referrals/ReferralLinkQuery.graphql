@@ -1,0 +1,3 @@
+query ReferralLink($domain: String!) {
+    referralLink(domain: $domain)
+}

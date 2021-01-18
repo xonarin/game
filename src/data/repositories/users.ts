@@ -293,6 +293,21 @@ class UsersRepository extends BaseRepository {
         });
     }
 
+    getReferralMoney(userId: string) {
+        return this.db.sequelize.transaction(async transaction => {
+            const user = await this.getUserByIdStrict(userId, transaction);
+
+            if (user.refMoney < 15) {
+                throw new UserError('NOT_ENOUGH_REF_MONEY');
+            }
+
+            await this.giveMoney(userId, user.refMoney, transaction);
+            await user.update({ refMoney: 0 }, { transaction });
+
+            return user;
+        });
+    }
+
     async updateClientSeed(userId: string, clientSeed?: string): Promise<User> {
         const user = await this.getUserByIdStrict(userId);
 
