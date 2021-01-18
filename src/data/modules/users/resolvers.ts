@@ -16,10 +16,11 @@ import { User as UserBackend } from '../../models/User';
 import { isAuth } from '../rules';
 import { checkUpdateClientSeedArgs } from './rules';
 import { sha256Hash } from '../../../utils/crypto';
+import { database } from '../../database';
 
 export type OriginUserParent = UserBackend;
 
-type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay'>;
+type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay' | 'usersTotal'>;
 type MutationType = Pick<Mutation, 'updateClientSeed' | 'updateServerSeed'>;
 type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money'>;
 
@@ -68,6 +69,7 @@ export const resolvers: UsersResolvers = {
                 nonce: user!.nonce,
             };
         },
+        usersTotal: () => database.User.count(),
     },
     Mutation: {
         updateClientSeed: async (_0, { clientSeed }, { user, repositories }) => {

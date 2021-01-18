@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import {
     ClassicGameState,
     CurrentClassicGameDocument,
     CurrentClassicGameQuery,
-    MeDocument,
-    MeQuery,
     PlacedClassicGameBetDocument,
     PlacedClassicGameBetSubscription,
     StartedClassicGameDocument,

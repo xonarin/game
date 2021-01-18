@@ -11,6 +11,8 @@ import PeopleCircles from './PeopleCircles/PeopleCircles';
 import StatsItem from './StatsItem/StatsItem';
 import TextBlock from '../../../components/TextBlock/TextBlock';
 import useOnlineDataQuery from '../../../hooks/graphql/liveData/useOnlineDataQuery';
+import useUsersTotalAndPayedTotalQuery from '../../../hooks/graphql/useUsersTotalAndPayedTotalQuery';
+import { cutNumberForHuman } from '../../../utils/strings';
 
 const cnWelcomeBanner = cn(s, 'WelcomeBanner');
 
@@ -18,7 +20,10 @@ const WelcomeBanner: React.FC = () => {
     useStyles(s);
 
     const [banner, inView] = useInView({ unobserveOnEnter: true });
+
+    const { usersTotal, payedTotal } = useUsersTotalAndPayedTotalQuery();
     const { online } = useOnlineDataQuery();
+
     return (
         <section className={cnWelcomeBanner({ inView })} ref={banner}>
             <div className={cnWelcomeBanner('Container')}>
@@ -27,40 +32,54 @@ const WelcomeBanner: React.FC = () => {
                         <Title className={cnWelcomeBanner('Title')} color="white">
                             Играйте, соревнуйтесь и зарабатывайте!
                         </Title>
+
                         <TextBlock className={cnWelcomeBanner('TextBlock')}>
                             Выберите игру, кидайте кости, крутите барабан и выигрывайте реальные деньги каждый день
                         </TextBlock>
                     </div>
+
                     <div className={cnWelcomeBanner('MainBottom')}>
                         <Button className={cnWelcomeBanner('PlayButton')} shape="alphaRight">
                             Начать играть
                         </Button>
+
                         <div className={cnWelcomeBanner('MainBottomRight')}>
                             <Text size="m" color="white">
                                 Уже играют:
                             </Text>
+
                             <PeopleCircles className={cnWelcomeBanner('PeopleCircles')} />
+
                             <Text size="m" color="green">
-                                +583K
+                                {usersTotal !== undefined && `+${cutNumberForHuman(usersTotal, 0)}`}
                             </Text>
                         </div>
                     </div>
                 </main>
+
                 <div className={cnWelcomeBanner('Stats')}>
                     <StatsItem
                         className={cnWelcomeBanner('StatsItem')}
                         label="Пользователей"
                         icon="user"
-                        value="550 000"
+                        value={usersTotal?.toLocaleString()}
                     />
+
                     <StatsItem
                         className={cnWelcomeBanner('StatsItem')}
                         label="Онлайн"
                         icon="lightning"
-                        value={online?.online}
+                        value={online?.online?.toLocaleString()}
                     />
-                    <StatsItem className={cnWelcomeBanner('StatsItem')} label="Выплачено" icon="rub" value="962 275" />
+
+                    <StatsItem
+                        className={cnWelcomeBanner('StatsItem')}
+                        label="Выплачено"
+                        icon="rub"
+                        value={payedTotal?.toLocaleString()}
+                    />
                 </div>
+
                 <div className={cnWelcomeBanner('NotebookImage')} />
             </div>
         </section>

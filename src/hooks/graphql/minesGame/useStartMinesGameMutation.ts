@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 import { FetchResult } from '@apollo/client';
 
 import {
-    MeDocument,
-    MeQuery,
     StartMinesGameDocument,
     StartMinesGameInput,
     StartMinesGameMutation,

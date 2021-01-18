@@ -1,0 +1,4 @@
+query UsersTotalAndPayedTotal {
+    usersTotal
+    payedTotal
+}

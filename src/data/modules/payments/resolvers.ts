@@ -26,9 +26,12 @@ import { UserError } from '../../../utils/errors';
 import { md5Hash } from '../../../utils/crypto';
 import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
-import { UserWithdraw } from '../../models/UserWithdraw';
+import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
 
-type QueryType = Pick<Query, 'availablePaymentMethods' | 'availableWithdrawMethods' | 'payments' | 'withdraws'>;
+type QueryType = Pick<
+    Query,
+    'availablePaymentMethods' | 'availableWithdrawMethods' | 'payments' | 'withdraws' | 'payedTotal'
+>;
 type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw'>;
 
 type PaymentMethodType = Pick<
@@ -90,6 +93,12 @@ export const resolvers: PaymentsResolvers = {
 
         payments: (_0, _1, { user }) => repositories.payments.getPaymentsByUserId(user!.id, UserPaymentStatus.FINISHED),
         withdraws: (_0, _1, { user }) => repositories.payments.getWithdrawsByUserId(user!.id),
+
+        payedTotal: async () => {
+            const withdraws = await repositories.payments.getWithdrawsByStatus(WithdrawStatusBackend.SUCCESS);
+
+            return withdraws.reduce((sum, withdraw) => sum + withdraw.sum, 0);
+        },
     },
     Mutation: {
         doDeposit: async (_0, { amount, method }, { user }) => {

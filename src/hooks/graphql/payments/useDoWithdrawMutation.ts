@@ -1,4 +1,4 @@
-import { FetchResult, Reference, useMutation } from '@apollo/client';
+import { FetchResult, useMutation } from '@apollo/client';
 
 import { DoWithdrawDocument, DoWithdrawMutation, MutationDoWithdrawArgs } from '../../../__generated__/graphql';
 

@@ -4,13 +4,8 @@ import {
     EndMinesGameDocument,
     EndMinesGameMutation,
     EndMinesGameMutationVariables,
-    MeDocument,
-    MeQuery,
-    MinesGameConfigurationDocument,
-    MinesGameConfigurationQuery,
 } from '../../../__generated__/graphql';
 import useMutationWithNotify from '../useMutationWithNotify';
-import { countOnes } from '../../../utils/number';
 
 export interface UseEndMinesGameMutationResult {
     (): Promise<FetchResult<EndMinesGameMutation>>;

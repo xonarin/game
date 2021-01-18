@@ -4,6 +4,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './HitsItem.scss';
 import { cn } from '../../../../../../utils/bem-css-module';
 import Text from '../../../../../../components/Text/Text';
+import { cutNumberForHuman } from '../../../../../../utils/strings';
 
 export interface HitsItemProps {
     coef: number;
@@ -16,14 +17,7 @@ const cnHitsItem = cn(s, 'HitsItem');
 const HitsItem: React.FC<HitsItemProps> = ({ coef, hit, isCurrent }) => {
     useStyles(s);
 
-    let transformedCoef;
-    if (coef >= 1000000) {
-        transformedCoef = `${Number((coef / 1000000).toFixed(2))}M`;
-    } else if (coef >= 1000) {
-        transformedCoef = `${Number((coef / 1000).toFixed(2))}K`;
-    } else {
-        transformedCoef = Number(coef.toFixed(2));
-    }
+    const transformedCoef = cutNumberForHuman(coef);
 
     return (
         <div className={cnHitsItem({ isCurrent })}>

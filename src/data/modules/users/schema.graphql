@@ -8,6 +8,7 @@ type Query {
     me: User
     user(userId: ID!): User
     fairPlay: FairPlayPayload!
+    usersTotal: Int!
 }
 
 type Mutation {
