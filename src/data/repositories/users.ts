@@ -86,10 +86,6 @@ class UsersRepository extends BaseRepository {
                     'user::maxBalanceWithoutDeposits',
                 );
 
-                if (user.money === maxBalance) {
-                    throw new UserError('MAX_BALANCE_REACHED');
-                }
-
                 return user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
             }
 

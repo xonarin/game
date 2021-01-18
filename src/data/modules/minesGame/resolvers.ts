@@ -75,6 +75,12 @@ export const resolvers: MinesGameResolvers = {
                 throw new UserError('MINES_GAME_ALREADY_ACTIVE');
             }
 
+            const maxBet = await repositories.settings.getSettingAsNumber('mines::maxBetAmount');
+
+            if (betAmount > maxBet) {
+                throw new UserError('MINES_GAME_BET_TOO_HIGH');
+            }
+
             await repositories.users.withdrawMoney(user!.id, betAmount);
 
             const createdGame = await repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
@@ -84,24 +90,7 @@ export const resolvers: MinesGameResolvers = {
             return createdGame;
         },
         endMinesGame: async (_0, _1, { user, repositories }) => {
-            const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
-
-            if (!currentGame) {
-                throw new UserError('NO_ACTIVE_MINES_GAME');
-            }
-
-            const madeStepsCount = countOnes(currentGame.stepsConf);
-            const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
-
-            // Increase turnover
-            const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
-            if (coef >= minTurnoverCoef) {
-                await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
-            }
-
-            await repositories.users.giveMoney(user!.id, currentGame.betAmount * coef);
-
-            return repositories.minesGames.endGame(currentGame.id);
+            return repositories.minesGames.endGame(user!.id);
         },
         makeMinesGameStep: async (_0, { cell }, { user, repositories }) => {
             const currentGame = await repositories.minesGames.getCurrentGame(user!.id);

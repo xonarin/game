@@ -117,11 +117,12 @@ class PaymentsRepository extends BaseRepository {
             const commission = (commissionPercent * payment.sum) / 100;
             const finalSum = payment.sum - commission;
 
-            await this.repositories.users.giveMoney(payment.userId, finalSum, transaction);
             await payment.update(
                 { methodId, status: PaymentStatus.FINISHED, commission: commissionPercent },
                 { transaction },
             );
+
+            await this.repositories.users.giveMoney(payment.userId, finalSum, transaction);
         });
     }
 

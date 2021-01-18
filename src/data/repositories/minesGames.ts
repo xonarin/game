@@ -4,9 +4,10 @@ import { Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { MinesGame, MinesGameStatus } from '../models/MinesGame';
-import { FIELD_SIZE } from '../../utils/mines';
+import { FIELD_SIZE, getMinesCoef } from '../../utils/mines';
 import { UserError } from '../../utils/errors';
 import { addMinesGame } from '../../services/LiveData/LiveDataStorage';
+import { countOnes } from '../../utils/number';
 
 class MinesGamesRepository extends BaseRepository {
     async getGameById(gameId: string, transaction?: Transaction): Promise<MinesGame | null> {
@@ -65,8 +66,25 @@ class MinesGamesRepository extends BaseRepository {
         });
     }
 
-    async endGame(gameId: string): Promise<MinesGame> {
-        const game = await this.getGameByIdStrict(gameId);
+    async endGame(userId: string): Promise<MinesGame> {
+        const currentGame = await this.repositories.minesGames.getCurrentGame(userId);
+
+        if (!currentGame) {
+            throw new UserError('NO_ACTIVE_MINES_GAME');
+        }
+
+        const madeStepsCount = countOnes(currentGame.stepsConf);
+        const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
+
+        // Increase turnover
+        const minTurnoverCoef = await this.repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+        if (coef >= minTurnoverCoef) {
+            await this.repositories.users.increaseTurnover(userId, currentGame.betAmount);
+        }
+
+        await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef);
+
+        const game = await this.getGameByIdStrict(currentGame.id);
         await game.update({ status: MinesGameStatus.Ended });
 
         await game.getUser();
@@ -78,7 +96,7 @@ class MinesGamesRepository extends BaseRepository {
     async makeStep(gameId: string, cell: number): Promise<MinesGame> {
         const stepMask = 1 << cell;
 
-        return this.db.sequelize.transaction(async transaction => {
+        const minesGame: MinesGame = await this.db.sequelize.transaction(async transaction => {
             const game = await this.getGameByIdStrict(gameId, transaction);
 
             if ((game.stepsConf & stepMask) !== 0) {
@@ -100,6 +118,18 @@ class MinesGamesRepository extends BaseRepository {
 
             return game;
         });
+
+        const madeStepsCount = countOnes(minesGame.stepsConf);
+        const coef = getMinesCoef(minesGame.bombsCount, madeStepsCount);
+        const profit = minesGame.betAmount * coef;
+
+        const maxProfit = await this.repositories.settings.getSettingAsNumber('mines::maxProfitAmount');
+
+        if (profit >= maxProfit) {
+            return this.endGame(minesGame.userId);
+        }
+
+        return minesGame;
     }
 
     async getLastGames(limit: number = 10): Promise<MinesGame[]> {

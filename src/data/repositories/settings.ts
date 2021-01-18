@@ -31,6 +31,8 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'payments::minBetToWithdraw': ['100', 'Минимальная суммарная ставка для вывода'],
     'payments::minDepositToWithdraw': ['50', 'Минимальная сумма депозита для вывода'],
     'user::maxBalanceWithoutDeposits': ['200', 'Максимальный баланс пользователя без депозитов'],
+    'mines::maxBetAmount': ['100', 'Максимальная ставка в минах'],
+    'mines::maxProfitAmount': ['1000', 'Максимальный выигрыш в минах'],
 };
 
 class SettingsRepository extends BaseRepository {

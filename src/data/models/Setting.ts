@@ -31,6 +31,8 @@ export type PaymentsSettings =
 
 export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
+export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
+
 export type SettingName =
     | ClassicGameSettingName
     | ChatSettingName
@@ -38,7 +40,8 @@ export type SettingName =
     | AppSettingsName
     | TournamentSettingsName
     | PaymentsSettings
-    | UserSettings;
+    | UserSettings
+    | MinesSettings;
 
 export class SettingValue {
     private readonly value: string | null;

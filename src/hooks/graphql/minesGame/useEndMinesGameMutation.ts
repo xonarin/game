@@ -31,30 +31,6 @@ const useEndMinesGameMutation = (): UseEndMinesGameMutationResult => {
                         activeMinesGame: (_0, { toReference }) => toReference(game),
                     },
                 });
-
-                const meData = cache.readQuery<MeQuery>({
-                    query: MeDocument,
-                });
-                const minesGameConfigurationData = cache.readQuery<MinesGameConfigurationQuery>({
-                    query: MinesGameConfigurationDocument,
-                });
-                if (!meData || !meData.me || !minesGameConfigurationData) return;
-
-                const {
-                    minesGameConfiguration: { minBombsCount, coefs },
-                } = minesGameConfigurationData;
-
-                const madeStepsCount = countOnes(game.stepsConf);
-                const coef = coefs[game.bombsCount - minBombsCount][madeStepsCount - 1];
-
-                cache.modify({
-                    id: cache.identify(meData.me),
-                    fields: {
-                        money: money => {
-                            return Number((money + game.betAmount * coef).toFixed(2));
-                        },
-                    },
-                });
             },
         },
     );

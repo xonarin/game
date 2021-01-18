@@ -28,20 +28,6 @@ const useStartMinesGameMutation = (): UseStartMinesGameMutationResult => {
                         activeMinesGame: (_0, { toReference }) => toReference(data.startMinesGame),
                     },
                 });
-
-                const meData = cache.readQuery<MeQuery>({
-                    query: MeDocument,
-                });
-                if (!meData || !meData.me) return;
-
-                cache.modify({
-                    id: cache.identify(meData.me),
-                    fields: {
-                        money: money => {
-                            return Number((money - data.startMinesGame.betAmount).toFixed(2));
-                        },
-                    },
-                });
             },
         },
     );

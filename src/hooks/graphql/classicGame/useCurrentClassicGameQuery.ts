@@ -18,7 +18,6 @@ import {
     UpdatedClassicGameTimerDocument,
     UpdatedClassicGameTimerSubscription,
 } from '../../../__generated__/graphql';
-import updateMeBalance from '../users/updateMeBalance';
 
 export interface UserCurrentClassicGameQueryResult {
     loading: boolean;
@@ -138,21 +137,6 @@ const useCurrentClassicGameQuery = (): UserCurrentClassicGameQueryResult => {
 
         return () => subscriptions.forEach(unsubscribe => unsubscribe());
     }, [subscribeToMore]);
-
-    useSubscription<SwitchedToClassicGameStateEndedSubscription>(SwitchedToClassicGameStateEndedDocument, {
-        onSubscriptionData: ({ client, subscriptionData }) => {
-            if (!subscriptionData.data?.switchedToClassicGameStateEnded) return;
-
-            const {
-                switchedToClassicGameStateEnded: { commission, winnerId, fund },
-            } = subscriptionData.data;
-            const queryData = client.readQuery<MeQuery>({ query: MeDocument });
-
-            if (winnerId === queryData?.me?.id) {
-                updateMeBalance(client.cache, fund - (fund * commission) / 100);
-            }
-        },
-    });
 
     return {
         loading,
