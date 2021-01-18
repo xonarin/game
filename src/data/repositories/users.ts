@@ -7,6 +7,7 @@ import { RefStatus, SocialType, User } from '../models/User';
 import { UserError } from '../../utils/errors';
 import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/graphql';
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
+import { PaymentStatus } from '../models/UserPayment';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
@@ -77,6 +78,20 @@ class UsersRepository extends BaseRepository {
     async giveMoney(userId: string, amount: number, transaction?: Transaction): Promise<User> {
         const f = async (tr: Transaction) => {
             const user = await this.getUserByIdStrict(userId, tr);
+
+            const payments = await this.repositories.payments.getPaymentsByUserId(userId, PaymentStatus.FINISHED, tr);
+
+            if (payments.length === 0) {
+                const maxBalance = await this.repositories.settings.getSettingAsNumber(
+                    'user::maxBalanceWithoutDeposits',
+                );
+
+                if (user.money === maxBalance) {
+                    throw new UserError('MAX_BALANCE_REACHED');
+                }
+
+                return user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
+            }
 
             return user.update({ money: user.money + amount }, { transaction: tr });
         };

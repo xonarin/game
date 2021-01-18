@@ -76,12 +76,16 @@ class PaymentsRepository extends BaseRepository {
         return user;
     }
 
-    getPaymentsByUserId(userId: string, status?: PaymentStatus): Promise<UserPayment[]> {
+    getPaymentsByUserId(userId: string, status?: PaymentStatus, transaction?: Transaction): Promise<UserPayment[]> {
         if (status) {
-            return this.db.UserPayment.findAll({ where: { userId, status }, order: [['createdAt', 'DESC']] });
+            return this.db.UserPayment.findAll({
+                where: { userId, status },
+                order: [['createdAt', 'DESC']],
+                transaction,
+            });
         }
 
-        return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+        return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']], transaction });
     }
 
     async createPayment(userId: string, methodId: string, amount: number): Promise<string> {

@@ -28,13 +28,16 @@ export type PaymentsSettings =
     | 'payments::minBetToWithdraw'
     | 'payments::minDepositToWithdraw';
 
+export type UserSettings = 'user::maxBalanceWithoutDeposits';
+
 export type SettingName =
     | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName
     | AppSettingsName
     | TournamentSettingsName
-    | PaymentsSettings;
+    | PaymentsSettings
+    | UserSettings;
 
 export class SettingValue {
     private readonly value: string | null;

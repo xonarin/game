@@ -29,6 +29,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'payments::defaultDepositCommission': ['5', 'Процент комиссии по-умолчанию для неизвестных способов оплаты'],
     'payments::minBetToWithdraw': ['100', 'Минимальная суммарная ставка для вывода'],
     'payments::minDepositToWithdraw': ['50', 'Минимальная сумма депозита для вывода'],
+    'user::maxBalanceWithoutDeposits': ['200', 'Максимальный баланс пользователя без депозитов'],
 };
 
 class SettingsRepository extends BaseRepository {
