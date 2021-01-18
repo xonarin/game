@@ -162,27 +162,37 @@ export class ClassicGameService {
             throw new UserError('CLASSIC_GAME_MIN_BET_PRICE_ERROR');
         }
 
+        const maxSummaryBet = await repositories.settings.getSettingAsNumber('classic::maxSummaryBet');
+        const currentSummaryBet = this.players.get(user.id)?.betsPrice || new Big(0);
+
+        if (currentSummaryBet.eq(maxSummaryBet)) {
+            throw new UserError('CLASSIC_GAME_MAX_BET_REACHED');
+        }
+
+        const tmpAmount = currentSummaryBet.plus(new Big(amount));
+        const newAmount = Number((tmpAmount.gt(maxSummaryBet) ? maxSummaryBet : tmpAmount).toFixed(2));
+
+        await this.betsLocker.lock();
+
         try {
-            await this.betsLocker.lock();
+            await repositories.users.withdrawMoney(user.id, newAmount);
 
-            await repositories.users.withdrawMoney(user.id, amount);
-
-            const newLastTicket = Math.round(this.currentLastTicket + amount * 100);
+            const newLastTicket = Math.round(this.currentLastTicket + newAmount * 100);
             const { id: betId, firstTicket, lastTicket } = await repositories.classicGameBets.createBet(
                 this.gameId,
                 user.id,
-                amount,
+                newAmount,
                 this.currentLastTicket + 1,
                 newLastTicket,
             );
 
-            this.fund = this.fund.plus(amount);
+            this.fund = this.fund.plus(newAmount);
             this.currentLastTicket = newLastTicket;
 
             const bet: ClassicGameBet = {
                 betId,
                 userId: user.id,
-                amount,
+                amount: newAmount,
                 firstTicket,
                 lastTicket,
             };
@@ -193,7 +203,7 @@ export class ClassicGameService {
                 userId: user.id,
                 username: user.username,
                 avatar: user.avatar,
-                betsPrice: currentPlayer ? currentPlayer.betsPrice.plus(amount) : new Big(amount),
+                betsPrice: currentPlayer ? currentPlayer.betsPrice.plus(newAmount) : new Big(newAmount),
                 chance: 0,
                 startDegree: 0,
                 endDegree: 0,

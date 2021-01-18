@@ -21,8 +21,11 @@ const usePlaceClassicGameBetMutation = (): UsePlaceClassicGameBetMutationResult 
         update: (cache, { data: mutationData }) => {
             if (!mutationData) return;
 
-            const { placeClassicGameBet: placedBet } = mutationData;
-            updateMeBalance(cache, -placedBet);
+            const {
+                placeClassicGameBet: { amount },
+            } = mutationData;
+
+            updateMeBalance(cache, -amount);
         },
     });
 

@@ -9,7 +9,8 @@ export type ClassicGameSettingName =
     | 'classic::minBetAmount'
     | 'classic::minPlayersToStartCountdown'
     | 'classic::commissionPercent'
-    | 'classic::turnsCount';
+    | 'classic::turnsCount'
+    | 'classic::maxSummaryBet';
 
 export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage';
 
