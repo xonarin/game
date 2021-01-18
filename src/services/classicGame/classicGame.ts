@@ -171,7 +171,9 @@ export class ClassicGameService {
         }
 
         const tmpAmount = currentSummaryBet.plus(new Big(amount));
-        const newAmount = Number((tmpAmount.gt(maxSummaryBet) ? maxSummaryBet : tmpAmount).toFixed(2));
+        const newAmount = Number(
+            (tmpAmount.gt(maxSummaryBet) ? new Big(maxSummaryBet).minus(currentSummaryBet) : amount).toFixed(2),
+        );
 
         await this.betsLocker.lock();
 
