@@ -21,8 +21,8 @@ class ClassicGamesRepository extends BaseRepository {
         return game;
     }
 
-    async createGame(randomNumber: string, hash: string): Promise<ClassicGame> {
-        return this.db.ClassicGame.create({ randomNumber, hash });
+    async createGame(randomNumber: string, hash: string, commission: number): Promise<ClassicGame> {
+        return this.db.ClassicGame.create({ randomNumber, hash, commission });
     }
 
     async updateState(gameId: string, state: ClassicGameState): Promise<ClassicGame> {

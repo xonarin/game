@@ -21,6 +21,7 @@ export enum ClassicGameState {
 
 export interface ClassicGame extends Model {
     readonly id: string;
+    readonly commission: number;
     readonly state: ClassicGameState;
     readonly randomNumber: string;
     readonly hash: string;
@@ -67,6 +68,11 @@ export const initClassicGame = (sequelize: Sequelize): ClassicGameStatic => {
             get(this: ClassicGame) {
                 return ((this.getDataValue('id') as unknown) as number).toString();
             },
+        },
+
+        commission: {
+            type: DataTypes.DOUBLE(5, 2),
+            allowNull: false,
         },
 
         state: {

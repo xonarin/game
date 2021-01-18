@@ -37,6 +37,7 @@ class ClassicGameStateCountdown extends ClassicGameState {
         return {
             minBetAmount: this.game.minBetAmount,
             gameId: this.game.gameId,
+            commission: this.game.commissionPercent,
             state: 'Countdown',
             hash: this.game.hash,
             fund: Number(this.game.fund.toFixed(2)),

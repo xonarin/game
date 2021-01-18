@@ -1,5 +1,6 @@
 fragment ClassicGamesHistoryItem on ClassicGamesHistoryItem {
     id
+    commission
     randomNumber
     fund
     winnerId

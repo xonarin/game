@@ -57,6 +57,7 @@ type ClassicGameType = Pick<
     ClassicGame,
     | 'minBetAmount'
     | 'id'
+    | 'commission'
     | 'state'
     | 'randomNumber'
     | 'hash'
@@ -78,6 +79,7 @@ type ClassicGamePlayerType = Pick<
 type ClassicGamesHistoryItemType = Pick<
     ClassicGamesHistoryItem,
     | 'id'
+    | 'commission'
     | 'randomNumber'
     | 'fund'
     | 'winnerId'
@@ -192,6 +194,7 @@ export const resolvers: ClassicGameResolvers = {
         id: snapshot => {
             return snapshot.gameId;
         },
+        commission: snapshot => snapshot.commission,
         state: snapshot => {
             return snapshot.state;
         },

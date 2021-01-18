@@ -48,6 +48,7 @@ class ClassicGameStateEnded extends ClassicGameState {
             );
             await pubsub.publish('switchedToClassicGameStateEnded', {
                 id: this.game.gameId,
+                commission: this.game.commissionPercent,
                 randomNumber: this.game.randomNumber.toFixed(18),
                 fund: Number(this.game.fund.toFixed(2)),
                 winnerId,
@@ -76,6 +77,7 @@ class ClassicGameStateEnded extends ClassicGameState {
         return {
             minBetAmount: this.game.minBetAmount,
             gameId: this.game.gameId,
+            commission: this.game.commissionPercent,
             state: 'Ended',
             randomNumber: this.game.randomNumber,
             hash: this.game.hash,

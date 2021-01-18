@@ -5,7 +5,7 @@ import { MeDocument, MeQuery } from '../../../__generated__/graphql';
 const updateMeBalance = <T>(cache: ApolloCache<T>, diff: number) => {
     const meQuery = cache.readQuery<MeQuery>({ query: MeDocument });
 
-    if (meQuery?.me?.money) {
+    if (typeof meQuery?.me?.money === 'number') {
         cache.writeQuery({
             query: MeDocument,
             data: {

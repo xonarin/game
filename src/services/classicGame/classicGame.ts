@@ -36,6 +36,7 @@ export interface ClassicGameClientSnapshot {
     minBetAmount: number;
     gameId: string;
     state: string;
+    commission: number;
     randomNumber?: number;
     hash: string;
     fund: number;
@@ -129,7 +130,7 @@ export class ClassicGameService {
         this.randomNumber = Number(randomNumber);
         this.hash = sha256Hash(randomNumber);
 
-        const game = await repositories.classicGames.createGame(randomNumber, this.hash);
+        const game = await repositories.classicGames.createGame(randomNumber, this.hash, this.commissionPercent);
         this.gameId = game.id;
 
         this.fund = new Big(0);

@@ -51,6 +51,7 @@ type ClassicGameBet {
 type ClassicGame {
     minBetAmount: Float!
     id: ID!
+    commission: Float!
     state: ClassicGameState!
     randomNumber: String
     hash: String!
@@ -70,6 +71,7 @@ type ClassicGame {
 
 type ClassicGamesHistoryItem {
     id: ID!
+    commission: Float!
     randomNumber: String!
     fund: Float!
     winnerId: ID!
