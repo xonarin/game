@@ -1,0 +1,3 @@
+mutation CreatePromoCode($promoCode: String!, $amount: Int!, $maxUses: Int!) {
+    createPromoCode(promoCode: $promoCode, amount: $amount, maxUses: $maxUses)
+}

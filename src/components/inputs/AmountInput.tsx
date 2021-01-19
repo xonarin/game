@@ -4,6 +4,7 @@ import { FieldInputProps } from 'react-final-form';
 import useNumberField from '../../hooks/useNumberField';
 
 export interface AmountInputProps {
+    className?: string;
     placeholder?: string;
     maxFractionDigits?: number;
 
@@ -14,6 +15,7 @@ export interface AmountInputProps {
 }
 
 export const AmountInput: React.FC<AmountInputProps> = ({
+    className,
     placeholder,
     maxFractionDigits = 2,
     value,
@@ -31,6 +33,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
 
     return (
         <input
+            className={className}
             value={rawValue}
             onChange={handleChange}
             onFocus={handleFocus}

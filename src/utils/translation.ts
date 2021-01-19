@@ -1,5 +1,6 @@
 type TranslationCode =
     | 'ERROR_TITLE'
+    | 'SUCCESS_TITLE'
     | 'NOT_AUTH'
     | 'NOT_ADMIN_OR_MODERATOR'
     | 'FREQUENT_REQUESTS'
@@ -23,6 +24,10 @@ const translations: Record<TranslationCode, Translation> = {
     // Common
     ERROR_TITLE: {
         ru: 'Ошибка',
+    },
+
+    SUCCESS_TITLE: {
+        ru: 'Успех',
     },
 
     // Common errors

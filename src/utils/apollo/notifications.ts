@@ -1,13 +1,22 @@
 import { Notification, NotificationLevel } from '../../__generated__/graphql';
-import { getTranslation, getTranslationNotStrict } from '../translation';
+import { getTranslationNotStrict } from '../translation';
 
-export const makeNotificationFromError = (errorMessage: string, autoDismiss: number = 5000): Notification => ({
+export const makeNotification = (
+    title: string,
+    message: string,
+    level: NotificationLevel,
+    autoDismiss: number = 5000,
+): Notification => ({
     __typename: 'Notification',
     id: Date.now().toString(),
-    title: getTranslation('ERROR_TITLE'),
-    message: getTranslationNotStrict(errorMessage),
-    level: NotificationLevel.Error,
+    title: getTranslationNotStrict(title),
+    message: getTranslationNotStrict(message),
+    level,
     autoDismiss,
 });
 
-export default { makeNotification: makeNotificationFromError };
+export const makeNotificationFromError = (errorMessage: string, autoDismiss?: number): Notification =>
+    makeNotification('ERROR_TITLE', errorMessage, NotificationLevel.Error, autoDismiss);
+
+export const makeSuccessNotification = (message: string, autoDismiss?: number): Notification =>
+    makeNotification('SUCCESS_TITLE', message, NotificationLevel.Success, autoDismiss);

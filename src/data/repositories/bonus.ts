@@ -1,9 +1,14 @@
 import { DateTime } from 'luxon';
+import { UniqueConstraintError } from 'sequelize';
 
 import BaseRepository from './base';
 import { Bonus } from '../models/Bonus';
 import { UserError } from '../../utils/errors';
 import KeyLocker from '../../utils/keyLocker';
+import { PromoCode } from '../models/PromoCode';
+import { PaymentStatus } from '../models/UserPayment';
+
+const promoCodeRegExp = /^\w{4,255}$/;
 
 class BonusRepository extends BaseRepository {
     private getBonusLocker = new KeyLocker<string>();
@@ -27,11 +32,13 @@ class BonusRepository extends BaseRepository {
             );
 
             if (minutesFromLastBonus < minutesBetweenBonuses) {
+                // console.log('has no bonuse due to minutes', minutesFromLastBonus);
                 return false;
             }
 
             const bets = await this.repositories.users.sumBetsAmountFrom(userId, lastBonus.createdAt);
             if (bets < lastBonus.amount) {
+                // console.log('has no bonuse due to bets', bets);
                 return false;
             }
         }
@@ -61,6 +68,49 @@ class BonusRepository extends BaseRepository {
                 });
             } finally {
                 locker.unlock();
+            }
+        });
+    }
+
+    async usePromoCode(userId: string, code: string): Promise<PromoCode> {
+        // TODO
+
+        throw new UserError('NOT_IMPLEMENTED');
+    }
+
+    async createPromoCode(userId: string, code: string, amount: number, maxUses: number): Promise<PromoCode> {
+        if (code.match(promoCodeRegExp) === null) {
+            throw new UserError('BAD_PROMO_CODE');
+        }
+
+        const payments = await this.repositories.payments.getPaymentsByUserId(userId, PaymentStatus.FINISHED);
+        const paymentsSum = payments.reduce((acc, payment) => acc + payment.sum, 0);
+        const minPaymentsSum = await this.repositories.settings.getSettingAsNumber(
+            'bonus::minDepositsToCreatePromoCode',
+        );
+
+        if (paymentsSum < minPaymentsSum) {
+            throw new UserError('PROMO_CODE_NOT_ENOUGH_DEPOSITS');
+        }
+
+        const fixedCode = code.toUpperCase();
+        return this.db.sequelize.transaction(async transaction => {
+            try {
+                const promoCode = await this.db.PromoCode.create(
+                    { code: fixedCode, userId, amount, maxUses },
+                    { transaction },
+                );
+
+                const cost = promoCode.amount * promoCode.maxUses;
+                await this.repositories.users.withdrawMoney(userId, cost, transaction);
+
+                return promoCode;
+            } catch (e) {
+                if (e instanceof UniqueConstraintError) {
+                    throw new UserError('PROMO_CODE_BUSIED');
+                }
+
+                throw e;
             }
         });
     }

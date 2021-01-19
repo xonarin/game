@@ -8,7 +8,6 @@ import { UserError } from '../../utils/errors';
 import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/graphql';
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
 import { PaymentStatus } from '../models/UserPayment';
-import { MinesGame } from '../models/MinesGame';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings

@@ -1,3 +1,5 @@
+@import '../../../assets/styles/vars';
+
 .PrizeCreatePromoCodeForm {
     display: flex;
     flex-direction: column;
@@ -10,14 +12,18 @@
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
+    }
 
-        input {
-            padding-left: 10px;
-            margin: 10px;
-            height: 40px;
-            background: #222731;
-            border: none;
-            color: white;
+    &-Input {
+        padding-left: 10px;
+        margin: 10px;
+        height: 40px;
+        background: #222731;
+        border: none;
+        color: white;
+
+        &_error {
+            outline-color: $color-red!important;
         }
     }
 

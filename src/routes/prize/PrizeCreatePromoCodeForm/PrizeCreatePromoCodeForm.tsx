@@ -5,34 +5,63 @@ import { Form, Field } from 'react-final-form';
 import s from './PrizeCreatePromoCodeForm.scss';
 import { cn } from '../../../utils/bem-css-module';
 import { AmountInput } from '../../../components/inputs/AmountInput';
+import useCreatePromoCodeMutation from '../../../hooks/graphql/bonus/createPromoCodeMutation';
+import { requiredValidator } from '../../../utils/validators';
+
+interface PrizeCreatePromoCodeFormValues {
+    promoCode: string;
+    amount: number;
+    maxUses: number;
+}
 
 const cnPrizeCreatePromoCodeForm = cn(s, 'PrizeCreatePromoCodeForm');
 
 const PrizeCreatePromoCodeForm: React.FC = () => {
     useStyles(s);
 
-    const onSubmit = useCallback(() => {
-        // TODO
-    }, []);
+    const createPromoCodeMutation = useCreatePromoCodeMutation();
+
+    const onSubmit = useCallback(
+        async ({ promoCode, amount, maxUses }: PrizeCreatePromoCodeFormValues) => {
+            await createPromoCodeMutation(promoCode, amount, maxUses);
+        },
+        [createPromoCodeMutation],
+    );
 
     return (
-        <Form onSubmit={onSubmit}>
+        <Form<PrizeCreatePromoCodeFormValues> onSubmit={onSubmit}>
             {({ handleSubmit }) => (
                 <form className={cnPrizeCreatePromoCodeForm()} onSubmit={handleSubmit}>
                     <div className={cnPrizeCreatePromoCodeForm('Inputs')}>
-                        <Field name="promoCode">
-                            {({ input }) => <input placeholder="Введите промокод" {...input} />}
-                        </Field>
-
-                        <Field name="amount">
-                            {({ input }) => (
-                                <AmountInput placeholder="Сумма промокода" maxFractionDigits={0} {...input} />
+                        <Field name="promoCode" validate={requiredValidator()}>
+                            {({ input, meta: { error } }) => (
+                                <input
+                                    className={cnPrizeCreatePromoCodeForm('Input', { error: !!error })}
+                                    placeholder="Промокод"
+                                    {...input}
+                                />
                             )}
                         </Field>
 
-                        <Field name="maxActivations">
-                            {({ input }) => (
-                                <AmountInput placeholder="Количество активаций" maxFractionDigits={0} {...input} />
+                        <Field name="amount" validate={requiredValidator()}>
+                            {({ input, meta: { error } }) => (
+                                <AmountInput
+                                    className={cnPrizeCreatePromoCodeForm('Input', { error: !!error })}
+                                    placeholder="Сумма промокода"
+                                    maxFractionDigits={0}
+                                    {...input}
+                                />
+                            )}
+                        </Field>
+
+                        <Field name="maxUses" validate={requiredValidator()}>
+                            {({ input, meta: { error } }) => (
+                                <AmountInput
+                                    className={cnPrizeCreatePromoCodeForm('Input', { error: !!error })}
+                                    placeholder="Количество активаций"
+                                    maxFractionDigits={0}
+                                    {...input}
+                                />
                             )}
                         </Field>
                     </div>
