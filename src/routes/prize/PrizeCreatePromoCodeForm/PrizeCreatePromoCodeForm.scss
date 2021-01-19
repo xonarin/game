@@ -23,7 +23,11 @@
         color: white;
 
         &_error {
-            outline-color: $color-red!important;
+            outline-color: $color-red !important;
+
+            &::placeholder {
+                color: $color-red;
+            }
         }
     }
 

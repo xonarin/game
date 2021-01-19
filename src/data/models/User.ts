@@ -19,6 +19,9 @@ import { ClassicGameBet } from './ClassicGameBet';
 import { MinesGame } from './MinesGame';
 import { UserPayment } from './UserPayment';
 import { UserWithdraw } from './UserWithdraw';
+import { Bonus } from './Bonus';
+import { PromoCode } from './PromoCode';
+import { PromoCodeUse } from './PromoCodeUse';
 
 export enum SocialType {
     Steam = 'Steam',
@@ -79,6 +82,9 @@ export type UserStatic = AssociableModelStatic<
         MinesGame: HasMany<User, MinesGame>;
         UserPayment: HasMany<User, UserPayment>;
         UserWithdraw: HasMany<User, UserWithdraw>;
+        Bonus: HasMany<User, Bonus>;
+        PromoCode: HasMany<User, PromoCode>;
+        PromoCodeUse: HasMany<User, PromoCodeUse>;
     }
 >;
 
@@ -209,6 +215,9 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
         User.ClassicGameBet = User.hasMany(database.ClassicGameBet, { as: 'classicGameBets', foreignKey: 'userId' });
         User.UserPayment = User.hasMany(database.UserPayment, { as: 'payments', foreignKey: 'userId' });
         User.UserWithdraw = User.hasMany(database.UserWithdraw, { as: 'withdraws', foreignKey: 'userId' });
+        User.Bonus = User.hasMany(database.Bonus, { as: 'bonuses', foreignKey: 'userId' });
+        User.PromoCode = User.hasMany(database.PromoCode, { as: 'promoCodes', foreignKey: 'userId' });
+        User.PromoCodeUse = User.hasMany(database.PromoCodeUse, { as: 'promoCodeUses', foreignKey: 'userId' });
     };
 
     return User;

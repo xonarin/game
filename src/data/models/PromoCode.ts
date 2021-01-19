@@ -1,7 +1,8 @@
-import { BelongsTo, BelongsToGetAssociationMixin, DataTypes, Model, Sequelize } from 'sequelize';
+import { BelongsTo, BelongsToGetAssociationMixin, DataTypes, HasMany, Model, Sequelize } from 'sequelize';
 
 import { User } from './User';
 import { AssociableModelStatic } from './index';
+import { PromoCodeUse } from './PromoCodeUse';
 
 export interface PromoCode extends Model {
     readonly code: string;
@@ -20,6 +21,7 @@ export type PromoCodeStatic = AssociableModelStatic<
     PromoCode,
     {
         User: BelongsTo<PromoCode, User>;
+        PromoCodeUse: HasMany<PromoCode, PromoCodeUse>;
     }
 >;
 
@@ -52,6 +54,7 @@ export const initPromoCode = (sequelize: Sequelize): PromoCodeStatic => {
 
     PromoCode.associate = database => {
         PromoCode.User = PromoCode.belongsTo(database.User, { as: 'user' });
+        PromoCode.PromoCodeUse = PromoCode.hasMany(database.PromoCodeUse, { as: 'uses', foreignKey: 'code' });
     };
 
     return PromoCode;

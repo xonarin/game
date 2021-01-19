@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { UniqueConstraintError } from 'sequelize';
+import { Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { Bonus } from '../models/Bonus';
@@ -7,6 +7,7 @@ import { UserError } from '../../utils/errors';
 import KeyLocker from '../../utils/keyLocker';
 import { PromoCode } from '../models/PromoCode';
 import { PaymentStatus } from '../models/UserPayment';
+import { PromoCodeUse } from '../models/PromoCodeUse';
 
 const promoCodeRegExp = /^\w{4,255}$/;
 
@@ -32,13 +33,13 @@ class BonusRepository extends BaseRepository {
             );
 
             if (minutesFromLastBonus < minutesBetweenBonuses) {
-                // console.log('has no bonuse due to minutes', minutesFromLastBonus);
+                // console.log('has no bonus due to minutes', minutesFromLastBonus);
                 return false;
             }
 
             const bets = await this.repositories.users.sumBetsAmountFrom(userId, lastBonus.createdAt);
             if (bets < lastBonus.amount) {
-                // console.log('has no bonuse due to bets', bets);
+                // console.log('has no bonus due to bets', bets);
                 return false;
             }
         }
@@ -72,14 +73,69 @@ class BonusRepository extends BaseRepository {
         });
     }
 
-    async usePromoCode(userId: string, code: string): Promise<PromoCode> {
-        // TODO
+    async getPromoCodeById(code: string, transaction?: Transaction): Promise<PromoCode | null> {
+        return this.db.PromoCode.findByPk(code, {
+            ...this.sequelizeContext,
+            ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
+            rejectOnEmpty: false,
+        });
+    }
 
-        throw new UserError('NOT_IMPLEMENTED');
+    async getPromoCodeByIdStrict(code: string, transaction?: Transaction): Promise<PromoCode> {
+        const promoCode = await this.getPromoCodeById(code, transaction);
+
+        if (!promoCode) {
+            throw new UserError('NO_PROMO_CODE');
+        }
+
+        return promoCode;
+    }
+
+    async usePromoCode(userId: string, code: string): Promise<PromoCode> {
+        const lastUse: PromoCodeUse | null = await this.db.PromoCodeUse.findOne({
+            where: { userId },
+            order: [['createdAt', 'DESC']],
+        });
+
+        if (lastUse) {
+            const bets = await this.repositories.users.sumBetsAmountFrom(userId, lastUse.createdAt);
+            const lastUsePromoCode: PromoCode = await lastUse.getPromoCode();
+
+            if (bets < lastUsePromoCode.amount) {
+                throw new UserError('LAST_PROMO_CODE_DIDNT_BET');
+            }
+        }
+
+        // TODO check vk
+
+        const fixedCode = code.toUpperCase();
+        return this.db.sequelize.transaction(async transaction => {
+            const promoCodeUses: PromoCode[] = await this.db.PromoCodeUse.findAll({
+                where: { code: fixedCode },
+                transaction,
+            });
+
+            if (promoCodeUses.some(promoCodeUse => promoCodeUse.userId === userId)) {
+                throw new UserError('PROMO_CODE_USED_ALREADY');
+            }
+
+            const promoCode = await this.getPromoCodeByIdStrict(fixedCode, transaction);
+            if (promoCodeUses.length >= promoCode.maxUses) {
+                throw new UserError('PROMO_CODE_USES_LIMIT');
+            }
+
+            await this.repositories.users.giveMoney(userId, promoCode.amount, transaction);
+            const promoCodeUse: PromoCodeUse = await this.db.PromoCodeUse.create(
+                { code: fixedCode, userId },
+                { transaction },
+            );
+
+            return promoCodeUse;
+        });
     }
 
     async createPromoCode(userId: string, code: string, amount: number, maxUses: number): Promise<PromoCode> {
-        if (code.match(promoCodeRegExp) === null) {
+        if (code.match(promoCodeRegExp) === null || amount <= 0 || maxUses <= 0) {
             throw new UserError('BAD_PROMO_CODE');
         }
 
@@ -93,25 +149,25 @@ class BonusRepository extends BaseRepository {
             throw new UserError('PROMO_CODE_NOT_ENOUGH_DEPOSITS');
         }
 
+        // check vk
+
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {
-            try {
-                const promoCode = await this.db.PromoCode.create(
-                    { code: fixedCode, userId, amount, maxUses },
-                    { transaction },
-                );
+            const existedPromoCode = await this.getPromoCodeById(fixedCode, transaction);
 
-                const cost = promoCode.amount * promoCode.maxUses;
-                await this.repositories.users.withdrawMoney(userId, cost, transaction);
-
-                return promoCode;
-            } catch (e) {
-                if (e instanceof UniqueConstraintError) {
-                    throw new UserError('PROMO_CODE_BUSIED');
-                }
-
-                throw e;
+            if (existedPromoCode) {
+                throw new UserError('PROMO_CODE_BUSIED');
             }
+
+            const promoCode = await this.db.PromoCode.create(
+                { code: fixedCode, userId, amount, maxUses },
+                { transaction },
+            );
+
+            const cost = promoCode.amount * promoCode.maxUses;
+            await this.repositories.users.withdrawMoney(userId, cost, transaction);
+
+            return promoCode;
         });
     }
 

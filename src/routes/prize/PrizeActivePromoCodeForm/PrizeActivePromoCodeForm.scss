@@ -1,9 +1,11 @@
+@import '../../../assets/styles/vars';
+
 .PrizeActivePromoCodeForm {
     display: flex;
     width: 100%;
     padding: 0 20px;
 
-    input {
+    &-Input {
         height: 44px;
         background: #222731;
         width: 50%;
@@ -11,7 +13,15 @@
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
         color: white;
-        padding: 5px;
+        padding: 5px 10px;
+
+        &_error {
+            outline-color: $color-red !important;
+
+            &::placeholder {
+                color: $color-red;
+            }
+        }
     }
 
     button {

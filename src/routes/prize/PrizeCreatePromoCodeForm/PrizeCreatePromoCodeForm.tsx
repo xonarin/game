@@ -5,7 +5,7 @@ import { Form, Field } from 'react-final-form';
 import s from './PrizeCreatePromoCodeForm.scss';
 import { cn } from '../../../utils/bem-css-module';
 import { AmountInput } from '../../../components/inputs/AmountInput';
-import useCreatePromoCodeMutation from '../../../hooks/graphql/bonus/createPromoCodeMutation';
+import useCreatePromoCodeMutation from '../../../hooks/graphql/bonus/useCreatePromoCodeMutation';
 import { requiredValidator } from '../../../utils/validators';
 
 interface PrizeCreatePromoCodeFormValues {
