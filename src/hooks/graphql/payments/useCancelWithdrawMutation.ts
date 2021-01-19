@@ -1,19 +1,16 @@
-import { FetchResult, useMutation } from '@apollo/client';
-
 import {
     CancelWithdrawDocument,
     CancelWithdrawMutation,
     MutationCancelWithdrawArgs,
 } from '../../../__generated__/graphql';
+import useMutationWithNotify from '../useMutationWithNotify';
 
-export interface UseCancelWithdrawMutationResult {
-    (id: string): Promise<FetchResult<CancelWithdrawMutation>>;
-}
+const useCancelWithdrawMutation = () => {
+    const [cancelWithdraw] = useMutationWithNotify<CancelWithdrawMutation, MutationCancelWithdrawArgs>(
+        CancelWithdrawDocument,
+    );
 
-const useCancelWithdrawMutation = (): UseCancelWithdrawMutationResult => {
-    const [cancelWithdraw] = useMutation<CancelWithdrawMutation, MutationCancelWithdrawArgs>(CancelWithdrawDocument);
-
-    return id => cancelWithdraw({ variables: { id } });
+    return (id: string) => cancelWithdraw({ variables: { id } });
 };
 
 export default useCancelWithdrawMutation;

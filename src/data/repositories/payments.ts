@@ -183,17 +183,17 @@ class PaymentsRepository extends BaseRepository {
     }
 
     async cancelWithdraw(withdrawId: string, userId: string): Promise<UserWithdraw> {
-        const withdraw = await this.getWithdrawByIdStrict(withdrawId);
-
-        if (withdraw.userId !== userId) {
-            throw new UserError('NO_WITHDRAW');
-        }
-
-        if (withdraw.status !== WithdrawStatus.WAIT_APPROVE) {
-            throw new UserError('CANNOT_CANCEL_WITHDRAW');
-        }
-
         return this.db.sequelize.transaction(async transaction => {
+            const withdraw = await this.getWithdrawByIdStrict(withdrawId);
+
+            if (withdraw.userId !== userId) {
+                throw new UserError('NO_WITHDRAW');
+            }
+
+            if (withdraw.status !== WithdrawStatus.WAIT_APPROVE) {
+                throw new UserError('CANNOT_CANCEL_WITHDRAW');
+            }
+
             await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
             return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
         });

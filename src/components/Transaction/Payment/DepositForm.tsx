@@ -79,13 +79,13 @@ export const DepositForm: React.FC<DepositFormProps> = ({ mobile }) => {
 
     const onSubmit: (values: DepositFormValues) => void = useCallback(
         async ({ method, amount }) => {
-            const { data } = await doDeposit(amount, method!.id);
+            const result = await doDeposit(amount, method!.id);
 
-            if (!data) {
+            if (!result?.data) {
                 return;
             }
 
-            window.location.href = data.doDeposit;
+            window.location.href = result.data.doDeposit;
         },
         [doDeposit],
     );

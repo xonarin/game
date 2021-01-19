@@ -1,15 +1,10 @@
-import { FetchResult, useMutation } from '@apollo/client';
+import { DoDepositDocument, DoDepositMutation, DoDepositMutationVariables } from '../../../__generated__/graphql';
+import useMutationWithNotify from '../useMutationWithNotify';
 
-import { DoDepositDocument, DoDepositMutation } from '../../../__generated__/graphql';
+const useDoDepositMutation = () => {
+    const [doDeposit] = useMutationWithNotify<DoDepositMutation, DoDepositMutationVariables>(DoDepositDocument);
 
-export interface UseDoDepositMutationResult {
-    (amount: number, method: string): Promise<FetchResult<DoDepositMutation>>;
-}
-
-const useDoDepositMutation = (): UseDoDepositMutationResult => {
-    const [doDeposit] = useMutation(DoDepositDocument);
-
-    return (amount, method) => doDeposit({ variables: { amount, method } });
+    return (amount: number, method: string) => doDeposit({ variables: { amount, method } });
 };
 
 export default useDoDepositMutation;
