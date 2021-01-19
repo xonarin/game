@@ -209,6 +209,7 @@ app.get('*', async (req, res, next) => {
         const context: AppContextTypes = {
             // The twins below are wild, be careful!
             pathname: req.path,
+            domain: req.headers.host || 'domain.io',
             query: req.query as QueryParams,
 
             user: req.user,

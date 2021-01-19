@@ -55,6 +55,7 @@ async function onLocationChange(location: Location, action?: Action) {
     const isInitialRender = !action;
     try {
         context.pathname = location.pathname;
+        context.domain = window.location.host;
         // @ts-ignore TODO
         context.query = queryString.parse(location.search);
 

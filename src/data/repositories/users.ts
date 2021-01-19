@@ -297,7 +297,8 @@ class UsersRepository extends BaseRepository {
         return this.db.sequelize.transaction(async transaction => {
             const user = await this.getUserByIdStrict(userId, transaction);
 
-            if (user.refMoney < 15) {
+            const minRefMoney = await this.repositories.settings.getSettingAsNumber('referrals::minRefMoneyToGet');
+            if (user.refMoney < minRefMoney) {
                 throw new UserError('NOT_ENOUGH_REF_MONEY');
             }
 

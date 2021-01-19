@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -14,6 +14,7 @@ import useReferralsStats from '../../../hooks/graphql/referrals/useReferralsStat
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
+import AppContext from '../../../context';
 
 const cnReferal = cn(s, 'Referal');
 
@@ -24,8 +25,8 @@ const ReferalsWeb: React.FC = () => {
     const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
 
-    const domain = useMemo(() => typeof window !== 'undefined' && window?.location?.host, [typeof window !== 'undefined']);
-    const { referralLink } = useReferralLinkQuery(domain || 'domain.io');
+    const { domain } = useContext(AppContext);
+    const { referralLink } = useReferralLinkQuery(domain);
     const getReferralMoney = useGetReferralMoneyMutation();
 
     useStyles(s);

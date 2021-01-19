@@ -14,7 +14,7 @@ export type ClassicGameSettingName =
 
 export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage';
 
-export type ReferralsSettingName = 'referrals::minTurnoverCoef';
+export type ReferralsSettingName = 'referrals::minTurnoverCoef' | 'referrals::minRefMoneyToGet';
 
 export type AppSettingsName = 'app::fakeOnline';
 
