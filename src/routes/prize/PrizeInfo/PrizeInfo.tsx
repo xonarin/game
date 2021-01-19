@@ -20,17 +20,13 @@ const cnPrizeInfo = cn(s, 'PrizeInfo');
 export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
     useStyles(s);
 
-    const [prize, setPrize] = useState<number | undefined>();
+    const { hasBonus, refetchHasBonus } = useHasBonusQuery();
 
-    const { hasBonus } = useHasBonusQuery();
-    const getBonus = useGetBonusMutation();
+    const { getBonusMutation, getBonusResult } = useGetBonusMutation();
     const onGetBonusClick = useCallback(async () => {
-        const { data } = await getBonus();
-
-        if (data) {
-            setPrize(data.getBonus);
-        }
-    }, [getBonus]);
+        await getBonusMutation();
+        await refetchHasBonus();
+    }, [getBonusMutation, refetchHasBonus]);
 
     return (
         <div className={cnPrizeInfo()}>
@@ -77,8 +73,8 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
 
             <div className={cnPrizeInfo('Action')}>
                 {selectedTab === 'freeCoins' &&
-                    (prize !== undefined ? (
-                        <Text color="white">Вы получили: {prize} монет</Text>
+                    (getBonusResult.data !== undefined ? (
+                        <Text color="white">Вы получили {getBonusResult.data.getBonus} монет</Text>
                     ) : (
                         <button
                             type="button"

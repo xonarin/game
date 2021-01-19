@@ -20,8 +20,14 @@ const PrizeCreatePromoCodeForm: React.FC = () => {
             {({ handleSubmit }) => (
                 <form className={cnPrizeCreatePromoCodeForm()} onSubmit={handleSubmit}>
                     <div className={cnPrizeCreatePromoCodeForm('Inputs')}>
+                        <Field name="promoCode">
+                            {({ input }) => <input placeholder="Введите промокод" {...input} />}
+                        </Field>
+
                         <Field name="amount">
-                            {({ input }) => <AmountInput placeholder="Сумма промокода" {...input} />}
+                            {({ input }) => (
+                                <AmountInput placeholder="Сумма промокода" maxFractionDigits={0} {...input} />
+                            )}
                         </Field>
 
                         <Field name="maxActivations">

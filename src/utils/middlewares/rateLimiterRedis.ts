@@ -11,7 +11,7 @@ const redis = new Redis(config.redisUrl, {
 const rateLimiter = new RateLimiterRedis({
     storeClient: redis,
     keyPrefix: 'middleware',
-    points: 10,
+    points: 20,
     duration: 1,
 });
 

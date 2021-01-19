@@ -46,7 +46,7 @@ class BonusRepository extends BaseRepository {
             await locker.lock();
 
             try {
-                const hasBonus = this.hasBonus(userId);
+                const hasBonus = await this.hasBonus(userId);
 
                 if (!hasBonus) {
                     throw new UserError('HAS_NO_BONUS');
@@ -70,14 +70,14 @@ class BonusRepository extends BaseRepository {
         const b = Math.random();
 
         if (a < 0.7) {
-            return Number((b * 0.03).toFixed(2));
+            return Number((0.01 + b * 0.02).toFixed(2));
         }
 
         if (a < 0.9) {
-            return Number((b * 0.05).toFixed(2));
+            return Number((0.01 + b * 0.04).toFixed(2));
         }
 
-        return Number((b * 0.1).toFixed(2));
+        return Number((0.01 + b * 0.09).toFixed(2));
     }
 }
 
