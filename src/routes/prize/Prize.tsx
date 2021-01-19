@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import PrizeMobile from './Mobile/PrizeMobile';
 import PrizeWeb from './Web/PrizeWeb';
+import Layout32ContentWithChat from '../../components/Layout/Web/containers/Layout32ContentWithChat';
 
-export interface AllGamesProps {
-    title: string;
+export interface PrizeProps {
     chatId: string;
 }
 
-const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
+const Prize: React.FC<PrizeProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
 
     useIsomorphicLayoutEffect(() => {
@@ -24,9 +24,10 @@ const AllGames: React.FC<AllGamesProps> = ({ title, chatId }) => {
     }, [typeof window !== 'undefined' && window?.screen?.width]);
 
     if (mobile) {
-        return <PrizeMobile chatId={chatId} />;
+        return <PrizeMobile />;
     }
-    return <PrizeWeb chatId={chatId} />;
+
+    return <Layout32ContentWithChat chatId={chatId} title="Prize" centerContent={<PrizeWeb />} bottomContent="" />;
 };
 
-export default AllGames;
+export default Prize;

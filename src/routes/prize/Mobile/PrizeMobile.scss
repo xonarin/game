@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 30px;
 
     button {
         &:focus {
@@ -37,6 +38,7 @@
                 background: #4986f5;
                 min-width: 50px;
                 height: 50px;
+                width: 50px;
                 margin: 3%;
             }
 
@@ -73,137 +75,6 @@
                 flex-direction: column;
                 text-align: left;
             }
-        }
-    }
-
-    &-Info {
-        display: flex;
-        flex-direction: column;
-        margin-top: 50px;
-        width: 100%;
-        margin-bottom: 30px;
-
-        &-Header {
-            border: 2px solid #fff;
-            border-bottom: 0;
-            height: 18px;
-            text-align: center;
-            position: relative;
-            margin: auto auto 10px;
-            width: 90%;
-            max-width: 400px;
-
-            span {
-                color: white;
-                text-transform: uppercase;
-                position: absolute;
-                top: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                white-space: nowrap;
-                z-index: 2;
-                background: #0e1420;
-                padding: 0 10px;
-            }
-        }
-
-        &-Groups {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid #4986f5;
-            padding-bottom: 20px;
-        }
-
-        &-Content {
-            height: 97px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-
-            ul {
-                list-style-type: upper-alpha;
-            }
-        }
-
-        &-Action {
-            border-top: 2px solid #4986f5;
-            background: rgb(23, 33, 53);
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-    }
-
-    &-Btn {
-        border: none;
-        width: 195px;
-        height: 40px;
-        background: #4986f5;
-        border-radius: 5px;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        margin: 20px 10px 0 10px;
-    }
-
-    &-Active-Promocode {
-        display: flex;
-        width: 100%;
-        padding: 0 20px;
-
-        input {
-            height: 44px;
-            background: #222731;
-            width: 50%;
-            border: none;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-            color: white;
-        }
-
-        button {
-            height: 44px;
-            background: #4986f5;
-            width: 50%;
-            border: none;
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-            color: white;
-        }
-    }
-
-    &-Create-Promocode {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        &-Inputs {
-            display: flex;
-
-            input {
-                padding-left: 10px;
-                margin: 0 10px;
-                height: 40px;
-                background: #222731;
-                width: 50%;
-                border: none;
-                color: white;
-            }
-        }
-
-        button {
-            margin-top: 5px;
-            height: 44px;
-            background: #4986f5;
-            width: 50%;
-            border: none;
-            border-radius: 5px;
-            color: white;
         }
     }
 }

@@ -1,126 +1,54 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from './Prize.scss';
-import Text from '../../../components/Text/Text';
 import { cn } from '../../../utils/bem-css-module';
-import Layout32ContentWithChat from '../../../components/Layout/Web/containers/Layout32ContentWithChat';
+import { PrizeTab } from './PrizeTab';
+import { PrizeInfo, TabNameType } from '../PrizeInfo/PrizeInfo';
+
 const cnPrize = cn(s, 'Prize');
-export interface PrizeWebProps{
-    chatId:string;
-}
-const PrizeWeb:React.FC<PrizeWebProps> = ({chatId}) => {
-    const [selectedTab, setSelectedTab] = useState('freeCoins');
-    const [showPrize, setShowPrize] = useState(false)
-    const [, setPromoCode] = useState('')
-    const [promoCodeAmount, setPromoCodeAmount] = useState("")
-    const [activateAmount, setActivateAmount] = useState("")
+
+const PrizeWeb: React.FC = () => {
+    const [selectedTab, setSelectedTab] = useState<TabNameType>('freeCoins');
     useStyles(s);
 
     return (
-        <Layout32ContentWithChat
-            chatId={chatId}
-            title="Prize"
-            centerContent={
-                <div className={cnPrize()}>
-                    <div className={cnPrize('Nav')}>
-                        <button className={selectedTab==="freeCoins" ?  cnPrize('Nav-Item-Active') :cnPrize('Nav-Item')} onClick={()=>setSelectedTab("freeCoins")}>
-                            <div className={cnPrize('Nav-Item-Img')}>
-                                <img src="" alt="" />
-                            </div>
-                            <div className={cnPrize('Nav-Item-Info')}>
-                                <Text color="blue">Бесплатные монеты</Text>
-                                <Text>Вступай в нашу группу и получай до 0.10 каждые 15 минут.</Text>
-                            </div>
-                        </button>
+        <div className={cnPrize()}>
+            <div className={cnPrize('Nav')}>
+                <PrizeTab
+                    tabName="freeCoins"
+                    img=""
+                    title="Бесплатные монеты"
+                    selectedTab={selectedTab}
+                    setSelectedTab={setSelectedTab}
+                >
+                    Вступай в нашу группу и получай до 0.10 монет каждые 15 минут.
+                </PrizeTab>
 
-                        <button className={selectedTab==="activePromocode" ?  cnPrize('Nav-Item-Active') :cnPrize('Nav-Item')} onClick={()=>setSelectedTab("activePromocode")}>
-                            <div className={cnPrize('Nav-Item-Img')}>
-                                <img src="" alt="" />
-                            </div>
-                            <div className={cnPrize('Nav-Item-Info')}>
-                                <Text color="blue">Бесплатные монеты</Text>
-                                <Text>Вступай в нашу группу и получай до 0.10 каждые 15 минут.</Text>
-                            </div>
-                        </button>
+                <PrizeTab
+                    tabName="activePromoCode"
+                    img=""
+                    title="Активировать промокод"
+                    selectedTab={selectedTab}
+                    setSelectedTab={setSelectedTab}
+                >
+                    Получайте промокоды от нас или друзей и получайте награду.
+                </PrizeTab>
 
-                        <button className={selectedTab==="createPromocode" ?  cnPrize('Nav-Item-Active') :cnPrize('Nav-Item')} onClick={()=>setSelectedTab("createPromocode")}>
-                            <div className={cnPrize('Nav-Item-Img')}>
-                                <img src="" alt="" />
-                            </div>
-                            <div className={cnPrize('Nav-Item-Info')}>
-                                <Text color="blue">Бесплатные монеты</Text>
-                                <Text>Вступай в нашу группу и получай до 0.10 каждые 15 минут.</Text>
-                            </div>
-                        </button>
-                    </div>
-                    <div className={cnPrize('Info')}>
-                        <div className={cnPrize('Info-Header')}>
-                            {selectedTab === 'freeCoins' ? <span>НАШИ ГРУППЫ</span> : <span>ПРОМОКОДЫ В ГРУППАХ</span>}
-                        </div>
-                        <div className={cnPrize('Info-Groups')}>
-                            <a href="/" className={cnPrize('Btn')}>
-                                Вконтакте
-                            </a>
-                            <a href="/" className={cnPrize('Btn')}>
-                                Телеграм
-                            </a>
-                        </div>
-                        <div className={cnPrize('Info-Content')}>
-                            {selectedTab === 'freeCoins' ? (
-                                <Text color="white">
-                                    Вступайте в группу ВК и получайте до 0.10 монет каждые 15 минут.
-                                </Text>
-                            ) : selectedTab === 'activePromocode' ? (
-                                <div>
-                                    <Text color="white">Для активации промокодов, вы должны:</Text>
-                                    <ul>
-                                        <li>Быть подписаны на группу ВК.</li>
-                                        <li>Открытый профиль в ВК.</li>
-                                        <li>Иметь не менее 20 друзей в ВК.</li>
-                                    </ul>
-                                </div>
-                            ) : (
-                                <div>
-                                    <Text color="white">Для создания промокодов, вы должны:</Text>
-                                    <ul>
-                                        <li>Иметь пополнений на сумму не менее 100 рублей.</li>
-                                        <li> Подписаны на группу ВК.</li>
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cnPrize('Info-Action')}>
-                            { selectedTab === "freeCoins"
-                                ? showPrize
-                                    ? (<Text color="white">Вы получили: 10 diamond</Text>)
-                                    : (<button className={cnPrize('Btn')} onClick={()=>setShowPrize(true)}>Получить</button>)
-                                : selectedTab === 'activePromocode' ? (
-                                    <div className={cnPrize('Active-Promocode')}>
-                                        <input type="text" placeholder='Введите промокод' onChange={(e)=>setPromoCode(e.target.value)}/>
-                                        <button>Активировать</button>
-                                    </div>
-                                    ) : (
-                                        <div className={cnPrize('Create-Promocode')}>
-                                            <div className={cnPrize('Create-Promocode-Inputs')}>
-                                                <input type="text" value={promoCodeAmount}
-                                                       onChange={(e)=>Number(e.target.value) || e.target.value==="" ? setPromoCodeAmount(e.target.value) : null }
-                                                       placeholder='Сумма промокода'/>
+                <PrizeTab
+                    tabName="createPromoCode"
+                    img=""
+                    title="Создать промокод"
+                    selectedTab={selectedTab}
+                    setSelectedTab={setSelectedTab}
+                >
+                    Создайте промокод и поделитесь им с друзьями.
+                </PrizeTab>
+            </div>
 
-                                                <input type="text" value={activateAmount}
-                                                       onChange={(e)=>Number(e.target.value) || e.target.value==="" ? setActivateAmount(e.target.value) : null }
-                                                       placeholder='Активаций'/>
-                                            </div>
+            <PrizeInfo selectedTab={selectedTab} />
+        </div>
+    );
+};
 
-                                            <button>Создать</button>
-                                        </div>
-                                )}
-                        </div>
-                    </div>
-                </div>
-            }
-            bottomContent={<div />}
-        />
-    )
-}
-
-export default PrizeWeb
+export default PrizeWeb;
