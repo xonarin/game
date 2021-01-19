@@ -8,6 +8,7 @@ import { UserError } from '../../utils/errors';
 import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/graphql';
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
 import { PaymentStatus } from '../models/UserPayment';
+import { MinesGame } from '../models/MinesGame';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
@@ -346,6 +347,15 @@ class UsersRepository extends BaseRepository {
             chatWarns: Math.min(user.chatWarns + 1, 5),
             chatWarnsUpdatedAt: new Date(now),
         });
+    }
+
+    async sumBetsAmountFrom(userId: string, time: Date): Promise<number> {
+        // Classic games no care. If you want to use it, take care about bonuses!
+
+        const mines: MinesGame[] = await this.db.MinesGame.findAll({ where: { userId, createdAt: { [Op.gt]: time } } });
+        const minesBets = mines.reduce((acc, game) => acc + game.betAmount, 0);
+
+        return minesBets;
     }
 }
 

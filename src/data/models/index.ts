@@ -4,7 +4,7 @@ import { forEach } from 'lodash';
 import { initSetting, SettingStatic } from './Setting';
 import { initUser, UserStatic } from './User';
 import { initChat, ChatStatic } from './Chat';
-import { ChatUserStatic, initChatUser } from './ChatUser';
+import { initChatUser, ChatUserStatic } from './ChatUser';
 import { initMessage, MessageStatic } from './Message';
 import { initClassicGame, ClassicGameStatic } from './ClassicGame';
 import { initClassicGameBet, ClassicGameBetStatic } from './ClassicGameBet';
@@ -15,6 +15,7 @@ import { initPaymentMethod, PaymentMethodStatic } from './PaymentMethod';
 import { initWithdrawMethod, WithdrawMethodStatic } from './WithdrawMethod';
 import { initUserPayment, UserPaymentStatic } from './UserPayment';
 import { initUserWithdraw, UserWithdrawStatic } from './UserWithdraw';
+import { initBonus, BonusStatic } from './Bonus';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -45,6 +46,7 @@ export interface Database {
     WithdrawMethod: WithdrawMethodStatic;
     UserPayment: UserPaymentStatic;
     UserWithdraw: UserWithdrawStatic;
+    Bonus: BonusStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -64,6 +66,7 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         WithdrawMethod: initWithdrawMethod(sequelize),
         UserPayment: initUserPayment(sequelize),
         UserWithdraw: initUserWithdraw(sequelize),
+        Bonus: initBonus(sequelize),
     };
 
     forEach(database, model => {

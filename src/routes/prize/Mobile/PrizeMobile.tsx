@@ -25,7 +25,7 @@ const PrizeMobile: React.FC = () => {
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
                     >
-                        Вступай в нашу группу и получай до 0.10 монет каждые 15 минут.
+                        Вступай в нашу группу и получай до 0.10 монет каждые 15 минут
                     </PrizeTabMobile>
 
                     <PrizeTabMobile
@@ -35,7 +35,7 @@ const PrizeMobile: React.FC = () => {
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
                     >
-                        Получайте промокоды от нас или друзей и получайте награду.
+                        Получайте промокоды от нас или друзей и получайте награду
                     </PrizeTabMobile>
 
                     <PrizeTabMobile
@@ -45,7 +45,7 @@ const PrizeMobile: React.FC = () => {
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
                     >
-                        Создайте промокод и поделитесь им с друзьями.
+                        Создайте промокод и поделитесь им с друзьями
                     </PrizeTabMobile>
                 </div>
 

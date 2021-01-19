@@ -1,0 +1,8 @@
+
+type Query {
+    hasBonus: Boolean!
+}
+
+type Mutation {
+    getBonus: Float!
+}

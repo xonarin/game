@@ -67,5 +67,10 @@
         align-items: center;
         text-decoration: none;
         margin: 0 10px;
+
+        &[disabled] {
+            background: #0e1420;
+            color: gray;
+        }
     }
 }

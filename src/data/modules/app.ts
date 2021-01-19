@@ -21,6 +21,8 @@ import { resolvers as tournamentsResolvers } from './tournaments/resolvers';
 import tournamentsTypeDefs from './tournaments/schema.graphql';
 import { rules as paymentRules, resolvers as paymentsResolvers } from './payments/resolvers';
 import paymentsTypeDefs from './payments/schema.graphql';
+import { rules as bonusRules, resolvers as bonusResolvers } from './bonus/resolvers';
+import bonusTypeDefs from './bonus/schema.graphql';
 import shieldConfig from '../../utils/graphql-shield/config';
 
 const typeDefs = mergeTypeDefs([
@@ -33,6 +35,7 @@ const typeDefs = mergeTypeDefs([
     minesGameTypeDefs,
     tournamentsTypeDefs,
     paymentsTypeDefs,
+    bonusTypeDefs,
 ]);
 
 const resolvers = mergeResolvers([
@@ -45,6 +48,7 @@ const resolvers = mergeResolvers([
     minesGameResolvers,
     tournamentsResolvers,
     paymentsResolvers,
+    bonusResolvers,
 ]);
 
 const schema = applyMiddleware(
@@ -56,6 +60,7 @@ const schema = applyMiddleware(
     shield(classicGameRules, shieldConfig),
     shield(minesGameRules, shieldConfig),
     shield(paymentRules, shieldConfig),
+    shield(bonusRules, shieldConfig),
 );
 
 export default schema;

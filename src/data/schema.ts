@@ -10,6 +10,7 @@ import classicGame from './modules/classicGame/schema.graphql';
 import minesGame from './modules/minesGame/schema.graphql';
 import tournaments from './modules/tournaments/schema.graphql';
 import payments from './modules/payments/schema.graphql';
+import bonus from './modules/bonus/schema.graphql';
 import clientSchema from './modules/clientState/schema';
 
 export default mergeTypeDefs([
@@ -22,5 +23,6 @@ export default mergeTypeDefs([
     minesGame,
     tournaments,
     payments,
+    bonus,
     ...clientSchema,
 ]);

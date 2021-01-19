@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './PrizeInfo.scss';
@@ -6,6 +6,8 @@ import { cn } from '../../../utils/bem-css-module';
 import Text from '../../../components/Text/Text';
 import PrizeActivePromoCodeForm from '../PrizeActivePromoCodeForm/PrizeActivePromoCodeForm';
 import PrizeCreatePromoCodeForm from '../PrizeCreatePromoCodeForm/PrizeCreatePromoCodeForm';
+import useHasBonusQuery from '../../../hooks/graphql/bonus/useHasBonusQuery';
+import useGetBonusMutation from '../../../hooks/graphql/bonus/useGetBonusMutation';
 
 export type TabNameType = 'freeCoins' | 'activePromoCode' | 'createPromoCode';
 
@@ -18,7 +20,17 @@ const cnPrizeInfo = cn(s, 'PrizeInfo');
 export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
     useStyles(s);
 
-    const [showPrize, setShowPrize] = useState(false);
+    const [prize, setPrize] = useState<number | undefined>();
+
+    const { hasBonus } = useHasBonusQuery();
+    const getBonus = useGetBonusMutation();
+    const onGetBonusClick = useCallback(async () => {
+        const { data } = await getBonus();
+
+        if (data) {
+            setPrize(data.getBonus);
+        }
+    }, [getBonus]);
 
     return (
         <div className={cnPrizeInfo()}>
@@ -65,10 +77,15 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
 
             <div className={cnPrizeInfo('Action')}>
                 {selectedTab === 'freeCoins' &&
-                    (showPrize ? (
-                        <Text color="white">Вы получили: 10 diamond</Text>
+                    (prize !== undefined ? (
+                        <Text color="white">Вы получили: {prize} монет</Text>
                     ) : (
-                        <button type="button" className={cnPrizeInfo('Btn')} onClick={() => setShowPrize(true)}>
+                        <button
+                            type="button"
+                            className={cnPrizeInfo('Btn')}
+                            disabled={!hasBonus}
+                            onClick={onGetBonusClick}
+                        >
                             Получить
                         </button>
                     ))}

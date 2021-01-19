@@ -88,7 +88,7 @@ export const resolvers: ReferralsResolvers = {
                 entries,
             };
         },
-        referralLink: async (_0, { domain }, { user }) => `${domain}/ref${user!.id}`,
+        referralLink: async (_0, { domain }, { user }) => `${domain}/?ref=${user!.id}`,
     },
     Mutation: {
         getReferralMoney: async (_0, _1, { user, repositories }) => {

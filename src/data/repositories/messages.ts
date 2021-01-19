@@ -54,21 +54,23 @@ class MessagesRepository extends BaseRepository {
     async addMessage(chatId: string, senderId: string, message: string): Promise<Message> {
         await MessagesRepository.ADD_MESSAGE_LOCK.lock();
 
-        const prevNumber = await this.getPrevMessageNumber(chatId);
-        const createdMessage: Message = await this.db.Message.create({
-            chatId,
-            senderId,
-            number: prevNumber + 1,
-            message,
-        });
+        try {
+            const prevNumber = await this.getPrevMessageNumber(chatId);
+            const createdMessage: Message = await this.db.Message.create({
+                chatId,
+                senderId,
+                number: prevNumber + 1,
+                message,
+            });
 
-        const chat = await this.repositories.chats.getChatByIdStrict(chatId);
-        chat.changed('updatedAt', true);
-        await chat.update({ updatedAt: createdMessage.createdAt });
+            const chat = await this.repositories.chats.getChatByIdStrict(chatId);
+            chat.changed('updatedAt', true);
+            await chat.update({ updatedAt: createdMessage.createdAt });
 
-        MessagesRepository.ADD_MESSAGE_LOCK.unlock();
-
-        return createdMessage;
+            return createdMessage;
+        } finally {
+            MessagesRepository.ADD_MESSAGE_LOCK.unlock();
+        }
     }
 
     async deleteMessage(messageId: string): Promise<string> {

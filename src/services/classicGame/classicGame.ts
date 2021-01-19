@@ -348,14 +348,16 @@ export class ClassicGameService {
         await this.stateLocker.lock();
         this.stateLocker.block();
 
-        if (this.state) {
-            await this.state.exit();
+        try {
+            if (this.state) {
+                await this.state.exit();
+            }
+            this.state = state;
+            await state.enter();
+        } finally {
+            this.stateLocker.unlock();
+            this.stateLocker.unblock();
         }
-        this.state = state;
-        await state.enter();
-
-        this.stateLocker.unlock();
-        this.stateLocker.unblock();
     }
 
     public async getStateStrictAsync(): Promise<ClassicGameState> {

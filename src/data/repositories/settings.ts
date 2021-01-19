@@ -34,6 +34,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'user::maxBalanceWithoutDeposits': ['200', 'Максимальный баланс пользователя без депозитов'],
     'mines::maxBetAmount': ['100', 'Максимальная ставка в минах'],
     'mines::maxProfitAmount': ['1000', 'Максимальный выигрыш в минах'],
+    'bonus::minsBetweenBonuses': ['15', 'Количество минут для получения следующего бонуса'],
 };
 
 class SettingsRepository extends BaseRepository {
