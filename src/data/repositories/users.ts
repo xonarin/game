@@ -352,10 +352,11 @@ class UsersRepository extends BaseRepository {
     async sumBetsAmountFrom(userId: string, time: Date): Promise<number> {
         // Classic games no care. If you want to use it, take care about bonuses!
 
-        const mines: MinesGame[] = await this.db.MinesGame.findAll({ where: { userId, createdAt: { [Op.gt]: time } } });
-        const minesBets = mines.reduce((acc, game) => acc + game.betAmount, 0);
+        const mines: number = await this.db.MinesGame.sum('betAmount', {
+            where: { userId, createdAt: { [Op.gt]: time } },
+        });
 
-        return minesBets;
+        return mines;
     }
 }
 

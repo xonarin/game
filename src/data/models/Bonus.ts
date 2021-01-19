@@ -24,31 +24,37 @@ export type BonusStatic = AssociableModelStatic<
 >;
 
 export const initBonus = (sequelize: Sequelize): BonusStatic => {
-    const Bonus = sequelize.define('Bonus', {
-        id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            primaryKey: true,
-            autoIncrement: true,
+    const Bonus = sequelize.define(
+        'Bonus',
+        {
+            id: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                primaryKey: true,
+                autoIncrement: true,
 
-            get(this: Bonus) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                get(this: Bonus) {
+                    return ((this.getDataValue('id') as unknown) as number).toString();
+                },
+            },
+
+            userId: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                allowNull: false,
+
+                get(this: Bonus) {
+                    return ((this.getDataValue('userId') as unknown) as number).toString();
+                },
+            },
+
+            amount: {
+                type: DataTypes.DOUBLE(3, 2),
+                allowNull: false,
             },
         },
-
-        userId: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-
-            get(this: Bonus) {
-                return ((this.getDataValue('userId') as unknown) as number).toString();
-            },
+        {
+            indexes: [{ name: 'createdAt', using: 'BTREE', fields: [{ name: 'createdAt', order: 'DESC' }] }],
         },
-
-        amount: {
-            type: DataTypes.DOUBLE(3, 2),
-            allowNull: false,
-        },
-    }) as BonusStatic;
+    ) as BonusStatic;
 
     Bonus.associate = database => {
         Bonus.User = Bonus.belongsTo(database.User, { as: 'user' });

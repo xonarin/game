@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './PrizeInfo.scss';
@@ -74,7 +74,7 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
             <div className={cnPrizeInfo('Action')}>
                 {selectedTab === 'freeCoins' &&
                     (getBonusResult.data !== undefined ? (
-                        <Text color="white">Вы получили {getBonusResult.data.getBonus} монет</Text>
+                        <Text color="white">Вы получили {getBonusResult.data?.getBonus} монет</Text>
                     ) : (
                         <button
                             type="button"
