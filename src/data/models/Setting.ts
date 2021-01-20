@@ -33,7 +33,10 @@ export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
 export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
 
-export type BonusSettings = 'bonus::minsBetweenBonuses' | 'bonus::minDepositsToCreatePromoCode';
+export type BonusSettings =
+    | 'bonus::minsBetweenBonuses'
+    | 'bonus::minVkFriendsToUsePromoCode'
+    | 'bonus::minDepositsToCreatePromoCode';
 
 export type SettingName =
     | ClassicGameSettingName

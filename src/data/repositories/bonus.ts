@@ -8,13 +8,14 @@ import KeyLocker from '../../utils/keyLocker';
 import { PromoCode } from '../models/PromoCode';
 import { PaymentStatus } from '../models/UserPayment';
 import { PromoCodeUse } from '../models/PromoCodeUse';
+import { vkGetFriendsCount, vkIsMemberOfGroup, vkIsPageClosed } from '../../utils/vk';
 
 const promoCodeRegExp = /^\w{4,255}$/;
 
 class BonusRepository extends BaseRepository {
     private getBonusLocker = new KeyLocker<string>();
 
-    async hasBonus(userId: string): Promise<boolean> {
+    async assertHasBonus(userId: string): Promise<void> {
         const lastBonus: Bonus | null = await this.db.Bonus.findOne({
             where: { userId },
             order: [
@@ -34,19 +35,26 @@ class BonusRepository extends BaseRepository {
 
             if (minutesFromLastBonus < minutesBetweenBonuses) {
                 // console.log('has no bonus due to minutes', minutesFromLastBonus);
-                return false;
+                throw new UserError('NOT_ENOUGH_MINS_FROM_BONUS');
             }
 
             const bets = await this.repositories.users.sumBetsAmountFrom(userId, lastBonus.createdAt);
             if (bets < lastBonus.amount) {
                 // console.log('has no bonus due to bets', bets);
-                return false;
+                throw new UserError('NOT_ENOUGH_BETS');
             }
         }
 
-        // TODO check vk
+        await this.repositories.users.assertUserInVkGroup(userId);
+    }
 
-        return true;
+    async hasBonus(userId: string): Promise<boolean> {
+        try {
+            await this.assertHasBonus(userId);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     async getBonus(userId: string): Promise<number> {
@@ -54,11 +62,7 @@ class BonusRepository extends BaseRepository {
             await locker.lock();
 
             try {
-                const hasBonus = await this.hasBonus(userId);
-
-                if (!hasBonus) {
-                    throw new UserError('HAS_NO_BONUS');
-                }
+                await this.assertHasBonus(userId);
 
                 const amount = BonusRepository.generateBonusAmount();
                 return this.db.sequelize.transaction(async transaction => {
@@ -106,7 +110,21 @@ class BonusRepository extends BaseRepository {
             }
         }
 
-        // TODO check vk
+        const vkUserId = await this.repositories.users.assertUserInVkGroup(userId);
+        const isVkPageClosed = await vkIsPageClosed(vkUserId);
+
+        if (isVkPageClosed) {
+            throw new UserError('VK_PAGE_CLOSED');
+        }
+
+        const minFriendsCount = await this.repositories.settings.getSettingAsNumber(
+            'bonus::minVkFriendsToUsePromoCode',
+        );
+
+        const vkFriendsCount = await vkGetFriendsCount(vkUserId);
+        if (vkFriendsCount === undefined || vkFriendsCount < minFriendsCount) {
+            throw new UserError('NOT_ENOUGH_VK_FRIENDS');
+        }
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {
@@ -149,7 +167,7 @@ class BonusRepository extends BaseRepository {
             throw new UserError('PROMO_CODE_NOT_ENOUGH_DEPOSITS');
         }
 
-        // check vk
+        await this.repositories.users.assertUserInVkGroup(userId);
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {

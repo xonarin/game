@@ -48,6 +48,10 @@ export default {
         vk: {
             appId: process.env.VK_APP_ID || '7008761',
             appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
+            appAccessToken: process.env.VK_APP_TOKEN || '',
+
+            groupId: process.env.VK_GROUP_ID || '',
+            groupAccessToken: process.env.VK_GROUP_TOKEN || '',
         },
 
         fk: {

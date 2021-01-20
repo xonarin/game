@@ -8,6 +8,7 @@ import { UserError } from '../../utils/errors';
 import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/graphql';
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
 import { PaymentStatus } from '../models/UserPayment';
+import { vkIsMemberOfGroup } from '../../utils/vk';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
@@ -356,6 +357,27 @@ class UsersRepository extends BaseRepository {
         });
 
         return mines;
+    }
+
+    async getVkIdStrict(userId: string): Promise<string> {
+        const user = await this.getUserByIdStrict(userId);
+
+        if (user.socialType !== SocialType.VK) {
+            throw new UserError('NOT_VK_USER');
+        }
+
+        return user.socialId;
+    }
+
+    async assertUserInVkGroup(userId: string): Promise<string> {
+        const vkUserId = await this.getVkIdStrict(userId);
+        const isMember = await vkIsMemberOfGroup(vkUserId);
+
+        if (!isMember) {
+            throw new UserError('NOT_IN_VK_GROUP');
+        }
+
+        return vkUserId;
     }
 }
 
