@@ -109,7 +109,6 @@ const MessageInputMobile: React.FC<MessageInputMobileProps> = ({
             </Text>
             <Button className={cnMessageInput('SmileButton')} icon="smile" clear />
             <EmojiSelect editableElement={editableRef} />
-            {isPm && (
                 <Button
                     className={cnMessageInput('SendButton')}
                     icon="send"
@@ -117,7 +116,6 @@ const MessageInputMobile: React.FC<MessageInputMobileProps> = ({
                     size="xs"
                     onClick={onSubmit}
                 />
-            )}
         </div>
     );
 };
