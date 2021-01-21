@@ -30,9 +30,36 @@
     }
 
     &-Items {
+        position: relative;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+
+        .WelcomeCard:nth-child(2)::before {
+            content: '';
+            position: absolute;
+            background: url('../../../assets/img/goldsack.png') 0 0 no-repeat;
+            background-size: cover;
+            width: 125px;
+            height: 125px;
+            top: 60%;
+            right: 25px;
+            transform: translateY(-50%);
+
+        }
+
+        .WelcomeCard:nth-child(3)::before {
+            content: '';
+            position: absolute;
+            background: url('../../../assets/img/goldtile.png') 0 0 no-repeat;
+            background-size: cover;
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 25px;
+            transform: translateY(-50%);
+
+        }
     }
 
     .WelcomeCard {

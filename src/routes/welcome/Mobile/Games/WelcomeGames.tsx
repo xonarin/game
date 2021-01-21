@@ -28,14 +28,14 @@ const WelcomeGames: React.FC = () => {
             </div>
             <Scroller className={cnWelcomeGames('List')}>
                 <WelcomeGamesItem
-                    title="DICE"
+                    title="Classic"
                     description="Восприятие, как принято считать, осознает эскапизм, что лишний раз подтверждает правоту З.Фрейда."
-                    type="dice"
+                    type="classic"
                 />
                 <WelcomeGamesItem
-                    title="Fast"
+                    title="Mines"
                     description="Самонаблюдение, исходя из того, что представляет собой субъект. Аутотренинг выбирает стресс."
-                    type="fast"
+                    type="mines"
                 />
                 <WelcomeGamesItem
                     title="KNB"

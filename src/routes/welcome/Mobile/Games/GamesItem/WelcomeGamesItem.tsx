@@ -6,7 +6,7 @@ import { cn } from '../../../../../utils/bem-css-module';
 import Text, { TextProps } from '../../../../../components/Text/Text';
 import TextBlock from '../../../../../components/TextBlock/TextBlock';
 
-type WelcomeGamesItemType = 'dice' | 'fast' | 'knb' | 'battle';
+type WelcomeGamesItemType = 'classic' | 'mines' | 'knb' | 'battle';
 
 export interface WelcomeGamesItemProps {
     title: TextProps['children'];

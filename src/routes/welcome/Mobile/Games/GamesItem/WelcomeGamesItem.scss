@@ -12,8 +12,7 @@
     white-space: initial;
 
     @include mq(max-width 576px) { 
-        height: auto!important;
-        flex: 0 0 50%;
+        flex: 0 0 80%;
      }
 
     &::before {
@@ -28,8 +27,14 @@
         z-index: 0;
     }
 
-    &_type_dice::before { background-color: #471777; }
-    &_type_fast::before { background-color: #1e4076; }
+    &_type_classic::before { 
+        background: url('../../../../../assets/img/classicback.png') center center no-repeat;
+        background-size: cover;
+    }
+    &_type_mines::before { 
+        background: url('../../../../../assets/img/minesback.png') center center no-repeat;
+        background-size: cover;
+    }
     &_type_knb::before { background-color: #1f6077; }
     &_type_battle::before { background-color: #8c2a2a; }
 
@@ -44,7 +49,7 @@
         position: relative;
         z-index: 1;
 
-        .Text { color: lighten($color-gray, 30%); }
+        .Text { color: $color-white; }
     }
 
     & + & { 
