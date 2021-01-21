@@ -94,7 +94,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                                         />
                                     )}
                                 />
-                                <Text>личный чат {unreadCount} </Text>
+                                <Text> Личный чат </Text>
                             </div>
                             <div className={cnSidebar('Message-Type')}>
                                 <button type="button" onClick={() => openChat()}>
