@@ -17,7 +17,7 @@ import PreLoader from '../../components/PreLoader/PreLoader';
 import PopUp from '../../components/PopUp';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
-import LayoutMobile from '../../components/Layout/Mobile/containers/LayoutMobileGame';
+import LayoutMobile from '../../components/Layout/Mobile/containers/LayoutMobileGamenoTabs';
 import MinesGameMobile from './Mobile/MinesGame';
 import MinesBetFormMobile from '../../components/forms/Mobile/MinesBetForm/MinesBetForm';
 
