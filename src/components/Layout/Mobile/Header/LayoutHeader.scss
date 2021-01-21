@@ -37,4 +37,8 @@
         &::before { opacity: 0; }
         &::after { opacity: 1; }
     }
+
+    &-LogoImg {
+        width: 45px;
+    }
 }

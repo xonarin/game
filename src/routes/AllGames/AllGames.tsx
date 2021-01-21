@@ -44,14 +44,14 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                 <div className={cnAllGames('Row')}>
                     <div className={cnAllGames('Game')}>
                         <Link to="/classic">
-                            <img src="/wheel.45b409c3.png" alt="" />
+                            <img src="/classicback.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Classic</h2>
                         </Link>
                     </div>
 
                     <div className={cnAllGames('Game')}>
                         <Link to="/mines">
-                            <img src="/mines.185b60b6.png" alt="" />
+                            <img src="/minesback.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Mines</h2>
                         </Link>
                     </div>

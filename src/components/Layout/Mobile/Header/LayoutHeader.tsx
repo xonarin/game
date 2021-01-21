@@ -41,7 +41,7 @@ const LayoutHeaderMobile: React.FC = () => {
                 </div>
 
                 <Link to="/all-games">
-                    <img src={logoImg} alt="Рулетка" />
+                    <img className={cnLayoutHeader('LogoImg')} src={logoImg} alt="Рулетка" />
                 </Link>
                 <Balance money={me?.money || 0} />
             </div>
