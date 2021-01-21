@@ -70,4 +70,28 @@
 
         & &-Title .Text { font-size: 20px; }
     }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: url('../../../../assets/img/syndyk2.png') 0 0 no-repeat;
+        background-size: cover;
+        left: 10px;
+        width: 270px;
+        height: 255px;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: url('../../../../assets/img/syndyk1.png') 0 0 no-repeat;
+        background-size: cover;
+        right: 10px;
+        width: 270px;
+        height: 255px;
+    }
 }
