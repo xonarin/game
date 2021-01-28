@@ -24,19 +24,17 @@ interface LiveFeedItem {
     time: string;
 }
 
-export interface LiveFeedTableProps {}
-
 const cnLiveFeedTable = cn(s, 'LiveFeedTable');
 
-// @ts-ignore TS не видит, что функция не может вернуть undefined
-// eslint-disable-next-line consistent-return
 const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
     if (game === 'classic') return 'sword';
     if (game === 'mines') return 'bomb';
     if (game === 'knb') return 'scissors';
+
+    return 'automat';
 };
 
-const LiveFeedTable: React.FC<LiveFeedTableProps> = () => {
+const LiveFeedTable: React.FC = () => {
     useStyles(s);
 
     const { loading, games } = useGamesQuery();

@@ -15,7 +15,9 @@ interface UseGamesQueryResult {
 }
 
 const useGamesQuery = (): UseGamesQueryResult => {
-    const { data, loading, subscribeToMore } = useQuery<GamesQueryQuery, GamesQueryQueryVariables>(GamesQueryDocument);
+    const { data, loading, subscribeToMore } = useQuery<GamesQueryQuery, GamesQueryQueryVariables>(GamesQueryDocument, {
+        fetchPolicy: 'cache-and-network',
+    });
 
     useEffect(() => {
         const subscriptions: Function[] = [];

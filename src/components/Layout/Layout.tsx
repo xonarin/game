@@ -48,19 +48,14 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         if (fullScreen || chat) {
             return <>{chat ? <Chat chatId="1" closeChat={() => chatChange()} /> : <div>{children}</div>}</>;
         }
+
         return (
             <div className={cnLayout()}>
                 <div className={cnLayout('Main')}>
                     <LayoutHeaderMobile />
-                    {popUp ? (
-                        <PopUp close={() => popUpChange()} />
-                    ) : (
-                        <div className={cnLayout('Content')}>{children}</div>
-                    )}
+                    {popUp ? <PopUp close={popUpChange} /> : <div className={cnLayout('Content')}>{children}</div>}
                     <SidebarMobile
-                        openPopUp={() => {
-                            setPopUp(true);
-                        }}
+                        openPopUp={popUpChange}
                         openChat={() => chatChange()}
                         closePopUp={() => setPopUp(false)}
                     />
