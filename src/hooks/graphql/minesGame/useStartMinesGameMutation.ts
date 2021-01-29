@@ -10,7 +10,7 @@ import {
 import useMutationWithNotify from '../useMutationWithNotify';
 
 export interface UseStartMinesGameMutationResult {
-    (input: StartMinesGameInput): Promise<FetchResult<StartMinesGameMutation>>;
+    (input: StartMinesGameInput): Promise<FetchResult<StartMinesGameMutation> | undefined>;
 }
 
 const useStartMinesGameMutation = (): UseStartMinesGameMutationResult => {

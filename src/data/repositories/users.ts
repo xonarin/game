@@ -87,10 +87,8 @@ class UsersRepository extends BaseRepository {
                     ? await this.repositories.settings.getSettingAsNumber('user::maxBalanceWithoutDeposits')
                     : Infinity;
 
-            const newUser: User = await user.update(
-                { money: Math.min(maxBalance, user.money + amount) },
-                { transaction: tr },
-            );
+            await user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
+            const newUser: User = await user.reload({ transaction: tr });
 
             pubsub.publish('balance', { userId, money: newUser.money }).then();
             return newUser;
@@ -107,7 +105,8 @@ class UsersRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_MONEY');
             }
 
-            const newUser: User = await user.update({ money: user.money - amount }, { transaction: tr });
+            await user.update({ money: user.money - amount }, { transaction: tr });
+            const newUser: User = await user.reload({ transaction: tr });
 
             pubsub.publish('balance', { userId, money: newUser.money }).then();
             return newUser;
