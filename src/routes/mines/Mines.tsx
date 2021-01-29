@@ -27,15 +27,6 @@ export interface MinesProps {
 
 const cnMines = cn(s, 'Mines');
 
-const items = [
-    { id: 1, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 2, game: 'dice' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 3, game: 'knb' as const, winner: 'Donald', chance: 10, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 4, game: 'dice' as const, winner: 'Donald', chance: 83, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 5, game: 'knb' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-];
-
 const Mines: React.FC<MinesProps> = ({ chatId }) => {
     useStyles(s);
 
@@ -46,6 +37,8 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
     const [formBombsCount, setFormBombsCount] = useState(
         activeMinesGame?.bombsCount || minesGameConfiguration?.minBombsCount || BOMBS_COUNT_BREAKPOINTS[0],
     );
+
+    const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (
             typeof window !== 'undefined' &&
@@ -64,7 +57,6 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
         setDirty(false);
     }, [activeMinesGame]);
     const [popup, setPopup] = useState(false);
-    const [mobile, setMobile] = useState(false);
     const popUpClose = () => {
         setPopup(false);
     };
@@ -131,7 +123,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                                 </Text>
                             }
                         >
-                            <LiveFeedTableMobile items={items} />
+                            <LiveFeedTableMobile />
                         </Panel>
                     )
                 }
@@ -183,7 +175,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                         </Text>
                     }
                 >
-                    <LiveFeedTable items={items} />
+                    <LiveFeedTable />
                 </Panel>
             }
         />

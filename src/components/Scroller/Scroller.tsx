@@ -12,12 +12,13 @@ export interface ScrollerProps {
     scrollDuration?: number;
     className?: string;
     children: React.ReactNode;
+    viewportRef?: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const cnScroller = cn(s, 'Scroller');
 
 const Scroller = React.forwardRef<HTMLDivElement, ScrollerProps>(
-    ({ withControls, scrollDuration = 500, children, className }, ref) => {
+    ({ withControls, scrollDuration = 500, children, className, viewportRef }, ref) => {
         useStyles(s);
 
         const viewport = useRef<HTMLDivElement | null>(null);
@@ -47,6 +48,18 @@ const Scroller = React.forwardRef<HTMLDivElement, ScrollerProps>(
         const onClickLeftControl = useCallback(() => onClickControl(false), [onClickControl]);
         const onClickRightControl = useCallback(() => onClickControl(true), [onClickControl]);
 
+        const finalViewportRef = useCallback(
+            (vp: HTMLDivElement | null) => {
+                viewport.current = vp;
+
+                if (viewportRef) {
+                    // eslint-disable-next-line no-param-reassign
+                    viewportRef.current = vp;
+                }
+            },
+            [viewportRef],
+        );
+
         return (
             <div className={cnScroller(null, [className])} ref={ref}>
                 {withControls && (
@@ -60,7 +73,7 @@ const Scroller = React.forwardRef<HTMLDivElement, ScrollerProps>(
                     />
                 )}
                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                <div className={cnScroller('Viewport')} ref={viewport} onMouseDown={onDragStart}>
+                <div className={cnScroller('Viewport')} ref={finalViewportRef} onMouseDown={onDragStart}>
                     <div className={cnScroller('Items')}>{children}</div>
                 </div>
                 {withControls && (

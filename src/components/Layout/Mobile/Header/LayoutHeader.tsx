@@ -16,11 +16,12 @@ const cnLayoutHeader = cn(s, 'LayoutHeader');
 const LayoutHeaderMobile: React.FC = () => {
     useStyles(s);
 
-    const { me, loading } = useMeQuery();
+    const { me } = useMeQuery();
 
-    if (loading) {
+    if (!me) {
         return <PreLoader />;
     }
+
     return (
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>

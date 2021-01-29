@@ -49,9 +49,9 @@ const ClassicGameForm: React.FC<ClassicGameFormProps> = ({ minBetAmount, classNa
         [minBetAmount, placeClassicGameBetMutation],
     );
 
-    const { loading, me } = useMeQuery();
+    const { me } = useMeQuery();
 
-    if (loading || !me) {
+    if (!me) {
         return <PreLoader />;
     }
 

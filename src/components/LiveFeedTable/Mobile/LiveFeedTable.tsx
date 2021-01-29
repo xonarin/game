@@ -37,9 +37,9 @@ const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
 const LiveFeedTable: React.FC = () => {
     useStyles(s);
 
-    const { loading, games } = useGamesQuery();
+    const { games } = useGamesQuery();
 
-    if (loading || games === undefined) {
+    if (games === undefined) {
         return null;
     }
 

@@ -25,9 +25,9 @@ const cnHistoryTable = cn(s, 'HistoryTable');
 const HistoryTable: React.FC = () => {
     useStyles(s);
 
-    const { loading, classicGamesHistory } = useClassicGamesHistory();
+    const { classicGamesHistory } = useClassicGamesHistory();
 
-    if (loading || !classicGamesHistory) {
+    if (!classicGamesHistory) {
         return <div>Loading...</div>;
     }
 

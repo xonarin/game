@@ -18,10 +18,10 @@ const cnLayoutHeader = cn(s, 'LayoutHeader');
 const LayoutHeader: React.FC = () => {
     useStyles(s);
 
-    const { me, loading } = useMeQuery();
+    const { me } = useMeQuery();
     const { unreadCount } = useUnreadCountQuery();
 
-    if (loading) {
+    if (!me) {
         return <PreLoader />;
     }
 

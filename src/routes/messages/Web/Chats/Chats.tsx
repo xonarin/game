@@ -71,6 +71,7 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
                     item.members.length === 2 &&
                     item.members.some(member => member.id === userId),
             );
+
             if (existingChat) {
                 history.push(`/messages/${existingChat.id}`);
             }
