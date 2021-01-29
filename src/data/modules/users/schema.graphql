@@ -16,6 +16,10 @@ type Mutation {
     updateServerSeed: UpdateServerSeedPayload!
 }
 
+type Subscription {
+    balance: Float
+}
+
 enum UserRole {
     Default
     Moderator

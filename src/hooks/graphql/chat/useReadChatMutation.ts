@@ -7,7 +7,7 @@ import memoizedThrottle from '../../../utils/memoizedThrottle';
 import { deleteAnnouncementsByChatId } from '../../../cache/announcements';
 
 export interface UseReadChatMutationResult {
-    (chatId: string): Promise<FetchResult<ReadChatMutation>>;
+    (chatId: string): Promise<FetchResult<ReadChatMutation> | undefined>;
 }
 
 const READ_NOTIFICATION_INTERVAL = 5000;

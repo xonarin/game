@@ -9,6 +9,7 @@ import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/gr
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
 import { PaymentStatus } from '../models/UserPayment';
 import { vkIsMemberOfGroup } from '../../utils/vk';
+import pubsub from '../pubsub';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
@@ -79,18 +80,20 @@ class UsersRepository extends BaseRepository {
     async giveMoney(userId: string, amount: number, transaction?: Transaction): Promise<User> {
         const f = async (tr: Transaction) => {
             const user = await this.getUserByIdStrict(userId, tr);
-
             const payments = await this.repositories.payments.getPaymentsByUserId(userId, PaymentStatus.FINISHED, tr);
 
-            if (payments.length === 0) {
-                const maxBalance = await this.repositories.settings.getSettingAsNumber(
-                    'user::maxBalanceWithoutDeposits',
-                );
+            const maxBalance =
+                payments.length === 0
+                    ? await this.repositories.settings.getSettingAsNumber('user::maxBalanceWithoutDeposits')
+                    : Infinity;
 
-                return user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
-            }
+            const newUser: User = await user.update(
+                { money: Math.min(maxBalance, user.money + amount) },
+                { transaction: tr },
+            );
 
-            return user.update({ money: user.money + amount }, { transaction: tr });
+            pubsub.publish('balance', { userId, money: newUser.money }).then();
+            return newUser;
         };
 
         return transaction ? f(transaction) : this.db.sequelize.transaction(f);
@@ -104,7 +107,10 @@ class UsersRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_MONEY');
             }
 
-            return user.update({ money: user.money - amount }, { transaction: tr });
+            const newUser: User = await user.update({ money: user.money - amount }, { transaction: tr });
+
+            pubsub.publish('balance', { userId, money: newUser.money }).then();
+            return newUser;
         };
 
         return transaction ? f(transaction) : this.db.sequelize.transaction(f);
@@ -119,6 +125,7 @@ class UsersRepository extends BaseRepository {
                 ),
                 0,
             ) + FREE_REFERRALS;
+
         const actualReferralsCount = await this.db.User.count({
             where: {
                 refId: referrer.id,

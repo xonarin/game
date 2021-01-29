@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { useSubscription } from '@apollo/client';
 
 import s from './Layout.scss';
 import { cn } from '../../utils/bem-css-module';
@@ -11,6 +12,14 @@ import SidebarMobile from './Mobile/Sidebar/Sidebar';
 import PreLoader from '../PreLoader/PreLoader';
 import PopUp from './Mobile/PopUp/PopUp';
 import Chat from '../Chat/Mobile/Chat';
+import {
+    BalanceSubscriptionDocument,
+    BalanceSubscriptionSubscription,
+    BalanceSubscriptionSubscriptionVariables,
+    MeDocument,
+    MeQuery,
+    MeQueryVariables,
+} from '../../__generated__/graphql';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -31,6 +40,30 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
         }
     }, [isLoading]);
     useStyles(s);
+
+    useSubscription<BalanceSubscriptionSubscription, BalanceSubscriptionSubscriptionVariables>(
+        BalanceSubscriptionDocument,
+        {
+            onSubscriptionData: ({ client, subscriptionData }) => {
+                const { data } = subscriptionData;
+
+                if (data?.balance === undefined || data.balance === null) {
+                    return;
+                }
+
+                const meQuery = client.cache.readQuery<MeQuery, MeQueryVariables>({ query: MeDocument });
+                if (!meQuery?.me) {
+                    return;
+                }
+
+                const { me } = meQuery;
+                client.cache.modify({
+                    id: client.cache.identify(me),
+                    fields: { money: () => data.balance },
+                });
+            },
+        },
+    );
 
     const popUpChange = () => {
         setPopUp(!popUp);

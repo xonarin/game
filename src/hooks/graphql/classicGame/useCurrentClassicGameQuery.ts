@@ -29,100 +29,114 @@ const useCurrentClassicGameQuery = (): UserCurrentClassicGameQueryResult => {
     });
 
     useEffect(() => {
-        subscribeToMore<PlacedClassicGameBetSubscription>({
-            document: PlacedClassicGameBetDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.placedClassicGameBet) return prev;
+        const subscriptions: Function[] = [];
 
-                const { placedClassicGameBet } = subscriptionData.data;
+        subscriptions.push(
+            subscribeToMore<PlacedClassicGameBetSubscription>({
+                document: PlacedClassicGameBetDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data.placedClassicGameBet) return prev;
 
-                return {
-                    ...prev,
-                    currentClassicGame: {
-                        ...prev.currentClassicGame,
-                        fund: placedClassicGameBet.fund,
-                        bets: [placedClassicGameBet.bet, ...prev.currentClassicGame.bets],
-                        players: placedClassicGameBet.players,
-                    },
-                };
-            },
-        });
+                    const { placedClassicGameBet } = subscriptionData.data;
 
-        subscribeToMore<StartedClassicGameSubscription>({
-            document: StartedClassicGameDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.startedClassicGame) return prev;
+                    return {
+                        ...prev,
+                        currentClassicGame: {
+                            ...prev.currentClassicGame,
+                            fund: placedClassicGameBet.fund,
+                            bets: [placedClassicGameBet.bet, ...prev.currentClassicGame.bets],
+                            players: placedClassicGameBet.players,
+                        },
+                    };
+                },
+            }),
+        );
 
-                const { startedClassicGame } = subscriptionData.data;
+        subscriptions.push(
+            subscribeToMore<StartedClassicGameSubscription>({
+                document: StartedClassicGameDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data.startedClassicGame) return prev;
 
-                return {
-                    ...prev,
-                    currentClassicGame: startedClassicGame,
-                };
-            },
-        });
+                    const { startedClassicGame } = subscriptionData.data;
 
-        subscribeToMore<UpdatedClassicGameTimerSubscription>({
-            document: UpdatedClassicGameTimerDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.updatedClassicGameTimer) return prev;
+                    return {
+                        ...prev,
+                        currentClassicGame: startedClassicGame,
+                    };
+                },
+            }),
+        );
 
-                const { updatedClassicGameTimer } = subscriptionData.data;
+        subscriptions.push(
+            subscribeToMore<UpdatedClassicGameTimerSubscription>({
+                document: UpdatedClassicGameTimerDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data.updatedClassicGameTimer) return prev;
 
-                return {
-                    ...prev,
-                    currentClassicGame: {
-                        ...prev.currentClassicGame,
-                        state: updatedClassicGameTimer.state,
-                        timer: updatedClassicGameTimer.timer,
-                        maxTimer: updatedClassicGameTimer.maxTimer,
-                    },
-                };
-            },
-        });
+                    const { updatedClassicGameTimer } = subscriptionData.data;
 
-        subscribeToMore<SwitchedToClassicGameStateCulminationSubscription>({
-            document: SwitchedToClassicGameStateCulminationDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.switchedToClassicGameStateCulmination) return prev;
+                    return {
+                        ...prev,
+                        currentClassicGame: {
+                            ...prev.currentClassicGame,
+                            state: updatedClassicGameTimer.state,
+                            timer: updatedClassicGameTimer.timer,
+                            maxTimer: updatedClassicGameTimer.maxTimer,
+                        },
+                    };
+                },
+            }),
+        );
 
-                const { switchedToClassicGameStateCulmination } = subscriptionData.data;
+        subscriptions.push(
+            subscribeToMore<SwitchedToClassicGameStateCulminationSubscription>({
+                document: SwitchedToClassicGameStateCulminationDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data.switchedToClassicGameStateCulmination) return prev;
 
-                return {
-                    ...prev,
-                    currentClassicGame: {
-                        ...prev.currentClassicGame,
-                        state: ClassicGameState.Culmination,
-                        culminationDegree: switchedToClassicGameStateCulmination.culminationDegree,
-                        remainingCulminationDuration:
-                            switchedToClassicGameStateCulmination.remainingCulminationDuration,
-                    },
-                };
-            },
-        });
+                    const { switchedToClassicGameStateCulmination } = subscriptionData.data;
 
-        subscribeToMore<SwitchedToClassicGameStateEndedSubscription>({
-            document: SwitchedToClassicGameStateEndedDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.switchedToClassicGameStateEnded) return prev;
+                    return {
+                        ...prev,
+                        currentClassicGame: {
+                            ...prev.currentClassicGame,
+                            state: ClassicGameState.Culmination,
+                            culminationDegree: switchedToClassicGameStateCulmination.culminationDegree,
+                            remainingCulminationDuration:
+                                switchedToClassicGameStateCulmination.remainingCulminationDuration,
+                        },
+                    };
+                },
+            }),
+        );
 
-                const { switchedToClassicGameStateEnded } = subscriptionData.data;
+        subscriptions.push(
+            subscribeToMore<SwitchedToClassicGameStateEndedSubscription>({
+                document: SwitchedToClassicGameStateEndedDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data.switchedToClassicGameStateEnded) return prev;
 
-                return {
-                    ...prev,
-                    currentClassicGame: {
-                        ...prev.currentClassicGame,
-                        state: ClassicGameState.Ended,
-                        randomNumber: switchedToClassicGameStateEnded.randomNumber,
-                        winnerId: switchedToClassicGameStateEnded.winnerId,
-                        winnerUsername: switchedToClassicGameStateEnded.winnerUsername,
-                        winnerAvatar: switchedToClassicGameStateEnded.winnerAvatar,
-                        winnerTicket: switchedToClassicGameStateEnded.winnerTicket,
-                        winnerChance: switchedToClassicGameStateEnded.winnerChance,
-                    },
-                };
-            },
-        });
+                    const { switchedToClassicGameStateEnded } = subscriptionData.data;
+
+                    return {
+                        ...prev,
+                        currentClassicGame: {
+                            ...prev.currentClassicGame,
+                            state: ClassicGameState.Ended,
+                            randomNumber: switchedToClassicGameStateEnded.randomNumber,
+                            winnerId: switchedToClassicGameStateEnded.winnerId,
+                            winnerUsername: switchedToClassicGameStateEnded.winnerUsername,
+                            winnerAvatar: switchedToClassicGameStateEnded.winnerAvatar,
+                            winnerTicket: switchedToClassicGameStateEnded.winnerTicket,
+                            winnerChance: switchedToClassicGameStateEnded.winnerChance,
+                        },
+                    };
+                },
+            }),
+        );
+
+        return () => subscriptions.forEach(unsubscribe => unsubscribe());
     }, [subscribeToMore]);
 
     return {

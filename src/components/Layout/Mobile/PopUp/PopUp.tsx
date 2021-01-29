@@ -3,10 +3,8 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './PopUp.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import Text from '../../../Text/Text';
 import Icon from '../../../Icon/Icon';
 import LiveFeedTable from '../../../LiveFeedTable/Mobile/LiveFeedTable';
-import useGamesQuery from '../../../../hooks/graphql/liveData/useGamesQuery';
 
 export interface PopUpProps {
     close: Function;

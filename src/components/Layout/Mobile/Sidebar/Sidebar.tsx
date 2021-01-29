@@ -86,7 +86,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                                 <Link
                                     to="/messages"
                                     isSoft
-                                    render={isActive => (
+                                    render={() => (
                                         <AlarmButton
                                             isAlarm={Boolean(unreadCount && unreadCount > 0)}
                                             icon="message"

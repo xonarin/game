@@ -8,7 +8,7 @@ import {
 import useMutationWithNotify from '../useMutationWithNotify';
 
 export interface UseEndMinesGameMutationResult {
-    (): Promise<FetchResult<EndMinesGameMutation>>;
+    (): Promise<FetchResult<EndMinesGameMutation> | undefined>;
 }
 
 const useEndMinesGameMutation = (): UseEndMinesGameMutationResult => {

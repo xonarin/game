@@ -9,7 +9,7 @@ import {
 import useMutationWithNotify from '../useMutationWithNotify';
 
 export interface UseMakeMinesGameStepMutationResult {
-    (cell: number): Promise<FetchResult<MakeMinesGameStepMutation>>;
+    (cell: number): Promise<FetchResult<MakeMinesGameStepMutation> | undefined>;
 }
 
 const useMakeMinesGameStepMutation = (): UseMakeMinesGameStepMutationResult => {
