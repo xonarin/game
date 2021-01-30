@@ -24,14 +24,12 @@ export default {
     databaseUrl:
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
-         'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
-        //'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
+        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
+    // 'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
 
     // Redis
-    redisUrl:
-        process.env.REDIS_URL ||
-         'localhost',
-        //'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
+    redisUrl: process.env.REDIS_URL || 'localhost',
+    // 'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
 
     // Web analytics
     analytics: {
@@ -60,6 +58,12 @@ export default {
             secret2: process.env.FK_SECRET2 || 'g0cj8gw8',
             walletId: process.env.FK_WALLET_ID || 'F101281784',
             apiKey: process.env.FK_API_KEY || 'B733D6F3C6F167DD948E4DA95B3A091F',
+        },
+
+        qiwi: {
+            proxy: process.env.QIWI_PROXY || '',
+            personId: process.env.QIWI_PERSON_ID || '',
+            personToken: process.env.QIWI_PERSON_TOKEN || '',
         },
     },
 

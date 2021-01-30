@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Transaction.scss';
@@ -8,20 +8,24 @@ import { cn } from '../../utils/bem-css-module';
 import { History, HistoryRef } from './History/History';
 import { DepositForm } from './Payment/DepositForm';
 import { WithdrawForm } from './Payment/WithdrawForm';
+import QiwiWithdrawForm from './Payment/QiwiWithdrawForm';
+import { MeQuery, UserRole } from '../../__generated__/graphql';
+import useMeQuery from '../../hooks/graphql/users/useMeQuery';
 
 export interface TransactionProps {
     mobile?: boolean;
     close?: () => void;
 }
 
-type SelectedTypeType = 'deposit' | 'withdraw' | 'history';
+type SelectedTypeType = 'deposit' | 'withdraw' | 'qiwiWithdraw' | 'history';
 
 const cnTransaction = cn(s, 'Transaction');
 
-const types: [SelectedTypeType, IconProps['type'], React.ReactNode][] = [
-    ['deposit', 'add', 'Пополнение'],
-    ['withdraw', 'minus', 'Вывод'],
-    ['history', 'clock', 'История'],
+const types: [SelectedTypeType, IconProps['type'], React.ReactNode, (me: MeQuery['me'] | undefined) => boolean][] = [
+    ['deposit', 'add', 'Пополнение', () => true],
+    ['withdraw', 'minus', 'Вывод', () => true],
+    ['qiwiWithdraw', 'minus', 'Вывод с Qiwi', me => me?.role === UserRole.Admin],
+    ['history', 'clock', 'История', () => true],
 ];
 
 export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close }) => {
@@ -44,11 +48,14 @@ export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close 
         o();
     }, []);
 
+    const { me } = useMeQuery();
+    const personalTypes = useMemo(() => types.filter(type => type[3](me)), [me]);
+
     return (
         <div className={cnTransaction({ mobile })}>
             <div className={cnTransaction('Header')}>
                 <div className={cnTransaction('Types')}>
-                    {types.map(([type, icon, label]) => (
+                    {personalTypes.map(([type, icon, label]) => (
                         <button
                             key={type}
                             type="button"
@@ -68,6 +75,7 @@ export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close 
 
             {selectedType === 'deposit' && <DepositForm mobile={mobile} />}
             {selectedType === 'withdraw' && <WithdrawForm mobile={mobile} openWithdrawHistory={openWithdrawHistory} />}
+            {me?.role === UserRole.Admin && selectedType === 'qiwiWithdraw' && <QiwiWithdrawForm />}
             {selectedType === 'history' && <History mobile={mobile} ref={historyRef} />}
         </div>
     );

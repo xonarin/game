@@ -1,0 +1,8 @@
+query QiwiWithdrawStats {
+    qiwiWithdrawStats {
+        turnover
+        restrictions
+        balance
+        providers
+    }
+}

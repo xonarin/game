@@ -13,6 +13,7 @@ import {
     Payment,
     PaymentMethod,
     PaymentStatus,
+    QiwiWithdrawStats,
     Query,
     Withdraw,
     WithdrawMethod,
@@ -21,16 +22,22 @@ import {
 import { PaymentMethod as PaymentMethodBackend } from '../../models/PaymentMethod';
 import { repositories } from '../../database';
 import { WithdrawMethod as WithdrawMethodBackend } from '../../models/WithdrawMethod';
-import { isAuth } from '../rules';
+import { isAdmin, isAuth } from '../rules';
 import { UserError } from '../../../utils/errors';
 import { md5Hash } from '../../../utils/crypto';
 import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
+import { qiwiFetchBalance, qiwiFetchMonthlyTurnover, qiwiFetchRestrictions } from '../../../utils/qiwi';
 
 type QueryType = Pick<
     Query,
-    'availablePaymentMethods' | 'availableWithdrawMethods' | 'payments' | 'withdraws' | 'payedTotal'
+    | 'availablePaymentMethods'
+    | 'availableWithdrawMethods'
+    | 'payments'
+    | 'withdraws'
+    | 'payedTotal'
+    | 'qiwiWithdrawStats'
 >;
 type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw'>;
 
@@ -46,6 +53,15 @@ type WithdrawMethodType = Pick<
 
 type PaymentType = Pick<Payment, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
 type WithdrawType = Pick<Withdraw, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
+
+type QiwiWithdrawStatsType = Pick<QiwiWithdrawStats, 'turnover' | 'restrictions' | 'balance' | 'providers'>;
+
+interface QiwiWithdrawStatsParent {
+    turnover: string;
+    restrictions: string[];
+    balance: string;
+    providers: string[];
+}
 
 interface QueryMapping {
     readonly availablePaymentMethods: Resolver<PaymentMethodBackend[]>;
@@ -68,6 +84,7 @@ type PaymentsResolvers = Resolvers<
         WithdrawMethod: TypeResolvers<WithdrawMethodType, {}, WithdrawMethodBackend>;
         Payment: TypeResolvers<PaymentType, {}, UserPayment>;
         Withdraw: TypeResolvers<WithdrawType, {}, UserWithdraw>;
+        QiwiWithdrawStats: TypeResolvers<QiwiWithdrawStatsType, {}, QiwiWithdrawStatsParent>;
         DateTime: GraphQLScalarType;
         URL: GraphQLScalarType;
     },
@@ -78,6 +95,7 @@ export const rules: IRules = {
     Query: {
         payments: isAuth,
         withdraws: isAuth,
+        qiwiWithdrawStats: isAdmin,
     },
     Mutation: {
         doDeposit: isAuth,
@@ -99,6 +117,13 @@ export const resolvers: PaymentsResolvers = {
 
             return withdraws.reduce((sum, withdraw) => sum + withdraw.sum, 0);
         },
+
+        qiwiWithdrawStats: async () => ({
+            turnover: await qiwiFetchMonthlyTurnover(),
+            restrictions: await qiwiFetchRestrictions(),
+            balance: await qiwiFetchBalance(),
+            providers: [],
+        }),
     },
     Mutation: {
         doDeposit: async (_0, { amount, method }, { user }) => {
