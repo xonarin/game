@@ -68,6 +68,7 @@
         "resize-observer-polyfill": "^1.5.1",
         "sequelize": "^5.21.2",
         "serialize-javascript": "^2.1.1",
+        "socks-proxy-agent": "^5.0.0",
         "source-map-support": "^0.5.16",
         "string.prototype.includes": "^1.0.0",
         "subscriptions-transport-ws": "^0.9.16",

@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 import * as queryString from 'querystring';
+import SocksProxyAgent from 'socks-proxy-agent/dist/agent';
+import * as http from 'http';
 
 import config from '../config';
 import Locker from './locker';
@@ -36,8 +38,10 @@ export interface QiwiBalance {
 
 const qiwiPersonId = config.auth.qiwi.personId;
 const qiwiPersonToken = config.auth.qiwi.personToken;
+const qiwiProxyOptions = config.auth.qiwi.proxy.hostname ? config.auth.qiwi.proxy : undefined;
 
 const qiwiApiLocker = new Locker();
+const qiwiAgent = qiwiProxyOptions ? new SocksProxyAgent(qiwiProxyOptions) : undefined;
 
 const qiwiApi = async <T>({
     host,
@@ -55,6 +59,7 @@ const qiwiApi = async <T>({
 
         const response = await fetch(`https://${host}/${resource}?${query}`, {
             method,
+            agent: qiwiAgent as http.Agent | undefined,
             headers: {
                 Accept: 'application/json',
                 ...authorizationHeaders,

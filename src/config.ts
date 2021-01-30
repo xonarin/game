@@ -61,9 +61,15 @@ export default {
         },
 
         qiwi: {
-            proxy: process.env.QIWI_PROXY || '',
-            personId: process.env.QIWI_PERSON_ID || '',
-            personToken: process.env.QIWI_PERSON_TOKEN || '',
+            proxy: {
+                protocol: process.env.QIWI_PROXY_PROTOCOL || 'socks5h:',
+                hostname: process.env.QIWI_PROXY_HOST || '45.132.20.180',
+                port: process.env.QIWI_PROXY_PORT || '8000',
+                userId: process.env.QIWI_PROXY_USER || 'czfagH',
+                password: process.env.QIWI_PROXY_PASSWORD || 'aywpBJ',
+            },
+            personId: process.env.QIWI_PERSON_ID || '79609646995',
+            personToken: process.env.QIWI_PERSON_TOKEN || '38fe2a4662dff7c79c5d829be049aca1',
         },
     },
 
