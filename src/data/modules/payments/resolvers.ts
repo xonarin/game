@@ -13,6 +13,8 @@ import {
     Payment,
     PaymentMethod,
     PaymentStatus,
+    QiwiLimit,
+    QiwiLimitInterval,
     QiwiWithdrawStats,
     Query,
     Withdraw,
@@ -28,7 +30,12 @@ import { md5Hash } from '../../../utils/crypto';
 import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
-import { qiwiFetchBalance, qiwiFetchMonthlyTurnover, qiwiFetchRestrictions } from '../../../utils/qiwi';
+import {
+    qiwiFetchBalance,
+    qiwiFetchMonthlyTurnover,
+    qiwiFetchRestrictions,
+    QiwiLimit as QiwiLimitBackend,
+} from '../../../utils/qiwi';
 
 type QueryType = Pick<
     Query,
@@ -54,13 +61,14 @@ type WithdrawMethodType = Pick<
 type PaymentType = Pick<Payment, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
 type WithdrawType = Pick<Withdraw, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
 
-type QiwiWithdrawStatsType = Pick<QiwiWithdrawStats, 'turnover' | 'restrictions' | 'balance' | 'providers'>;
+type QiwiWithdrawStatsType = Pick<QiwiWithdrawStats, 'turnover' | 'restrictions' | 'balance'>;
+type QiwiLimitType = Pick<QiwiLimit, 'type' | 'currency' | 'rest' | 'max' | 'spent' | 'interval'>;
+type QiwiLimitIntervalType = Pick<QiwiLimitInterval, 'dateFrom' | 'dateTill'>;
 
 interface QiwiWithdrawStatsParent {
-    turnover: string;
-    restrictions: string[];
-    balance: string;
-    providers: string[];
+    turnover?: QiwiLimitBackend;
+    restrictions?: string[];
+    balance?: number;
 }
 
 interface QueryMapping {
@@ -68,6 +76,8 @@ interface QueryMapping {
     readonly availableWithdrawMethods: Resolver<WithdrawMethodBackend[]>;
     readonly payments: Resolver<UserPayment[]>;
     readonly withdraws: Resolver<UserWithdraw[]>;
+    readonly payedTotal: Resolver<number>;
+    readonly qiwiWithdrawStats: Resolver<QiwiWithdrawStatsParent>;
 }
 
 interface MutationMapping {
@@ -85,6 +95,8 @@ type PaymentsResolvers = Resolvers<
         Payment: TypeResolvers<PaymentType, {}, UserPayment>;
         Withdraw: TypeResolvers<WithdrawType, {}, UserWithdraw>;
         QiwiWithdrawStats: TypeResolvers<QiwiWithdrawStatsType, {}, QiwiWithdrawStatsParent>;
+        QiwiLimit: TypeResolvers<QiwiLimitType, {}, QiwiLimitBackend>;
+        QiwiLimitInterval: TypeResolvers<QiwiLimitIntervalType, {}, QiwiLimitBackend['interval']>;
         DateTime: GraphQLScalarType;
         URL: GraphQLScalarType;
     },
@@ -122,7 +134,6 @@ export const resolvers: PaymentsResolvers = {
             turnover: await qiwiFetchMonthlyTurnover(),
             restrictions: await qiwiFetchRestrictions(),
             balance: await qiwiFetchBalance(),
-            providers: [],
         }),
     },
     Mutation: {

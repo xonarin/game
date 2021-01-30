@@ -13,6 +13,27 @@ interface QiwiApiParams<T> {
     typeGuard?: (value: unknown) => value is T;
 }
 
+export interface QiwiLimit {
+    type: string;
+    currency: string;
+    rest: number;
+    max: number;
+    spent: number;
+    interval: {
+        dateFrom: string;
+        dateTill: string;
+    };
+}
+
+export interface QiwiBalance {
+    alias: string;
+    hasBalance: boolean;
+    balance: null | {
+        amount: number;
+    };
+    currency: number;
+}
+
 const qiwiPersonId = config.auth.qiwi.personId;
 const qiwiPersonToken = config.auth.qiwi.personToken;
 
@@ -24,7 +45,7 @@ const qiwiApi = async <T>({
     resource,
     method = 'GET',
     queryParams = {},
-    typeGuard,
+    typeGuard = (_0): _0 is T => true,
 }: QiwiApiParams<T>): Promise<T> => {
     await qiwiApiLocker.lock();
 
@@ -58,10 +79,6 @@ const qiwiApi = async <T>({
             throw new Error('Qiwi API error');
         });
 
-        if (!typeGuard) {
-            return responseJson;
-        }
-
         if (!typeGuard(responseJson)) {
             console.warn(
                 'qiwiApi !typeGuard(responseJson)',
@@ -78,7 +95,48 @@ const qiwiApi = async <T>({
     }
 };
 
-export const qiwiFetchMonthlyTurnover = async (): Promise<string | undefined> => {
+const isRecord = (value: unknown): value is Record<string | number | symbol, unknown> =>
+    typeof value === 'object' && value !== null;
+
+const qiwiFetchMonthlyTurnoverTypeGuard = (value: unknown): value is Record<'limits', Record<'RU', QiwiLimit[]>> => {
+    if (!isRecord(value)) {
+        return false;
+    }
+
+    if (!('limits' in value) || !isRecord(value.limits)) {
+        return false;
+    }
+
+    if (!('RU' in value.limits) || !Array.isArray(value.limits.RU)) {
+        return false;
+    }
+
+    return value.limits.RU.every(elem => {
+        if (!isRecord(elem)) {
+            return false;
+        }
+
+        if (['type', 'currency'].some(field => !(field in elem) || typeof elem[field] !== 'string')) {
+            return false;
+        }
+
+        if (['rest', 'max', 'spent'].some(field => !(field in elem) || typeof elem[field] !== 'number')) {
+            return false;
+        }
+
+        if (!('interval' in elem) || !isRecord(elem.interval)) {
+            return false;
+        }
+
+        return ['dateFrom', 'dateTill'].every(
+            field =>
+                field in (elem.interval as Record<string, unknown>) ||
+                typeof (elem.interval as Record<string, unknown>)[field] === 'string',
+        );
+    });
+};
+
+export const qiwiFetchMonthlyTurnover = async (): Promise<QiwiLimit | undefined> => {
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
@@ -87,9 +145,16 @@ export const qiwiFetchMonthlyTurnover = async (): Promise<string | undefined> =>
             queryParams: {
                 'types[0]': 'TURNOVER',
             },
+            typeGuard: qiwiFetchMonthlyTurnoverTypeGuard,
         });
 
-        return JSON.stringify(response, null, 4);
+        const result = response.limits.RU.filter(limit => limit.currency === 'RUB');
+        if (result.length !== 1) {
+            console.warn(`qiwiFetchMonthlyTurnover wrong limits count (${result.length})`);
+            return undefined;
+        }
+
+        return result[0];
     } catch {
         return undefined;
     }
@@ -111,15 +176,67 @@ export const qiwiFetchRestrictions = async (): Promise<string[] | undefined> => 
     }
 };
 
-export const qiwiFetchBalance = async (): Promise<string | undefined> => {
+const qiwiFetchBalanceTypeGuard = (value: unknown): value is Record<'accounts', QiwiBalance[]> => {
+    if (!isRecord(value)) {
+        return false;
+    }
+
+    if (!('accounts' in value) || !Array.isArray(value.accounts)) {
+        return false;
+    }
+
+    return value.accounts.every(elem => {
+        if (!isRecord(elem)) {
+            return false;
+        }
+
+        if (!('alias' in elem) || typeof elem.alias !== 'string') {
+            return false;
+        }
+
+        if (!('hasBalance' in elem) || typeof elem.hasBalance !== 'boolean') {
+            return false;
+        }
+
+        if (!('balance' in elem)) {
+            return false;
+        }
+
+        if (isRecord(elem.balance)) {
+            if (!('amount' in elem.balance)) {
+                return false;
+            }
+        } else if (elem.balance !== null) {
+            return false;
+        }
+
+        return 'currency' in elem && typeof elem.currency === 'number';
+    });
+};
+
+export const qiwiFetchBalance = async (): Promise<number | undefined> => {
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
             authorization: true,
             resource: `/funding-sources/v2/persons/${qiwiPersonId}/accounts`,
+            typeGuard: qiwiFetchBalanceTypeGuard,
         });
 
-        return JSON.stringify(response, null, 4);
+        const balances = response.accounts.filter(elem => elem.hasBalance && elem.currency === 643);
+
+        if (balances.length !== 1) {
+            console.warn(`qiwiFetchBalance wrong balances count (${balances.length})`);
+            return undefined;
+        }
+
+        const balance = balances[0];
+        if (balance.balance === null) {
+            // todo
+            return undefined;
+        }
+
+        return balance.balance.amount;
     } catch {
         return undefined;
     }

@@ -66,8 +66,21 @@ type Withdraw {
 }
 
 type QiwiWithdrawStats {
-    turnover: String
+    turnover: QiwiLimit
     restrictions: [String!]
-    balance: String
-    providers: [String!]
+    balance: Float
+}
+
+type QiwiLimit {
+    type: String!
+    currency: String!
+    rest: Float!
+    max: Float!
+    spent: Float!
+    interval: QiwiLimitInterval!
+}
+
+type QiwiLimitInterval {
+    dateFrom: String!
+    dateTill: String!
 }
