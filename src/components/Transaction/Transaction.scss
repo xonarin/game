@@ -9,6 +9,7 @@
 
     &-Header {
         display: flex;
+        min-height: 0;
         justify-content: space-between;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -29,8 +30,9 @@
     }
 
     &-Types {
-        width: 100%;
         display: flex;
+        width: 100%;
+        min-height: 0;
         justify-content: space-around;
     }
 
@@ -81,7 +83,7 @@
         }
 
         .Transaction-Type {
-            white-space: nowrap;
+            margin: 0 4px;
 
             :last-child {
                 margin-left: 4px;

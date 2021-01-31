@@ -219,6 +219,17 @@ const qiwiFetchBalanceTypeGuard = (value: unknown): value is Record<'accounts', 
     });
 };
 
+const qiwiFetchBalanceGetQiwiBalance = (response: Record<'accounts', QiwiBalance[]>): QiwiBalance | undefined => {
+    const balances = response.accounts.filter(account => account.hasBalance && account.currency === 643);
+
+    if (balances.length !== 1) {
+        console.warn(`qiwiFetchBalanceGetBalance wrong balances count (${balances.length})`);
+        return undefined;
+    }
+
+    return balances[0];
+};
+
 export const qiwiFetchBalance = async (): Promise<number | undefined> => {
     try {
         const response = await qiwiApi({
@@ -228,17 +239,24 @@ export const qiwiFetchBalance = async (): Promise<number | undefined> => {
             typeGuard: qiwiFetchBalanceTypeGuard,
         });
 
-        const balances = response.accounts.filter(elem => elem.hasBalance && elem.currency === 643);
-
-        if (balances.length !== 1) {
-            console.warn(`qiwiFetchBalance wrong balances count (${balances.length})`);
+        const balance = qiwiFetchBalanceGetQiwiBalance(response);
+        if (!balance) {
             return undefined;
         }
 
-        const balance = balances[0];
         if (balance.balance === null) {
-            // todo
-            return undefined;
+            const retryResponse = await qiwiApi({
+                host: 'edge.qiwi.com',
+                authorization: true,
+                resource: `/funding-sources/v2/persons/${qiwiPersonId}/accounts`,
+                queryParams: {
+                    timeout: '1000',
+                    alias: balance.alias,
+                },
+                typeGuard: qiwiFetchBalanceTypeGuard,
+            });
+
+            return qiwiFetchBalanceGetQiwiBalance(retryResponse)?.balance?.amount;
         }
 
         return balance.balance.amount;
