@@ -7,6 +7,7 @@ import s from '../Payment.scss';
 import cardAvatar from './providerIcons/card.svg';
 import yooAvatar from './providerIcons/yoo.svg';
 import wmAvatar from './providerIcons/wm.png';
+import qiwiAvatar from './providerIcons/qiwi.svg';
 import { cn } from '../../../../utils/bem-css-module';
 import Scrollable from '../../../Scrollable/Scrollable';
 import QiwiWithdrawStats from './QiwiWithdrawStats';
@@ -41,9 +42,10 @@ interface QiwiWithdrawFormValues {
 }
 
 const qiwiWithdrawMethods: QiwiWithdrawMethod[] = [
-    { id: QiwiWithdrawMethodId.Card, name: 'Карта', avatar: cardAvatar },
+    { id: QiwiWithdrawMethodId.Visa, name: 'Visa (кроме РФ)', avatar: cardAvatar },
     { id: QiwiWithdrawMethodId.YooMoney, name: 'ЮMoney', avatar: yooAvatar },
     { id: QiwiWithdrawMethodId.Wmz, name: 'WebMoney WMZ', avatar: wmAvatar },
+    { id: QiwiWithdrawMethodId.Qiwi, name: 'Qiwi', avatar: qiwiAvatar },
 ];
 
 const cardFields: [keyof QiwiWithdrawPurse, string][] = [
@@ -120,7 +122,7 @@ const QiwiWithdrawForm: React.FC = () => {
                                     )}
                                 </Field>
 
-                                {method.id === QiwiWithdrawMethodId.Card && (
+                                {method.id === QiwiWithdrawMethodId.Visa && (
                                     <>
                                         <hr />
                                         <Text>Дополнительная информация для вывода на карту:</Text>

@@ -1,7 +1,6 @@
 import fetch, { BodyInit, HeadersInit } from 'node-fetch';
 import * as queryString from 'querystring';
 import SocksProxyAgent from 'socks-proxy-agent/dist/agent';
-import FormData from 'form-data';
 import * as http from 'http';
 
 import config from '../config';
@@ -10,6 +9,7 @@ import { UserError } from './errors';
 import { repositories } from '../data/database';
 
 interface QiwiApiParams<T> {
+    proxy?: boolean;
     host: 'qiwi.com' | 'api.qiwi.com' | 'edge.qiwi.com';
     authorization?: boolean;
     resource: string;
@@ -42,9 +42,10 @@ export interface QiwiBalance {
 }
 
 export enum QiwiWithdrawMethod {
-    Card = 'Card',
+    Visa = 'Visa',
     YooMoney = 'YooMoney',
     Wmz = 'Wmz',
+    Qiwi = 'Qiwi',
 }
 
 export interface QiwiWithdrawPurse {
@@ -66,6 +67,7 @@ const qiwiApiLocker = new Locker();
 const qiwiAgent = qiwiProxyOptions ? new SocksProxyAgent(qiwiProxyOptions) : undefined;
 
 const qiwiApi = async <T>({
+    proxy = true,
     host,
     authorization = false,
     resource,
@@ -83,7 +85,7 @@ const qiwiApi = async <T>({
 
         const response = await fetch(`https://${host}/${resource}?${query}`, {
             method,
-            agent: qiwiAgent as http.Agent | undefined,
+            agent: proxy ? (qiwiAgent as http.Agent | undefined) : undefined,
             body: data,
             headers: {
                 Accept: 'application/json',
@@ -295,56 +297,23 @@ export const qiwiFetchBalance = async (): Promise<number | undefined> => {
     }
 };
 
-const qiwiDoWithdrawFetchIdTypeGuard = (value: unknown): value is { code: { value: number }; message: string } => {
-    if (!isRecord(value)) {
-        return false;
-    }
-
-    if (!('code' in value) || !isRecord(value.code)) {
-        return false;
-    }
-
-    if (!('value' in value.code) || typeof value.code.value !== 'number') {
-        return false;
-    }
-
-    return 'message' in value && typeof value.message === 'string';
-};
-
-const qiwiDoWithdrawFetchId = async (method: QiwiWithdrawMethod, account: string): Promise<string> => {
-    // eslint-disable-next-line default-case
+const qiwiDoWithdrawFetchId = (method: QiwiWithdrawMethod): string => {
     switch (method) {
+        case QiwiWithdrawMethod.Visa:
+            return '1960';
+
         case QiwiWithdrawMethod.YooMoney:
             return '26476';
 
         case QiwiWithdrawMethod.Wmz:
-            return '31217'; // '36539';
+            return '31271';
+
+        case QiwiWithdrawMethod.Qiwi:
+            return '99';
+
+        default:
+            throw new Error('wtf');
     }
-
-    const data = new FormData();
-    data.append('cardNumber', account);
-
-    const response = await qiwiApi({
-        host: 'qiwi.com',
-        resource: 'card/detect.action',
-        method: 'POST',
-        data: `cardNumber=${account}`,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        typeGuard: qiwiDoWithdrawFetchIdTypeGuard,
-    }).catch(() => {
-        throw new UserError('QIWI_ERROR');
-    });
-
-    if (response.code.value === 2) {
-        throw new UserError(response.message);
-    }
-
-    if (response.code.value === 0) {
-        return response.message;
-    }
-
-    console.warn('qiwiDoWithdrawFetchId bad code.value', JSON.stringify(response, null, 4));
-    throw new UserError('QIWI_ERROR');
 };
 
 export const qiwiDoWithdraw = async (
@@ -353,7 +322,7 @@ export const qiwiDoWithdraw = async (
     purse: QiwiWithdrawPurse,
     userId: string,
 ): Promise<string> => {
-    const id = await qiwiDoWithdrawFetchId(method, purse.account);
+    const id = qiwiDoWithdrawFetchId(method);
 
     const payment = {
         id: String(Date.now()),
@@ -393,7 +362,14 @@ export const qiwiDoWithdraw = async (
                 typeof value.transaction.id === 'string',
         });
 
-        await repositories.payments.addQiwiWithdraw(id, purse.account, payment.id, amount, response.transaction.id, userId);
+        await repositories.payments.addQiwiWithdraw(
+            id,
+            purse.account,
+            payment.id,
+            amount,
+            response.transaction.id,
+            userId,
+        );
 
         return response.transaction.id;
     } catch {
