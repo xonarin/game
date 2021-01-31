@@ -9,6 +9,7 @@ import {
     Mutation,
     MutationCancelWithdrawArgs,
     MutationDoDepositArgs,
+    MutationDoQiwiWithdrawArgs,
     MutationDoWithdrawArgs,
     Payment,
     PaymentMethod,
@@ -31,6 +32,7 @@ import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
 import {
+    qiwiDoWithdraw,
     qiwiFetchBalance,
     qiwiFetchMonthlyTurnover,
     qiwiFetchRestrictions,
@@ -46,7 +48,7 @@ type QueryType = Pick<
     | 'payedTotal'
     | 'qiwiWithdrawStats'
 >;
-type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw'>;
+type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw' | 'doQiwiWithdraw'>;
 
 type PaymentMethodType = Pick<
     PaymentMethod,
@@ -84,6 +86,7 @@ interface MutationMapping {
     readonly doDeposit: Resolver<string, MutationDoDepositArgs>;
     readonly doWithdraw: Resolver<UserWithdraw, MutationDoWithdrawArgs>;
     readonly cancelWithdraw: Resolver<UserWithdraw, MutationCancelWithdrawArgs>;
+    readonly doQiwiWithdraw: Resolver<string, MutationDoQiwiWithdrawArgs>;
 }
 
 type PaymentsResolvers = Resolvers<
@@ -113,6 +116,7 @@ export const rules: IRules = {
         doDeposit: isAuth,
         doWithdraw: isAuth,
         cancelWithdraw: isAuth,
+        doQiwiWithdraw: isAdmin,
     },
 };
 
@@ -172,6 +176,22 @@ export const resolvers: PaymentsResolvers = {
             return repositories.payments.createWithdraw(user!.id, method, purse, amount);
         },
         cancelWithdraw: (_0, { id }, { user }) => repositories.payments.cancelWithdraw(id, user!.id),
+        doQiwiWithdraw: (_0, { amount, method, purse }, { user }) =>
+            qiwiDoWithdraw(
+                amount,
+                method,
+                {
+                    account: purse.account,
+                    remName: purse.remName ?? undefined,
+                    remNameF: purse.remNameF ?? undefined,
+                    recAddress: purse.recAddress ?? undefined,
+                    recCity: purse.recCity ?? undefined,
+                    recCountry: purse.recCountry ?? undefined,
+                    regName: purse.regName ?? undefined,
+                    regNameF: purse.regNameF ?? undefined,
+                },
+                user!.id,
+            ),
     },
     Payment: {
         method: parent => repositories.payments.getPaymentMethodById(parent.methodId),

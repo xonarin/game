@@ -1,10 +1,13 @@
-import fetch from 'node-fetch';
+import fetch, { BodyInit, HeadersInit } from 'node-fetch';
 import * as queryString from 'querystring';
 import SocksProxyAgent from 'socks-proxy-agent/dist/agent';
+import FormData from 'form-data';
 import * as http from 'http';
 
 import config from '../config';
 import Locker from './locker';
+import { UserError } from './errors';
+import { repositories } from '../data/database';
 
 interface QiwiApiParams<T> {
     host: 'qiwi.com' | 'api.qiwi.com' | 'edge.qiwi.com';
@@ -12,6 +15,8 @@ interface QiwiApiParams<T> {
     resource: string;
     method?: 'GET' | 'POST';
     queryParams?: Record<string, string>;
+    data?: BodyInit;
+    headers?: HeadersInit;
     typeGuard?: (value: unknown) => value is T;
 }
 
@@ -36,6 +41,23 @@ export interface QiwiBalance {
     currency: number;
 }
 
+export enum QiwiWithdrawMethod {
+    Card = 'Card',
+    YooMoney = 'YooMoney',
+    Wmz = 'Wmz',
+}
+
+export interface QiwiWithdrawPurse {
+    account: string;
+    remName?: string;
+    remNameF?: string;
+    recAddress?: string;
+    recCity?: string;
+    recCountry?: string;
+    regName?: string;
+    regNameF?: string;
+}
+
 const qiwiPersonId = config.auth.qiwi.personId;
 const qiwiPersonToken = config.auth.qiwi.personToken;
 const qiwiProxyOptions = config.auth.qiwi.proxy.hostname ? config.auth.qiwi.proxy : undefined;
@@ -49,6 +71,8 @@ const qiwiApi = async <T>({
     resource,
     method = 'GET',
     queryParams = {},
+    data,
+    headers = {},
     typeGuard = (_0): _0 is T => true,
 }: QiwiApiParams<T>): Promise<T> => {
     await qiwiApiLocker.lock();
@@ -60,24 +84,30 @@ const qiwiApi = async <T>({
         const response = await fetch(`https://${host}/${resource}?${query}`, {
             method,
             agent: qiwiAgent as http.Agent | undefined,
+            body: data,
             headers: {
                 Accept: 'application/json',
                 ...authorizationHeaders,
+                ...headers,
             },
         }).catch(reason => {
-            console.warn('qiwiApi fetch catch', { host, authorization, resource, method, queryParams }, reason);
+            console.warn('qiwiApi fetch catch', { host, authorization, resource, method, queryParams, data }, reason);
             throw new Error('Qiwi API error');
         });
 
         if (!response.ok) {
-            console.warn('qiwiApi !response.ok', { host, authorization, resource, method, queryParams }, response);
+            console.warn(
+                'qiwiApi !response.ok',
+                { host, authorization, resource, method, queryParams, data },
+                await response.text(),
+            );
             throw new Error('Qiwi API error');
         }
 
         const responseJson = await response.json().catch(reason => {
             console.warn(
                 'qiwiApi response.json() catch',
-                { host, authorization, resource, method, queryParams },
+                { host, authorization, resource, method, queryParams, data },
                 reason,
             );
 
@@ -87,7 +117,7 @@ const qiwiApi = async <T>({
         if (!typeGuard(responseJson)) {
             console.warn(
                 'qiwiApi !typeGuard(responseJson)',
-                { host, authorization, resource, method, queryParams },
+                { host, authorization, resource, method, queryParams, data },
                 responseJson,
             );
 
@@ -262,5 +292,111 @@ export const qiwiFetchBalance = async (): Promise<number | undefined> => {
         return balance.balance.amount;
     } catch {
         return undefined;
+    }
+};
+
+const qiwiDoWithdrawFetchIdTypeGuard = (value: unknown): value is { code: { value: number }; message: string } => {
+    if (!isRecord(value)) {
+        return false;
+    }
+
+    if (!('code' in value) || !isRecord(value.code)) {
+        return false;
+    }
+
+    if (!('value' in value.code) || typeof value.code.value !== 'number') {
+        return false;
+    }
+
+    return 'message' in value && typeof value.message === 'string';
+};
+
+const qiwiDoWithdrawFetchId = async (method: QiwiWithdrawMethod, account: string): Promise<string> => {
+    // eslint-disable-next-line default-case
+    switch (method) {
+        case QiwiWithdrawMethod.YooMoney:
+            return '26476';
+
+        case QiwiWithdrawMethod.Wmz:
+            return '31217'; // '36539';
+    }
+
+    const data = new FormData();
+    data.append('cardNumber', account);
+
+    const response = await qiwiApi({
+        host: 'qiwi.com',
+        resource: 'card/detect.action',
+        method: 'POST',
+        data: `cardNumber=${account}`,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        typeGuard: qiwiDoWithdrawFetchIdTypeGuard,
+    }).catch(() => {
+        throw new UserError('QIWI_ERROR');
+    });
+
+    if (response.code.value === 2) {
+        throw new UserError(response.message);
+    }
+
+    if (response.code.value === 0) {
+        return response.message;
+    }
+
+    console.warn('qiwiDoWithdrawFetchId bad code.value', JSON.stringify(response, null, 4));
+    throw new UserError('QIWI_ERROR');
+};
+
+export const qiwiDoWithdraw = async (
+    amount: number,
+    method: QiwiWithdrawMethod,
+    purse: QiwiWithdrawPurse,
+    userId: string,
+): Promise<string> => {
+    const id = await qiwiDoWithdrawFetchId(method, purse.account);
+
+    const payment = {
+        id: String(Date.now()),
+        sum: {
+            amount,
+            currency: '643',
+        },
+        paymentMethod: {
+            type: 'Account',
+            accountId: '643',
+        },
+        fields: {
+            account: purse.account,
+            rem_name: purse.remName,
+            rem_name_f: purse.remNameF,
+            rec_address: purse.recAddress,
+            rec_city: purse.recCity,
+            rec_country: purse.recCountry,
+            reg_name: purse.regName,
+            reg_name_f: purse.regNameF,
+        },
+    };
+
+    try {
+        const response = await qiwiApi({
+            host: 'edge.qiwi.com',
+            authorization: true,
+            resource: `sinap/api/v2/terms/${id}/payments`,
+            method: 'POST',
+            data: JSON.stringify(payment),
+            headers: { 'Content-Type': 'application/json' },
+            typeGuard: (value): value is Record<'transaction', Record<'id', string>> =>
+                isRecord(value) &&
+                'transaction' in value &&
+                isRecord(value.transaction) &&
+                'id' in value.transaction &&
+                typeof value.transaction.id === 'string',
+        });
+
+        await repositories.payments.addQiwiWithdraw(id, purse.account, payment.id, amount, response.transaction.id, userId);
+
+        return response.transaction.id;
+    } catch {
+        throw new UserError('QIWI_WITHDRAW_FAILED');
     }
 };

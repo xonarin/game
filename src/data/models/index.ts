@@ -18,6 +18,7 @@ import { initUserWithdraw, UserWithdrawStatic } from './UserWithdraw';
 import { initBonus, BonusStatic } from './Bonus';
 import { initPromoCode, PromoCodeStatic } from './PromoCode';
 import { initPromoCodeUse, PromoCodeUseStatic } from './PromoCodeUse';
+import { initQiwiWithdraw, QiwiWithdrawStatic } from './QiwiWithdraw';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -51,6 +52,7 @@ export interface Database {
     Bonus: BonusStatic;
     PromoCode: PromoCodeStatic;
     PromoCodeUse: PromoCodeUseStatic;
+    QiwiWithdraw: QiwiWithdrawStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -73,6 +75,7 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         Bonus: initBonus(sequelize),
         PromoCode: initPromoCode(sequelize),
         PromoCodeUse: initPromoCodeUse(sequelize),
+        QiwiWithdraw: initQiwiWithdraw(sequelize),
     };
 
     forEach(database, model => {

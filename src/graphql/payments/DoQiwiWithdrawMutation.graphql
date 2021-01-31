@@ -1,0 +1,3 @@
+mutation DoQiwiWithdraw($amount: Float!, $method: QiwiWithdrawMethod!, $purse: QiwiWithdrawPurse!) {
+    doQiwiWithdraw(amount: $amount, method: $method, purse: $purse)
+}

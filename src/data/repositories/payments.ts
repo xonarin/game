@@ -198,6 +198,17 @@ class PaymentsRepository extends BaseRepository {
             return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
         });
     }
+
+    async addQiwiWithdraw(
+        methodId: string,
+        purse: string,
+        paymentId: string,
+        amount: number,
+        transactionId: string,
+        userId: string,
+    ) {
+        await this.db.QiwiWithdraw.create({ userId, purse, methodId, paymentId, transactionId, amount });
+    }
 }
 
 export default PaymentsRepository;
