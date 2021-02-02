@@ -9,10 +9,13 @@ import {
     Mutation,
     MutationCancelWithdrawArgs,
     MutationDoDepositArgs,
+    MutationDoQiwiWithdrawArgs,
     MutationDoWithdrawArgs,
     Payment,
     PaymentMethod,
     PaymentStatus,
+    QiwiLimit,
+    QiwiLimitInterval,
     QiwiWithdrawStats,
     Query,
     Withdraw,
@@ -28,7 +31,14 @@ import { md5Hash } from '../../../utils/crypto';
 import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
-import { qiwiFetchBalance, qiwiFetchMonthlyTurnover, qiwiFetchRestrictions } from '../../../utils/qiwi';
+import {
+    qiwiCreateBill,
+    qiwiDoWithdraw,
+    qiwiFetchBalance,
+    qiwiFetchMonthlyTurnover,
+    qiwiFetchRestrictions,
+    QiwiLimit as QiwiLimitBackend,
+} from '../../../utils/qiwi';
 
 type QueryType = Pick<
     Query,
@@ -39,7 +49,7 @@ type QueryType = Pick<
     | 'payedTotal'
     | 'qiwiWithdrawStats'
 >;
-type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw'>;
+type MutationType = Pick<Mutation, 'doDeposit' | 'doWithdraw' | 'cancelWithdraw' | 'doQiwiWithdraw'>;
 
 type PaymentMethodType = Pick<
     PaymentMethod,
@@ -54,13 +64,14 @@ type WithdrawMethodType = Pick<
 type PaymentType = Pick<Payment, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
 type WithdrawType = Pick<Withdraw, 'id' | 'method' | 'amount' | 'status' | 'createdAt'>;
 
-type QiwiWithdrawStatsType = Pick<QiwiWithdrawStats, 'turnover' | 'restrictions' | 'balance' | 'providers'>;
+type QiwiWithdrawStatsType = Pick<QiwiWithdrawStats, 'turnover' | 'restrictions' | 'balance'>;
+type QiwiLimitType = Pick<QiwiLimit, 'type' | 'currency' | 'rest' | 'max' | 'spent' | 'interval'>;
+type QiwiLimitIntervalType = Pick<QiwiLimitInterval, 'dateFrom' | 'dateTill'>;
 
 interface QiwiWithdrawStatsParent {
-    turnover: string;
-    restrictions: string[];
-    balance: string;
-    providers: string[];
+    turnover?: QiwiLimitBackend;
+    restrictions?: string[];
+    balance?: number;
 }
 
 interface QueryMapping {
@@ -68,12 +79,15 @@ interface QueryMapping {
     readonly availableWithdrawMethods: Resolver<WithdrawMethodBackend[]>;
     readonly payments: Resolver<UserPayment[]>;
     readonly withdraws: Resolver<UserWithdraw[]>;
+    readonly payedTotal: Resolver<number>;
+    readonly qiwiWithdrawStats: Resolver<QiwiWithdrawStatsParent>;
 }
 
 interface MutationMapping {
     readonly doDeposit: Resolver<string, MutationDoDepositArgs>;
     readonly doWithdraw: Resolver<UserWithdraw, MutationDoWithdrawArgs>;
     readonly cancelWithdraw: Resolver<UserWithdraw, MutationCancelWithdrawArgs>;
+    readonly doQiwiWithdraw: Resolver<string, MutationDoQiwiWithdrawArgs>;
 }
 
 type PaymentsResolvers = Resolvers<
@@ -85,6 +99,8 @@ type PaymentsResolvers = Resolvers<
         Payment: TypeResolvers<PaymentType, {}, UserPayment>;
         Withdraw: TypeResolvers<WithdrawType, {}, UserWithdraw>;
         QiwiWithdrawStats: TypeResolvers<QiwiWithdrawStatsType, {}, QiwiWithdrawStatsParent>;
+        QiwiLimit: TypeResolvers<QiwiLimitType, {}, QiwiLimitBackend>;
+        QiwiLimitInterval: TypeResolvers<QiwiLimitIntervalType, {}, QiwiLimitBackend['interval']>;
         DateTime: GraphQLScalarType;
         URL: GraphQLScalarType;
     },
@@ -101,6 +117,7 @@ export const rules: IRules = {
         doDeposit: isAuth,
         doWithdraw: isAuth,
         cancelWithdraw: isAuth,
+        doQiwiWithdraw: isAdmin,
     },
 };
 
@@ -122,7 +139,6 @@ export const resolvers: PaymentsResolvers = {
             turnover: await qiwiFetchMonthlyTurnover(),
             restrictions: await qiwiFetchRestrictions(),
             balance: await qiwiFetchBalance(),
-            providers: [],
         }),
     },
     Mutation: {
@@ -138,8 +154,18 @@ export const resolvers: PaymentsResolvers = {
             }
 
             const paymentId = await repositories.payments.createPayment(user!.id, paymentMethod.id, amount);
-            const sign = md5Hash(`${config.auth.fk.merchantId}:${amount}:${config.auth.fk.secret}:${paymentId}`);
 
+            if (paymentMethod.id === '777') {
+                const a = await qiwiFetchRestrictions();
+                if (a === undefined || a.length !== 0) {
+                    throw new UserError('QIWI_DEPOSIT_INACTIVE');
+                }
+
+                const link = await qiwiCreateBill(paymentId, amount);
+                return config.auth.qiwi.mediatorLink(`${link}&successUrl=${encodeURIComponent('https://willy.bet')}`);
+            }
+
+            const sign = md5Hash(`${config.auth.fk.merchantId}:${amount}:${config.auth.fk.secret}:${paymentId}`);
             return `https://www.free-kassa.ru/merchant/cash.php?${queryString.encode({
                 m: config.auth.fk.merchantId,
                 oa: amount,
@@ -161,6 +187,22 @@ export const resolvers: PaymentsResolvers = {
             return repositories.payments.createWithdraw(user!.id, method, purse, amount);
         },
         cancelWithdraw: (_0, { id }, { user }) => repositories.payments.cancelWithdraw(id, user!.id),
+        doQiwiWithdraw: (_0, { amount, method, purse }, { user }) =>
+            qiwiDoWithdraw(
+                amount,
+                method,
+                {
+                    account: purse.account,
+                    remName: purse.remName ?? undefined,
+                    remNameF: purse.remNameF ?? undefined,
+                    recAddress: purse.recAddress ?? undefined,
+                    recCity: purse.recCity ?? undefined,
+                    recCountry: purse.recCountry ?? undefined,
+                    regName: purse.regName ?? undefined,
+                    regNameF: purse.regNameF ?? undefined,
+                },
+                user!.id,
+            ),
     },
     Payment: {
         method: parent => repositories.payments.getPaymentMethodById(parent.methodId),

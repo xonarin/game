@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { QueryResult, useQuery } from '@apollo/client';
 
 import {
     QiwiWithdrawStatsDocument,
@@ -9,17 +9,19 @@ import {
 interface UseQiwiWithdrawStatsQueryResult {
     loading: boolean;
     qiwiWithdrawStats?: QiwiWithdrawStatsQuery['qiwiWithdrawStats'];
+    refetch: QueryResult<QiwiWithdrawStatsQuery, QiwiWithdrawStatsQueryVariables>['refetch'];
 }
 
 const useQiwiWithdrawStatsQuery = (): UseQiwiWithdrawStatsQueryResult => {
-    const { loading, data } = useQuery<QiwiWithdrawStatsQuery, QiwiWithdrawStatsQueryVariables>(
+    const { loading, data, refetch } = useQuery<QiwiWithdrawStatsQuery, QiwiWithdrawStatsQueryVariables>(
         QiwiWithdrawStatsDocument,
-        { fetchPolicy: 'cache-and-network' },
+        { notifyOnNetworkStatusChange: true },
     );
 
     return {
         loading,
         qiwiWithdrawStats: data?.qiwiWithdrawStats,
+        refetch,
     };
 };
 

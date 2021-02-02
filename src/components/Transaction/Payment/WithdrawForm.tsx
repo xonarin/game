@@ -49,17 +49,13 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
             {({ handleSubmit, values: { method } }) => (
                 <form className={cnPayment()} onSubmit={handleSubmit}>
                     {!mobile && (
-                        <Field
+                        <Field<WithdrawMethod>
                             name="method"
                             validate={requiredValidator()}
                             initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
                         >
                             {({ input }) => (
-                                <PaymentMethods<WithdrawMethod>
-                                    methods={availableWithdrawMethods}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                />
+                                <PaymentMethods<WithdrawMethod> methods={availableWithdrawMethods} {...input} />
                             )}
                         </Field>
                     )}
@@ -68,7 +64,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                         <Scrollable disablePadding>
                             <div>
                                 {mobile && (
-                                    <Field
+                                    <Field<WithdrawMethod>
                                         name="method"
                                         validate={requiredValidator()}
                                         initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
@@ -76,8 +72,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                                         {({ input }) => (
                                             <PaymentMethodsMobile<WithdrawMethod>
                                                 methods={availableWithdrawMethods}
-                                                value={input.value}
-                                                onChange={input.onChange}
+                                                {...input}
                                             />
                                         )}
                                     </Field>

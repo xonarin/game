@@ -101,7 +101,7 @@ class PaymentsRepository extends BaseRepository {
         return payment.id;
     }
 
-    finishPayment(paymentId: string, methodId: string): Promise<void> {
+    finishPayment(paymentId: string, methodId?: string): Promise<void> {
         return this.db.sequelize.transaction(async transaction => {
             const payment = await this.getPaymentByIdStrict(paymentId, transaction);
 
@@ -118,7 +118,11 @@ class PaymentsRepository extends BaseRepository {
             const finalSum = payment.sum - commission;
 
             await payment.update(
-                { methodId, status: PaymentStatus.FINISHED, commission: commissionPercent },
+                {
+                    methodId: methodId === undefined ? payment.methodId : methodId,
+                    status: PaymentStatus.FINISHED,
+                    commission: commissionPercent,
+                },
                 { transaction },
             );
 
@@ -197,6 +201,17 @@ class PaymentsRepository extends BaseRepository {
             await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
             return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
         });
+    }
+
+    async addQiwiWithdraw(
+        methodId: string,
+        purse: string,
+        paymentId: string,
+        amount: number,
+        transactionId: string,
+        userId: string,
+    ) {
+        await this.db.QiwiWithdraw.create({ userId, purse, methodId, paymentId, transactionId, amount });
     }
 }
 

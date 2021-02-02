@@ -8,7 +8,7 @@ import { cn } from '../../utils/bem-css-module';
 import { History, HistoryRef } from './History/History';
 import { DepositForm } from './Payment/DepositForm';
 import { WithdrawForm } from './Payment/WithdrawForm';
-import QiwiWithdrawForm from './Payment/QiwiWithdrawForm';
+import QiwiWithdrawForm from './Payment/QiwiWithdrawForm/QiwiWithdrawForm';
 import { MeQuery, UserRole } from '../../__generated__/graphql';
 import useMeQuery from '../../hooks/graphql/users/useMeQuery';
 
@@ -24,7 +24,7 @@ const cnTransaction = cn(s, 'Transaction');
 const types: [SelectedTypeType, IconProps['type'], React.ReactNode, (me: MeQuery['me'] | undefined) => boolean][] = [
     ['deposit', 'add', 'Пополнение', () => true],
     ['withdraw', 'minus', 'Вывод', () => true],
-    ['qiwiWithdraw', 'minus', 'Вывод с Qiwi', me => me?.role === UserRole.Admin],
+    ['qiwiWithdraw', 'qiwi', 'Вывод с Qiwi', me => me?.role === UserRole.Admin],
     ['history', 'clock', 'История', () => true],
 ];
 
@@ -63,7 +63,7 @@ export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close 
                             onClick={() => setSelectedType(type)}
                         >
                             <Icon type={icon} />
-                            <Text>{label}</Text>
+                            <Text style={{ verticalAlign: 'middle' }}>{label}</Text>
                         </button>
                     ))}
                 </div>
