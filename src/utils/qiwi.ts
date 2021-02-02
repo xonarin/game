@@ -2,6 +2,7 @@ import fetch, { BodyInit, HeadersInit } from 'node-fetch';
 import * as queryString from 'querystring';
 import SocksProxyAgent from 'socks-proxy-agent/dist/agent';
 import * as http from 'http';
+import { DateTime, Duration } from 'luxon';
 
 import config from '../config';
 import Locker from './locker';
@@ -11,9 +12,9 @@ import { repositories } from '../data/database';
 interface QiwiApiParams<T> {
     proxy?: boolean;
     host: 'qiwi.com' | 'api.qiwi.com' | 'edge.qiwi.com';
-    authorization?: boolean;
+    authorization?: string;
     resource: string;
-    method?: 'GET' | 'POST';
+    method?: 'GET' | 'POST' | 'PUT';
     queryParams?: Record<string, string>;
     data?: BodyInit;
     headers?: HeadersInit;
@@ -62,6 +63,7 @@ export interface QiwiWithdrawPurse {
 const qiwiPersonId = config.auth.qiwi.personId;
 const qiwiPersonToken = config.auth.qiwi.personToken;
 const qiwiProxyOptions = config.auth.qiwi.proxy.hostname ? config.auth.qiwi.proxy : undefined;
+const qiwiP2pSecret = config.auth.qiwi.p2pSecret;
 
 const qiwiApiLocker = new Locker();
 const qiwiAgent = qiwiProxyOptions ? new SocksProxyAgent(qiwiProxyOptions) : undefined;
@@ -69,7 +71,7 @@ const qiwiAgent = qiwiProxyOptions ? new SocksProxyAgent(qiwiProxyOptions) : und
 const qiwiApi = async <T>({
     proxy = true,
     host,
-    authorization = false,
+    authorization,
     resource,
     method = 'GET',
     queryParams = {},
@@ -81,7 +83,7 @@ const qiwiApi = async <T>({
 
     try {
         const query = queryString.encode(queryParams);
-        const authorizationHeaders: HeadersInit = authorization ? { Authorization: `Bearer ${qiwiPersonToken}` } : {};
+        const authorizationHeaders: HeadersInit = authorization ? { Authorization: `Bearer ${authorization}` } : {};
 
         const response = await fetch(`https://${host}/${resource}?${query}`, {
             method,
@@ -177,7 +179,7 @@ export const qiwiFetchMonthlyTurnover = async (): Promise<QiwiLimit | undefined>
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
-            authorization: true,
+            authorization: qiwiPersonToken,
             resource: `qw-limits/v1/persons/${qiwiPersonId}/actual-limits`,
             queryParams: {
                 'types[0]': 'TURNOVER',
@@ -201,7 +203,7 @@ export const qiwiFetchRestrictions = async (): Promise<string[] | undefined> => 
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
-            authorization: true,
+            authorization: qiwiPersonToken,
             resource: `person-profile/v1/persons/${qiwiPersonId}/status/restrictions`,
             typeGuard: (value): value is Record<'restrictionDescription', string>[] =>
                 Array.isArray(value) && value.every(elem => typeof elem.restrictionDescription === 'string'),
@@ -266,7 +268,7 @@ export const qiwiFetchBalance = async (): Promise<number | undefined> => {
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
-            authorization: true,
+            authorization: qiwiPersonToken,
             resource: `/funding-sources/v2/persons/${qiwiPersonId}/accounts`,
             typeGuard: qiwiFetchBalanceTypeGuard,
         });
@@ -279,7 +281,7 @@ export const qiwiFetchBalance = async (): Promise<number | undefined> => {
         if (balance.balance === null) {
             const retryResponse = await qiwiApi({
                 host: 'edge.qiwi.com',
-                authorization: true,
+                authorization: qiwiPersonToken,
                 resource: `/funding-sources/v2/persons/${qiwiPersonId}/accounts`,
                 queryParams: {
                     timeout: '1000',
@@ -349,7 +351,7 @@ export const qiwiDoWithdraw = async (
     try {
         const response = await qiwiApi({
             host: 'edge.qiwi.com',
-            authorization: true,
+            authorization: qiwiPersonToken,
             resource: `sinap/api/v2/terms/${id}/payments`,
             method: 'POST',
             data: JSON.stringify(payment),
@@ -374,5 +376,37 @@ export const qiwiDoWithdraw = async (
         return response.transaction.id;
     } catch {
         throw new UserError('QIWI_WITHDRAW_FAILED');
+    }
+};
+
+const qiwiCreateBillDuration = Duration.fromObject({ days: 45 });
+
+export const qiwiCreateBill = async (billId: string, amount: number): Promise<string> => {
+    const bill = {
+        amount: {
+            value: amount,
+            currency: 'RUB',
+        },
+        expirationDateTime: DateTime.local()
+            .plus(qiwiCreateBillDuration)
+            .set({ millisecond: 0 })
+            .toISO({ suppressMilliseconds: true }),
+    };
+
+    try {
+        const response = await qiwiApi({
+            host: 'api.qiwi.com',
+            authorization: qiwiP2pSecret,
+            resource: `partner/bill/v1/bills/${billId}`,
+            method: 'PUT',
+            data: JSON.stringify(bill),
+            headers: { 'Content-Type': 'application/json' },
+            typeGuard: (value): value is Record<'payUrl', string> =>
+                isRecord(value) && 'payUrl' in value && typeof value.payUrl === 'string',
+        });
+
+        return response.payUrl;
+    } catch {
+        throw new UserError('QIWI_DEPOSIT_FAILED');
     }
 };

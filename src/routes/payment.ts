@@ -42,6 +42,8 @@ const initPayments = (app: Express) => {
 
         return res.send('YES');
     });
+
+    // TODO qiwi
 };
 
 export default initPayments;

@@ -1,3 +1,5 @@
+import { md5Hash } from './utils/crypto';
+
 if (process.env.BROWSER) {
     throw new Error('Do not import `config.js` from inside the client-side code.');
 }
@@ -70,6 +72,15 @@ export default {
             },
             personId: process.env.QIWI_PERSON_ID || '79609646995',
             personToken: process.env.QIWI_PERSON_TOKEN || '38fe2a4662dff7c79c5d829be049aca1',
+            p2pSecret:
+                process.env.QIWI_P2P_SECRET ||
+                'eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6Imgwbmt2Mi0wMCIsInVzZXJfaWQiOiI3OTYwOTY0Njk5NSIsInNlY3JldCI6IjY3NzM1MDA0YjlhZTE3NWE0NThlMmI2NTU2YzI3MWE3MTY2NTgyNTRlYTFiNDVjMTFmNjMzMjRkOTNkNTJlNGYifX0=',
+            mediatorLink: (url: string): string => {
+                const baseUrl = 'https://prokladka.xonaruz.ru/to.php';
+                const sign = md5Hash(`SuPeR SeCrEt PhRaSe${url}`);
+
+                return encodeURI(`${baseUrl}?t=${url}&s=${sign}`);
+            },
         },
     },
 

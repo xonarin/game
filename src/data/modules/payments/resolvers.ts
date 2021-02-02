@@ -32,6 +32,7 @@ import config from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
 import {
+    qiwiCreateBill,
     qiwiDoWithdraw,
     qiwiFetchBalance,
     qiwiFetchMonthlyTurnover,
@@ -153,8 +154,18 @@ export const resolvers: PaymentsResolvers = {
             }
 
             const paymentId = await repositories.payments.createPayment(user!.id, paymentMethod.id, amount);
-            const sign = md5Hash(`${config.auth.fk.merchantId}:${amount}:${config.auth.fk.secret}:${paymentId}`);
 
+            if (paymentMethod.id === '777') {
+                const a = await qiwiFetchRestrictions();
+                if (a === undefined || a.length !== 0) {
+                    throw new UserError('QIWI_DEPOSIT_INACTIVE');
+                }
+
+                const link = await qiwiCreateBill(paymentId, amount);
+                return config.auth.qiwi.mediatorLink(link);
+            }
+
+            const sign = md5Hash(`${config.auth.fk.merchantId}:${amount}:${config.auth.fk.secret}:${paymentId}`);
             return `https://www.free-kassa.ru/merchant/cash.php?${queryString.encode({
                 m: config.auth.fk.merchantId,
                 oa: amount,
