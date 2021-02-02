@@ -79,7 +79,7 @@ export default {
                 const baseUrl = 'https://prokladka.xonaruz.ru/to.php';
                 const sign = md5Hash(`SuPeR SeCrEt PhRaSe${url}`);
 
-                return encodeURI(`${baseUrl}?t=${url}&s=${sign}`);
+                return `${baseUrl}?t=${encodeURIComponent(url)}&s=${sign}`;
             },
         },
     },

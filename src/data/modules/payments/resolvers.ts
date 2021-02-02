@@ -162,7 +162,7 @@ export const resolvers: PaymentsResolvers = {
                 }
 
                 const link = await qiwiCreateBill(paymentId, amount);
-                return config.auth.qiwi.mediatorLink(link);
+                return config.auth.qiwi.mediatorLink(`${link}&successUrl=${encodeURIComponent('https://willy.bet')}`);
             }
 
             const sign = md5Hash(`${config.auth.fk.merchantId}:${amount}:${config.auth.fk.secret}:${paymentId}`);
