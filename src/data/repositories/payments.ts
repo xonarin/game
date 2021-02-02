@@ -101,7 +101,7 @@ class PaymentsRepository extends BaseRepository {
         return payment.id;
     }
 
-    finishPayment(paymentId: string, methodId: string): Promise<void> {
+    finishPayment(paymentId: string, methodId?: string): Promise<void> {
         return this.db.sequelize.transaction(async transaction => {
             const payment = await this.getPaymentByIdStrict(paymentId, transaction);
 
@@ -118,7 +118,11 @@ class PaymentsRepository extends BaseRepository {
             const finalSum = payment.sum - commission;
 
             await payment.update(
-                { methodId, status: PaymentStatus.FINISHED, commission: commissionPercent },
+                {
+                    methodId: methodId === undefined ? payment.methodId : methodId,
+                    status: PaymentStatus.FINISHED,
+                    commission: commissionPercent,
+                },
                 { transaction },
             );
 
