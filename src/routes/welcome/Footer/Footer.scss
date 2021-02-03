@@ -62,4 +62,27 @@
         justify-content: space-between;
         align-items: center;
     }
+
+    &-PaymentsLink {
+        margin-right: 25px;
+        cursor: pointer;
+
+        img {
+            height: 20px;
+        }
+
+        &:first-child img{
+            height: 25px;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &:hover {
+            filter: brightness(120%);
+            -webkit-filter: brightness(120%);
+        }
+    
+    }
 }

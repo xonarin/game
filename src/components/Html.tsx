@@ -22,7 +22,7 @@ export interface HtmlProps {
 
 // noinspection HtmlUnknownTarget,JSUnresolvedLibraryURL
 const Html: FC<HtmlProps> = ({ title, description, styles = [], scripts = [], app, children }) => (
-    <html className="no-js" lang="en">
+    <html className="no-js" lang="ru">
         <head>
             <meta charSet="utf-8" />
             <meta httpEquiv="x-ua-compatible" content="ie=edge" />
