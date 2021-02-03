@@ -16,7 +16,6 @@ import pubsub from '../pubsub';
 const FREE_REFERRALS = 2;
 const REF_A = 40;
 const REF_D = 10;
-const INITIAL_REFERRAL_INCOME = 10;
 
 class UsersRepository extends BaseRepository {
     static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
@@ -137,6 +136,8 @@ class UsersRepository extends BaseRepository {
     }
 
     async setReferrer(userId: string, refId: string): Promise<User> {
+        const INITIAL_REFERRAL_INCOMEUSER =  await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEREF =  await this.repositories.settings.getSettingAsNumber('referrals::plusRefMoney'); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             const user = await this.getUserByIdStrict(userId, transaction);
             const referrer = await this.getUserById(refId, transaction);
@@ -145,12 +146,12 @@ class UsersRepository extends BaseRepository {
                 const referralsCountDelta = await this.calcReferralsCountDelta(referrer, transaction);
 
                 if (referralsCountDelta > 0) {
-                    await user.update({ money: user.money + INITIAL_REFERRAL_INCOME }, { transaction });
-                    await referrer.update({ refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOME }, { transaction });
+                    await user.update({ money: user.money + INITIAL_REFERRAL_INCOMEREF }, { transaction });
+                    await referrer.update({ refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOMEUSER }, { transaction });
                     await this.repositories.referralIncomes.writeIncome(
                         referrer.id,
                         user.id,
-                        INITIAL_REFERRAL_INCOME,
+                        INITIAL_REFERRAL_INCOMEUSER, // записываем в таблицу сколько человек получил за реферала
                         transaction,
                     );
                 }
@@ -169,6 +170,7 @@ class UsersRepository extends BaseRepository {
     }
 
     async increaseTurnover(userId: string, amount: number): Promise<User> {
+        const INITIAL_REFERRAL_INCOMEUSER =  await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             let user = await this.getUserByIdStrict(userId, transaction);
             user = await user.update({ turnover: user.turnover + amount }, { transaction });
@@ -194,7 +196,7 @@ class UsersRepository extends BaseRepository {
                     newReferrals.map(async referral => {
                         await referral.update(
                             {
-                                money: referral.money + INITIAL_REFERRAL_INCOME,
+                                money: referral.money + INITIAL_REFERRAL_INCOMEUSER,
                                 refStatus: RefStatus.Active,
                             },
                             { transaction },
@@ -202,14 +204,15 @@ class UsersRepository extends BaseRepository {
                         await this.repositories.referralIncomes.writeIncome(
                             user.id,
                             referral.id,
-                            INITIAL_REFERRAL_INCOME,
+                            INITIAL_REFERRAL_INCOMEUSER,
                             transaction,
                         );
                     }),
                 );
 
                 return user.update(
-                    { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOME },
+
+                    { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOMEUSER },
                     { transaction },
                 );
             }

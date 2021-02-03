@@ -4,6 +4,8 @@ import { Setting, SettingName, SettingValue } from '../models/Setting';
 const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'referrals::minTurnoverCoef': ['2', 'Минимальный коэфициент для подсчета оборота'],
     'referrals::minRefMoneyToGet': ['15', 'Минимальное значение refMoney для перечисления на money'],
+    'referrals::plusUserMoney': ['9', 'Сколько получит рефовод'],
+    'referrals::plusRefMoney': ['15', 'Сколько получит реферал'],
     'chat::adminAnnouncementsTitle': ['Новости от администрации', 'Названия чата с оповещениями от администрации'],
     'chat::adminAnnouncementsImage': [
         'https://static10.tgstat.ru/channels/_0/15/15e0f5c67b87b751e377b4dbb3c1dc74.jpg',
