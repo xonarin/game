@@ -27,6 +27,7 @@ type PaymentMethod {
     minAmount: Float!
     maxAmount: Float!
     enabled: Boolean!
+    sortPayment: Float!
 }
 
 type WithdrawMethod {
@@ -37,6 +38,7 @@ type WithdrawMethod {
     minAmount: Float!
     maxAmount: Float!
     enabled: Boolean!
+    sortPayment: Float!
 }
 
 enum PaymentStatus {

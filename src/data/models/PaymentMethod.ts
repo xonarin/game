@@ -10,6 +10,7 @@ export interface PaymentMethod extends Model {
     readonly minAmount: number;
     readonly maxAmount: number;
     readonly enabled: boolean;
+    readonly sortPayment: number;
 }
 
 export type PaymentMethodStatic = ModelStatic<PaymentMethod>;
@@ -57,6 +58,11 @@ export const initPaymentMethod = (sequelize: Sequelize): PaymentMethodStatic => 
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false,
+            },
+
+            sortPayment: {
+                type: DataTypes.DOUBLE(8, 2),
+                allowNull: false,
             },
         },
         { timestamps: false },

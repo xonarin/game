@@ -11,14 +11,14 @@ class PaymentsRepository extends BaseRepository {
     getAvailablePaymentMethods(): Promise<PaymentMethod[]> {
         return this.db.PaymentMethod.findAll({
             where: { enabled: true },
-            order: ['id'],
+            order: ['sortPayment'],
         });
     }
 
     getAvailableWithdrawMethods(): Promise<WithdrawMethod[]> {
         return this.db.WithdrawMethod.findAll({
             where: { enabled: true },
-            order: ['id'],
+            order: ['sortPayment'],
         });
     }
 
