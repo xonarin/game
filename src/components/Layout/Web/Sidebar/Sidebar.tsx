@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
             <Link className={cnSidebar('Logo')} to="/">
                 <img src={logoImg} alt="Рулетка" />
             </Link>
-            <nav>
+            <nav className={cnSidebar('NavigationBarList')}>
                 <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" />
                 <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite" />
                 <SidebarNavigationItem to="#" icon="dice" iconHover="diceWhite" />

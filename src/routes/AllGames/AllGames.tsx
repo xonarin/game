@@ -56,25 +56,13 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                         </Link>
                     </div>
                     <div className={cnAllGames('Game')}>
-                        <Link to="/classic">
+                        <Link to="#">
                             <img src="/wheel.45b409c3.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Classic</h2>
                         </Link>
                     </div>
                     <div className={cnAllGames('Game')}>
-                        <Link to="/mines">
-                            <img src="/mines.185b60b6.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Mines</h2>
-                        </Link>
-                    </div>
-                    <div className={cnAllGames('Game')}>
-                        <Link to="/classic">
-                            <img src="/wheel.45b409c3.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Classic</h2>
-                        </Link>
-                    </div>
-                    <div className={cnAllGames('Game')}>
-                        <Link to="/mines">
+                        <Link to="#">
                             <img src="/mines.185b60b6.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Mines</h2>
                         </Link>

@@ -4,6 +4,12 @@
         display: flex;
         margin-bottom: 30px;
         flex-wrap: wrap;
+        color: red;
+
+        .AllGames-Game:nth-child(n+3) a{
+            opacity: 0.2;
+            cursor: url(/coming-soon.svg), url(/coming-soon.cur), default;
+        }
     }
 
     &-BetsPanel.Panel { height: 100%; }
