@@ -1,7 +1,7 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-
+import { moneyRound } from "../../../../utils/money";
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
@@ -75,7 +75,7 @@ const MonthlyBonuse = () => {
                         id: index + 1,
                         avatar: user.avatar,
                         winner: user.username,
-                        point: user.amount,
+                        point: moneyRound(user.amount),
                         fund: user.prize,
                     })) || []
                 }

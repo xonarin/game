@@ -1,7 +1,7 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-
+import { moneyRound } from "../../../../utils/money";
 import s from './BonuseBanner.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../../components/Text/Text';
@@ -25,7 +25,7 @@ const BonuseBannerPlayerMobile: React.FC<BonuseBannerPlayerMobileProps> = ({ des
     const nowDateTime = DateTime.local();
     const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
     const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
-
+    const amountRound = moneyRound(amount);
     return (
         <div className={cnBonuseBannerMobile()}>
             <div className={cnBonuseBannerMobile('Header')}>
@@ -76,7 +76,7 @@ const BonuseBannerPlayerMobile: React.FC<BonuseBannerPlayerMobileProps> = ({ des
                 <div className={cnBonuseBannerMobile('Main-Rating')}>
                     <Icon type="diceWhite" />
                     <Text color="white">
-                        Набрано <Text color="green">{amount}</Text> баллов
+                        Набрано <Text color="green">{amountRound}</Text> баллов
                     </Text>
                 </div>
             </div>
@@ -87,7 +87,7 @@ const BonuseBannerPlayerMobile: React.FC<BonuseBannerPlayerMobileProps> = ({ des
                             id: index + 1,
                             avatar: user.avatar,
                             winner: user.username,
-                            point: user.amount,
+                            point: moneyRound(user.amount),
                             fund: user.prize,
                         })) || []
                     }
