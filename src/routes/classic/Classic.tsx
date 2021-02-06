@@ -56,7 +56,11 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                                 Ставки
                             </Text>
                         }
-                        rightHead={<Icon type="guard" />}
+                        rightHead={ 
+                            <>
+                             {/* <Icon type="guard" /> */}
+                             </>
+                        }
                     >
                         <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
                     </Panel>
@@ -77,7 +81,11 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                             Ставки
                         </Text>
                     }
-                    rightHead={<Icon type="guard" />}
+                    rightHead={
+                        <>
+                        {/* <Icon type="guard" /> */}
+                        </>
+                    }
                 >
                     <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
                 </Panel>
