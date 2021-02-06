@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import PrizeMobile from './Mobile/PrizeMobile';
 import PrizeWeb from './Web/PrizeWeb';
-import Layout32ContentWithChat from '../../components/Layout/Web/containers/Layout32ContentWithChat';
+import Layout34ContentWithChat from '../../components/Layout/Web/containers/Layout34ContentWithChat';
 
 export interface PrizeProps {
     chatId: string;
@@ -27,7 +27,7 @@ const Prize: React.FC<PrizeProps> = ({ chatId }) => {
         return <PrizeMobile />;
     }
 
-    return <Layout32ContentWithChat chatId={chatId} title="Prize" centerContent={<PrizeWeb />} bottomContent="" />;
+    return <Layout34ContentWithChat chatId={chatId} title="Prize" centerContent={<PrizeWeb />} bottomContent="" />;
 };
 
 export default Prize;

@@ -3,9 +3,12 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './PrizeMobile.scss';
 import { cn } from '../../../utils/bem-css-module';
-import Layout from '../../../components/Layout/Layout';
+import Layout33Content from '../../../components/Layout/Mobile/containers/Layout33Content';
 import { PrizeInfo, TabNameType } from '../PrizeInfo/PrizeInfo';
 import { PrizeTabMobile } from './PrizeTabMobile';
+import GiftBox from '../bonusicon/giftbox.svg';
+import PomoCode from '../bonusicon/promo.svg';
+import NewPromoCode from '../bonusicon/add.svg';
 
 const cnPrizeMobile = cn(s, 'PrizeMobile');
 
@@ -15,12 +18,13 @@ const PrizeMobile: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState<TabNameType>('freeCoins');
 
     return (
-        <Layout>
+        <Layout33Content
+            centerContent={
             <div className={cnPrizeMobile()}>
                 <div className={cnPrizeMobile('Nav')}>
                     <PrizeTabMobile
                         tabName="freeCoins"
-                        img=""
+                        img={GiftBox}
                         title="Бесплатные монеты"
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
@@ -30,7 +34,7 @@ const PrizeMobile: React.FC = () => {
 
                     <PrizeTabMobile
                         tabName="activePromoCode"
-                        img=""
+                        img={PomoCode}
                         title="Активировать промокод"
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
@@ -40,7 +44,7 @@ const PrizeMobile: React.FC = () => {
 
                     <PrizeTabMobile
                         tabName="createPromoCode"
-                        img=""
+                        img={NewPromoCode}
                         title="Создать промокод"
                         selectedTab={selectedTab}
                         setSelectedTab={setSelectedTab}
@@ -51,7 +55,8 @@ const PrizeMobile: React.FC = () => {
 
                 <PrizeInfo selectedTab={selectedTab} />
             </div>
-        </Layout>
+        }
+        />
     );
 };
 

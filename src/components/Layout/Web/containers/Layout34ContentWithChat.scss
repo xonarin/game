@@ -1,0 +1,35 @@
+@import '../../../../assets/styles/mixins';
+
+.Layout32ContentWithChat {
+    &-Top {
+        display: flex;
+        height: 605px;
+        margin-bottom: 30px;
+    }
+
+    &-LeftContent {
+        flex: 1 1 340px;
+        max-width: 380px;
+        min-width: 340px;
+    }
+
+    &-RightContent {
+        flex: 1 1 500px;
+        min-width: 0;
+        margin-right: 65px;
+    }
+
+    &-Chat.Chat {
+        flex: 1 1 340px;
+        max-width: 380px;
+        min-width: 340px;
+        height: 100%;
+    }
+
+    @include mq(max-width 1400px) {
+        &-RightContent { margin: 0 15px; }
+
+        &-LeftContent,
+        &-Chat.Chat { min-width: 280px; }
+    }
+}

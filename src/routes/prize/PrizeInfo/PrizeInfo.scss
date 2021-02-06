@@ -73,4 +73,11 @@
             color: gray;
         }
     }
+
+    @media (max-width: 992px) {
+        &-Btn {
+            border: none;
+            width: 150px;
+        }
+    }
 }
