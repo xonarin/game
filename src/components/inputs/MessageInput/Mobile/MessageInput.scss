@@ -9,6 +9,7 @@
     align-items: center;
     width: 100%;
     background-color: lighten($color-bg, 5%);
+    color: red;
 
     //noinspection CssOverwrittenProperties
     & &-Editable {
