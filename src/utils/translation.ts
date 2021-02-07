@@ -14,7 +14,16 @@ type TranslationCode =
     | 'CLASSIC_GAME_IN_PROGRESS_ERROR'
     | 'CLASSIC_GAME_ENDED_ERROR'
     | 'INVALID_AMOUNT_REQUIRED'
-    | 'INVALID_AMOUNT_MORE_THAN';
+    | 'INVALID_AMOUNT_MORE_THAN'
+    | 'INVALID_BET_AMOUNT_MORE_THAN'
+    | 'NOT_ENOUGH_BETS'
+    | 'MINES_GAME_BET_TOO_HIGH'
+    | 'PROMO_CODE_BUSIED'
+    | 'BAD_PROMO_CODE'
+    | 'NO_PROMO_CODE'
+    | 'LAST_PROMO_CODE_DIDNT_BET'
+    | 'VK_PAGE_CLOSED'
+    | 'NOT_ENOUGH_VK_FRIENDS'
 
 interface Translation {
     ru: string;
@@ -76,6 +85,33 @@ const translations: Record<TranslationCode, Translation> = {
     },
     INVALID_AMOUNT_MORE_THAN: {
         ru: 'Сумма должна быть больше 0',
+    },
+    INVALID_BET_AMOUNT_MORE_THAN: {
+        ru: 'Сумма должна быть больше 0',
+    },
+    NOT_ENOUGH_BETS: {
+        ru: 'После первого депозита сделайте ставок на 100 рублей с кэфом не менее 2х.',
+    },
+    MINES_GAME_BET_TOO_HIGH: {
+        ru: 'Максимальная ставка не более 100 рублей.',
+    },
+    PROMO_CODE_BUSIED: {
+        ru: 'Смените название промокода.',
+    },
+    BAD_PROMO_CODE: {
+        ru: 'Мин.сумма промокода 1 рубль и 1 активация.',
+    },
+    NO_PROMO_CODE: {
+        ru: 'Такого промокода не существует.',
+    },
+    LAST_PROMO_CODE_DIDNT_BET: {
+        ru: 'Последний раз вы брали промокод и не сделали на его сумму ставок. Сделайте ставки.',
+    },
+    VK_PAGE_CLOSED: {
+        ru: 'Откройте профиль в ВК, чтобы взять промокод.',
+    },
+    NOT_ENOUGH_VK_FRIENDS: {
+        ru: 'У вас должно быть больше 20 друзей в ВК.',
     },
 };
 

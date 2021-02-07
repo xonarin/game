@@ -30,14 +30,14 @@ const AllGamesMobile: React.FC = () => {
                     </div>
                     <div className={cnAllGames('Game')}>
                         <Link to="#">
-                            <img src="/wheel.45b409c3.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Classic</h2>
+                            <img src="/darts.png" alt="" />
+                            <h2 className={cnAllGames('Title')}>Darts</h2>
                         </Link>
                     </div>
                     <div className={cnAllGames('Game')}>
                         <Link to="#">
                             <img src="/mines.185b60b6.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Mines</h2>
+                            <h2 className={cnAllGames('Title')}>KNB</h2>
                         </Link>
                     </div>
                 </div>

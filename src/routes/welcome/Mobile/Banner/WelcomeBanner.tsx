@@ -11,6 +11,8 @@ import PeopleCircles from './PeopleCircles/PeopleCircles';
 import StatsItem from './StatsItem/StatsItem';
 import TextBlock from '../../../../components/TextBlock/TextBlock';
 import useOnlineDataQuery from '../../../../hooks/graphql/liveData/useOnlineDataQuery';
+import useUsersTotalAndPayedTotalQuery from '../../../../hooks/graphql/useUsersTotalAndPayedTotalQuery';
+import { cutNumberForHuman } from '../../../../utils/strings';
 
 const cnWelcomeBanner = cn(s, 'WelcomeBanner');
 
@@ -18,6 +20,7 @@ const WelcomeBanner: React.FC = () => {
     useStyles(s);
 
     const [banner, inView] = useInView({ unobserveOnEnter: true });
+    const { usersTotal, payedTotal } = useUsersTotalAndPayedTotalQuery();
     const { online } = useOnlineDataQuery();
     return (
         <section className={cnWelcomeBanner({ inView })} ref={banner}>
@@ -33,7 +36,7 @@ const WelcomeBanner: React.FC = () => {
                     </div>
                     <div className={cnWelcomeBanner('MainBottom')}>
                         <Button className={cnWelcomeBanner('PlayButton')} shape="alphaRight">
-                            Начать играть
+                            <a href="/auth/vk">Начать играть</a>
                         </Button>
                         <div className={cnWelcomeBanner('MainBottomRight')}>
                             <Text size="m" color="white">
@@ -41,7 +44,7 @@ const WelcomeBanner: React.FC = () => {
                             </Text>
                             <PeopleCircles className={cnWelcomeBanner('PeopleCircles')} />
                             <Text size="m" color="green">
-                                +583K
+                                {usersTotal !== undefined && `+${cutNumberForHuman(usersTotal, 0)}`}
                             </Text>
                         </div>
                     </div>
@@ -51,7 +54,7 @@ const WelcomeBanner: React.FC = () => {
                         className={cnWelcomeBanner('StatsItem')}
                         label="Пользователей"
                         icon="user"
-                        value="550 000"
+                        value={usersTotal?.toLocaleString()}
                     />
                     <StatsItem
                         className={cnWelcomeBanner('StatsItem')}
@@ -59,7 +62,12 @@ const WelcomeBanner: React.FC = () => {
                         icon="lightning"
                         value={online?.online}
                     />
-                    <StatsItem className={cnWelcomeBanner('StatsItem')} label="Выплачено" icon="rub" value="962 275" />
+                    <StatsItem 
+                        className={cnWelcomeBanner('StatsItem')} 
+                        label="Выплачено" 
+                        icon="rub" 
+                        value={payedTotal?.toLocaleString()}
+                    />
                 </div>
                 <div className={cnWelcomeBanner('NotebookImage')} />
             </div>

@@ -27,7 +27,7 @@ export default {
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
         'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
-    // 'mysql://b6a4ff4918e389:147e8cbc@eu-cdbr-west-03.cleardb.net/heroku_9b236af7a8e92d4?reconnect=true',
+    // 'mysql://admin:kristinap22012013a@localhost:3306/playtime',,
 
     // Redis
     redisUrl: process.env.REDIS_URL || 'localhost',
@@ -36,7 +36,7 @@ export default {
     // Web analytics
     analytics: {
         // https://analytics.google.com/
-        googleTrackingId: process.env.GOOGLE_TRACKING_ID, // UA-XXXXX-X
+        googleTrackingId: process.env.GOOGLE_TRACKING_ID || 'UA-30115745-1', // UA-XXXXX-X
     },
 
     // Authentication
@@ -46,20 +46,24 @@ export default {
         jwt: { secret: process.env.JWT_SECRET || 'idontknow' },
 
         vk: {
+            //localhost
             appId: process.env.VK_APP_ID || '7008761',
             appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
-            appAccessToken: process.env.VK_APP_TOKEN || '',
+            //Production
+            // appId: process.env.VK_APP_ID || '7723218',
+            // appSecret: process.env.VK_APP_SECRET || 'UZgw4N4CTvkY9BuTcRUY',
+            appAccessToken: process.env.VK_APP_TOKEN || 'b4ebbe8e34429fbc06ab9de4bb1d0e4a5f5e85b11df5c2bbf93b0a3fe6d1bb745165bee41200b3d7bbd0c',
 
-            groupId: process.env.VK_GROUP_ID || '',
-            groupAccessToken: process.env.VK_GROUP_TOKEN || '',
+            groupId: process.env.VK_GROUP_ID || '188874446',
+            groupAccessToken: process.env.VK_GROUP_TOKEN || 'fd7ceb7ebe18e06d44b23d8e2bd980242b4574689f28d9caa39938460ea27ac31962190bf8b543bdad5b4',
         },
 
         fk: {
-            merchantId: process.env.FK_MERCHANT_ID || '253080',
-            secret: process.env.FK_SECRET || 'pbicjr2m',
-            secret2: process.env.FK_SECRET2 || 'g0cj8gw8',
-            walletId: process.env.FK_WALLET_ID || 'F101281784',
-            apiKey: process.env.FK_API_KEY || 'B733D6F3C6F167DD948E4DA95B3A091F',
+            merchantId: process.env.FK_MERCHANT_ID || '252728',
+            secret: process.env.FK_SECRET || '5vbryudo',
+            secret2: process.env.FK_SECRET2 || 'ul5a01ql',
+            walletId: process.env.FK_WALLET_ID || 'F100481963',
+            apiKey: process.env.FK_API_KEY || 'F89FA8AE6F56780C48FD8A5E5EB34BEF',
         },
 
         qiwi: {

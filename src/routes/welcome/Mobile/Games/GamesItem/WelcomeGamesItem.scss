@@ -35,8 +35,11 @@
         background: url('../../../../../assets/img/minesback.png') center center no-repeat;
         background-size: cover;
     }
-    &_type_knb::before { background-color: #1f6077; }
-    &_type_battle::before { background-color: #8c2a2a; }
+    &_type_darts::before { 
+        background: url('../../../../../assets/img/darts.png') center center no-repeat;
+        background-size: cover;
+     }
+    &_type_knb::before { background-color: #8c2a2a; }
 
     & &-Title {
         position: relative;

@@ -29,23 +29,23 @@ const WelcomeGames: React.FC = () => {
             <Scroller className={cnWelcomeGames('List')}>
                 <WelcomeGamesItem
                     title="Classic"
-                    description="Восприятие, как принято считать, осознает эскапизм, что лишний раз подтверждает правоту З.Фрейда."
+                    description="Сразись с другими игроками за главный приз и не дай себя обхитрить."
                     type="classic"
                 />
                 <WelcomeGamesItem
                     title="Mines"
-                    description="Самонаблюдение, исходя из того, что представляет собой субъект. Аутотренинг выбирает стресс."
+                    description="Прислушайся к своему шестому чувству и сорви крупный куш."
                     type="mines"
                 />
                 <WelcomeGamesItem
-                    title="KNB"
-                    description="Эпитет интуитивно понятен. Идея самоценности искусства, на первый вгляд, вызывает реализм."
-                    type="knb"
+                    title="Darts"
+                    description="Набери как можно больше баллов, которые помогут приумножить твой выигрыш"
+                    type="darts"
                 />
                 <WelcomeGamesItem
-                    title="Battle"
-                    description="Восприятие, как принято считать, осознает эскапизм, что лишний раз подтверждает правоту З.Фрейда."
-                    type="battle"
+                    title="Knb"
+                    description="Любимая всеми игра детства, теперь и на нашем сайте!"
+                    type="knb"
                 />
             </Scroller>
         </section>
