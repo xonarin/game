@@ -24,6 +24,7 @@ type TranslationCode =
     | 'LAST_PROMO_CODE_DIDNT_BET'
     | 'VK_PAGE_CLOSED'
     | 'NOT_ENOUGH_VK_FRIENDS'
+    | 'NOT_ENOUGH_REF_MONEY';
 
 interface Translation {
     ru: string;
@@ -112,6 +113,9 @@ const translations: Record<TranslationCode, Translation> = {
     },
     NOT_ENOUGH_VK_FRIENDS: {
         ru: 'У вас должно быть больше 20 друзей в ВК.',
+    },
+    NOT_ENOUGH_REF_MONEY: {
+        ru: 'Для вывод с реферальского баланса нужно не менее 15 рублей',
     },
 };
 

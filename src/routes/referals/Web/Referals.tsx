@@ -42,17 +42,17 @@ const ReferalsWeb: React.FC = () => {
                             </Text>
                         </Link>
                         <Link to="/referal">
-                            МОИ ПРОФИЛЬ
+                            МОЙ ПРОФИЛЬ
                         </Link>
                     </nav>
                     <div className={cnReferal("Info")}>
                         <div className={cnReferal("Info-Title")}>
                             <Text color='white' size='xxl'>
                                 Зарабатывайте легко на бонусах без вложений
-                        </Text>
+                            </Text>
                             <Text color="white">
                                 Заработано: {amountFullAmount} ₽
-                        </Text>
+                            </Text>
                         </div>
 
                         <div className={cnReferal("Info-Link")}>
@@ -66,7 +66,10 @@ const ReferalsWeb: React.FC = () => {
                             </div>
                             <Icon type='link' />
                         </div>
-
+                            <Text color="white" size='xs'>
+                                    Вы получите: 7 ₽, а ваш  реферал:  5 ₽
+                            </Text>
+                        <div />
                         <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>
                 </div>
@@ -74,7 +77,7 @@ const ReferalsWeb: React.FC = () => {
             DiagramsIcon={
                 <div className={cnReferal("Icon")}>
                     <Icon size='xxl' type='diagrams' />
-                    <Text upper color='white' size='xl'>СТАТИстики</Text>
+                    <Text upper color='white' size='xl'>Статистика</Text>
                 </div>
             }
             LeftContent={
@@ -83,7 +86,7 @@ const ReferalsWeb: React.FC = () => {
                         <div className={cnReferal("Diagram-Container-Header-Title")}>
                         <Icon  type='balance' />
                         <Text>
-                            ЗАРАБОТАНО:<Text color='green'>{amountValue} ₽</Text>
+                            ЗАРАБОТАНО: <Text color='green'>{amountValue} ₽</Text>
                         </Text>
                         </div>
 
@@ -104,7 +107,7 @@ const ReferalsWeb: React.FC = () => {
                     <div className={cnReferal("Diagram-Container-Header-Title")}>
                     <Icon type='peoples' />
                     <Text>
-                        ЗАРАБОТАНО: <Text color='green'>{countValue}</Text>
+                        Привлечено: <Text color='green'>{countValue}</Text>
                     </Text>
                     </div>
 

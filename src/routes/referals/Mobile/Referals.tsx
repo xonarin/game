@@ -67,7 +67,9 @@ const ReferalsMobile: React.FC = () => {
                             </div>
                             <Icon type="link" />
                         </div>
-
+                        <Text color="white" size='xs'>
+                            Вы получите: 7 ₽, а ваш  реферал:  5 ₽
+                        </Text>
                         <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>
                 </div>
@@ -76,7 +78,7 @@ const ReferalsMobile: React.FC = () => {
                 <div className={cnReferal('Icon')}>
                     <Icon size="xxl" type="diagrams" />
                     <Text upper color="white" size="xl">
-                        СТАТИстики
+                        Статистика
                     </Text>
                 </div>
             }
@@ -86,7 +88,7 @@ const ReferalsMobile: React.FC = () => {
                         <div className={cnReferal('Diagram-Container-Header-Title')}>
                             <Icon type="balance" />
                             <Text>
-                                ЗАРАБОТАНО:<Text color="green">{amountValue} ₽</Text>
+                                ЗАРАБОТАНО: <Text color="green">{amountValue} ₽</Text>
                             </Text>
                         </div>
 
@@ -174,7 +176,7 @@ const ReferalsMobile: React.FC = () => {
                         <div className={cnReferal('Diagram-Container-Header-Title')}>
                             <Icon type="peoples" />
                             <Text>
-                                ЗАРАБОТАНО:<Text color="green">{countValue}</Text>
+                                Привлечено:<Text color="green">{countValue}</Text>
                             </Text>
                         </div>
 
