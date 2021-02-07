@@ -6,22 +6,12 @@
     justify-content: center;
     align-items: center;
     border: none;
-    padding: 12px;
+	padding: 12px;
     border-radius: 3px;
     background-color: $color-blue;
     outline: none;
     cursor: pointer;
 
-    &::after {
-        content: '';
-        position: absolute;
-        display: block;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0;
-    }
 
     &:hover { background-color: lighten($color-blue, 4%); }
 
@@ -34,6 +24,7 @@
         opacity: 0;
         transform: scale(0);
         transition: opacity 0.3s $nice-ease, transform 0.4s cubic-bezier(0.26, 0.39, 0.58, 1.51);
+        z-index: 999;
     }
 
     &_type_bomb {
@@ -55,13 +46,49 @@
         }
     }
 
+    &-IconAfter {
+        background: url('./gem-appear.png') no-repeat 0 0;
+        background-size: auto 100%;
+    }
+
+    &-IconAfter {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    &_type_bomb {
+        & div {
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: url('./bomb-appear.png') no-repeat 0 0;
+            background-size: auto 100%;
+        }
+
+        &.MinesButton_isStepped div { animation: mines-appear .8s steps(61) .2s; }
+
+        .MinesButton-Icon {
+            background-image: url('../../../../components/Icon/types/bombColored.svg');
+            opacity: 0.5;
+            transform: scale(1);
+        }
+    }
+
     &_type_gem {
-        &::after {
+        & div {
             background: url('./gem-appear.png') no-repeat 0 0;
             background-size: auto 100%;
         }
 
-        &.MinesButton_isStepped::after { animation: mines-appear .38s steps(22) .3s forwards; }
+        &.MinesButton_isStepped div  { animation: mines-appear .38s steps(22) .3s forwards; }
 
         .MinesButton-Icon {
             background-image: url('/gem.svg');
