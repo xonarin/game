@@ -156,8 +156,9 @@ export const resolvers: PaymentsResolvers = {
             const paymentId = await repositories.payments.createPayment(user!.id, paymentMethod.id, amount);
 
             if (paymentMethod.id === '777') {
-                const a = await qiwiFetchRestrictions();
-                if (a === undefined || a.length !== 0) {
+                const restrictions = await qiwiFetchRestrictions();
+
+                if (restrictions === undefined || restrictions.length !== 0) {
                     throw new UserError('QIWI_DEPOSIT_INACTIVE');
                 }
 

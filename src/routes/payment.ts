@@ -15,6 +15,9 @@ interface QiwiNotification {
         status: {
             value: string;
         };
+        customFields: {
+            paymentId: string;
+        };
     };
 }
 
@@ -44,16 +47,20 @@ const qiwiNotificationTypeGuard = (value: unknown): value is QiwiNotification =>
         return false;
     }
 
-    if (['amount', 'status'].some(field => typeof bill[field] !== 'object' || bill[field] === null)) {
+    if (['amount', 'status', 'customFields'].some(field => typeof bill[field] !== 'object' || bill[field] === null)) {
         return false;
     }
 
-    const { amount, status } = bill as Record<'amount' | 'status', Record<string | number | symbol, unknown>>;
+    const { amount, status, customFields } = bill as Record<
+        'amount' | 'status',
+        Record<string | number | symbol, unknown>
+    >;
+
     if (['value', 'currency'].some(field => typeof amount[field] !== 'string')) {
         return false;
     }
 
-    return typeof status.value === 'string';
+    return typeof status.value === 'string' && typeof customFields.paymentId === 'string';
 };
 
 const initPayments = (app: Express) => {
@@ -95,7 +102,13 @@ const initPayments = (app: Express) => {
         }
 
         const {
-            bill: { siteId, billId, amount, status },
+            bill: {
+                siteId,
+                billId,
+                amount,
+                status,
+                customFields: { paymentId },
+            },
         } = data;
 
         const sign = req.header('X-Api-Signature-SHA256');
@@ -112,7 +125,7 @@ const initPayments = (app: Express) => {
         }
 
         try {
-            await repositories.payments.finishPayment(billId);
+            await repositories.payments.finishPayment(paymentId);
         } catch (e) {
             console.error(e);
             return res.sendStatus(500);

@@ -1,8 +1,9 @@
 import fetch, { BodyInit, HeadersInit } from 'node-fetch';
 import * as queryString from 'querystring';
 import SocksProxyAgent from 'socks-proxy-agent/dist/agent';
-import * as http from 'http';
 import { DateTime, Duration } from 'luxon';
+import { uuid } from 'uuidv4';
+import * as http from 'http';
 
 import config from '../config';
 import Locker from './locker';
@@ -381,7 +382,7 @@ export const qiwiDoWithdraw = async (
 
 const qiwiCreateBillDuration = Duration.fromObject({ days: 45 });
 
-export const qiwiCreateBill = async (billId: string, amount: number): Promise<string> => {
+export const qiwiCreateBill = async (paymentId: string, amount: number): Promise<string> => {
     const bill = {
         amount: {
             value: amount,
@@ -391,7 +392,12 @@ export const qiwiCreateBill = async (billId: string, amount: number): Promise<st
             .plus(qiwiCreateBillDuration)
             .set({ millisecond: 0 })
             .toISO({ suppressMilliseconds: true }),
+        customFields: {
+            paymentId,
+        },
     };
+
+    const billId = uuid();
 
     try {
         const response = await qiwiApi({
