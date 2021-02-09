@@ -102,8 +102,20 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.use(passport.initialize());
 
 // Vk authentication
+let lastVkAuth = Date.now();
+
 app.get(
     '/auth/vk',
+    (_0, res, next) => {
+        const now = Date.now();
+
+        if (now - lastVkAuth < 1000) {
+            res.redirect('/');
+        } else {
+            lastVkAuth = Date.now();
+            next();
+        }
+    },
     passport.authenticate('vkontakte', {
         failureRedirect: '/',
         session: false,
