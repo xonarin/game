@@ -114,7 +114,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                     ) : null}
                 </div>
                 <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                    <NavigationItem to="/" icon="user" iconHover="user" />
+                    <NavigationItem to="/referal" icon="user" iconHover="user" />
                 </button>
             </div>
         </aside>

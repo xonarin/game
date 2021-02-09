@@ -13,9 +13,9 @@ import pubsub from '../pubsub';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
-const FREE_REFERRALS = 2;
-const REF_A = 40;
-const REF_D = 10;
+const FREE_REFERRALS = 5;
+const REF_A = 15;
+const REF_D = 1;
 
 class UsersRepository extends BaseRepository {
     static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
