@@ -55,6 +55,15 @@
         &.Button_shape_right::before { width: 20px; }
 
         & + & { margin-left: 5px; }
+
+        a {
+            text-decoration: none;
+            color: #687393;
+            font-weight: 700;
+            &:hover {
+                color: #ffffff;
+            }
+        }
     }
 
     &-Copyright {

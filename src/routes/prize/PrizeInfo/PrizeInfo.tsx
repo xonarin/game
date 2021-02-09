@@ -35,11 +35,11 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
             </div>
 
             <div className={cnPrizeInfo('Groups')}>
-                <a href="/" className={cnPrizeInfo('Btn')}>
+                <a href="https://vk.com/willygame" className={cnPrizeInfo('Btn')}>
                     Вконтакте
                 </a>
 
-                <a href="/" className={cnPrizeInfo('Btn')}>
+                <a href="https://t.me/willygames" className={cnPrizeInfo('Btn')}>
                     Телеграм
                 </a>
             </div>

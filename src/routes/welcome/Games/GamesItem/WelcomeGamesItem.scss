@@ -34,7 +34,10 @@
         background: url('../../../../assets/img/darts.png') center center no-repeat;
         background-size: cover;
      }
-    &_type_knb::before { background-color: #8c2a2a; }
+    &_type_knb::before {
+        background: url('../../../../assets/img/knb.png') center center no-repeat;
+        background-size: cover;
+    }
 
     & &-Title {
         position: relative;

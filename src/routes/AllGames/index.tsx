@@ -12,7 +12,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
     // }
 
     return {
-        title: 'All Games',
+        title: 'Все игры',
         chunks: ['classic'],
         pageContent: <AllGames chatId={chatId} />,
         redirect: user ? undefined : '/',

@@ -1,7 +1,7 @@
 .Bonuse {
     &-Navigation {
         display: flex;
-        width: max-content;
+        justify-content: space-between;
         button {
             background: none;
             border: none;

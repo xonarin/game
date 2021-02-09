@@ -10,7 +10,7 @@ const action = ({ user }: AppContextTypes): RouteResult => {
     // }
 
     return {
-        title: 'Bonuse',
+        title: 'Турниры',
         chunks: ['bonuse'],
         pageContent: <Bonuse />,
         redirect: user ? undefined : '/',

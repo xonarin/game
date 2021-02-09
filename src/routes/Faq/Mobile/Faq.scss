@@ -3,7 +3,6 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        border: 1px solid red;
     }
 
     &-title {
@@ -14,13 +13,14 @@
 
     &-description {
         font-size: 14px;
-        color: #2c3343;
+        color: #5e6b86;
         margin-bottom: 20px;
     }
 
     &-question-theme {
+        width: 100%;
         border: none;
-        background: #09101a;
+        background: #181b2b;
         height: 40px;
         display: flex;
         align-items: center;
@@ -43,7 +43,7 @@
         font-weight: 500;
         font-size: 14px;
         margin-bottom: 15px;
-        color: #434d5e;
+        color: #5e6b86;
 
         &:focus {
             outline: none;

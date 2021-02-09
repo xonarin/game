@@ -6,7 +6,7 @@ import Referals from './Referals';
 
 const action = ({ user }: AppContextTypes): RouteResult => {
     return {
-        title: 'Referals',
+        title: 'Партнёрская программа',
         chunks: ['referal'],
         pageContent: <Referals />,
         redirect: user ? undefined : '/',

@@ -52,9 +52,10 @@ export default {
             //Production
             // appId: process.env.VK_APP_ID || '7723218',
             // appSecret: process.env.VK_APP_SECRET || 'UZgw4N4CTvkY9BuTcRUY',
+            //appAccessToken: process.env.VK_APP_TOKEN || '4968df8c4968df8c4968df8ca0491d075e449684968df8c1691663a40f9a0cf90a7daea',
             appAccessToken: process.env.VK_APP_TOKEN || 'b4ebbe8e34429fbc06ab9de4bb1d0e4a5f5e85b11df5c2bbf93b0a3fe6d1bb745165bee41200b3d7bbd0c',
 
-            groupId: process.env.VK_GROUP_ID || '188874446',
+            groupId: process.env.VK_GROUP_ID || '202468109',
             groupAccessToken: process.env.VK_GROUP_TOKEN || 'fd7ceb7ebe18e06d44b23d8e2bd980242b4574689f28d9caa39938460ea27ac31962190bf8b543bdad5b4',
         },
 

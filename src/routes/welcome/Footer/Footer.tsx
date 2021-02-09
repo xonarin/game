@@ -49,13 +49,10 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                     </ul>
                     <div>
                         <Button className={cnFooter('SocialButton')} color="gray">
-                            VK
+                            <a href="https://vk.com/willygame">VK</a>
                         </Button>
                         <Button className={cnFooter('SocialButton')} color="gray">
-                            TG
-                        </Button>
-                        <Button className={cnFooter('SocialButton')} color="gray">
-                            IN
+                        <a href="https://t.me/willygames">TG</a>
                         </Button>
                     </div>
                 </div>

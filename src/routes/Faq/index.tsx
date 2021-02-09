@@ -10,7 +10,7 @@ const action = ({ user }: AppContextTypes): RouteResult => {
     // }
 
     return {
-        title: 'Faq',
+        title: 'Помощь',
         chunks: ['classic'],
         pageContent: <Faq />,
         redirect: user ? undefined : '/',

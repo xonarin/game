@@ -93,14 +93,22 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                                             iconHover="messageWhite"
                                         />
                                     )}
+                                    
                                 />
+                                <Link to="/messages">
                                 <Text> Личный чат </Text>
+                                </Link>
+                                    
+                                
+                                
                             </div>
                             <div className={cnSidebar('Message-Type')}>
                                 <button type="button" onClick={() => openChat()}>
-                                    <NavigationItem icon="message" iconHover="messageWhite" />
+                                    <NavigationItem icon="message" iconHover="messageWhite" text="Правила"/>
+                                    
                                 </button>
-                                <Text>Общий чат </Text>
+                                <div className={cnSidebar('Message-Type-Text')} onClick={() => openChat()}>Общий чат</div>
+                                
                             </div>
                         </div>
                     ) : null}

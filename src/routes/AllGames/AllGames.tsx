@@ -63,7 +63,7 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                     </div>
                     <div className={cnAllGames('Game')}>
                         <Link to="#">
-                            <img src="/mines.185b60b6.png" alt="" />
+                            <img src="/knb.png" alt="" />
                             <h2 className={cnAllGames('Title')}>KNB</h2>
                         </Link>
                     </div>

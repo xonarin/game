@@ -69,7 +69,7 @@ const routes: Route<AppContextTypes, RouteResult> = {
         const route = await next();
 
         // Provide default values for title, description etc.
-        route.title = `${route.title || 'Untitled Page'} - PlayTime`;
+        route.title = `${route.title || 'Untitled Page'} - Willy`;
         route.description = route.description || '';
 
         // Render page content wrapped in page if exists
