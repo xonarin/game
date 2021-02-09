@@ -161,8 +161,9 @@ class UsersRepository extends BaseRepository {
             if (referrer) {
                 const referralsCountDelta = await this.calcReferralsCountDelta(referrer, transaction);
 
+                await this.giveMoney(user.id, INITIAL_REFERRAL_INCOMEREF, transaction);
+
                 if (referralsCountDelta > 0) {
-                    await user.update({ money: user.money + INITIAL_REFERRAL_INCOMEREF }, { transaction });
                     await referrer.update(
                         { refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOMEUSER },
                         { transaction },
