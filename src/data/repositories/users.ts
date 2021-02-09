@@ -24,38 +24,50 @@ class UsersRepository extends BaseRepository {
         [RefStatsPeriod.Year]: 'year',
     };
 
-    async createUser(socialType: SocialType, socialId: string, username: string, avatar: string): Promise<User> {
-        return this.db.User.create({
-            socialType,
-            socialId,
-            username,
-            avatar,
-            clientSeed: generateSeed(),
-            serverSeed: generateSeed(),
-        });
+    async createUser(
+        socialType: SocialType,
+        socialId: string,
+        username: string,
+        avatar: string,
+        transaction: Transaction,
+    ): Promise<User> {
+        return this.db.User.create(
+            {
+                socialType,
+                socialId,
+                username,
+                avatar,
+                clientSeed: generateSeed(),
+                serverSeed: generateSeed(),
+            },
+            { transaction },
+        );
     }
 
-    async authVk(profile: VkProfile): Promise<[User, boolean]> {
-        let user: User | null = await this.db.User.findOne({
-            where: {
-                socialType: SocialType.VK,
-                socialId: profile.id,
-            },
+    authVk(profile: VkProfile): Promise<[User, boolean]> {
+        return this.db.sequelize.transaction(async transaction => {
+            let user: User | null = await this.db.User.findOne({
+                where: {
+                    socialType: SocialType.VK,
+                    socialId: profile.id,
+                },
+                transaction,
+            });
+
+            const avatar = profile.photos ? profile.photos[0].value : 'default_avatar'; // TODO: default avatar
+
+            if (!user) {
+                user = await this.createUser(SocialType.VK, profile.id, profile.displayName, avatar, transaction);
+
+                // Add to chat for admin announcements
+                const aaChat = await this.repositories.chats.getAdminAnnouncementsChat(transaction);
+                await aaChat.addMember(user, { transaction });
+
+                return [user, true];
+            }
+
+            return [user, false];
         });
-
-        const avatar = profile.photos ? profile.photos[0].value : 'default_avatar'; // TODO: default avatar
-
-        if (!user) {
-            user = await this.createUser(SocialType.VK, profile.id, profile.displayName, avatar);
-
-            // Add to chat for admin announcements
-            const aaChat = await this.repositories.chats.getAdminAnnouncementsChat();
-            await aaChat.addMember(user);
-
-            return [user, true];
-        }
-
-        return [user, false];
     }
 
     async getUserById(userId: string, transaction?: Transaction): Promise<User | null> {
@@ -136,8 +148,12 @@ class UsersRepository extends BaseRepository {
     }
 
     async setReferrer(userId: string, refId: string): Promise<User> {
-        const INITIAL_REFERRAL_INCOMEUSER =  await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
-        const INITIAL_REFERRAL_INCOMEREF =  await this.repositories.settings.getSettingAsNumber('referrals::plusRefMoney'); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
+            'referrals::plusUserMoney',
+        ); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEREF = await this.repositories.settings.getSettingAsNumber(
+            'referrals::plusRefMoney',
+        ); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             const user = await this.getUserByIdStrict(userId, transaction);
             const referrer = await this.getUserById(refId, transaction);
@@ -147,7 +163,10 @@ class UsersRepository extends BaseRepository {
 
                 if (referralsCountDelta > 0) {
                     await user.update({ money: user.money + INITIAL_REFERRAL_INCOMEREF }, { transaction });
-                    await referrer.update({ refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOMEUSER }, { transaction });
+                    await referrer.update(
+                        { refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOMEUSER },
+                        { transaction },
+                    );
                     await this.repositories.referralIncomes.writeIncome(
                         referrer.id,
                         user.id,
@@ -170,7 +189,9 @@ class UsersRepository extends BaseRepository {
     }
 
     async increaseTurnover(userId: string, amount: number): Promise<User> {
-        const INITIAL_REFERRAL_INCOMEUSER =  await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
+            'referrals::plusUserMoney',
+        ); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             let user = await this.getUserByIdStrict(userId, transaction);
             user = await user.update({ turnover: user.turnover + amount }, { transaction });
@@ -211,7 +232,6 @@ class UsersRepository extends BaseRepository {
                 );
 
                 return user.update(
-
                     { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOMEUSER },
                     { transaction },
                 );
