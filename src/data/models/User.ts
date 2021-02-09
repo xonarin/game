@@ -192,7 +192,10 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             },
         },
         {
-            indexes: [{ name: 'createdAt', using: 'BTREE', fields: [{ name: 'createdAt', order: 'ASC' }] }],
+            indexes: [
+                { unique: true, fields: ['socialType', 'socialId'] },
+                { name: 'createdAt', using: 'BTREE', fields: [{ name: 'createdAt', order: 'ASC' }] },
+            ],
         },
     ) as UserStatic;
 
