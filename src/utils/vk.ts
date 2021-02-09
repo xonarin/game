@@ -42,8 +42,8 @@ const vkApi = async (method: string, params: Record<string, string>) => {
             throw new Error('VK API error');
         });
 
-        if (!responseJson.response) {
-            console.warn('vkApi !responseJson.response', method, query, responseJson);
+        if (responseJson.response === undefined) {
+            console.warn('vkApi responseJson.response === undefined', method, query, responseJson);
             throw new Error('VK API error');
         }
 
