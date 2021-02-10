@@ -8,7 +8,7 @@ import {
     Mutation,
     MutationMakeMinesGameStepArgs,
     MutationStartMinesGameArgs,
-    Query,
+    Query
 } from '../../../__generated__/graphql';
 import { MinesGame as MinesGameBackend, MinesGameStatus } from '../../models/MinesGame';
 import { isAuth } from '../rules';
@@ -81,12 +81,7 @@ export const resolvers: MinesGameResolvers = {
             }
 
             await repositories.users.withdrawMoney(user!.id, betAmount);
-
-            const createdGame = await repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
-
-            await repositories.users.giveIncomeToReferrer(user!.id, betAmount * 0.05);
-
-            return createdGame;
+            return repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
         },
         endMinesGame: async (_0, _1, { user, repositories }) => {
             return repositories.minesGames.endGame(user!.id);

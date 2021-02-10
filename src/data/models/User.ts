@@ -162,7 +162,7 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             refPercent: {
                 type: DataTypes.DOUBLE(8, 2),
                 allowNull: false,
-                defaultValue: 3,
+                defaultValue: 5,
             },
 
             clientSeed: {

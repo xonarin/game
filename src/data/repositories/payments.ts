@@ -127,6 +127,7 @@ class PaymentsRepository extends BaseRepository {
             );
 
             await this.repositories.users.giveMoney(payment.userId, finalSum, transaction);
+            await this.repositories.users.giveIncomeToReferrer(payment.userId, finalSum, transaction);
         });
     }
 

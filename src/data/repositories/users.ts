@@ -246,19 +246,21 @@ class UsersRepository extends BaseRepository {
         return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
-    async giveIncomeToReferrer(referralId: string, ourProfit: number): Promise<void> {
-        const referral = await this.getUserByIdStrict(referralId);
-        const { refId } = referral;
+    async giveIncomeToReferrer(referralId: string, ourProfit: number, transaction?: Transaction): Promise<void> {
+        const f = async (tr: Transaction) => {
+            const referral = await this.getUserByIdStrict(referralId);
+            const { refId } = referral;
 
-        if (refId) {
-            await this.db.sequelize.transaction(async transaction => {
-                const referrer = await this.getUserByIdStrict(refId, transaction);
+            if (refId) {
+                const referrer = await this.getUserByIdStrict(refId, tr);
                 const incomeAmount = (ourProfit * referrer.refPercent) / 100;
 
-                await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction });
-                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount, transaction);
-            });
-        }
+                await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction: tr });
+                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount, tr);
+            }
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
     async getReferralsCount(referrerId: string): Promise<number> {
