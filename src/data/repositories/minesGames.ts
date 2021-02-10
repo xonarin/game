@@ -77,6 +77,12 @@ class MinesGamesRepository extends BaseRepository {
                 throw new UserError('NO_ACTIVE_MINES_GAME');
             }
 
+            const bombReached = (currentGame.fieldConf & currentGame.stepsConf) !== 0;
+
+            if (bombReached) {
+                throw new UserError('BOMB_REACHED_EARLIER_MINES_GAME');
+            }
+
             const madeStepsCount = countOnes(currentGame.stepsConf);
             const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
 
