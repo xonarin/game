@@ -36,6 +36,7 @@ class MinesGamesRepository extends BaseRepository {
                 status: MinesGameStatus.InGame,
             },
             order: [['id', 'DESC']],
+            include: [this.db.MinesGame.User],
             transaction,
         });
     }
@@ -93,13 +94,10 @@ class MinesGamesRepository extends BaseRepository {
 
             await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef, transaction);
 
-            const game = await this.getGameByIdStrict(currentGame.id, transaction);
-            await game.update({ status: MinesGameStatus.Ended }, { transaction });
+            await currentGame.update({ status: MinesGameStatus.Ended }, { transaction });
+            await addMinesGame(currentGame);
 
-            await game.getUser({ transaction });
-            await addMinesGame(game);
-
-            return game;
+            return currentGame;
         });
     }
 
@@ -129,7 +127,6 @@ class MinesGamesRepository extends BaseRepository {
             );
 
             if (game.status === MinesGameStatus.Ended) {
-                await game.getUser({ transaction });
                 await addMinesGame(game);
             }
 
