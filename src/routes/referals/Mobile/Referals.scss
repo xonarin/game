@@ -21,6 +21,7 @@
 
     &-Info {
         background-image: url('../../../assets/img//referalsBG.svg');
+        background-size: cover;
         background-color: black;
         margin-top: 30px;
         display: flex;
@@ -53,6 +54,10 @@
                 display: flex;
                 flex-direction: column;
             }
+        }
+
+        span {
+            text-align: center;
         }
     }
     &-Period{

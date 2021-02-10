@@ -48,6 +48,7 @@ type IconType =
     | 'bellWhite'
     | 'messageWhite'
     | 'signOut'
+    | 'signOutGray'
     | 'smile'
     | 'ban'
     | 'delete'

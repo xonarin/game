@@ -7,6 +7,7 @@ import s from './Sidebar.scss';
 import Text from '../../../Text/Text';
 import useUnreadCountQuery from '../../../../hooks/graphql/chat/useUnreadCountQuery';
 import Link from '../../../Link/Link';
+import Icon from '../../../../components/Icon/Icon';
 import AlarmButton from '../../../Button/containers/AlarmButton/AlarmButton';
 
 export interface SidebarMobileProps {
@@ -34,17 +35,27 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         <NavigationItem to="/referal" text="Рефералы" icon="gamepad" iconHover="gamepadWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="#" text="Профиль" icon="user" iconHover="user" />
-                    </button>
-                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="#" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
-                    </button>
-                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
                         <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
                         <NavigationItem to="/faq" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
                     </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="#" text="Профиль" icon="user" iconHover="user" />
+                    </button>
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+
+                        <Link className={cnSidebar('LogOut')} to="/logout"  external>
+                            <Icon className={cnSidebar('LogOutIcon')} type="signOutGray" size="xs" />
+                            <span className={cnSidebar('LogOutText')}>Выход</span>
+                        </Link>
+                    </button>
+
+                    {/*
+                    <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
+                        <NavigationItem to="#" text="Честная игра" icon="guardTwo" iconHover="gamepadWhite" />
+                    </button>
+                    */}
                 </div>
             ) : null}
             <div className={cnSidebar('Row')}>

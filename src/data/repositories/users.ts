@@ -13,8 +13,8 @@ import pubsub from '../pubsub';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
-const FREE_REFERRALS = 5;
-const REF_A = 15;
+const FREE_REFERRALS = 5000;
+const REF_A = 1;
 const REF_D = 1;
 
 class UsersRepository extends BaseRepository {
