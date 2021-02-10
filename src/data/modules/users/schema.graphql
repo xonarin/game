@@ -17,7 +17,7 @@ type Mutation {
 }
 
 type Subscription {
-    balance: Float
+    balance: BalanceSubscription
 }
 
 enum UserRole {
@@ -43,4 +43,9 @@ type FairPlayPayload {
 type UpdateServerSeedPayload {
     oldServerSeed: String!
     newServerSeedHash: String!
+}
+
+type BalanceSubscription {
+    money: Float!
+    maxReached: Boolean!
 }

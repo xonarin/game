@@ -1,3 +1,6 @@
 subscription BalanceSubscription {
-    balance
+    balance {
+        money
+        maxReached
+    }
 }

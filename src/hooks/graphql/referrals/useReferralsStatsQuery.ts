@@ -8,14 +8,14 @@ import {
     RefStatsType,
 } from '../../../__generated__/graphql';
 
-interface ReferralsQueryResult {
+interface UseReferralsStatsQueryResult {
     loading: boolean;
     fullAmount?: ReferralsStatsQuery['referralsStats']['fullAmount'];
     mainValue?: ReferralsStatsQuery['referralsStats']['mainValue'];
     entries?: ReferralsStatsQuery['referralsStats']['entries'];
 }
 
-const useReferralsQuery = (type: RefStatsType, period: RefStatsPeriod): ReferralsQueryResult => {
+const useReferralsStatsQuery = (type: RefStatsType, period: RefStatsPeriod): UseReferralsStatsQueryResult => {
     const { data, loading } = useQuery<ReferralsStatsQuery, ReferralsStatsQueryVariables>(ReferralsStatsDocument, {
         variables: { type, period },
     });
@@ -28,4 +28,4 @@ const useReferralsQuery = (type: RefStatsType, period: RefStatsPeriod): Referral
     };
 };
 
-export default useReferralsQuery;
+export default useReferralsStatsQuery;

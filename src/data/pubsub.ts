@@ -23,6 +23,7 @@ import { LiveDataGameParent, OnlinePayloadParent } from './modules/liveData/reso
 export interface BalanceSubscriptionPayload {
     userId: string;
     money: number;
+    maxReached: boolean;
 }
 
 export interface PubSubEventPayloads {

@@ -101,7 +101,10 @@ class UsersRepository extends BaseRepository {
             await user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
             const newUser: User = await user.reload({ transaction: tr });
 
-            pubsub.publish('balance', { userId, money: newUser.money }).then();
+            pubsub
+                .publish('balance', { userId, money: newUser.money, maxReached: newUser.money === maxBalance })
+                .then();
+
             return newUser;
         };
 
@@ -119,7 +122,7 @@ class UsersRepository extends BaseRepository {
             await user.update({ money: user.money - amount }, { transaction: tr });
             const newUser: User = await user.reload({ transaction: tr });
 
-            pubsub.publish('balance', { userId, money: newUser.money }).then();
+            pubsub.publish('balance', { userId, money: newUser.money, maxReached: false }).then();
             return newUser;
         };
 
@@ -285,7 +288,7 @@ class UsersRepository extends BaseRepository {
     }
 
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
-        const results = this.db.User.findAll({
+        return this.db.User.findAll({
             attributes: [
                 'id',
                 'username',
@@ -306,8 +309,6 @@ class UsersRepository extends BaseRepository {
             subQuery: false,
             raw: true,
         });
-
-        return results;
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {

@@ -5,6 +5,7 @@ import { and, IRules } from 'graphql-shield';
 import { Resolver, Resolvers, ResolverSubscriber, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
 import {
+    BalanceSubscription,
     Mutation,
     MutationUpdateClientSeedArgs,
     Query,
@@ -27,6 +28,7 @@ type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay' | 'usersTotal'>;
 type MutationType = Pick<Mutation, 'updateClientSeed' | 'updateServerSeed'>;
 type SubscriptionType = Pick<Subscription, 'balance'>;
 type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money'>;
+type BalanceSubscriptionType = Pick<BalanceSubscription, 'money' | 'maxReached'>;
 
 interface QueryMapping {
     me: Resolver<OriginUserParent | null>;
@@ -39,7 +41,7 @@ interface MutationMapping {
 }
 
 interface SubscriptionMapping {
-    balance: ResolverSubscriber<number, BalanceSubscriptionPayload>;
+    balance: ResolverSubscriber<BalanceSubscriptionType, BalanceSubscriptionPayload>;
 }
 
 type UsersResolvers = Resolvers<
@@ -48,6 +50,7 @@ type UsersResolvers = Resolvers<
         Mutation: TypeResolvers<MutationType, MutationMapping>;
         Subscription: TypeResolvers<SubscriptionType, SubscriptionMapping>;
         User: TypeResolvers<UserType, {}, OriginUserParent>;
+        BalanceSubscription: TypeResolvers<BalanceSubscriptionType, {}, BalanceSubscriptionPayload>;
         URL: GraphQLScalarType;
     },
     ApolloContext
@@ -101,7 +104,6 @@ export const resolvers: UsersResolvers = {
     },
     Subscription: {
         balance: {
-            resolve: data => data?.balance.money,
             subscribe: withFilter(
                 () => pubsub.asyncIterator('balance'),
                 ({ balance: { userId } }, _, { user }) => userId === user?.id,

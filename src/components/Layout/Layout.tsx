@@ -13,13 +13,16 @@ import PreLoader from '../PreLoader/PreLoader';
 import PopUp from './Mobile/PopUp/PopUp';
 import Chat from '../Chat/Mobile/Chat';
 import {
+    AddNotificationDocument,
+    AddNotificationMutationVariables,
     BalanceSubscriptionDocument,
     BalanceSubscriptionSubscription,
     BalanceSubscriptionSubscriptionVariables,
     MeDocument,
     MeQuery,
-    MeQueryVariables,
+    MeQueryVariables, Notification
 } from '../../__generated__/graphql';
+import { makeSuccessNotification, makeWarningNotification } from '../../utils/apollo/notifications';
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -44,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
     useSubscription<BalanceSubscriptionSubscription, BalanceSubscriptionSubscriptionVariables>(
         BalanceSubscriptionDocument,
         {
-            onSubscriptionData: ({ client, subscriptionData }) => {
+            onSubscriptionData: async ({ client, subscriptionData }) => {
                 const { data } = subscriptionData;
 
                 if (data?.balance === undefined || data.balance === null) {
@@ -56,11 +59,20 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
                     return;
                 }
 
+                const { balance } = data;
+
                 const { me } = meQuery;
                 client.cache.modify({
                     id: client.cache.identify(me),
-                    fields: { money: () => data.balance },
+                    fields: { money: () => balance.money },
                 });
+
+                if (balance.maxReached) {
+                    await client.mutate<Notification, AddNotificationMutationVariables>({
+                        mutation: AddNotificationDocument,
+                        variables: { input: makeWarningNotification('MAX_BALANCE_REACHED') },
+                    });
+                }
             },
         },
     );

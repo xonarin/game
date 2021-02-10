@@ -10,7 +10,7 @@ import Icon from '../../../components/Icon/Icon';
 import ReferalsTable from './ReferalsTable/ReferalsTable';
 import Diagram from '../../../components/Diagram/Diagram';
 import LayoutReferalMobile from '../../../components/Layout/Mobile/containers/LayoutReferalMobile';
-import useReferralsStats from "../../../hooks/graphql/referrals/useReferralsStats";
+import useReferralsStatsQuery from "../../../hooks/graphql/referrals/useReferralsStatsQuery";
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
@@ -24,8 +24,8 @@ const ReferalsMobile: React.FC = () => {
     const [referalsTypeToggle, setReferalsTypeToggle] = useState(false);
     const [amountToggle, setAmountToggle] = useState(false);
 
-    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
-    const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
+    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
+    const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
 
     const { domain } = useContext(AppContext);
     const { referralLink } = useReferralLinkQuery(domain || 'domain.io');

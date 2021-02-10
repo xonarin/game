@@ -141,7 +141,7 @@ export const resolvers: ChatResolvers = {
             const chat = await repositories.chats.getChatByIdStrict(chatId);
 
             // Проверка на бан чата
-            //if (user!.chatWarns > 0) Все чаты
+            // if (user!.chatWarns > 0) Все чаты
             if (chat.type === ChatTypeEnum.Game && user!.chatWarns > 0) {
                 const now = Date.now();
                 const banEndTime = getBanEndTime(user!.chatWarnsUpdatedAt, user!.chatWarns);
