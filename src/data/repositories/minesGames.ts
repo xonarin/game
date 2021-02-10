@@ -129,7 +129,7 @@ class MinesGamesRepository extends BaseRepository {
             );
 
             if (game.status === MinesGameStatus.Ended) {
-                await game.getUser();
+                await game.getUser({ transaction });
                 await addMinesGame(game);
             }
 
