@@ -14,8 +14,7 @@ import { MinesGame as MinesGameBackend, MinesGameStatus } from '../../models/Min
 import { isAuth } from '../rules';
 import { checkMakeMinesGameStepArgs, checkStartMinesGameArgs } from './rules';
 import { UserError } from '../../../utils/errors';
-import { countOnes } from '../../../utils/number';
-import { FIELD_SIZE, generateMinesCoefs, getMinesCoef, getMinesCoefs, MIN_BOMBS_COUNT } from '../../../utils/mines';
+import { FIELD_SIZE, generateMinesCoefs, getMinesCoefs, MIN_BOMBS_COUNT } from '../../../utils/mines';
 
 export type OriginMinesGameParent = MinesGameBackend;
 
@@ -93,26 +92,7 @@ export const resolvers: MinesGameResolvers = {
             return repositories.minesGames.endGame(user!.id);
         },
         makeMinesGameStep: async (_0, { cell }, { user, repositories }) => {
-            const currentGame = await repositories.minesGames.getCurrentGame(user!.id);
-
-            if (!currentGame) {
-                throw new UserError('NO_ACTIVE_MINES_GAME');
-            }
-
-            const updatedGame = await repositories.minesGames.makeStep(currentGame.id, cell);
-
-            // Increase turnover if game is ended
-            if (updatedGame.status === MinesGameStatus.Ended) {
-                const madeStepsCount = countOnes(updatedGame.stepsConf);
-                const coef = getMinesCoef(updatedGame.bombsCount, madeStepsCount);
-
-                const minTurnoverCoef = await repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
-                if (coef >= minTurnoverCoef) {
-                    await repositories.users.increaseTurnover(user!.id, currentGame.betAmount);
-                }
-            }
-
-            return updatedGame;
+            return repositories.minesGames.makeStep(user!.id, cell);
         },
     },
     MinesGame: {

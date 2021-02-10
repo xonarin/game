@@ -189,15 +189,16 @@ class UsersRepository extends BaseRepository {
         });
     }
 
-    async increaseTurnover(userId: string, amount: number): Promise<User> {
-        const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
-            'referrals::plusUserMoney',
-        ); // Сколько начислится за реферала
-        return this.db.sequelize.transaction(async transaction => {
-            let user = await this.getUserByIdStrict(userId, transaction);
-            user = await user.update({ turnover: user.turnover + amount }, { transaction });
+    async increaseTurnover(userId: string, amount: number, transaction?: Transaction): Promise<User> {
+        const INITIAL_REFERRAL_INCOMEUSER = (
+            await this.repositories.settings.getSetting('referrals::plusUserMoney', transaction)
+        ).asNumber(); // Сколько начислится за реферала
 
-            const referralsCountDelta = await this.calcReferralsCountDelta(user!, transaction);
+        const f = async (tr: Transaction) => {
+            let user = await this.getUserByIdStrict(userId, tr);
+            user = await user.update({ turnover: user.turnover + amount }, { transaction: tr });
+
+            const referralsCountDelta = await this.calcReferralsCountDelta(user!, tr);
             if (referralsCountDelta > 0) {
                 const newReferrals: User[] = await this.db.User.findAll({
                     where: {
@@ -206,8 +207,8 @@ class UsersRepository extends BaseRepository {
                     },
                     order: [['createdAt', 'ASC']],
                     limit: referralsCountDelta,
-                    transaction,
-                    lock: transaction.LOCK.UPDATE,
+                    transaction: tr,
+                    lock: tr.LOCK.UPDATE,
                 });
 
                 if (newReferrals.length === 0) {
@@ -221,25 +222,28 @@ class UsersRepository extends BaseRepository {
                                 money: referral.money + INITIAL_REFERRAL_INCOMEUSER,
                                 refStatus: RefStatus.Active,
                             },
-                            { transaction },
+                            { transaction: tr },
                         );
+
                         await this.repositories.referralIncomes.writeIncome(
                             user.id,
                             referral.id,
                             INITIAL_REFERRAL_INCOMEUSER,
-                            transaction,
+                            tr,
                         );
                     }),
                 );
 
                 return user.update(
                     { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOMEUSER },
-                    { transaction },
+                    { transaction: tr },
                 );
             }
 
             return user;
-        });
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
     async giveIncomeToReferrer(referralId: string, ourProfit: number): Promise<void> {

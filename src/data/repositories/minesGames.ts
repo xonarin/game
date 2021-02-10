@@ -29,13 +29,14 @@ class MinesGamesRepository extends BaseRepository {
         return game;
     }
 
-    async getCurrentGame(userId: string): Promise<MinesGame | null> {
+    async getCurrentGame(userId: string, transaction?: Transaction): Promise<MinesGame | null> {
         return this.db.MinesGame.findOne({
             where: {
                 userId,
                 status: MinesGameStatus.InGame,
             },
             order: [['id', 'DESC']],
+            transaction,
         });
     }
 
@@ -67,46 +68,56 @@ class MinesGamesRepository extends BaseRepository {
     }
 
     async endGame(userId: string): Promise<MinesGame> {
-        const currentGame = await this.repositories.minesGames.getCurrentGame(userId);
-
-        if (!currentGame) {
-            throw new UserError('NO_ACTIVE_MINES_GAME');
-        }
-
-        const madeStepsCount = countOnes(currentGame.stepsConf);
-        const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
-
-        // Increase turnover
         const minTurnoverCoef = await this.repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
-        if (coef >= minTurnoverCoef) {
-            await this.repositories.users.increaseTurnover(userId, currentGame.betAmount);
-        }
 
-        await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef);
+        return this.db.sequelize.transaction(async transaction => {
+            const currentGame = await this.repositories.minesGames.getCurrentGame(userId, transaction);
 
-        const game = await this.getGameByIdStrict(currentGame.id);
-        await game.update({ status: MinesGameStatus.Ended });
+            if (!currentGame) {
+                throw new UserError('NO_ACTIVE_MINES_GAME');
+            }
 
-        await game.getUser();
-        await addMinesGame(game);
+            const madeStepsCount = countOnes(currentGame.stepsConf);
+            const coef = getMinesCoef(currentGame.bombsCount, madeStepsCount);
 
-        return game;
+            // Increase turnover
+            if (coef >= minTurnoverCoef) {
+                await this.repositories.users.increaseTurnover(userId, currentGame.betAmount, transaction);
+            }
+
+            await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef, transaction);
+
+            const game = await this.getGameByIdStrict(currentGame.id, transaction);
+            await game.update({ status: MinesGameStatus.Ended }, { transaction });
+
+            await game.getUser({ transaction });
+            await addMinesGame(game);
+
+            return game;
+        });
     }
 
-    async makeStep(gameId: string, cell: number): Promise<MinesGame> {
+    async makeStep(userId: string, cell: number): Promise<MinesGame> {
         const stepMask = 1 << cell;
 
         const minesGame: MinesGame = await this.db.sequelize.transaction(async transaction => {
-            const game = await this.getGameByIdStrict(gameId, transaction);
+            const game = await this.repositories.minesGames.getCurrentGame(userId, transaction);
+
+            if (!game) {
+                throw new UserError('NO_ACTIVE_MINES_GAME');
+            }
 
             if ((game.stepsConf & stepMask) !== 0) {
                 throw new UserError('CELL_ALREADY_STEPPED');
             }
 
+            const newStepsConf = game.stepsConf | stepMask;
+            const bombReached = (game.fieldConf & newStepsConf) !== 0;
+
             await game.update(
                 {
-                    stepsConf: game.stepsConf | stepMask,
-                    status: (game.fieldConf & stepMask) !== 0 ? MinesGameStatus.Ended : MinesGameStatus.InGame,
+                    stepsConf: newStepsConf,
+                    status: bombReached ? MinesGameStatus.Ended : MinesGameStatus.InGame,
                 },
                 { transaction },
             );
@@ -119,14 +130,27 @@ class MinesGamesRepository extends BaseRepository {
             return game;
         });
 
-        const madeStepsCount = countOnes(minesGame.stepsConf);
-        const coef = getMinesCoef(minesGame.bombsCount, madeStepsCount);
-        const profit = minesGame.betAmount * coef;
+        if (minesGame.status === MinesGameStatus.InGame) {
+            const madeStepsCount = countOnes(minesGame.stepsConf);
+            const coef = getMinesCoef(minesGame.bombsCount, madeStepsCount);
+            const profit = minesGame.betAmount * coef;
 
-        const maxProfit = await this.repositories.settings.getSettingAsNumber('mines::maxProfitAmount');
+            const maxProfit = await this.repositories.settings.getSettingAsNumber('mines::maxProfitAmount');
 
-        if (profit >= maxProfit) {
-            return this.endGame(minesGame.userId);
+            if (madeStepsCount === FIELD_SIZE - minesGame.bombsCount || profit >= maxProfit) {
+                return this.endGame(minesGame.userId);
+            }
+        }
+
+        // Increase turnover if game is ended
+        if (minesGame.status === MinesGameStatus.Ended) {
+            const madeStepsCount = countOnes(minesGame.stepsConf);
+            const coef = getMinesCoef(minesGame.bombsCount, madeStepsCount);
+
+            const minTurnoverCoef = await this.repositories.settings.getSettingAsNumber('referrals::minTurnoverCoef');
+            if (coef >= minTurnoverCoef) {
+                await this.repositories.users.increaseTurnover(minesGame.userId, minesGame.betAmount);
+            }
         }
 
         return minesGame;
