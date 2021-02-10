@@ -22,18 +22,18 @@ enum LiveDataStorageKeys {
 
 const resetOnline = async () => {
     await redis.del(LiveDataStorageKeys.ONLINE);
-    await redis.set(LiveDataStorageKeys.ONLINE, 0);
 };
-const increaseOnline = async () => {
-    await redis.incr(LiveDataStorageKeys.ONLINE);
-};
-const decreaseOnline = async () => {
-    await redis.decr(LiveDataStorageKeys.ONLINE);
-};
-const getOnline = async () => {
-    const online = await redis.get(LiveDataStorageKeys.ONLINE);
 
-    return online ? parseInt(online, 10) : 0;
+const increaseOnline = async (userId: string) => {
+    await redis.sadd(LiveDataStorageKeys.ONLINE, userId);
+};
+
+const decreaseOnline = async (userId: string) => {
+    await redis.srem(LiveDataStorageKeys.ONLINE, userId);
+};
+
+const getOnline = () => {
+    return redis.scard(LiveDataStorageKeys.ONLINE);
 };
 
 const resetGames = async () => {

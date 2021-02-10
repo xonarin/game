@@ -179,15 +179,21 @@ const server = new ApolloServer({
     validationRules: [depthLimit(5)],
     context: ({ req, res, connection }) => createContext(req, res, connection),
     subscriptions: {
-        onConnect: connectionParams => {
-            const context = createWebSocketContext(connectionParams);
+        onConnect: async connectionParams => {
+            const context = await createWebSocketContext(connectionParams);
 
-            increaseOnline();
+            if (context.user) {
+                await increaseOnline(context.user.id);
+            }
 
             return context;
         },
-        onDisconnect: () => {
-            decreaseOnline();
+        onDisconnect: async (_0, context) => {
+            const user = (await context.initPromise)?.user;
+
+            if (user && typeof user.id === 'string') {
+                await decreaseOnline(user.id);
+            }
         },
     },
 });
