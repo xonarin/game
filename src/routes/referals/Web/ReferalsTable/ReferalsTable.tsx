@@ -36,7 +36,7 @@ const ReferalsTable: React.FC<ReferalsTableProps> = () => {
         setShowAll(!showAll);
     };
 
-    const data = showAll || referrals.length <= 6 ? referrals : [...referrals].slice(0, 6);
+    const data = showAll || referrals.length <= 6 ? referrals : referrals.slice(0, 6);
 
     return (
         <>

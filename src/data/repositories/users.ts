@@ -193,10 +193,6 @@ class UsersRepository extends BaseRepository {
     }
 
     async increaseTurnover(userId: string, amount: number, transaction?: Transaction): Promise<User> {
-        const INITIAL_REFERRAL_INCOMEUSER = (
-            await this.repositories.settings.getSetting('referrals::plusUserMoney', transaction)
-        ).asNumber(); // Сколько начислится за реферала
-
         const f = async (tr: Transaction) => {
             let user = await this.getUserByIdStrict(userId, tr);
             user = await user.update({ turnover: user.turnover + amount }, { transaction: tr });
@@ -217,6 +213,10 @@ class UsersRepository extends BaseRepository {
                 if (newReferrals.length === 0) {
                     return user;
                 }
+
+                const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
+                    'referrals::plusUserMoney',
+                ); // Сколько начислится за реферала
 
                 await Promise.all(
                     newReferrals.map(async referral => {
@@ -338,6 +338,16 @@ class UsersRepository extends BaseRepository {
             const minRefMoney = await this.repositories.settings.getSettingAsNumber('referrals::minRefMoneyToGet');
             if (user.refMoney < minRefMoney) {
                 throw new UserError('NOT_ENOUGH_REF_MONEY');
+            }
+
+            const payments = await this.repositories.payments.getPaymentsByUserId(
+                userId,
+                PaymentStatus.FINISHED,
+                transaction,
+            );
+
+            if (payments.length === 0) {
+                throw new UserError('GET_REF_MONEY_NOT_ENOUGH_DEPS');
             }
 
             await this.giveMoney(userId, user.refMoney, transaction);

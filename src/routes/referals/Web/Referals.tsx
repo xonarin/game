@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';

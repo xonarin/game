@@ -1,6 +1,5 @@
 import BaseRepository from './base';
 import { Setting, SettingName, SettingValue } from '../models/Setting';
-import { Transaction } from 'sequelize';
 
 const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'referrals::minTurnoverCoef': ['2', 'Минимальный коэфициент для подсчета оборота'],
@@ -43,17 +42,16 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
 };
 
 class SettingsRepository extends BaseRepository {
-    async getSetting(name: SettingName, transaction?: Transaction): Promise<SettingValue> {
+    async getSetting(name: SettingName): Promise<SettingValue> {
         const setting: Setting | null = await this.db.Setting.findByPk(name, {
             ...this.sequelizeContext,
             rejectOnEmpty: false,
-            transaction,
         });
 
         if (!setting) {
             if (defaultSettings[name]) {
                 const [value, description] = defaultSettings[name];
-                await this.db.Setting.create({ name, value, description }, { transaction });
+                await this.db.Setting.create({ name, value, description });
                 return new SettingValue(value);
             }
 

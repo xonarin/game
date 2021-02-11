@@ -20,9 +20,10 @@ import {
     BalanceSubscriptionSubscriptionVariables,
     MeDocument,
     MeQuery,
-    MeQueryVariables, Notification
+    MeQueryVariables,
+    Notification,
 } from '../../__generated__/graphql';
-import { makeSuccessNotification, makeWarningNotification } from '../../utils/apollo/notifications';
+import { makeWarningNotification } from '../../utils/apollo/notifications';
 
 export interface LayoutProps {
     children: React.ReactNode;

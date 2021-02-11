@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -28,7 +28,7 @@ const ReferalsMobile: React.FC = () => {
     const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
 
     const { domain } = useContext(AppContext);
-    const { referralLink } = useReferralLinkQuery(domain || 'domain.io');
+    const { referralLink } = useReferralLinkQuery(domain);
     const getReferralMoney = useGetReferralMoneyMutation();
 
     useStyles(s);
