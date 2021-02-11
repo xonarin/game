@@ -297,7 +297,7 @@ class UsersRepository extends BaseRepository {
                 [fn('IF', fn('STRCMP', col('refStatus'), 'Active'), 0, 1), 'isActive'],
                 'createdAt',
                 [fn('COUNT', col('referrerIncomes.id')), 'gamesCount'],
-                [fn('SUM', col('referrerIncomes.amount')), 'income'],
+                [fn('COALESCE', fn('SUM', col('referrerIncomes.amount')), 0), 'income'],
             ],
             where: {
                 refId: referrerId,
