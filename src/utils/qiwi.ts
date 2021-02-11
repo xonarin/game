@@ -103,6 +103,7 @@ const qiwiApi = async <T>({
             console.warn(
                 'qiwiApi !response.ok',
                 { host, authorization, resource, method, queryParams, data },
+                response.status,
                 await response.text(),
             );
             throw new Error('Qiwi API error');
