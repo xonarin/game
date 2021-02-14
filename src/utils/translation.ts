@@ -6,6 +6,7 @@ type TranslationCode =
     | 'NOT_ADMIN_OR_MODERATOR'
     | 'FREQUENT_REQUESTS'
     | 'NOT_ENOUGH_MONEY'
+    | 'NOT_ENOUGH_DEPOSITS'
     | 'CHAT_BANNED'
     | 'INVALID_MESSAGE_REQUIRED'
     | 'INVALID_MESSAGE_MIN'
@@ -122,6 +123,9 @@ const translations: Record<TranslationCode, Translation> = {
     NOT_ENOUGH_REF_MONEY: {
         ru: 'Для вывода с реферальского баланса нужно не менее 15 рублей',
     },
+    NOT_ENOUGH_DEPOSITS: {
+        ru: 'Сделайте депозит в 50 рублей для вывода средств.'
+    }
 };
 
 export const getTranslation = (code: TranslationCode, language: keyof Translation = 'ru') => {

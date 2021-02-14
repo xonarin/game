@@ -7,6 +7,11 @@
     overflow: hidden;
 
     &-Head {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -17,7 +22,7 @@
     }
 
     &-Content {
-        height: calc(100% - 65px);
+        height: calc(100% - 50px);
         background-color: lighten($color-bg, 3%);
     }
 

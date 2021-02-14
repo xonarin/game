@@ -193,15 +193,15 @@ class BonusRepository extends BaseRepository {
         const a = Math.random();
         const b = Math.random();
 
-        if (a < 0.7) {
-            return Number((0.01 + b * 0.02).toFixed(2));
+        if (a < 0.90) {
+            return Number((0.50 + b * 0.55).toFixed(2));
         }
 
-        if (a < 0.9) {
-            return Number((0.01 + b * 0.04).toFixed(2));
+        if (a < 0.95) {
+            return Number((0.60 + b * 1.20).toFixed(2));
         }
 
-        return Number((0.01 + b * 0.09).toFixed(2));
+        return Number((0.60 + b * 1.5).toFixed(2));
     }
 }
 

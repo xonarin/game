@@ -25,7 +25,7 @@ const PrizeWeb: React.FC = () => {
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}
                 >
-                    Вступай в нашу группу и получай до 0.10 монет каждые 15 минут
+                    Вступай в нашу группу и получай до 3 рублей каждый день
                 </PrizeTab>
 
                 <PrizeTab

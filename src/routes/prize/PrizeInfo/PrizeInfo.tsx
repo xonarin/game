@@ -46,7 +46,7 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
 
             <div className={cnPrizeInfo('Content')}>
                 {selectedTab === 'freeCoins' && (
-                    <Text color="white">Вступайте в группу ВК и получайте до 0.10 монет каждые 15 минут.</Text>
+                    <Text color="white">Вступите в группу ВК и получайте до 3 рублей каждый день.</Text>
                 )}
 
                 {selectedTab === 'activePromoCode' && (
