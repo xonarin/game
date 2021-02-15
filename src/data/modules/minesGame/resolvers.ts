@@ -8,7 +8,7 @@ import {
     Mutation,
     MutationMakeMinesGameStepArgs,
     MutationStartMinesGameArgs,
-    Query
+    Query,
 } from '../../../__generated__/graphql';
 import { MinesGame as MinesGameBackend, MinesGameStatus } from '../../models/MinesGame';
 import { isAuth } from '../rules';
@@ -92,8 +92,7 @@ export const resolvers: MinesGameResolvers = {
     },
     MinesGame: {
         fieldConf: game => {
-            // eslint-disable-next-line no-bitwise
-            return game.status === MinesGameStatus.Ended ? game.fieldConf : game.fieldConf & game.stepsConf;
+            return game.status === MinesGameStatus.Ended ? game.fieldConf : 0;
         },
     },
 };
