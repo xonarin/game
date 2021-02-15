@@ -40,7 +40,7 @@ const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile 
     <Field
         name="amount"
         validate={composeValidators(requiredValidator(), minMaxValidator(minAmount, maxAmount))}
-        initialValue={500}
+        initialValue={20}
     >
         {({ input, meta: { error } }) => (
             <>

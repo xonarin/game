@@ -20,6 +20,7 @@ const cnSidebar = cn(s, 'Sidebar');
 
 const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, closePopUp }) => {
     const [msgToggle, setMsgToggle] = useState(false);
+    const [shareToggle, setshareToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     useStyles(s);
     const { unreadCount } = useUnreadCountQuery();
@@ -38,7 +39,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         <NavigationItem to="/messages?userId=1" text="Поддержка" icon="faq" iconHover="faqWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                        <NavigationItem to="/faq" text="Правила" icon="gamepad" iconHover="gamepadWhite" />
+                        <NavigationItem to="/faq" text="Правила" icon="faq" iconHover="gamepadWhite" />
                     </button>
                     <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
                         <NavigationItem to="#" text="Профиль" icon="user" iconHover="user" />
@@ -71,6 +72,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                     onClick={() => {
                         setAllToggle(!allToggle);
                         setMsgToggle(false);
+                        setshareToggle(false);
                     }}
                 >
                     <NavigationItem
@@ -87,6 +89,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                             onClick={() => {
                                 setMsgToggle(!msgToggle);
                                 setAllToggle(false);
+                                setshareToggle(false);
                             }}
                             className={cnSidebar('Selector')}
                         />
@@ -124,9 +127,36 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         </div>
                     ) : null}
                 </div>
-                <button type="button" className={cnSidebar('Navigation-Button')} onClick={() => closePopUp()}>
-                    <NavigationItem to="/referal" icon="user" iconHover="user" />
-                </button>
+
+                    <button type="button" className={cnSidebar('Selector')}>
+                        <AlarmButton
+                            isAlarm={Boolean(unreadCount && unreadCount > 0)}
+                            icon="share"
+                            iconHover="sharehover"
+                            onClick={() => {
+                                setshareToggle(!shareToggle);
+                                setAllToggle(false);
+                                setMsgToggle(false);
+                            }}
+                            className={cnSidebar('Selector')}
+                        />
+                    </button>
+
+                    {shareToggle ? (
+                        <div className={cnSidebar('Message')}>
+                            <a className={cnSidebar('LogOut')} href="https://vk.com/willygame" target="_blank">
+                                <Icon className={cnSidebar('LogOutIcon')} type="vk" size="xs" />
+                                <span className={cnSidebar('LogOutText')}>Вконтакте</span>
+                            </a>
+
+
+                            <a className={cnSidebar('LogOut')} href="https://t.me/willygames" target="_blank">
+                                <Icon className={cnSidebar('LogOutIcon')} type="telegram" size="xs" />
+                                <span className={cnSidebar('LogOutText')}>Telegram</span>
+                            </a>
+                        </div>
+                    ) : null }
+
             </div>
         </aside>
     );

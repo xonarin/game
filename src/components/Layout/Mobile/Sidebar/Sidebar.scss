@@ -22,6 +22,12 @@
         &:focus {
             outline: none;
         }
+
+        .Sidebar-LogOut {
+            display: block;
+            border: 0;
+            height: auto;
+        }
     }
 
     &-Selector {
@@ -99,6 +105,17 @@
         & span::after {
             content: unset !important;
         }
+    }
+
+    &-LogOut {
+        text-decoration: none;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid #181a29;
+        border-right: 1px solid #181a29;
     }
 
     &-LogOutText {

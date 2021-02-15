@@ -78,6 +78,10 @@ type IconType =
     | 'rubleWhite'
     | 'add'
     | 'minus'
+    | 'share'
+    | 'sharehover'
+    | 'vk'
+    | 'telegram'
     | 'clock';
 
 export interface IconProps {

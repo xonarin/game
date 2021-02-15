@@ -26,6 +26,7 @@ type TranslationCode =
     | 'LAST_PROMO_CODE_DIDNT_BET'
     | 'VK_PAGE_CLOSED'
     | 'NOT_ENOUGH_VK_FRIENDS'
+    | 'MAX_BALANCE_REACHED'
     | 'NOT_ENOUGH_REF_MONEY';
 
 interface Translation {
@@ -125,6 +126,9 @@ const translations: Record<TranslationCode, Translation> = {
     },
     NOT_ENOUGH_DEPOSITS: {
         ru: 'Сделайте депозит в 50 рублей для вывода средств.'
+    },
+    MAX_BALANCE_REACHED: {
+        ru: 'Без депозита в 50 рублей, ваш баланс не может превышать сумму больше 100 рублей.'
     }
 };
 

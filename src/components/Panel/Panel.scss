@@ -1,4 +1,5 @@
 @import '../../assets/styles/vars';
+@import '../../assets/styles/mixins';
 
 .Panel {
     display: flex;
@@ -7,11 +8,6 @@
     overflow: hidden;
 
     &-Head {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 999;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -28,5 +24,15 @@
 
     & .LiveFeedTable.Table {
         max-width: 100%;
+    }
+
+    @include mq(max-width 992px) {
+        &.Chat &-Head {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
     }
 }

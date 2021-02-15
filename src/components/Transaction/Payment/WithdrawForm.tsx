@@ -16,6 +16,7 @@ import { composeValidators, minMaxValidator, requiredValidator } from '../../../
 import AmountWithCommissionInput from './AmountWithCommissionInput/AmountWithCommissionInput';
 import CornerLabel from './CornerLabel/CornerLabel';
 import { PaymentMethodsMobile } from './PaymentMethodsMobile';
+import Icon from '../../../components/Icon/Icon';
 
 export interface WithdrawFormProps {
     readonly mobile: boolean;
@@ -125,6 +126,13 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                                 <Text> — </Text>
 
                                 <TextIcon text={method?.maxAmount} color="white" icon="diamond" iconSize="xs" noGap />
+                            </div>
+                            <div className={cnPayment('Footer')}>
+                                <Text>Делись скрином выплат в нашей группе&nbsp;
+                                <a className={cnPayment('VK')} href="https://t.me/willygames" target="_blank">
+                                    <span className={cnPayment('VK')}>&nbsp;Вконтакте</span>
+                                </a>    
+                                &nbsp;и получи возможность вернуть 5% назад на баланс.</Text>
                             </div>
                         </Scrollable>
                     </div>
