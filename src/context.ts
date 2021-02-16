@@ -1,13 +1,15 @@
 import { createContext } from 'react';
 import { QueryParams } from 'universal-router';
 
+export type GlobalChatType = 'game';
+
 export interface AppContextTypes {
     pathname: string;
     domain: string;
     query?: QueryParams;
     params?: object;
     user?: Express.User;
-    chats: Record<string, string>;
+    chats: Record<GlobalChatType, string>;
 }
 
 const AppContext = createContext<AppContextTypes>({
@@ -15,7 +17,7 @@ const AppContext = createContext<AppContextTypes>({
     domain: 'domain.io',
     query: {},
     params: {},
-    chats: {},
+    chats: { game: '' },
 });
 
 export default AppContext;

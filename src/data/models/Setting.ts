@@ -12,11 +12,15 @@ export type ClassicGameSettingName =
     | 'classic::turnsCount'
     | 'classic::maxSummaryBet';
 
-export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage';
+export type ChatSettingName =
+    | 'chat::adminAnnouncementsTitle'
+    | 'chat::adminAnnouncementsImage'
+    | 'chat::minDepsToSendGlobalMessage';
 
-export type ReferralsSettingName = 
-    | 'referrals::minTurnoverCoef' 
+export type ReferralsSettingName =
+    | 'referrals::minTurnoverCoef'
     | 'referrals::minRefMoneyToGet'
+    | 'referrals::minDepsToGetMoney'
     | 'referrals::plusUserMoney'
     | 'referrals::plusRefMoney';
 

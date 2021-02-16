@@ -346,14 +346,13 @@ class UsersRepository extends BaseRepository {
                 transaction,
             );
 
-            if (payments.length === 0) {
+            const minPayments = await this.repositories.settings.getSettingAsNumber('referrals::minDepsToGetMoney');
+            if (payments.reduce((sum, payment) => sum + payment.sum, 0) < minPayments) {
                 throw new UserError('GET_REF_MONEY_NOT_ENOUGH_DEPS');
             }
 
             await this.giveMoney(userId, user.refMoney, transaction);
-            await user.update({ refMoney: 0 }, { transaction });
-
-            return user;
+            return user.update({ refMoney: 0 }, { transaction });
         });
     }
 

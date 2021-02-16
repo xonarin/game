@@ -7,7 +7,7 @@ import useCurrentClassicGameQuery from '../../hooks/graphql/classicGame/useCurre
 import Layout31WithChat from '../../components/Layout/Web/containers/Layout31WithChat';
 import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
-import Icon from '../../components/Icon/Icon';
+// import Icon from '../../components/Icon/Icon';
 import BetsTable from './Web/BetsTable/BetsTable';
 import HistoryTable from './Web/HistoryTable/HistoryTable';
 import ClassicGame from './Web/ClassicGame/ClassicGame';
@@ -56,7 +56,7 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                                 Ставки
                             </Text>
                         }
-                        rightHead={ 
+                        rightHead={
                             <>
                              {/* <Icon type="guard" /> */}
                              </>

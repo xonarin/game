@@ -15,7 +15,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import depthLimit from 'graphql-depth-limit';
 
-import { AppContextTypes } from './context';
+import { AppContextTypes, GlobalChatType } from './context';
 import createApolloClient from './utils/apollo/createApolloClient.server';
 import App from './components/App';
 import Html, { HtmlProps } from './components/Html';
@@ -202,7 +202,7 @@ server.applyMiddleware({ app });
 //
 // Ids for different chats
 // -----------------------------------------------------------------------------
-let chats: Record<string, string> = {};
+let chats: Record<GlobalChatType, string> = { game: '' };
 
 //
 // Register server-side rendering middleware

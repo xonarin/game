@@ -4,6 +4,7 @@ import { Setting, SettingName, SettingValue } from '../models/Setting';
 const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'referrals::minTurnoverCoef': ['2', 'Минимальный коэфициент для подсчета оборота'],
     'referrals::minRefMoneyToGet': ['15', 'Минимальное значение refMoney для перечисления на money'],
+    'referrals::minDepsToGetMoney': ['50', 'Минимальная сумма депозитов для перечисления refMoney на money'],
     'referrals::plusUserMoney': ['5', 'Сколько получит рефовод'],
     'referrals::plusRefMoney': ['5', 'Сколько получит реферал'],
     'chat::adminAnnouncementsTitle': ['Новости от администрации', 'Названия чата с оповещениями от администрации'],
@@ -11,6 +12,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
         'https://static10.tgstat.ru/channels/_0/15/15e0f5c67b87b751e377b4dbb3c1dc74.jpg',
         'Картинка чата с оповещениями от администрации',
     ],
+    'chat::minDepsToSendGlobalMessage': ['50', 'Минимальная сумма депозитов для отправки сообщений в глобальный чат'],
     'classic::countdownTimer': ['30', 'Время обратного отсчета таймера для классика в секундах'],
     'classic::culminationTimer': ['10', 'Длительность кульминации для классика в секундах'],
     'classic::endedTimer': ['5', 'Длительность окончания игры для классика в секундах'],
