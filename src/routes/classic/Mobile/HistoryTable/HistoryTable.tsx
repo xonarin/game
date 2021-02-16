@@ -4,20 +4,12 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './HistoryTable.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import { ClassicGamesHistoryItemFragment } from '../../../../__generated__/graphql';
-// import { addLeadingZeros } from '../../../../utils/strings';
 import SafeTableSpring from '../../../../components/Table/containers/SafeTableSpring';
 import Column from '../../../../components/Table/Column/Column';
 import Text from '../../../../components/Text/Text';
 import ChanceBadge from '../../../../components/Badge/containers/ChanceBadge';
 import TextIcon from '../../../../components/TextIcon/TextIcon';
 import useClassicGamesHistory from '../../../../hooks/graphql/classicGame/useClassicGamesHistoryQuery';
-
-// const transformDate = (dateString: string): string => {
-//     const date = new Date(dateString);
-//     return `${addLeadingZeros(date.getDay())}.${addLeadingZeros(
-//         date.getMonth(),
-//     )}.${date.getFullYear()} ${addLeadingZeros(date.getHours())}:${addLeadingZeros(date.getMinutes())}`;
-// };
 
 const cnHistoryTable = cn(s, 'HistoryTable');
 

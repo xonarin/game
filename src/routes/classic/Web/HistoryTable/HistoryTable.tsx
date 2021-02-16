@@ -15,8 +15,8 @@ import useClassicGamesHistory from '../../../../hooks/graphql/classicGame/useCla
 
 const transformDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return `${addLeadingZeros(date.getDay())}.${addLeadingZeros(
-        date.getMonth(),
+    return `${addLeadingZeros(date.getDate())}.${addLeadingZeros(
+        date.getMonth() + 1,
     )}.${date.getFullYear()} ${addLeadingZeros(date.getHours())}:${addLeadingZeros(date.getMinutes())}`;
 };
 
