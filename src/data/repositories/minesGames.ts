@@ -94,7 +94,7 @@ class MinesGamesRepository extends BaseRepository {
 
             await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef, transaction);
 
-            await currentGame.update({ status: MinesGameStatus.Ended }, { transaction });
+            await currentGame.update({ status: MinesGameStatus.Ended, coefficient: coef }, { transaction });
             await addMinesGame(currentGame);
 
             return currentGame;
@@ -122,6 +122,7 @@ class MinesGamesRepository extends BaseRepository {
                 {
                     stepsConf: newStepsConf,
                     status: bombReached ? MinesGameStatus.Ended : MinesGameStatus.InGame,
+                    coefficient: bombReached ? 0 : null,
                 },
                 { transaction },
             );
