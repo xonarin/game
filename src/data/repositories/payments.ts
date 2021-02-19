@@ -154,10 +154,10 @@ class PaymentsRepository extends BaseRepository {
     }
 
     getWithdrawsByStatus(status: WithdrawStatus): Promise<UserWithdraw[]> {
-        return this.db.UserWithdraw.findAll({ where: { status } });
+        return this.db.UserWithdraw.findAll({ where: { status }, order: [['createdAt', 'DESC']] });
     }
 
-    async createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
+    async createWithdraw(userId: string, methodId: string, wallet: string, amount: number): Promise<UserWithdraw> {
         const withdraws = await this.getWithdrawsByUserId(userId);
 
         const minDeposit = await this.repositories.settings.getSettingAsNumber('payments::minDepositToWithdraw');
@@ -181,6 +181,8 @@ class PaymentsRepository extends BaseRepository {
             }
         }
 
+        const purse = wallet.replace(/\s/g, '');
+
         return this.db.sequelize.transaction(async transaction => {
             await this.repositories.users.withdrawMoney(userId, amount, transaction);
             return this.db.UserWithdraw.create({ userId, methodId, purse, sum: amount }, { transaction });
@@ -201,6 +203,19 @@ class PaymentsRepository extends BaseRepository {
 
             await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
             return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
+        });
+    }
+
+    async makeWithdrawStatusBadPurse(withdrawId: string): Promise<void> {
+        return this.db.sequelize.transaction(async transaction => {
+            const withdraw = await this.getWithdrawByIdStrict(withdrawId);
+
+            if (withdraw.status !== WithdrawStatus.APPROVED) {
+                return;
+            }
+
+            await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
+            await withdraw.update({ status: WithdrawStatus.BAD_PURSE }, { transaction });
         });
     }
 

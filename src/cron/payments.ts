@@ -44,7 +44,7 @@ const withdrawCheck = async (withdraw: UserWithdraw) => {
             break;
 
         case 'Canceled':
-            await repositories.payments.cancelWithdraw(withdraw.id, withdraw.userId);
+            // await repositories.payments.cancelWithdraw(withdraw.id, withdraw.userId);
             break;
 
         default:
@@ -80,6 +80,15 @@ const withdrawCashOut = async (withdraw: UserWithdraw) => {
     const respJson = await resp.json();
     const paymentId = respJson?.data?.payment_id;
     if (!paymentId) {
+        if (respJson?.status === 'error' && typeof respJson?.desc === 'string') {
+            const desc: string = respJson?.desc;
+
+            if (desc.includes('Invalid Purse')) {
+                await repositories.payments.makeWithdrawStatusBadPurse(withdraw.id);
+                return;
+            }
+        }
+
         console.warn('withdrawCashOut - bad response body', respJson);
         return;
     }

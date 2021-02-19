@@ -10,17 +10,19 @@ import {
 
 interface UsePaymentsAndWithdrawsQueryResult {
     loading: boolean;
+    refetch: () => Promise<void>;
     payments?: Payment[];
     withdraws?: Withdraw[];
 }
 
 const usePaymentsAndWithdrawsQuery = (): UsePaymentsAndWithdrawsQueryResult => {
-    const { loading, data } = useQuery<PaymentsAndWithdrawsQuery, PaymentsAndWithdrawsQueryVariables>(
+    const { loading, refetch, data } = useQuery<PaymentsAndWithdrawsQuery, PaymentsAndWithdrawsQueryVariables>(
         PaymentsAndWithdrawsDocument,
     );
 
     return {
         loading,
+        refetch,
         payments: data?.payments,
         withdraws: data?.withdraws,
     };
