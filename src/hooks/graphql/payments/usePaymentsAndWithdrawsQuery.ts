@@ -10,7 +10,7 @@ import {
 
 interface UsePaymentsAndWithdrawsQueryResult {
     loading: boolean;
-    refetch: () => Promise<void>;
+    refetch: () => Promise<unknown>;
     payments?: Payment[];
     withdraws?: Withdraw[];
 }

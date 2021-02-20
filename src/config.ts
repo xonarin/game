@@ -57,6 +57,10 @@ export default {
                 process.env.VK_APP_TOKEN ||
                 'b4ebbe8e34429fbc06ab9de4bb1d0e4a5f5e85b11df5c2bbf93b0a3fe6d1bb745165bee41200b3d7bbd0c',
 
+            userAccessToken:
+                process.env.VK_USER_TOKEN ||
+                'e4d78546388887dc841ae89d15ff9de8ebef85977f40f365bfd24a004760c11f495a17b76c3ce5e213b37',
+
             groupId: process.env.VK_GROUP_ID || '202468109',
             groupAccessToken:
                 process.env.VK_GROUP_TOKEN ||

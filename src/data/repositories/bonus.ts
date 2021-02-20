@@ -8,7 +8,7 @@ import KeyLocker from '../../utils/keyLocker';
 import { PromoCode } from '../models/PromoCode';
 import { PaymentStatus } from '../models/UserPayment';
 import { PromoCodeUse } from '../models/PromoCodeUse';
-import { vkGetFriendsCount, vkIsMemberOfGroup, vkIsPageClosed } from '../../utils/vk';
+import { vkCheckRepost, vkGetFriendsCount, vkIsPageClosed } from '../../utils/vk';
 
 const promoCodeRegExp = /^\w{4,255}$/;
 
@@ -46,6 +46,12 @@ class BonusRepository extends BaseRepository {
         }
 
         await this.repositories.users.assertUserInVkGroup(userId);
+
+        const userVkId = await this.repositories.users.getVkIdStrict(userId);
+        const postId = await this.repositories.settings.getSettingAsString('bonus::vkPostId');
+        if (!(await vkCheckRepost(postId, userVkId))) {
+            throw new UserError('VK_NOT_REPOSTED');
+        }
     }
 
     async hasBonus(userId: string): Promise<boolean> {
@@ -194,11 +200,11 @@ class BonusRepository extends BaseRepository {
         const b = Math.random();
 
         if (a < 0.95) {
-            return Number((1 + b * 1).toFixed(2));
+            return Number((1 + b).toFixed(2));
         }
 
         if (a < 0.99) {
-            return Number((1 + b * 1.10).toFixed(2));
+            return Number((1 + b * 1.1).toFixed(2));
         }
 
         return Number((1 + b * 1.2).toFixed(2));

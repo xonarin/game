@@ -39,6 +39,7 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'mines::maxBetAmount': ['100', 'Максимальная ставка в минах'],
     'mines::maxProfitAmount': ['2500', 'Максимальный выигрыш в минах'],
     'bonus::minsBetweenBonuses': ['15', 'Количество минут для получения следующего бонуса'],
+    'bonus::vkPostId': ['', 'ID поста, который нужно репостнуть для получения бонуса'],
     'bonus::minVkFriendsToUsePromoCode': ['20', 'Необходимое количество друзей для активации промокода'],
     'bonus::minDepositsToCreatePromoCode': ['100', 'Сумма депозитов для создания промокода'],
 };
