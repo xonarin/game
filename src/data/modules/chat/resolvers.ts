@@ -35,7 +35,6 @@ import { withFilter, withFilterByTarget } from '../../../utils/withFilter';
 import { limit } from '../../../utils/graphql-shield/limit';
 import { getBanEndTime, warnsMap } from '../../../utils/chatWarns';
 import { buildMessageToAnnouncement } from '../../../utils/announcements';
-import { PaymentStatus } from '../../models/UserPayment';
 
 export type OriginChatParent = ChatBackend;
 export type OriginMessageParent = MessageBackend;
@@ -159,10 +158,10 @@ export const resolvers: ChatResolvers = {
             // Проверка депозитов
             const gameChats = await repositories.chats.getAllGameChats();
             if (gameChats.some(gameChat => gameChat.id === chatId)) {
-                const payments = await repositories.payments.getPaymentsByUserId(user!.id, PaymentStatus.FINISHED);
+                const payments = await repositories.payments.getFinishedPaymentsSumByUserId(user!.id);
                 const minPayments = await repositories.settings.getSettingAsNumber('chat::minDepsToSendGlobalMessage');
 
-                if (payments.reduce((sum, payment) => sum + payment.sum, 0) < minPayments) {
+                if (payments < minPayments) {
                     throw new UserError('SEND_MESSAGE_NOT_ENOUGH_DEPS');
                 }
             }

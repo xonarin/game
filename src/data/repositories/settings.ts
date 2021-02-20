@@ -40,8 +40,24 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'mines::maxProfitAmount': ['2500', 'Максимальный выигрыш в минах'],
     'bonus::minsBetweenBonuses': ['15', 'Количество минут для получения следующего бонуса'],
     'bonus::vkPostId': ['', 'ID поста, который нужно репостнуть для получения бонуса'],
+    'bonus::getBonusFrequencyLimitDeposit': [
+        '50',
+        'Минимальная сумма депозита для снятия частотных ограничений на получение бонусов',
+    ],
+    'bonus::getBonusFrequencyLimitWithoutDeps': [
+        '3/P7D',
+        'Частотные ограничения на получение бонусов (<кол-во получений>/<период в формате ISO 8601 duration>)',
+    ],
     'bonus::minVkFriendsToUsePromoCode': ['20', 'Необходимое количество друзей для активации промокода'],
     'bonus::minDepositsToCreatePromoCode': ['100', 'Сумма депозитов для создания промокода'],
+    'bonus::usePromoCodeFrequencyLimitDeposit': [
+        '50',
+        'Минимальная сумма депозита для снятия частотных ограничений на активацию промокодов',
+    ],
+    'bonus::usePromoCodeFrequencyLimitWithoutDeps': [
+        '3/P7D',
+        'Частотные ограничения на активацию промокодов (<кол-во активаций>/<период в формате ISO 8601 duration>)',
+    ],
 };
 
 class SettingsRepository extends BaseRepository {

@@ -1,12 +1,11 @@
-import { DateTime } from 'luxon';
-import { Transaction } from 'sequelize';
+import { DateTime, Duration } from 'luxon';
+import { Op, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { Bonus } from '../models/Bonus';
 import { UserError } from '../../utils/errors';
 import KeyLocker from '../../utils/keyLocker';
 import { PromoCode } from '../models/PromoCode';
-import { PaymentStatus } from '../models/UserPayment';
 import { PromoCodeUse } from '../models/PromoCodeUse';
 import { vkCheckRepost, vkGetFriendsCount, vkIsPageClosed } from '../../utils/vk';
 
@@ -14,6 +13,27 @@ const promoCodeRegExp = /^\w{4,255}$/;
 
 class BonusRepository extends BaseRepository {
     private getBonusLocker = new KeyLocker<string>();
+
+    private static parseFrequencyLimit(freqLimit: string): [number, Duration] | undefined {
+        const [countString, durationString] = freqLimit.split('/').map(s => s.trim());
+
+        const count = +countString;
+        const duration = Duration.fromISO(durationString);
+
+        if (Number.isNaN(count) || duration.invalidReason !== null) {
+            console.warn('Invalid frequency limit', {
+                countString,
+                duration: {
+                    invalidReason: duration.invalidReason,
+                    invalidExplanation: duration.invalidExplanation,
+                },
+            });
+
+            return undefined;
+        }
+
+        return [count, duration];
+    }
 
     async assertHasBonus(userId: string): Promise<void> {
         const lastBonus: Bonus | null = await this.db.Bonus.findOne({
@@ -42,6 +62,37 @@ class BonusRepository extends BaseRepository {
             if (bets < lastBonus.amount) {
                 // console.log('has no bonus due to bets', bets);
                 throw new UserError('NOT_ENOUGH_BETS');
+            }
+        }
+
+        const paymentsSum = await this.repositories.payments.getFinishedPaymentsSumByUserId(userId);
+        const minPaymentsSum = await this.repositories.settings.getSettingAsNumber(
+            'bonus::getBonusFrequencyLimitDeposit',
+        );
+
+        if (paymentsSum < minPaymentsSum) {
+            const freqLimit = await this.repositories.settings.getSettingAsString(
+                'bonus::getBonusFrequencyLimitWithoutDeps',
+            );
+
+            const parsedFreqLimit = BonusRepository.parseFrequencyLimit(freqLimit);
+            if (parsedFreqLimit) {
+                const [count, duration] = parsedFreqLimit;
+
+                const lastBonusesCount = await this.db.Bonus.count({
+                    where: {
+                        userId,
+                        createdAt: {
+                            [Op.gt]: DateTime.local()
+                                .minus(duration)
+                                .toJSDate(),
+                        },
+                    },
+                });
+
+                if (lastBonusesCount >= count) {
+                    throw new UserError('BONUS_FREQ_LIMIT_REACHED');
+                }
             }
         }
 
@@ -116,6 +167,37 @@ class BonusRepository extends BaseRepository {
             }
         }
 
+        const paymentsSum = await this.repositories.payments.getFinishedPaymentsSumByUserId(userId);
+        const minPaymentsSum = await this.repositories.settings.getSettingAsNumber(
+            'bonus::usePromoCodeFrequencyLimitDeposit',
+        );
+
+        if (paymentsSum < minPaymentsSum) {
+            const freqLimit = await this.repositories.settings.getSettingAsString(
+                'bonus::usePromoCodeFrequencyLimitWithoutDeps',
+            );
+
+            const parsedFreqLimit = BonusRepository.parseFrequencyLimit(freqLimit);
+            if (parsedFreqLimit) {
+                const [count, duration] = parsedFreqLimit;
+
+                const lastBonusesCount = await this.db.PromoCodeUse.count({
+                    where: {
+                        userId,
+                        createdAt: {
+                            [Op.gt]: DateTime.local()
+                                .minus(duration)
+                                .toJSDate(),
+                        },
+                    },
+                });
+
+                if (lastBonusesCount >= count) {
+                    throw new UserError('PROMO_CODE_FREQ_LIMIT_REACHED');
+                }
+            }
+        }
+
         const vkUserId = await this.repositories.users.assertUserInVkGroup(userId);
         const isVkPageClosed = await vkIsPageClosed(vkUserId);
 
@@ -163,8 +245,7 @@ class BonusRepository extends BaseRepository {
             throw new UserError('BAD_PROMO_CODE');
         }
 
-        const payments = await this.repositories.payments.getPaymentsByUserId(userId, PaymentStatus.FINISHED);
-        const paymentsSum = payments.reduce((acc, payment) => acc + payment.sum, 0);
+        const paymentsSum = await this.repositories.payments.getFinishedPaymentsSumByUserId(userId);
         const minPaymentsSum = await this.repositories.settings.getSettingAsNumber(
             'bonus::minDepositsToCreatePromoCode',
         );

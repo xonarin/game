@@ -340,14 +340,10 @@ class UsersRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_REF_MONEY');
             }
 
-            const payments = await this.repositories.payments.getPaymentsByUserId(
-                userId,
-                PaymentStatus.FINISHED,
-                transaction,
-            );
-
+            const payments = await this.repositories.payments.getFinishedPaymentsSumByUserId(userId, transaction);
             const minPayments = await this.repositories.settings.getSettingAsNumber('referrals::minDepsToGetMoney');
-            if (payments.reduce((sum, payment) => sum + payment.sum, 0) < minPayments) {
+
+            if (payments < minPayments) {
                 throw new UserError('GET_REF_MONEY_NOT_ENOUGH_DEPS');
             }
 

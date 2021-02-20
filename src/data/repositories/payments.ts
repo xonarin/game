@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { col, fn, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { PaymentMethod } from '../models/PaymentMethod';
@@ -88,6 +88,17 @@ class PaymentsRepository extends BaseRepository {
         return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']], transaction });
     }
 
+    async getFinishedPaymentsSumByUserId(userId: string, transaction?: Transaction): Promise<number> {
+        const result = await this.db.UserPayment.findOne({
+            attributes: [[fn('COALESCE', fn('SUM', col('sum')), 0), 'sum']],
+            where: { userId, status: PaymentStatus.FINISHED },
+            order: [['createdAt', 'DESC']],
+            transaction,
+        });
+
+        return result.sum;
+    }
+
     async createPayment(userId: string, methodId: string, amount: number): Promise<string> {
         const { commission } = await this.getPaymentMethodByIdStrict(methodId);
 
@@ -160,13 +171,8 @@ class PaymentsRepository extends BaseRepository {
     async createWithdraw(userId: string, methodId: string, wallet: string, amount: number): Promise<UserWithdraw> {
         const withdraws = await this.getWithdrawsByUserId(userId);
 
+        const successDepositSum = await this.getFinishedPaymentsSumByUserId(userId);
         const minDeposit = await this.repositories.settings.getSettingAsNumber('payments::minDepositToWithdraw');
-        const payments = await this.getPaymentsByUserId(userId);
-
-        const successDepositSum = payments
-            .filter(payment => payment.status === 'FINISHED')
-            .map(payment => payment.sum)
-            .reduce((a, b) => a + b, 0);
 
         if (successDepositSum < minDeposit) {
             throw new UserError('NOT_ENOUGH_DEPOSITS');
