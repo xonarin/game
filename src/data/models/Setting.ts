@@ -39,7 +39,11 @@ export type PaymentsSettings =
 
 export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
-export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
+export type MinesSettings =
+    | 'mines::maxBetAmount'
+    | 'mines::maxProfitAmount'
+    | 'mines::antiMinus'
+    | 'mines::antiMinusSteps';
 
 export type BonusSettings =
     | 'bonus::minsBetweenBonuses'
@@ -73,10 +77,12 @@ export class SettingValue {
         if (!this.value) {
             throw new TypeError('Value is not a number');
         }
+
         const value = Number(this.value);
         if (Number.isNaN(value)) {
             throw new TypeError('Value is not a number');
         }
+
         return value;
     }
 

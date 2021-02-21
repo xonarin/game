@@ -38,6 +38,8 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
     'user::maxBalanceWithoutDeposits': ['250', 'Максимальный баланс пользователя без депозитов'],
     'mines::maxBetAmount': ['100', 'Максимальная ставка в минах'],
     'mines::maxProfitAmount': ['2500', 'Максимальный выигрыш в минах'],
+    'mines::antiMinus': ['0', 'Вероятность активации антиминуса (от 0 до 1)'],
+    'mines::antiMinusSteps': ['5', 'Верхняя граница номера хода с бомбой для антиминуса (нумерация с 1)'],
     'bonus::minsBetweenBonuses': ['15', 'Количество минут для получения следующего бонуса'],
     'bonus::vkPostId': ['', 'ID поста, который нужно репостнуть для получения бонуса'],
     'bonus::getBonusFrequencyLimitDeposit': [

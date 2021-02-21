@@ -57,11 +57,18 @@ class MinesGamesRepository extends BaseRepository {
         const pickedBombs = resultBombs.slice(0, bombsCount);
         const fieldConf = pickedBombs.reduce((acc, bomb) => acc | (1 << bomb), 0);
 
+        const antiMinusProb = await this.repositories.settings.getSettingAsNumber('mines::antiMinus');
+        const antiMinusSteps = await this.repositories.settings.getSettingAsNumber('mines::antiMinusSteps');
+
+        const antiMinusInUse = Math.random() < antiMinusProb;
+        const forcedBombStep = antiMinusInUse ? Math.floor(Math.random() * antiMinusSteps) : null;
+
         return this.db.MinesGame.create({
             userId,
             betAmount,
             bombsCount,
             fieldConf,
+            forcedBombStep,
             clientSeed,
             serverSeed,
             nonce,
@@ -94,9 +101,12 @@ class MinesGamesRepository extends BaseRepository {
 
             await this.repositories.users.giveMoney(userId, currentGame.betAmount * coef, transaction);
 
-            await currentGame.update({ status: MinesGameStatus.Ended, coefficient: coef }, { transaction });
-            await addMinesGame(currentGame);
+            await currentGame.update(
+                { status: MinesGameStatus.Ended, coefficient: coef, forcedBombStep: null },
+                { transaction },
+            );
 
+            await addMinesGame(currentGame);
             return currentGame;
         });
     }
@@ -118,11 +128,19 @@ class MinesGamesRepository extends BaseRepository {
             const newStepsConf = game.stepsConf | stepMask;
             const bombReached = (game.fieldConf & newStepsConf) !== 0;
 
+            // AntiMinus activated ONLY if player didn't loose on specified step
+            const antiMinusReached = !bombReached && game.forcedBombStep === countOnes(game.stepsConf);
+            const newFieldConf = antiMinusReached
+                ? MinesGamesRepository.applyAntiMinus(stepMask, game.fieldConf)
+                : game.fieldConf;
+
             await game.update(
                 {
+                    fieldConf: newFieldConf,
                     stepsConf: newStepsConf,
-                    status: bombReached ? MinesGameStatus.Ended : MinesGameStatus.InGame,
-                    coefficient: bombReached ? 0 : null,
+                    status: bombReached || antiMinusReached ? MinesGameStatus.Ended : MinesGameStatus.InGame,
+                    forcedBombStep: bombReached ? null : game.forcedBombStep,
+                    coefficient: bombReached || antiMinusReached ? 0 : null,
                 },
                 { transaction },
             );
@@ -167,6 +185,21 @@ class MinesGamesRepository extends BaseRepository {
             order: [['id', 'DESC']],
             limit,
         });
+    }
+
+    private static applyAntiMinus(stepMask: number, fieldConf: number): number {
+        if ((fieldConf & stepMask) !== 0) {
+            console.warn('[Anti-Minus]', 'Tried to apply anti-minus when player already loose');
+            return fieldConf;
+        }
+
+        const bombMasks = range(0, FIELD_SIZE)
+            .map(cell => 1 << cell)
+            .filter(cellMask => (fieldConf & cellMask) !== 0);
+
+        const randomBombMask = bombMasks[Math.floor(Math.random() * bombMasks.length)];
+
+        return fieldConf ^ randomBombMask ^ stepMask;
     }
 }
 
