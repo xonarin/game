@@ -46,14 +46,21 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
 
             <div className={cnPrizeInfo('Content')}>
                 {selectedTab === 'freeCoins' && (
-                    <Text color="white">Вступите в группу ВК и получайте до 3 рублей каждый день.</Text>
+                    <div>
+                        <Text color="white">Чтобы получать каждый день до 3 рублей, нужно:</Text>
+                        <ul>
+                            <li>Быть подписаным на группу ВК.</li>
+                            <li>Открытый профиль в ВК.</li>
+                            <li>Сделать репост последней записи в ВК группе.</li>
+                        </ul>
+                    </div>
                 )}
 
                 {selectedTab === 'activePromoCode' && (
                     <div>
                         <Text color="white">Для активации промокодов, вы должны:</Text>
                         <ul>
-                            <li>Быть подписаны на группу ВК.</li>
+                            <li>Быть подписаным на группу ВК.</li>
                             <li>Открытый профиль в ВК.</li>
                             <li>Иметь не менее 20 друзей в ВК.</li>
                         </ul>
@@ -64,8 +71,8 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
                     <div>
                         <Text color="white">Для создания промокодов, вы должны:</Text>
                         <ul>
-                            <li>Иметь пополнений на сумму не менее 100 рублей.</li>
-                            <li>Подписаны на группу ВК.</li>
+                            <li>Иметь пополнений на сумму не менее 50 рублей.</li>
+                            <li>Подписаным на группу ВК.</li>
                         </ul>
                     </div>
                 )}

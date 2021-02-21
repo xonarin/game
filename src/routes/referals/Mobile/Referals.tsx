@@ -19,8 +19,8 @@ import AppContext from '../../../context';
 const cnReferal = cn(s, 'Referal');
 
 const ReferalsMobile: React.FC = () => {
-    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
-    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
+    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
+    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
     const [referalsTypeToggle, setReferalsTypeToggle] = useState(false);
     const [amountToggle, setAmountToggle] = useState(false);
 
@@ -68,7 +68,7 @@ const ReferalsMobile: React.FC = () => {
                             <Icon type="link" />
                         </div>
                         <Text color="white" size='xs'>
-                           Вы будете получать до 10% с каждого пополнения реферала, а ваш реферал 5 ₽<br /><br />
+                           Получайте до 15% с каждого пополнения реферала. <br />Чем больше рефералов, тем выше %<br /><br />
                         </Text>
                         <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>

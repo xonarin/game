@@ -42,16 +42,16 @@ type TournamentsResolvers = Resolvers<
 const MonthPrizes: Record<string, number> = {
     '0': 5000,
     '1': 3000,
-    '2': 0,
+    '2': 2000,
     '3': 0,
     '4': 0,
     '5': 0,
 };
 
 const activityPrizes: Record<string, number> = {
-    '0': 2500,
-    '1': 1500,
-    '2': 1000,
+    '0': 1500,
+    '1': 1000,
+    '2': 500,
     '3': 0,
     '4': 0,
     '5': 0,

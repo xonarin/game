@@ -55,7 +55,7 @@ const Bonuse: React.FC = () => {
                                     ставок по сумме.
                                 </>
                             }
-                            count="5000"
+                            count="3000"
                         />
                     ) : (
                         <BonuseBannerReferalMobile
@@ -102,7 +102,7 @@ const Bonuse: React.FC = () => {
                             сумме.
                         </>
                     }
-                    count="5000"
+                    count="3000"
                 />
             }
             RightContent={

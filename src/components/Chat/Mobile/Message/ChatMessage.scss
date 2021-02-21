@@ -33,6 +33,7 @@
     }
 
     & &-Time {
+        opacity: 0;
         margin-left: 10px;
         transition: transform 0.3s $nice-ease;
     }

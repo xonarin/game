@@ -19,8 +19,8 @@ import AppContext from '../../../context';
 const cnReferal = cn(s, 'Referal');
 
 const ReferalsWeb: React.FC = () => {
-    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
-    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
+    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
+    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
 
     const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
     const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
@@ -67,7 +67,7 @@ const ReferalsWeb: React.FC = () => {
                             <Icon type='link' />
                         </div>
                             <Text color="white" size='xs'>
-                            Вы будете получать до 10% с каждого пополнения реферала, а ваш реферал 5 ₽<br /><br />
+                                Получайте до 15% с каждого пополнения реферала. <br />Чем больше рефералов, тем выше %<br /><br />
                             </Text>
                         <div />
                         <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
@@ -112,9 +112,9 @@ const ReferalsWeb: React.FC = () => {
                     </div>
 
                     <div>
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
+                        <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
+                        <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Month ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
+                        <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Year ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
                     </div>
                 </div>
                 <div className={cnReferal("Diagram-Container-Content")}>

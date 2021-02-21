@@ -8,7 +8,7 @@ export const checkStartMinesGameArgs = inputRule()(yup =>
             betAmount: yup
                 .number()
                 .required('INVALID_BET_AMOUNT_REQUIRED')
-                .moreThan(0, 'INVALID_BET_AMOUNT_MORE_THAN'),
+                .moreThan(0.99, 'INVALID_BET_AMOUNT_MORE_THAN'),
             bombsCount: yup
                 .number()
                 .required('INVALID_BOMBS_COUNT_REQUIRED')

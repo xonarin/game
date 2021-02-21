@@ -27,6 +27,9 @@ type TranslationCode =
     | 'VK_PAGE_CLOSED'
     | 'NOT_ENOUGH_VK_FRIENDS'
     | 'MAX_BALANCE_REACHED'
+    | 'SEND_MESSAGE_NOT_ENOUGH_DEPS'
+    | 'PROMO_CODE_FREQ_LIMIT_REACHED'
+    | 'PROMO_CODE_NOT_ENOUGH_DEPOSITS'
     | 'NOT_ENOUGH_REF_MONEY';
 
 interface Translation {
@@ -95,10 +98,10 @@ const translations: Record<TranslationCode, Translation> = {
         ru: 'Сумма должна быть больше 0',
     },
     INVALID_BET_AMOUNT_MORE_THAN: {
-        ru: 'Сумма должна быть больше 0',
+        ru: 'Мин.ставка не может быть меньше 1 рубля',
     },
     NOT_ENOUGH_BETS: {
-        ru: 'После первого депозита сделайте ставок на 100 рублей с кэфом не менее 2х.',
+        ru: 'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
     },
     MINES_GAME_BET_TOO_HIGH: {
         ru: 'Максимальная ставка не более 100 рублей.',
@@ -129,6 +132,15 @@ const translations: Record<TranslationCode, Translation> = {
     },
     MAX_BALANCE_REACHED: {
         ru: 'Без депозита в 50 рублей, ваш баланс не может превышать сумму больше 100 рублей.'
+    },
+    SEND_MESSAGE_NOT_ENOUGH_DEPS: {
+        ru: 'Для возможности писать в чат, сделайте депозит в 30 рублей.'
+    },
+    PROMO_CODE_FREQ_LIMIT_REACHED: {
+        ru: 'Промокод больше не активен.'
+    },
+    PROMO_CODE_NOT_ENOUGH_DEPOSITS: {
+        ru: 'Для создания промокода нужно сделать пополнение.'
     }
 };
 

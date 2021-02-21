@@ -32,7 +32,7 @@ const ExtendedBetInput: React.FC<ExtendedBetInputProps> = ({
     const [rawValue, handleChange, handleFocus, handleBlur] = useNumberField(value, onChange, onFocus, onBlur);
 
     const onClear = useCallback(() => {
-        onChange(0);
+        onChange(1);
     }, [onChange]);
 
     const buildOnMultiply = (multiplier: number) => {
@@ -64,7 +64,7 @@ const ExtendedBetInput: React.FC<ExtendedBetInputProps> = ({
                         ×
                     </Button>
                     <Button className={cnExtendedBetInput('MultiplyButton')} clear onClick={buildOnMultiply(0.5)}>
-                        :2
+                        /2
                     </Button>
                     <Button className={cnExtendedBetInput('MultiplyButton')} clear onClick={buildOnMultiply(2)}>
                         ×2
