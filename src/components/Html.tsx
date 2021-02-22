@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import serialize from 'serialize-javascript';
-
+import { YMInitializer } from 'react-yandex-metrika';
 import config from '../config';
 
 /* eslint-disable react/no-danger */
@@ -63,6 +63,8 @@ const Html: FC<HtmlProps> = ({ title, description, styles = [], scripts = [], ap
             {config.analytics.googleTrackingId && (
                 <script src="https://www.google-analytics.com/analytics.js" async defer />
             )}
+
+            <YMInitializer accounts={[72792775]} options={{webvisor: true}} version="2" />
         </body>
     </html>
 );

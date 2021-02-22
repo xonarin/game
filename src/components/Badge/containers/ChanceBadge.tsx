@@ -19,7 +19,7 @@ const getColor = (chance: number): BadgeProps['color'] => {
 const ChanceBadge: React.FC<ChanceBadgeProps> = ({ chance, forceColor }) => {
     return (
         <Badge color={forceColor ? undefined : getColor(chance)} rawColor={forceColor}>
-            {chance}%
+            {chance}
         </Badge>
     );
 };

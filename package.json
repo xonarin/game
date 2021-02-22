@@ -63,6 +63,7 @@
         "react-scroll": "^1.8.1",
         "react-spinners-kit": "^1.9.1",
         "react-spring": "^8.0.27",
+        "react-yandex-metrika": "^2.6.0",
         "recharts": "^1.8.5",
         "reflect-metadata": "^0.1.13",
         "resize-observer-polyfill": "^1.5.1",
