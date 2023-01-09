@@ -6,12 +6,11 @@
     justify-content: center;
     align-items: center;
     border: none;
-	padding: 12px;
+    padding: 12px;
     border-radius: 3px;
     background-color: $color-blue;
     outline: none;
     cursor: pointer;
-
 
     &:hover { background-color: lighten($color-blue, 4%); }
 
@@ -28,7 +27,8 @@
     }
 
     &_type_bomb {
-        &::after {
+        &::after,
+        & div {
             width: 200%;
             height: 200%;
             top: -50%;
@@ -37,18 +37,14 @@
             background-size: auto 100%;
         }
 
-        &.MinesButton_isStepped::after { animation: mines-appear .8s steps(61) .2s; }
+        &.MinesButton_isStepped::after,
+        &.MinesButton_isStepped div { animation: mines-appear 0.8s steps(61) 0.2s; }
 
         .MinesButton-Icon {
-            background-image: url('/bombColored.svg');
+            background-image: url('../../../../components/Icon/types/bombColored.svg');
             opacity: 0.5;
             transform: scale(1);
         }
-    }
-
-    &-IconAfter {
-        background: url('./gem-appear.png') no-repeat 0 0;
-        background-size: auto 100%;
     }
 
     &-IconAfter {
@@ -61,25 +57,8 @@
         left: 0;
         opacity: 0;
         z-index: -1;
-    }
-
-    &_type_bomb {
-        & div {
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: url('./bomb-appear.png') no-repeat 0 0;
-            background-size: auto 100%;
-        }
-
-        &.MinesButton_isStepped div { animation: mines-appear .8s steps(61) .2s; }
-
-        .MinesButton-Icon {
-            background-image: url('../../../../components/Icon/types/bombColored.svg');
-            opacity: 0.5;
-            transform: scale(1);
-        }
+        background: url('./gem-appear.png') no-repeat 0 0;
+        background-size: auto 100%;
     }
 
     &_type_gem {
@@ -88,7 +67,7 @@
             background-size: auto 100%;
         }
 
-        &.MinesButton_isStepped div  { animation: mines-appear .38s steps(22) .3s forwards; }
+        &.MinesButton_isStepped div { animation: mines-appear 0.38s steps(22) 0.3s forwards; }
 
         .MinesButton-Icon {
             background-image: url('/gem.svg');

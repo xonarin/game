@@ -7,8 +7,7 @@
     height: 465px;
     margin-bottom: 105px;
     color: $color-white;
-    background-color: #0e252f;
-    background: url('../../../../assets/img/referalsBG.svg') 0 0 no-repeat;
+    background: url('../../../../assets/img/referalsBG.svg') 0 0 no-repeat #0e252f;
     background-size: cover;
 
     &-Container {
@@ -23,12 +22,12 @@
         max-width: 450px;
         margin-top: 80px;
 
-        @include mq(max-width 576px) { 
+        @include mq(max-width 576px) {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-         }
+        }
     }
 
     &-Text { margin-bottom: 40px; }
@@ -46,9 +45,9 @@
         justify-content: flex-start;
         flex-direction: column;
 
-        @include mq(max-width 576px) { 
+        @include mq(max-width 576px) {
             align-items: center;
-         }
+        }
     }
 
     & &-PlayButton {
@@ -128,9 +127,9 @@
         pointer-events: none;
         transition: opacity 1s $nice-ease 0.5s, transform 1s $nice-ease 0s;
 
-        @include mq(max-width 576px) { 
+        @include mq(max-width 576px) {
             display: none;
-         }
+        }
     }
 
     &_inView &-NotebookImage {

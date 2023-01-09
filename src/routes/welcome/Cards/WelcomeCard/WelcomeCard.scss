@@ -62,7 +62,10 @@
         background-color: lighten($color-bg, 5%);
     }
 
-    & &-Description { width: 70%; z-index: 99;}
+    & &-Description {
+        width: 70%;
+        z-index: 99;
+    }
 
     &-ButtonLink {
         display: inline-flex;

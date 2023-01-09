@@ -4,7 +4,8 @@
     position: relative;
     width: 105px;
     height: 40px;
-    &-Deposit{
+
+    &-Deposit {
         background: none;
         border: none;
     }
@@ -19,15 +20,15 @@
         z-index: 2;
 
         & > button {
-            position: relative!important;
-            width: 25px!important;
-        
+            position: relative !important;
+            width: 25px !important;
+
             &::before {
-                width: 25px!important;
+                width: 25px !important;
             }
         }
-
     }
+
     &-Main {
         position: relative;
         display: flex;

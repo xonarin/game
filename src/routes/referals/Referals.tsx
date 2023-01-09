@@ -4,7 +4,11 @@ import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import ReferalsMobile from './Mobile/Referals';
 import ReferalsWeb from './Web/Referals';
 
-const Referals: React.FC = () => {
+export interface ReferalsWebProps {
+    chatId: string;
+}
+
+const Referals: React.FC<ReferalsWebProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (
@@ -21,7 +25,7 @@ const Referals: React.FC = () => {
         return <ReferalsMobile />;
     }
 
-    return <ReferalsWeb />;
+    return <ReferalsWeb chatId={chatId} />;
 };
 
 export default Referals;

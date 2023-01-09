@@ -7,27 +7,27 @@ import Layout from '../../Layout';
 import Chat from '../../../Chat/Chat';
 import MiddleGame from '../MiddleGame/MiddleGameBonuse';
 
-export interface Layout32ContentWithChatProps {
+export interface Layout34ContentWithChatProps {
     chatId: string;
     title: string;
     centerContent: React.ReactNode;
     bottomContent: React.ReactNode;
 }
 
-const cnLayout32ContentWithChat = cn(s, 'Layout32ContentWithChat');
+const cnLayout34ContentWithChat = cn(s, 'Layout34ContentWithChat');
 
-const Layout32ContentWithChat: React.FC<Layout32ContentWithChatProps> = ({ chatId, centerContent, bottomContent }) => {
+const Layout34ContentWithChat: React.FC<Layout34ContentWithChatProps> = ({ chatId, centerContent, bottomContent }) => {
     useStyles(s);
 
     return (
         <Layout>
-            <div className={cnLayout32ContentWithChat('Top')}>
-                <MiddleGame className={cnLayout32ContentWithChat('RightContent')}>{centerContent}</MiddleGame>
-                <Chat className={cnLayout32ContentWithChat('Chat')} chatId={chatId} />
+            <div className={cnLayout34ContentWithChat('Top')}>
+                <MiddleGame className={cnLayout34ContentWithChat('RightContent')}>{centerContent}</MiddleGame>
+                <Chat className={cnLayout34ContentWithChat('Chat')} chatId={chatId} />
             </div>
             <div>{bottomContent}</div>
         </Layout>
     );
 };
 
-export default Layout32ContentWithChat;
+export default Layout34ContentWithChat;

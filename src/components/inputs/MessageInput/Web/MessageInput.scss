@@ -80,14 +80,12 @@
 
         .MessageInput-SmileButton { right: 100px; }
     }
-
 }
 
 @media screen and (max-width: 992px) {
     .MessageInput {
-        position: fixed!important;
-        bottom: 0!important;
-
+        position: fixed !important;
+        bottom: 0 !important;
 
         & &-Editable {
             font-size: 16px !important;

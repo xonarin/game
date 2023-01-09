@@ -37,7 +37,7 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                             </Link>
                         </li>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/referal">
+                            <Link className={cnFooter('NavigationItem')} to="/partners">
                                 <Text size="xs">Партнерская программа</Text>
                             </Link>
                         </li>

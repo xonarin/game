@@ -22,18 +22,21 @@
         z-index: 0;
     }
 
-    &_type_classic::before { 
+    &_type_classic::before {
         background: url('../../../../assets/img/classicback.png') 0 0 no-repeat;
         background-size: cover;
     }
-    &_type_mines::before { 
+
+    &_type_mines::before {
         background: url('../../../../assets/img/minesback.png') 0 0 no-repeat;
         background-size: cover;
     }
-    &_type_darts::before { 
+
+    &_type_darts::before {
         background: url('../../../../assets/img/darts.png') center center no-repeat;
         background-size: cover;
-     }
+    }
+
     &_type_knb::before {
         background: url('../../../../assets/img/knb.png') center center no-repeat;
         background-size: cover;
@@ -54,5 +57,4 @@
     }
 
     & + & { margin-left: 40px; }
-    
 }

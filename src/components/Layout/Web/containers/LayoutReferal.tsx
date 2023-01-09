@@ -27,7 +27,6 @@ const LayoutReferal: React.FC<LayoutReferalProps> = ({
     useStyles(s);
 
     return (
-        <Layout>
             <div className={cnLayoutReferal('Container')}>
                 <div className={cnLayoutReferal('Top')}>{TopContent}</div>
                 <div className={cnLayoutReferal('Icon')}>{DiagramsIcon}</div>
@@ -38,7 +37,6 @@ const LayoutReferal: React.FC<LayoutReferalProps> = ({
                 <div className={cnLayoutReferal('Icon')}>{TableIcons}</div>
                 <div className={cnLayoutReferal('Bottom')}>{BottomContent}</div>
             </div>
-        </Layout>
     );
 };
 

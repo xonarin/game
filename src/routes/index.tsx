@@ -22,7 +22,7 @@ const routes: Route<AppContextTypes, RouteResult> = {
         },
         {
             path: '/all-games',
-            load: () => import(/* webpackChunkName: 'all-games' */ './AllGames'),
+            load: () => import(/* webpackChunkName: 'casino' */ './AllGames'),
         },
         {
             path: '/bonuse',
@@ -37,8 +37,8 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'bonuse' */ './bonuse'),
         },
         {
-            path: '/referal',
-            load: () => import(/* webpackChunkName: 'referal' */ './referals'),
+            path: '/partners',
+            load: () => import(/* webpackChunkName: 'partners' */ './referals'),
         },
         {
             path: '/messages/:chatId?',
@@ -49,8 +49,8 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'classic' */ './classic'),
         },
         {
-            path: '/battle',
-            load: () => import(/* webpackChunkName: 'battle' */ './battle'),
+            path: '/classic-history',
+            load: () => import(/* webpackChunkName: 'classic-history' */ './classic-history'),
         },
         {
             path: '/mines',

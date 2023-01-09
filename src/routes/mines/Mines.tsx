@@ -10,13 +10,11 @@ import Layout31WithChat from '../../components/Layout/Web/containers/Layout31Wit
 import Panel from '../../components/Panel/Panel';
 import LiveFeedTableMobile from '../../components/LiveFeedTable/Mobile/LiveFeedTable';
 import Text from '../../components/Text/Text';
-import Icon from '../../components/Icon/Icon';
 import MinesGame from './Web/MinesGame';
 import MinesBetForm, { BOMBS_COUNT_BREAKPOINTS } from '../../components/forms/Web/MinesBetForm/MinesBetForm';
 import PreLoader from '../../components/PreLoader/PreLoader';
 import PopUp from '../../components/PopUp';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
-import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
 import LayoutMobile from '../../components/Layout/Mobile/containers/LayoutMobileGamenoTabs';
 import MinesGameMobile from './Mobile/MinesGame';
 import MinesBetFormMobile from '../../components/forms/Mobile/MinesBetForm/MinesBetForm';
@@ -168,17 +166,6 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                     formBombsCount={formBombsCount}
                     activeMinesGame={actuallyActiveMinesGame}
                 />
-            }
-            bottomContent={
-                <Panel
-                    leftHead={
-                        <Text className={cnMines('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                            Последние игры
-                        </Text>
-                    }
-                >
-                    <LiveFeedTable />
-                </Panel>
             }
         />
     );

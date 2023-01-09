@@ -117,7 +117,10 @@
 
             .ClassicGameWinner-RightInfo { margin-left: 0; }
 
-            &_isEnded { margin-bottom: 65px; height: 110px;}
+            &_isEnded {
+                margin-bottom: 65px;
+                height: 110px;
+            }
         }
 
         &-Main {

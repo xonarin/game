@@ -2,6 +2,7 @@
 
 .Layout {
     display: flex;
+    height: calc(100vh - 90px);
 
     &-Main {
         flex: auto;
@@ -11,6 +12,7 @@
     &-Content {
         padding: 0 15px 30px;
         margin-top: -75px;
+        height: 100%;
 
         @include mq(max-width 1400px) {
             padding: 0 10px 50px;

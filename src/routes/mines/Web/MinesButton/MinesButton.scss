@@ -46,7 +46,7 @@
             background-size: auto 100%;
         }
 
-        &.MinesButton_isStepped::after { animation: mines-appear .8s steps(61) .2s; }
+        &.MinesButton_isStepped::after { animation: mines-appear 0.8s steps(61) 0.2s; }
 
         .MinesButton-Icon {
             background-image: url('../../../../components/Icon/types/bombColored.svg');
@@ -61,7 +61,7 @@
             background-size: auto 100%;
         }
 
-        &.MinesButton_isStepped::after { animation: mines-appear .38s steps(22) .3s forwards; }
+        &.MinesButton_isStepped::after { animation: mines-appear 0.38s steps(22) 0.3s forwards; }
 
         .MinesButton-Icon {
             background-image: url('../../../../components/Icon/types/gem.svg');

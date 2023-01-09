@@ -6,7 +6,7 @@
         flex-wrap: wrap;
         color: red;
 
-        .AllGames-Game:nth-child(n+3) a{
+        .AllGames-Game:nth-child(n+3) a {
             opacity: 0.2;
             cursor: url(/coming-soon.svg), url(/coming-soon.cur), default;
         }
@@ -20,8 +20,8 @@
     &-Game {
         display: flex;
         flex: 0 0 33%;
-        padding: 5px;     
-        
+        padding: 5px;
+
         & .Link {
             position: relative;
         }
@@ -33,8 +33,6 @@
             object-fit: cover;
             border-radius: 6px;
         }
-
-
     }
 
     &-Title {
@@ -48,13 +46,13 @@
 
     @media only screen and (min-width: 1400px) {
         &-Game {
-            flex: 0 0 25%;   
+            flex: 0 0 25%;
         }
     }
 
     @media only screen and (min-width: 1600px) {
         &-Game {
-            flex: 0 0 20%;   
+            flex: 0 0 20%;
         }
     }
 }

@@ -1,6 +1,5 @@
 .Sidebar {
     position: fixed;
-    z-index: 33;
     bottom: 0;
     display: flex;
     background: #090d15;
@@ -72,12 +71,12 @@
             button {
                 background: none;
                 border: none;
-
             }
 
-            a::after, button::before {
-                background: unset!important;
-                font-size: 14px!important;
+            a::after,
+            button::before {
+                background: unset !important;
+                font-size: 14px !important;
             }
 
             &-Text {
@@ -87,7 +86,6 @@
                 font-size: 12px;
             }
         }
-
     }
 
     &-Burger {

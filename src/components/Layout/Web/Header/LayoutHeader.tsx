@@ -49,7 +49,7 @@ const LayoutHeader: React.FC = () => {
                             )}
                         />
                         <AnnouncementsWidget className={cnLayoutHeader('Button')} />
-                        <Link
+                        {/* <Link
                             className={cnLayoutHeader('Button')}
                             to="/messages"
                             isSoft
@@ -61,7 +61,7 @@ const LayoutHeader: React.FC = () => {
                                     iconHover="messageWhite"
                                 />
                             )}
-                        />
+                        /> */}
                     </div>
                     <MiniProfile username={me?.username || ''} avatar={me?.avatar || ''} />
                 </div>

@@ -7,7 +7,8 @@ import useCurrentClassicGameQuery from '../../hooks/graphql/classicGame/useCurre
 import Layout31WithChat from '../../components/Layout/Web/containers/Layout31WithChat';
 import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
-// import Icon from '../../components/Icon/Icon';
+import Icon from '../../components/Icon/Icon';
+import Link from '../../components/Link/Link';
 import BetsTable from './Web/BetsTable/BetsTable';
 import HistoryTable from './Web/HistoryTable/HistoryTable';
 import ClassicGame from './Web/ClassicGame/ClassicGame';
@@ -83,7 +84,13 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                     }
                     rightHead={
                         <>
-                        {/* <Icon type="guard" /> */}
+                            <Link to={'#'}>
+                                <Icon type={'guard'} size="m" />
+                            </Link>
+
+                            <Link to={'/classic-history'}>
+                                <Icon type={'clock'} size="m" />
+                            </Link>
                         </>
                     }
                 >
@@ -91,17 +98,6 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                 </Panel>
             }
             rightContent={<ClassicGame game={currentClassicGame} />}
-            bottomContent={
-                <Panel
-                    leftHead={
-                        <Text className={cnClassic('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                            Последние игры
-                        </Text>
-                    }
-                >
-                    <HistoryTable />
-                </Panel>
-            }
         />
     );
 };

@@ -2,7 +2,6 @@
 
 .BonuseTable {
     &.Table {
-        max-width: 1030px;
         width: 100%;
         border-radius: 5px;
         padding: 20px 13px 13px;
@@ -24,10 +23,12 @@
         height: 13px;
         margin-left: 11px;
     }
-    &-WinnerId{
+
+    &-WinnerId {
         position: absolute;
     }
-    &-IdContainer{
+
+    &-IdContainer {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -39,6 +40,7 @@
         left: -5px;
         top: -5px;
     }
+
     &-WinnerAvatar {
         display: inline-block;
         width: 25px;

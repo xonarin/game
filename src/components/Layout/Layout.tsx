@@ -6,7 +6,6 @@ import s from './Layout.scss';
 import { cn } from '../../utils/bem-css-module';
 import Sidebar from './Web/Sidebar/Sidebar';
 import LayoutHeader from './Web/Header/LayoutHeader';
-import Footer from '../../routes/welcome/Footer/Footer';
 import LayoutHeaderMobile from './Mobile/Header/LayoutHeader';
 import SidebarMobile from './Mobile/Sidebar/Sidebar';
 import PreLoader from '../PreLoader/PreLoader';
@@ -115,7 +114,6 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
             <div className={cnLayout('Main')}>
                 <LayoutHeader />
                 <div className={cnLayout('Content')}>{children}</div>
-                <Footer isFluid />
             </div>
         </div>
     );

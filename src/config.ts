@@ -26,8 +26,8 @@ export default {
     databaseUrl:
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
-        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
-    // 'mysql://admin:kristinap22012013a@localhost:3306/playtime',,
+        //'mysql://root:2644824@localhost:3306/playtime',
+     'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
 
     // Redis
     redisUrl: process.env.REDIS_URL || 'localhost',
