@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-
 import s from './Classic.scss';
 import { cn } from '../../utils/bem-css-module';
 import useCurrentClassicGameQuery from '../../hooks/graphql/classicGame/useCurrentClassicGameQuery';
@@ -10,7 +9,6 @@ import Text from '../../components/Text/Text';
 import Icon from '../../components/Icon/Icon';
 import Link from '../../components/Link/Link';
 import BetsTable from './Web/BetsTable/BetsTable';
-import HistoryTable from './Web/HistoryTable/HistoryTable';
 import ClassicGame from './Web/ClassicGame/ClassicGame';
 import LayoutMobileGame from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';

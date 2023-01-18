@@ -1,5 +1,4 @@
 import React from 'react';
-import { CircleSpinner } from 'react-spinners-kit';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import { cn } from '../../utils/bem-css-module';
@@ -12,7 +11,7 @@ const PreLoader: React.FC = () => {
 
     return (
         <div className={cnPreLoader()}>
-            <CircleSpinner color="#2f83fd" />
+            <div className={cnPreLoader('circle')}></div>
         </div>
     );
 };
