@@ -17,6 +17,10 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'welcome' */ './welcome'),
         },
         {
+            path: '/auth-wait',
+            load: () => import(/* webpackChunkName: 'auth-wait' */ './auth-wait'),
+        },
+        {
             path: '/balance',
             load: () => import(/* webpackChunkName: 'balance' */ './balance'),
         },
