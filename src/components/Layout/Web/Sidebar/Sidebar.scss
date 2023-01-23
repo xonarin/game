@@ -11,12 +11,7 @@
         margin-bottom: 30px;
 
         img {
-            width: 45px;
+            width: 68px;
         }
-    }
-
-    &-NavigationBarList a:nth-child(n+3) {
-        opacity: 0.2;
-        cursor: url(/coming-soon.svg), url(/coming-soon.cur), default;
     }
 }
