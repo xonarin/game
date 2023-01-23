@@ -10,6 +10,7 @@ import FaqMobile from './Mobile/Faq';
 
 export interface FaqProps {
     title: string;
+    chatId: string;
 }
 
 const themes = [
@@ -197,7 +198,7 @@ const themes = [
 ];
 const cnFaq = cn(s, 'Faq');
 
-const Faq: React.FC<FaqProps> = () => {
+const Faq: React.FC<FaqProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
     useIsomorphicLayoutEffect(() => {
         if (
@@ -217,6 +218,7 @@ const Faq: React.FC<FaqProps> = () => {
     }
     return (
         <Layout33Content
+            chatId={chatId}
             title="Помощь"
             centerContent={
                 <div className={cnFaq('list')}>
