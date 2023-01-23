@@ -11,7 +11,7 @@ const action = ({ user, query }: AppContextTypes): RouteResult => {
         title: 'Добро пожаловать',
         chunks: ['welcome'],
         pageContent: <Welcome refId={refId} />,
-        redirect: user && '/all-games',
+        redirect: user && '/casino',
     };
 };
 

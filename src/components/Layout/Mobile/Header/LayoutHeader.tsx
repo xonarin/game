@@ -41,7 +41,7 @@ const LayoutHeaderMobile: React.FC = () => {
                     <AnnouncementsWidget className={cnLayoutHeader('Button')} />
                 </div>
 
-                <Link to="/all-games">
+                <Link to="/casino">
                     <img className={cnLayoutHeader('LogoImg')} src={logoImg} alt="Рулетка" />
                 </Link>
                 <Balance money={me?.money || 0} />

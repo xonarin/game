@@ -11,11 +11,12 @@ export interface SidebarNavigationItemProps {
     to: LinkProps['to'];
     icon: IconProps['type'];
     iconHover: IconProps['hover'];
+    title: string;
 }
 
 const cnSidebarNavigationItem = cn(s, 'SidebarNavigationItem');
 
-const SidebarNavigationItem: React.FC<SidebarNavigationItemProps> = ({ to, icon, iconHover }) => {
+const SidebarNavigationItem: React.FC<SidebarNavigationItemProps> = ({ to, icon, iconHover, title }) => {
     useStyles(s);
 
     const active = useIsOnPath(to);
@@ -23,6 +24,10 @@ const SidebarNavigationItem: React.FC<SidebarNavigationItemProps> = ({ to, icon,
     return (
         <Link className={cnSidebarNavigationItem({ active })} to={to}>
             <Icon className={cnSidebarNavigationItem('Icon')} type={icon} hover={iconHover} size="m" />
+            <div className={cnSidebarNavigationItem('Info')}>
+                <span className={cnSidebarNavigationItem('Title')}>{title}</span>
+                <span className={cnSidebarNavigationItem('Total')}>500</span>    
+            </div>
         </Link>
     );
 };

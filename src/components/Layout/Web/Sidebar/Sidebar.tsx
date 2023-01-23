@@ -3,7 +3,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Sidebar.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import logoImg from './logo.svg';
+import logoImg from './logo2.svg';
 import SidebarNavigationItem from './NavigationItem/SidebarNavigationItem';
 import Link from '../../../Link/Link';
 
@@ -18,8 +18,9 @@ const Sidebar: React.FC = () => {
                 <img src={logoImg} alt="Рулетка" />
             </Link>
             <nav className={cnSidebar('NavigationBarList')}>
-                <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" />
-                <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite" />
+                <SidebarNavigationItem to="/casino" icon="sword" iconHover="swordWhite" title={'Casino'} />
+                <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" title={'Classic'} />
+                <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite"  title={'Mines'} />
             </nav>
         </aside>
     );
