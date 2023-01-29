@@ -40,7 +40,6 @@ const ReferalsWeb: React.FC<ReferalsPageProps> = ({ chatId }) =>  {
 
         <Layout33Content
             chatId={chatId}
-            title="Partners"
             centerContent={
                 <LayoutReferal
                     TopContent={
@@ -48,10 +47,10 @@ const ReferalsWeb: React.FC<ReferalsPageProps> = ({ chatId }) =>  {
                             <nav className={cnReferal("Navigation")}>
                                 <Link to="/referal" className={cnReferal("Navigation-Active")}>
                                     <Text color='white' size='l'>
-                                        ПАРТНЁРСКАЯ ПРОГРАММА
+                                        Партнёрка
                                     </Text>
                                 </Link>
-                                <Link to="/referal">
+                                <Link to="/profile">
                                     МОЙ ПРОФИЛЬ
                                 </Link>
                             </nav>

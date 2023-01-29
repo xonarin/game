@@ -3,7 +3,7 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Sidebar.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import logoImg from './logo2.svg';
+import logoImg from '../../../../assets/img/logowiz.png';
 import SidebarNavigationItem from './NavigationItem/SidebarNavigationItem';
 import Link from '../../../Link/Link';
 

@@ -32,6 +32,10 @@ type User {
     username: String!
     avatar: URL!
     money: Float
+    refPercent: Float
+    turnover: Float
+    chatWarns: String!
+    createdAt: DateTime!
 }
 
 type FairPlayPayload {
