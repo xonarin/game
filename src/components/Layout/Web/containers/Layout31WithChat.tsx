@@ -6,7 +6,6 @@ import { cn } from '../../../../utils/bem-css-module';
 import Layout from '../../Layout';
 import Chat from '../../../Chat/Chat';
 import MiddleGame from '../MiddleGame/MiddleGame';
-import Footer from '../../../../routes/welcome/Footer/Footer';
 
 export interface Layout31WithChatProps {
     chatId: string;
@@ -37,7 +36,6 @@ const Layout31WithChat: React.FC<Layout31WithChatProps> = ({
                 <Chat className={cnLayout31WithChat('Chat')} chatId={chatId} />
             </div>
             <div>{bottomContent}</div>
-            <Footer isFluid />
         </Layout>
     );
 };
