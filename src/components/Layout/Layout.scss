@@ -2,7 +2,7 @@
 
 .Layout {
     display: flex;
-    height: calc(100vh - 90px);
+    height: calc(100vh - 85px);
 
     &-Main {
         flex: auto;
@@ -10,7 +10,7 @@
     }
 
     &-Content {
-        padding: 0 15px 30px;
+        padding: 0 15px 0;
         margin-top: -75px;
         height: 100%;
 

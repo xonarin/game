@@ -15,7 +15,7 @@ import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
 import AppContext from '../../../context';
-import LayoutProfile from '../../../components/Layout/Web/containers/LayoutProfile';
+import Layout33Content from '../../../components/Layout/Web/containers/Layout33Content';
 
 const cnReferal = cn(s, 'Referal');
 
@@ -38,9 +38,8 @@ const ReferalsWeb: React.FC<ReferalsPageProps> = ({ chatId }) =>  {
 
     return (
 
-        <LayoutProfile
+        <Layout33Content
             chatId={chatId}
-            title="Partners"
             centerContent={
                 <LayoutReferal
                     TopContent={
@@ -48,10 +47,10 @@ const ReferalsWeb: React.FC<ReferalsPageProps> = ({ chatId }) =>  {
                             <nav className={cnReferal("Navigation")}>
                                 <Link to="/referal" className={cnReferal("Navigation-Active")}>
                                     <Text color='white' size='l'>
-                                        ПАРТНЁРСКАЯ ПРОГРАММА
+                                        Партнёрка
                                     </Text>
                                 </Link>
-                                <Link to="/referal">
+                                <Link to="/profile">
                                     МОЙ ПРОФИЛЬ
                                 </Link>
                             </nav>

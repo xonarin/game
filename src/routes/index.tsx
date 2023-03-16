@@ -45,6 +45,10 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'partners' */ './referals'),
         },
         {
+            path: '/profile',
+            load: () => import(/* webpackChunkName: 'profile' */ './profile'),
+        },
+        {
             path: '/messages/:chatId?',
             load: () => import(/* webpackChunkName: 'messages' */ './messages'),
         },

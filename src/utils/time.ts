@@ -8,3 +8,11 @@ export const getTime = (time: Date) => {
         hour < 10 ? `0${hour}` : hour
     }:${minutes < 10 ? `0${minutes}` : minutes}`;
 };
+
+export const getDateDMY = (time: Date): string => {
+    const date = time.getDate();
+    const month = time.getMonth() + 1;
+    const year = time.getFullYear();
+
+    return `${date}.${month < 10 ? `0${month}` : month}.${year}`;
+}

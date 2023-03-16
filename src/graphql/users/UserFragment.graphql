@@ -3,4 +3,8 @@ fragment User on User {
     username
     avatar
     role
+    refPercent
+    chatWarns
+    createdAt
+    turnover
 }

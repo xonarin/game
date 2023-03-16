@@ -1,0 +1,27 @@
+@import '../../assets/styles/vars';
+
+.Profile {
+    display: flex;
+
+    &-Avatar {
+        width: 150px;
+        height: 150px;
+
+        & img {
+            width: 100%;
+            border-radius: 10px;
+        }
+    }
+
+    &-List {
+        padding: 0 0 0 15px;
+        margin: 0;
+        list-style: none;
+    }
+
+    &-Item {
+        //  font-family: 'Rubik', sans-serif;
+        font-size: $font-size-l;
+        color: $color-white;
+    }
+}
