@@ -5,6 +5,9 @@ import s from './Prize.scss';
 import { cn } from '../../../utils/bem-css-module';
 import { PrizeTab } from './PrizeTab';
 import { PrizeInfo, TabNameType } from '../PrizeInfo/PrizeInfo';
+import GiftBox from '../bonusicon/giftbox.svg';
+import PomoCode from '../bonusicon/promo.svg';
+import NewPromoCode from '../bonusicon/add.svg';
 
 const cnPrize = cn(s, 'Prize');
 
@@ -17,17 +20,17 @@ const PrizeWeb: React.FC = () => {
             <div className={cnPrize('Nav')}>
                 <PrizeTab
                     tabName="freeCoins"
-                    img=""
+                    img={GiftBox}
                     title="Бесплатные монеты"
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}
                 >
-                    Вступай в нашу группу и получай до 0.10 монет каждые 15 минут
+                    Вступай в нашу группу и получай до 3 рублей каждый день
                 </PrizeTab>
 
                 <PrizeTab
                     tabName="activePromoCode"
-                    img=""
+                    img={PomoCode}
                     title="Активировать промокод"
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}
@@ -37,7 +40,7 @@ const PrizeWeb: React.FC = () => {
 
                 <PrizeTab
                     tabName="createPromoCode"
-                    img=""
+                    img={NewPromoCode}
                     title="Создать промокод"
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}

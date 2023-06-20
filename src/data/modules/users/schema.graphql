@@ -16,6 +16,10 @@ type Mutation {
     updateServerSeed: UpdateServerSeedPayload!
 }
 
+type Subscription {
+    balance: BalanceSubscription
+}
+
 enum UserRole {
     Default
     Moderator
@@ -28,6 +32,10 @@ type User {
     username: String!
     avatar: URL!
     money: Float
+    refPercent: Float
+    turnover: Float
+    chatWarns: String!
+    createdAt: DateTime!
 }
 
 type FairPlayPayload {
@@ -39,4 +47,9 @@ type FairPlayPayload {
 type UpdateServerSeedPayload {
     oldServerSeed: String!
     newServerSeedHash: String!
+}
+
+type BalanceSubscription {
+    money: Float!
+    maxReached: Boolean!
 }

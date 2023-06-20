@@ -20,6 +20,12 @@ import {
 } from './modules/classicGame/resolvers';
 import { LiveDataGameParent, OnlinePayloadParent } from './modules/liveData/resolvers';
 
+export interface BalanceSubscriptionPayload {
+    userId: string;
+    money: number;
+    maxReached: boolean;
+}
+
 export interface PubSubEventPayloads {
     // Chat
     sentMessage: OriginMessageParent;
@@ -39,6 +45,9 @@ export interface PubSubEventPayloads {
     // Live Data
     games: LiveDataGameParent;
     onlineData: OnlinePayloadParent;
+
+    // Users
+    balance: BalanceSubscriptionPayload;
 }
 
 export type PubSubEvent = keyof PubSubEventPayloads;

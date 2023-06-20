@@ -10,6 +10,7 @@ export interface WithdrawMethod extends Model {
     readonly minAmount: number;
     readonly maxAmount: number;
     readonly enabled: boolean;
+    readonly sortPayment: number;
 }
 
 export type WithdrawMethodStatic = ModelStatic<WithdrawMethod>;
@@ -56,6 +57,11 @@ export const initWithdrawMethod = (sequelize: Sequelize): WithdrawMethodStatic =
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false,
+            },
+
+            sortPayment: {
+                type: DataTypes.DOUBLE(8, 2),
+                allowNull: false,
             },
         },
         { timestamps: false },

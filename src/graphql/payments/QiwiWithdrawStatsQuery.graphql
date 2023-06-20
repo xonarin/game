@@ -1,0 +1,17 @@
+query QiwiWithdrawStats {
+    qiwiWithdrawStats {
+        turnover {
+            type
+            currency
+            rest
+            max
+            spent
+            interval {
+                dateFrom
+                dateTill
+            }
+        }
+        restrictions
+        balance
+    }
+}

@@ -2,13 +2,15 @@ import { GraphQLScalarType } from 'graphql';
 import { GraphQLURL } from 'graphql-scalars';
 import { and, IRules } from 'graphql-shield';
 
-import { Resolver, Resolvers, TypeResolvers } from '../../../interfaces/graphql';
+import { Resolver, Resolvers, ResolverSubscriber, TypeResolvers } from '../../../interfaces/graphql';
 import { ApolloContext } from '../../../interfaces/apollo';
 import {
+    BalanceSubscription,
     Mutation,
     MutationUpdateClientSeedArgs,
     Query,
     QueryUserArgs,
+    Subscription,
     UpdateServerSeedPayload,
     User,
 } from '../../../__generated__/graphql';
@@ -17,12 +19,16 @@ import { isAuth } from '../rules';
 import { checkUpdateClientSeedArgs } from './rules';
 import { sha256Hash } from '../../../utils/crypto';
 import { database } from '../../database';
+import { withFilter } from '../../../utils/withFilter';
+import pubsub, { BalanceSubscriptionPayload } from '../../pubsub';
 
 export type OriginUserParent = UserBackend;
 
 type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay' | 'usersTotal'>;
 type MutationType = Pick<Mutation, 'updateClientSeed' | 'updateServerSeed'>;
+type SubscriptionType = Pick<Subscription, 'balance'>;
 type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money'>;
+type BalanceSubscriptionType = Pick<BalanceSubscription, 'money' | 'maxReached'>;
 
 interface QueryMapping {
     me: Resolver<OriginUserParent | null>;
@@ -34,11 +40,17 @@ interface MutationMapping {
     updateServerSeed: Resolver<UpdateServerSeedPayload>;
 }
 
+interface SubscriptionMapping {
+    balance: ResolverSubscriber<BalanceSubscriptionType, BalanceSubscriptionPayload>;
+}
+
 type UsersResolvers = Resolvers<
     {
         Query: TypeResolvers<QueryType, QueryMapping>;
         Mutation: TypeResolvers<MutationType, MutationMapping>;
+        Subscription: TypeResolvers<SubscriptionType, SubscriptionMapping>;
         User: TypeResolvers<UserType, {}, OriginUserParent>;
+        BalanceSubscription: TypeResolvers<BalanceSubscriptionType, {}, BalanceSubscriptionPayload>;
         URL: GraphQLScalarType;
     },
     ApolloContext
@@ -88,6 +100,14 @@ export const resolvers: UsersResolvers = {
                 oldServerSeed,
                 newServerSeedHash: sha256Hash(newServerSeed),
             };
+        },
+    },
+    Subscription: {
+        balance: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator('balance'),
+                ({ balance: { userId } }, _, { user }) => userId === user?.id,
+            ),
         },
     },
     User: {

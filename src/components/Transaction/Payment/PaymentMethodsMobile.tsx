@@ -7,8 +7,9 @@ import { PaymentMethod, WithdrawMethod } from '../../../__generated__/graphql';
 import Text from '../../Text/Text';
 import CornerLabel from './CornerLabel/CornerLabel';
 import Icon from '../../Icon/Icon';
+import { QiwiWithdrawMethod } from './QiwiWithdrawForm/QiwiWithdrawForm';
 
-type PaymentMethodType = PaymentMethod | WithdrawMethod;
+type PaymentMethodType = PaymentMethod | WithdrawMethod | QiwiWithdrawMethod;
 
 export interface PaymentMethodsMobileProps<T extends PaymentMethodType> {
     readonly methods?: T[];
@@ -24,6 +25,27 @@ interface PaymentMethodComponentProps<T extends PaymentMethodType> {
     readonly onChange: (value: T) => void;
     readonly toggle: () => void;
 }
+
+const normalPaymentMethodTypeGuardFields = [
+    ['name', 'string'],
+    ['avatar', 'string'],
+    ['commission', 'number'],
+    ['minAmount', 'number'],
+    ['maxAmount', 'number'],
+    ['enabled', 'boolean'],
+] as const;
+
+const normalPaymentMethodTypeGuard = (
+    value: PaymentMethodType | undefined,
+): value is PaymentMethod | WithdrawMethod => {
+    if (!value) {
+        return false;
+    }
+
+    // @ts-ignore
+    // eslint-disable-next-line valid-typeof
+    return normalPaymentMethodTypeGuardFields.every(([field, type]) => field in value && typeof value[field] === type);
+};
 
 const cnPayment = cn(s, 'Payment');
 
@@ -51,9 +73,11 @@ const PaymentMethodComponent = <T extends PaymentMethodType>({
                 <Text color="white">{method?.name}</Text>
 
                 <div className={cnPayment('Method-MiniInfo')}>
-                    <Text color="gray" size="xs">
-                        {method?.commission}% / {method?.minAmount}&nbsp;руб — {method?.maxAmount}&nbsp;руб
-                    </Text>
+                    {normalPaymentMethodTypeGuard(method) && (
+                        <Text color="gray" size="xs">
+                            {method?.commission}% / {method?.minAmount}&nbsp;руб — {method?.maxAmount}&nbsp;руб
+                        </Text>
+                    )}
                 </div>
             </div>
         </button>

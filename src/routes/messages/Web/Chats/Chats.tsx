@@ -12,8 +12,8 @@ import useScrollableHelper from '../../../../hooks/useScrollableHelper';
 import useReadChatMutation from '../../../../hooks/graphql/chat/useReadChatMutation';
 import Panel from '../../../../components/Panel/Panel';
 import InfiniteScroll from '../../../../components/InfiniteScroll/InfiniteScroll';
-import CreatePmChatForm from '../../../../components/forms/Web/CreatePmChatForm/CreatePmChatForm';
-import ChatMessageForm from '../../../../components/forms/Web/ChatMessageForm/ChatMessageForm';
+// import CreatePmChatForm from '../../../../components/forms/Web/CreatePmChatForm/CreatePmChatForm';
+// import ChatMessageForm from '../../../../components/forms/Web/ChatMessageForm/ChatMessageForm';
 import SearchInput from '../../../../components/inputs/MessageInput/Mobile/SearchInput/SearchInput';
 import ChatItem from '../ChatItem/ChatItem';
 
@@ -71,6 +71,7 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
                     item.members.length === 2 &&
                     item.members.some(member => member.id === userId),
             );
+
             if (existingChat) {
                 history.push(`/messages/${existingChat.id}`);
             }
@@ -83,12 +84,12 @@ const Chats: React.FC<MessagesProps> = ({ chatId, userId }) => {
         [chats],
     );
 
-    let formElem = null;
-    if (userId) {
-        formElem = <CreatePmChatForm userId={userId} />;
-    } else if (chatId) {
-        formElem = <ChatMessageForm chatId={chatId} onMutate={onSentMessage} isPm />;
-    }
+    // let formElem = null;
+    // if (userId) {
+    //     formElem = <CreatePmChatForm userId={userId} />;
+    // } else if (chatId) {
+    //     formElem = <ChatMessageForm chatId={chatId} onMutate={onSentMessage} isPm />;
+    // }
 
     return (
         <Panel

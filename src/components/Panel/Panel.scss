@@ -1,4 +1,5 @@
 @import '../../assets/styles/vars';
+@import '../../assets/styles/mixins';
 
 .Panel {
     display: flex;
@@ -13,15 +14,25 @@
         min-height: 65px;
         height: 65px;
         padding: 0 15px;
-        background-color: lighten($color-bg, 9%);
+        background-color: lighten($color-bg, 5%);
     }
 
     &-Content {
-        height: calc(100% - 65px);
+        height: calc(100% - 50px);
         background-color: lighten($color-bg, 3%);
     }
 
     & .LiveFeedTable.Table {
         max-width: 100%;
+    }
+
+    @include mq(max-width 992px) {
+        &.Chat &-Head {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
     }
 }

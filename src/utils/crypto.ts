@@ -15,6 +15,13 @@ export const sha256Hash = (data: string): string => {
         .digest('hex');
 };
 
+export const hmacSha256Hash = (key: string, data: string): string => {
+    return crypto
+        .createHmac('sha256', key)
+        .update(data)
+        .digest('hex');
+};
+
 export const hmacSha512Bytes = (key: string, data: string): Uint8Array => {
     const buffer = crypto
         .createHmac('sha512', key)

@@ -10,7 +10,7 @@ const action = ({ user }: AppContextTypes): RouteResult => {
     // }
 
     return {
-        title: 'All Games',
+        title: 'Все игры',
         chunks: ['classic'],
         pageContent: <AllGamesMobile />,
         redirect: user ? undefined : '/',

@@ -12,9 +12,17 @@ export type ClassicGameSettingName =
     | 'classic::turnsCount'
     | 'classic::maxSummaryBet';
 
-export type ChatSettingName = 'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage';
+export type ChatSettingName =
+    | 'chat::adminAnnouncementsTitle'
+    | 'chat::adminAnnouncementsImage'
+    | 'chat::minDepsToSendGlobalMessage';
 
-export type ReferralsSettingName = 'referrals::minTurnoverCoef' | 'referrals::minRefMoneyToGet';
+export type ReferralsSettingName =
+    | 'referrals::minTurnoverCoef'
+    | 'referrals::minRefMoneyToGet'
+    | 'referrals::minDepsToGetMoney'
+    | 'referrals::plusUserMoney'
+    | 'referrals::plusRefMoney';
 
 export type AppSettingsName = 'app::fakeOnline';
 
@@ -31,12 +39,21 @@ export type PaymentsSettings =
 
 export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
-export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
+export type MinesSettings =
+    | 'mines::maxBetAmount'
+    | 'mines::maxProfitAmount'
+    | 'mines::antiMinus'
+    | 'mines::antiMinusSteps';
 
 export type BonusSettings =
     | 'bonus::minsBetweenBonuses'
+    | 'bonus::vkPostId'
+    | 'bonus::getBonusFrequencyLimitDeposit'
+    | 'bonus::getBonusFrequencyLimitWithoutDeps'
     | 'bonus::minVkFriendsToUsePromoCode'
-    | 'bonus::minDepositsToCreatePromoCode';
+    | 'bonus::minDepositsToCreatePromoCode'
+    | 'bonus::usePromoCodeFrequencyLimitDeposit'
+    | 'bonus::usePromoCodeFrequencyLimitWithoutDeps';
 
 export type SettingName =
     | ClassicGameSettingName
@@ -60,10 +77,12 @@ export class SettingValue {
         if (!this.value) {
             throw new TypeError('Value is not a number');
         }
+
         const value = Number(this.value);
         if (Number.isNaN(value)) {
             throw new TypeError('Value is not a number');
         }
+
         return value;
     }
 

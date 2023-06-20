@@ -30,7 +30,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({ title, buttonText, children }
                 <TextBlock className={cnWelcomeCard('Description')} size="l" weight="regular" color="white">
                     {children}
                 </TextBlock>
-                <Button size="m">{buttonText}</Button>
+                <Button size="m"><a className={cnWelcomeCard('ButtonLink')} href="/auth/vk">{buttonText}</a></Button>
             </div>
         </div>
     );

@@ -12,7 +12,7 @@ export interface Layout31WithChatProps {
     title: string;
     leftContent: React.ReactNode;
     rightContent: React.ReactNode;
-    bottomContent: React.ReactNode;
+    bottomContent?: React.ReactNode;
 }
 
 const cnLayout31WithChat = cn(s, 'Layout31WithChat');

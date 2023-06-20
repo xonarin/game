@@ -24,15 +24,19 @@ const useGetReferralMoneyMutation = () => {
                 Object.values(RefStatsPeriod).forEach(period => {
                     const query = { query: ReferralsStatsDocument, variables: { type: RefStatsType.Income, period } };
 
-                    const queryData = cache.readQuery<ReferralsStatsQuery, ReferralsStatsQueryVariables>(query);
+                    try {
+                        const queryData = cache.readQuery<ReferralsStatsQuery, ReferralsStatsQueryVariables>(query);
 
-                    if (queryData) {
-                        const { referralsStats } = queryData;
+                        if (queryData) {
+                            const { referralsStats } = queryData;
 
-                        cache.writeQuery<ReferralsStatsQuery, ReferralsStatsQueryVariables>({
-                            ...query,
-                            data: { referralsStats: { ...referralsStats, fullAmount } },
-                        });
+                            cache.writeQuery<ReferralsStatsQuery, ReferralsStatsQueryVariables>({
+                                ...query,
+                                data: { referralsStats: { ...referralsStats, fullAmount } },
+                            });
+                        }
+                    } catch (e) {
+                        // suppress
                     }
                 });
             },

@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { col, fn, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { PaymentMethod } from '../models/PaymentMethod';
@@ -11,14 +11,14 @@ class PaymentsRepository extends BaseRepository {
     getAvailablePaymentMethods(): Promise<PaymentMethod[]> {
         return this.db.PaymentMethod.findAll({
             where: { enabled: true },
-            order: ['id'],
+            order: ['sortPayment'],
         });
     }
 
     getAvailableWithdrawMethods(): Promise<WithdrawMethod[]> {
         return this.db.WithdrawMethod.findAll({
             where: { enabled: true },
-            order: ['id'],
+            order: ['sortPayment'],
         });
     }
 
@@ -88,6 +88,17 @@ class PaymentsRepository extends BaseRepository {
         return this.db.UserPayment.findAll({ where: { userId }, order: [['createdAt', 'DESC']], transaction });
     }
 
+    async getFinishedPaymentsSumByUserId(userId: string, transaction?: Transaction): Promise<number> {
+        const result = await this.db.UserPayment.findOne({
+            attributes: [[fn('COALESCE', fn('SUM', col('sum')), 0), 'sum']],
+            where: { userId, status: PaymentStatus.FINISHED },
+            order: [['createdAt', 'DESC']],
+            transaction,
+        });
+
+        return result.sum;
+    }
+
     async createPayment(userId: string, methodId: string, amount: number): Promise<string> {
         const { commission } = await this.getPaymentMethodByIdStrict(methodId);
 
@@ -101,7 +112,7 @@ class PaymentsRepository extends BaseRepository {
         return payment.id;
     }
 
-    finishPayment(paymentId: string, methodId: string): Promise<void> {
+    finishPayment(paymentId: string, methodId?: string): Promise<void> {
         return this.db.sequelize.transaction(async transaction => {
             const payment = await this.getPaymentByIdStrict(paymentId, transaction);
 
@@ -118,11 +129,16 @@ class PaymentsRepository extends BaseRepository {
             const finalSum = payment.sum - commission;
 
             await payment.update(
-                { methodId, status: PaymentStatus.FINISHED, commission: commissionPercent },
+                {
+                    methodId: methodId === undefined ? payment.methodId : methodId,
+                    status: PaymentStatus.FINISHED,
+                    commission: commissionPercent,
+                },
                 { transaction },
             );
 
             await this.repositories.users.giveMoney(payment.userId, finalSum, transaction);
+            await this.repositories.users.giveIncomeToReferrer(payment.userId, finalSum, transaction);
         });
     }
 
@@ -149,19 +165,14 @@ class PaymentsRepository extends BaseRepository {
     }
 
     getWithdrawsByStatus(status: WithdrawStatus): Promise<UserWithdraw[]> {
-        return this.db.UserWithdraw.findAll({ where: { status } });
+        return this.db.UserWithdraw.findAll({ where: { status }, order: [['createdAt', 'DESC']] });
     }
 
-    async createWithdraw(userId: string, methodId: string, purse: string, amount: number): Promise<UserWithdraw> {
+    async createWithdraw(userId: string, methodId: string, wallet: string, amount: number): Promise<UserWithdraw> {
         const withdraws = await this.getWithdrawsByUserId(userId);
 
+        const successDepositSum = await this.getFinishedPaymentsSumByUserId(userId);
         const minDeposit = await this.repositories.settings.getSettingAsNumber('payments::minDepositToWithdraw');
-        const payments = await this.getPaymentsByUserId(userId);
-
-        const successDepositSum = payments
-            .filter(payment => payment.status === 'FINISHED')
-            .map(payment => payment.sum)
-            .reduce((a, b) => a + b, 0);
 
         if (successDepositSum < minDeposit) {
             throw new UserError('NOT_ENOUGH_DEPOSITS');
@@ -175,6 +186,8 @@ class PaymentsRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_BETS');
             }
         }
+
+        const purse = wallet.replace(/\s/g, '');
 
         return this.db.sequelize.transaction(async transaction => {
             await this.repositories.users.withdrawMoney(userId, amount, transaction);
@@ -197,6 +210,30 @@ class PaymentsRepository extends BaseRepository {
             await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
             return withdraw.update({ status: WithdrawStatus.CANCELLED }, { transaction });
         });
+    }
+
+    async makeWithdrawStatusBadPurse(withdrawId: string): Promise<void> {
+        return this.db.sequelize.transaction(async transaction => {
+            const withdraw = await this.getWithdrawByIdStrict(withdrawId);
+
+            if (withdraw.status !== WithdrawStatus.APPROVED) {
+                return;
+            }
+
+            await this.repositories.users.giveMoney(withdraw.userId, withdraw.sum, transaction);
+            await withdraw.update({ status: WithdrawStatus.BAD_PURSE }, { transaction });
+        });
+    }
+
+    async addQiwiWithdraw(
+        methodId: string,
+        purse: string,
+        paymentId: string,
+        amount: number,
+        transactionId: string,
+        userId: string,
+    ) {
+        await this.db.QiwiWithdraw.create({ userId, purse, methodId, paymentId, transactionId, amount });
     }
 }
 

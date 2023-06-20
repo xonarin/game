@@ -18,20 +18,39 @@
         top: 50%;
         left: 50%;
         border-radius: 5px;
-        background: grad($grad-green);
+        background-color: $color-dark-gray;
         opacity: 0;
         transform: translate(-50%, -50%) skewX(-8deg);
         transition: opacity 0.3s $nice-ease;
         z-index: 1;
+        opacity: 1;
     }
-
+    
     & &-Icon {
         position: relative;
         z-index: 2;
     }
-
+    
+    &-Info {
+        z-index: 9;
+        display: flex;
+        flex-direction: column;
+        margin-left: 9px;
+        color: #5e6b86;
+        font-weight: 700;
+        
+        .SidebarNavigationItem:hover &, .SidebarNavigationItem_active & {
+            color: #fff;
+            transition: color 0.3s $nice-ease;
+        }
+        
+    }
+    
     &_active {
-        &::before { opacity: 1; }
+        &::before { 
+            opacity: 1;
+            background: grad($grad-green);
+         }
 
         .SidebarNavigationItem-Icon {
             &::before { opacity: 0; }
@@ -39,7 +58,7 @@
         }
     }
 
-    & + & { margin-top: 25px; }
+    & + & { margin-top: 15px; }
 
     &:hover .SidebarNavigationItem-Icon {
         &::before { opacity: 0; }

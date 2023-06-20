@@ -37,7 +37,7 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                             </Link>
                         </li>
                         <li>
-                            <Link className={cnFooter('NavigationItem')} to="/referal">
+                            <Link className={cnFooter('NavigationItem')} to="/partners">
                                 <Text size="xs">Партнерская программа</Text>
                             </Link>
                         </li>
@@ -49,21 +49,32 @@ const Footer: React.FC<FooterProps> = ({ isFluid }) => {
                     </ul>
                     <div>
                         <Button className={cnFooter('SocialButton')} color="gray">
-                            VK
+                            <a href="https://vk.com/willygame">VK</a>
                         </Button>
                         <Button className={cnFooter('SocialButton')} color="gray">
-                            TG
-                        </Button>
-                        <Button className={cnFooter('SocialButton')} color="gray">
-                            IN
+                        <a href="https://t.me/willygames">TG</a>
                         </Button>
                     </div>
                 </div>
                 <div className={cnFooter('Copyright')}>
                     <Text size="xs">Willy © 2020</Text>
-                    <a href="//freekassa.ru/" className={cnFooter('Btn')}>
-                        <img src="//www.free-kassa.ru/img/fk_btn/16.png" alt="Приём оплаты на сайте картами" />
-                    </a>
+                    <div className={cnFooter('PaymentsWrap')}>
+                        <a className={cnFooter('PaymentsLink')}>
+                            <img src="/qiwi.svg" alt="Приём оплаты на сайте картами" />
+                        </a>
+                        <a className={cnFooter('PaymentsLink')}>
+                            <img src="/visa.svg" alt="Приём оплаты на сайте картами" />
+                        </a>
+                        <a className={cnFooter('PaymentsLink')}>
+                            <img src="/mastercard.svg" alt="Приём оплаты на сайте картами" />
+                        </a>
+                        <a className={cnFooter('PaymentsLink')}>
+                            <img src="/beeline.svg" alt="Приём оплаты на сайте картами" />
+                        </a>
+                        <a className={cnFooter('PaymentsLink')}>
+                            <img src="/megafon.svg" alt="Приём оплаты на сайте картами" />
+                        </a>
+                    </div>
                 </div>
             </div>
         </footer>

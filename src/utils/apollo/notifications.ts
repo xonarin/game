@@ -18,5 +18,8 @@ export const makeNotification = (
 export const makeNotificationFromError = (errorMessage: string, autoDismiss?: number): Notification =>
     makeNotification('ERROR_TITLE', errorMessage, NotificationLevel.Error, autoDismiss);
 
+export const makeWarningNotification = (message: string, autoDismiss?: number): Notification =>
+    makeNotification('WARN_TITLE', message, NotificationLevel.Warn, autoDismiss);
+
 export const makeSuccessNotification = (message: string, autoDismiss?: number): Notification =>
     makeNotification('SUCCESS_TITLE', message, NotificationLevel.Success, autoDismiss);

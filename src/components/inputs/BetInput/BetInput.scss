@@ -49,5 +49,9 @@
         visibility: hidden;
         white-space: nowrap;
         vertical-align: middle;
+
+        @media (max-width: 992px) {
+            min-width: 70px;
+        }
     }
 }

@@ -22,6 +22,7 @@ import { UserWithdraw } from './UserWithdraw';
 import { Bonus } from './Bonus';
 import { PromoCode } from './PromoCode';
 import { PromoCodeUse } from './PromoCodeUse';
+import { QiwiWithdraw } from './QiwiWithdraw';
 
 export enum SocialType {
     Steam = 'Steam',
@@ -85,6 +86,7 @@ export type UserStatic = AssociableModelStatic<
         Bonus: HasMany<User, Bonus>;
         PromoCode: HasMany<User, PromoCode>;
         PromoCodeUse: HasMany<User, PromoCodeUse>;
+        QiwiWithdraw: HasMany<User, QiwiWithdraw>;
     }
 >;
 
@@ -160,7 +162,7 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             refPercent: {
                 type: DataTypes.DOUBLE(8, 2),
                 allowNull: false,
-                defaultValue: 3,
+                defaultValue: 5,
             },
 
             clientSeed: {
@@ -190,7 +192,10 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             },
         },
         {
-            indexes: [{ name: 'createdAt', using: 'BTREE', fields: [{ name: 'createdAt', order: 'ASC' }] }],
+            indexes: [
+                { unique: true, fields: ['socialType', 'socialId'] },
+                { name: 'createdAt', using: 'BTREE', fields: [{ name: 'createdAt', order: 'ASC' }] },
+            ],
         },
     ) as UserStatic;
 
@@ -218,6 +223,7 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
         User.Bonus = User.hasMany(database.Bonus, { as: 'bonuses', foreignKey: 'userId' });
         User.PromoCode = User.hasMany(database.PromoCode, { as: 'promoCodes', foreignKey: 'userId' });
         User.PromoCodeUse = User.hasMany(database.PromoCodeUse, { as: 'promoCodeUses', foreignKey: 'userId' });
+        User.QiwiWithdraw = User.hasMany(database.QiwiWithdraw, { as: 'qiwiWithdraws', foreignKey: 'userId' });
     };
 
     return User;

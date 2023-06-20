@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -10,7 +10,7 @@ import Icon from '../../../components/Icon/Icon';
 import ReferalsTable from './ReferalsTable/ReferalsTable';
 import Diagram from '../../../components/Diagram/Diagram';
 import LayoutReferalMobile from '../../../components/Layout/Mobile/containers/LayoutReferalMobile';
-import useReferralsStats from "../../../hooks/graphql/referrals/useReferralsStats";
+import useReferralsStatsQuery from "../../../hooks/graphql/referrals/useReferralsStatsQuery";
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
@@ -19,16 +19,16 @@ import AppContext from '../../../context';
 const cnReferal = cn(s, 'Referal');
 
 const ReferalsMobile: React.FC = () => {
-    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
-    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
+    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
+    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
     const [referalsTypeToggle, setReferalsTypeToggle] = useState(false);
     const [amountToggle, setAmountToggle] = useState(false);
 
-    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
-    const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
+    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
+    const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
 
     const { domain } = useContext(AppContext);
-    const { referralLink } = useReferralLinkQuery(domain || 'domain.io');
+    const { referralLink } = useReferralLinkQuery(domain);
     const getReferralMoney = useGetReferralMoneyMutation();
 
     useStyles(s);
@@ -67,7 +67,9 @@ const ReferalsMobile: React.FC = () => {
                             </div>
                             <Icon type="link" />
                         </div>
-
+                        <Text color="white" size='xs'>
+                           Получайте до 15% с каждого пополнения реферала. <br />Чем больше рефералов, тем выше %<br /><br />
+                        </Text>
                         <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                     </div>
                 </div>
@@ -76,7 +78,7 @@ const ReferalsMobile: React.FC = () => {
                 <div className={cnReferal('Icon')}>
                     <Icon size="xxl" type="diagrams" />
                     <Text upper color="white" size="xl">
-                        СТАТИстики
+                        Статистика
                     </Text>
                 </div>
             }
@@ -86,7 +88,7 @@ const ReferalsMobile: React.FC = () => {
                         <div className={cnReferal('Diagram-Container-Header-Title')}>
                             <Icon type="balance" />
                             <Text>
-                                ЗАРАБОТАНО:<Text color="green">{amountValue} ₽</Text>
+                                ЗАРАБОТАНО: <Text color="green">{amountValue} ₽</Text>
                             </Text>
                         </div>
 
@@ -174,7 +176,7 @@ const ReferalsMobile: React.FC = () => {
                         <div className={cnReferal('Diagram-Container-Header-Title')}>
                             <Icon type="peoples" />
                             <Text>
-                                ЗАРАБОТАНО:<Text color="green">{countValue}</Text>
+                                Привлечено:<Text color="green">{countValue}</Text>
                             </Text>
                         </div>
 

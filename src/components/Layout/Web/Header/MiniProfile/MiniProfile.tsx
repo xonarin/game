@@ -18,7 +18,7 @@ const MiniProfile: React.FC<MiniProfileProps> = ({ username, avatar }) => {
 
     return (
         <div className={cnMiniProfile()}>
-            <Link className={cnMiniProfile('Avatar')} to="/">
+            <Link className={cnMiniProfile('Avatar')} to="/profile">
                 <img className={cnMiniProfile('AvatarImg')} src={avatar} alt={username} />
             </Link>
             <Link className={cnMiniProfile('LogOut')} to="/logout" external>

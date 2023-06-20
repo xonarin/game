@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './AllGames.scss';
-import Panel from '../../components/Panel/Panel';
-import Text from '../../components/Text/Text';
 import Link from '../../components/Link/Link';
-import LiveFeedTable from '../../components/LiveFeedTable/Web/LiveFeedTable';
 import { cn } from '../../utils/bem-css-module';
 import Layout32ContentWithChat from '../../components/Layout/Web/containers/Layout32ContentWithChat';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import AllGamesMobile from './Mobile/AllGames';
 
 export interface AllGamesProps {
-    title: string;
+    title?: string;
     chatId: string;
 }
 
@@ -39,7 +36,7 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
     return (
         <Layout32ContentWithChat
             chatId={chatId}
-            title="All Games"
+            title="Lobby"
             centerContent={
                 <div className={cnAllGames('Row')}>
                     <div className={cnAllGames('Game')}>
@@ -56,41 +53,18 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                         </Link>
                     </div>
                     <div className={cnAllGames('Game')}>
-                        <Link to="/classic">
-                            <img src="/wheel.45b409c3.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Classic</h2>
+                        <Link to="#">
+                            <img src="/darts.png" alt="" />
+                            <h2 className={cnAllGames('Title')}>Darts</h2>
                         </Link>
                     </div>
                     <div className={cnAllGames('Game')}>
-                        <Link to="/mines">
-                            <img src="/mines.185b60b6.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Mines</h2>
-                        </Link>
-                    </div>
-                    <div className={cnAllGames('Game')}>
-                        <Link to="/classic">
-                            <img src="/wheel.45b409c3.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Classic</h2>
-                        </Link>
-                    </div>
-                    <div className={cnAllGames('Game')}>
-                        <Link to="/mines">
-                            <img src="/mines.185b60b6.png" alt="" />
-                            <h2 className={cnAllGames('Title')}>Mines</h2>
+                        <Link to="#">
+                            <img src="/knb.png" alt="" />
+                            <h2 className={cnAllGames('Title')}>KNB</h2>
                         </Link>
                     </div>
                 </div>
-            }
-            bottomContent={
-                <Panel
-                    leftHead={
-                        <Text className={cnAllGames('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                            Последние игры
-                        </Text>
-                    }
-                >
-                    <LiveFeedTable />
-                </Panel>
             }
         />
     );

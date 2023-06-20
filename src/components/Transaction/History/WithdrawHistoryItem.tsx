@@ -75,6 +75,12 @@ const WithdrawHistoryItem: React.FC<WithdrawHistoryItemProps> = ({ mobile, withd
                             Отменено
                         </Button>
                     )}
+
+                    {withdraw.status === WithdrawStatus.BadPurse && (
+                        <Button className={cnWithdrawHistoryItem('Status')} color="gray">
+                            Неверный номер кошелька
+                        </Button>
+                    )}
                 </div>
             </div>
 

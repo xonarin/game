@@ -4,15 +4,13 @@ import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
 import Bonuse from './Bonuse';
 
-const action = ({ user }: AppContextTypes): RouteResult => {
-    // if (!chatId) {
-    //     throw new Error('Chat for classic is not defined');
-    // }
+const action = ({ user, chats }: AppContextTypes): RouteResult => {
+    const chatId = chats.game;
 
     return {
-        title: 'Bonuse',
+        title: 'Турниры',
         chunks: ['bonuse'],
-        pageContent: <Bonuse />,
+        pageContent: <Bonuse chatId={chatId} />,
         redirect: user ? undefined : '/',
     };
 };

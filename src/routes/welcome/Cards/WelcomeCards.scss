@@ -35,6 +35,17 @@
         justify-content: space-between;
         flex-wrap: wrap;
 
+        .WelcomeCard:nth-child(1)::before {
+            content: '';
+            position: absolute;
+            background: url('../../../assets/img/kirka.png') 0 0 no-repeat;
+            background-size: cover;
+            width: 274px;
+            height: 280px;
+            bottom: 0;
+            right: 0;
+        }
+
         .WelcomeCard:nth-child(2)::before {
             content: '';
             position: absolute;
@@ -45,7 +56,6 @@
             top: 60%;
             right: 25px;
             transform: translateY(-50%);
-
         }
 
         .WelcomeCard:nth-child(3)::before {
@@ -58,7 +68,18 @@
             top: 60%;
             right: 25px;
             transform: translateY(-50%);
+        }
 
+        .WelcomeCard:nth-child(4)::before {
+            content: '';
+            position: absolute;
+            background: url('../../../assets/img/cashback.png') 0 0 no-repeat;
+            background-size: cover;
+            width: 150px;
+            height: 170px;
+            top: 60%;
+            right: 25px;
+            transform: translateY(-50%);
         }
     }
 

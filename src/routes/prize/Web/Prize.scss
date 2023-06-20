@@ -20,16 +20,17 @@
         justify-content: space-between;
 
         &-Item {
+            position: relative;
             border: none;
             width: 30%;
             display: flex;
             align-items: center;
-            margin: 0 1%;
             background: #172135;
             height: 100px;
             border-top-right-radius: 10px;
             border-top-left-radius: 10px;
             padding: 0;
+            cursor: pointer;
 
             &-Img {
                 display: flex;
@@ -41,6 +42,11 @@
                 height: 50px;
                 width: 50px;
                 margin: 3%;
+
+                img {
+                    width: 18px;
+                    height: 18px;
+                }
             }
 
             &-Info {
@@ -55,7 +61,7 @@
                 display: block;
                 width: 0;
                 height: 2px;
-                top: 170px;
+                bottom: 0;
                 background-color: #4986f5;
                 opacity: 0;
                 transition: width 0.4s cubic-bezier(0.62, 0.28, 0.23, 0.99), opacity 0.3s cubic-bezier(0.62, 0.28, 0.23, 0.99);
@@ -64,7 +70,7 @@
             &:hover::after,
             &:active::after,
             &_active::after {
-                width: 28%;
+                width: 100%;
                 opacity: 1;
             }
         }

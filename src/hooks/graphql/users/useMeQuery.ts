@@ -8,7 +8,7 @@ export interface UseMeQueryResult {
 }
 
 const useMeQuery = (): UseMeQueryResult => {
-    const { data, loading } = useQuery<MeQuery>(MeDocument, { pollInterval: 500 });
+    const { data, loading } = useQuery<MeQuery>(MeDocument);
 
     return {
         loading,

@@ -22,13 +22,13 @@
         transform: translateX(-50%);
     }
 
-    &-List .Scroller-Items { 
-        padding: 0 50px; 
-    
-        @include mq(max-width 576px) { 
+    &-List .Scroller-Items {
+        padding: 0 50px;
+
+        @include mq(max-width 576px) {
             display: flex;
-            padding: 0 20px!important;
-         }
+            padding: 0 20px !important;
+        }
     }
 
     .WelcomeGamesItem {

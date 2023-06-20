@@ -47,7 +47,7 @@ const MinesBetForm: React.FC<MinesBetFormProps> = ({
     const endMinesGameMutation = useEndMinesGameMutation();
 
     const { betAmount, bombsCount, stepsConf, status } = activeMinesGame || {
-        betAmount: 0,
+        betAmount: 1,
         bombsCount: BOMBS_COUNT_BREAKPOINTS[0],
         stepsConf: 0,
     };

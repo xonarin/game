@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Referals.scss';
@@ -10,20 +10,25 @@ import LayoutReferal from '../../../components/Layout/Web/containers/LayoutRefer
 import Icon from '../../../components/Icon/Icon';
 import ReferalsTable from './ReferalsTable/ReferalsTable'
 import Diagram from '../../../components/Diagram/Diagram'
-import useReferralsStats from '../../../hooks/graphql/referrals/useReferralsStats';
+import useReferralsStatsQuery from '../../../hooks/graphql/referrals/useReferralsStatsQuery';
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
 import AppContext from '../../../context';
+import Layout33Content from '../../../components/Layout/Web/containers/Layout33Content';
 
 const cnReferal = cn(s, 'Referal');
 
-const ReferalsWeb: React.FC = () => {
-    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
-    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Week);
+export interface ReferalsPageProps {
+    chatId: string;
+}
 
-    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStats(RefStatsType.Income, amountPeriodType);
-    const { mainValue: countValue, entries: countStats } = useReferralsStats(RefStatsType.Count, referalsPeriodType);
+const ReferalsWeb: React.FC<ReferalsPageProps> = ({ chatId }) =>  {
+    const [amountPeriodType, setAmountPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
+    const [referalsPeriodType, setReferalsPeriodType] = useState<RefStatsPeriod>(RefStatsPeriod.Month);
+
+    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
+    const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
 
     const { domain } = useContext(AppContext);
     const { referralLink } = useReferralLinkQuery(domain);
@@ -32,103 +37,114 @@ const ReferalsWeb: React.FC = () => {
     useStyles(s);
 
     return (
-        <LayoutReferal
-            TopContent={
-                <div className={cnReferal("Header")}>
-                    <nav className={cnReferal("Navigation")}>
-                        <Link to="/referal" className={cnReferal("Navigation-Active")}>
-                            <Text color='white' size='l'>
-                                ПАРТНЁРСКАЯ ПРОГРАММА
-                            </Text>
-                        </Link>
-                        <Link to="/referal">
-                            МОИ ПРОФИЛЬ
-                        </Link>
-                    </nav>
-                    <div className={cnReferal("Info")}>
-                        <div className={cnReferal("Info-Title")}>
-                            <Text color='white' size='xxl'>
-                                Зарабатывайте легко на бонусах без вложений
-                        </Text>
-                            <Text color="white">
-                                Заработано: {amountFullAmount} ₽
-                        </Text>
-                        </div>
 
-                        <div className={cnReferal("Info-Link")}>
-                            <div className={cnReferal("Info-Link-Main")}>
-                                <Text color='white'>
-                                    Реферальная ссылка
-                                </Text>
-                                <Text color='white'>
-                                    {referralLink}
-                                </Text>
+        <Layout33Content
+            chatId={chatId}
+            centerContent={
+                <LayoutReferal
+                    TopContent={
+                        <div className={cnReferal("Header")}>
+                            <nav className={cnReferal("Navigation")}>
+                                <Link to="/referal" className={cnReferal("Navigation-Active")}>
+                                    <Text color='white' size='l'>
+                                        Партнёрка
+                                    </Text>
+                                </Link>
+                                <Link to="/profile">
+                                    МОЙ ПРОФИЛЬ
+                                </Link>
+                            </nav>
+                            <div className={cnReferal("Info")}>
+                                <div className={cnReferal("Info-Title")}>
+                                    <Text color='white' size='xxl'>
+                                        Зарабатывайте легко на бонусах без вложений
+                                    </Text>
+                                    <Text color="white">
+                                        Заработано: {amountFullAmount} ₽
+                                    </Text>
+                                </div>
+        
+                                <div className={cnReferal("Info-Link")}>
+                                    <div className={cnReferal("Info-Link-Main")}>
+                                        <Text color='white'>
+                                            Реферальная ссылка
+                                        </Text>
+                                        <Text color='white'>
+                                            {referralLink}
+                                        </Text>
+                                    </div>
+                                    <Icon type='link' />
+                                </div>
+                                    <Text color="white" size='xs'>
+                                        Получайте до 15% с каждого пополнения реферала. <br />Чем больше рефералов, тем выше %<br /><br />
+                                    </Text>
+                                <div />
+                                <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
                             </div>
-                            <Icon type='link' />
                         </div>
-
-                        <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
-                    </div>
-                </div>
-            }
-            DiagramsIcon={
-                <div className={cnReferal("Icon")}>
-                    <Icon size='xxl' type='diagrams' />
-                    <Text upper color='white' size='xl'>СТАТИстики</Text>
-                </div>
-            }
-            LeftContent={
-                <div className={cnReferal("Diagram-Container")}>
-                    <div className={cnReferal("Diagram-Container-Header")}>
-                        <div className={cnReferal("Diagram-Container-Header-Title")}>
-                        <Icon  type='balance' />
-                        <Text>
-                            ЗАРАБОТАНО:<Text color='green'>{amountValue} ₽</Text>
-                        </Text>
+                    }
+                    DiagramsIcon={
+                        <div className={cnReferal("Icon")}>
+                            <Icon size='xxl' type='diagrams' />
+                            <Text upper color='white' size='xl'>Статистика</Text>
                         </div>
-
-                        <div>
-                            <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
-                            <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Month ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
-                            <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Year ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
+                    }
+                    LeftContent={
+                        <div className={cnReferal("Diagram-Container")}>
+                            <div className={cnReferal("Diagram-Container-Header")}>
+                                <div className={cnReferal("Diagram-Container-Header-Title")}>
+                                <Icon  type='balance' />
+                                <Text>
+                                    ЗАРАБОТАНО: <Text color='green'>{amountValue} ₽</Text>
+                                </Text>
+                                </div>
+        
+                                <div>
+                                    <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
+                                    <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Month ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
+                                    <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Year ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setAmountPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
+                                </div>
+                            </div>
+                            <div className={cnReferal("Diagram-Container-Content")}>
+                                <Diagram items={amountStats} color="#82ca9d"/>
+                            </div>
+                        </div>
+                    }
+                    RightContent={
+                        <div className={cnReferal("Diagram-Container")}>
+                        <div className={cnReferal("Diagram-Container-Header")}>
+                            <div className={cnReferal("Diagram-Container-Header-Title")}>
+                            <Icon type='peoples' />
+                            <Text>
+                                Привлечено: <Text color='green'>{countValue}</Text>
+                            </Text>
+                            </div>
+        
+                            <div>
+                                <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
+                                <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Month ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
+                                <button type='button' className={cnReferal(referalsPeriodType === RefStatsPeriod.Year ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
+                            </div>
+                        </div>
+                        <div className={cnReferal("Diagram-Container-Content")}>
+                            <Diagram items={countStats} color="#347dfe"/>
                         </div>
                     </div>
-                    <div className={cnReferal("Diagram-Container-Content")}>
-                        <Diagram items={amountStats} color="#82ca9d"/>
-                    </div>
-                </div>
-            }
-            RightContent={
-                <div className={cnReferal("Diagram-Container")}>
-                <div className={cnReferal("Diagram-Container-Header")}>
-                    <div className={cnReferal("Diagram-Container-Header-Title")}>
-                    <Icon type='peoples' />
-                    <Text>
-                        ЗАРАБОТАНО: <Text color='green'>{countValue}</Text>
-                    </Text>
-                    </div>
-
-                    <div>
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Week)}><Text>Неделя</Text></button >
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Month)}><Text>месяц</Text></button >
-                        <button type='button' className={cnReferal(amountPeriodType === RefStatsPeriod.Week ? "Diagram-Btn-Active" : "Diagram-Btn")} onClick={() => setReferalsPeriodType(RefStatsPeriod.Year)}><Text>Год</Text></button >
-                    </div>
-                </div>
-                <div className={cnReferal("Diagram-Container-Content")}>
-                    <Diagram items={countStats} color="#347dfe"/>
-                </div>
-            </div>
-            }
-            TableIcons={
-                <div className={cnReferal("Icon")}>
-                    <Icon size='xxl'  type='star' />
-                    <Text upper color='white' size='xl'>РЕФЕРАЛЫ</Text>
-                </div>
-            }
-            BottomContent={
-                <ReferalsTable />
+                    }
+                    TableIcons={
+                        <div className={cnReferal("Icon")}>
+                            <Icon size='xxl'  type='star' />
+                            <Text upper color='white' size='xl'>РЕФЕРАЛЫ</Text>
+                        </div>
+                    }
+                    BottomContent={
+                        <ReferalsTable />
+                    }
+                />
             }
         />
+
+
     );
 };
 

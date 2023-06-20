@@ -4,11 +4,13 @@ import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
 import Referals from './Referals';
 
-const action = ({ user }: AppContextTypes): RouteResult => {
+const action = ({ user, chats }: AppContextTypes): RouteResult => {
+    const chatId = chats.game;
+
     return {
-        title: 'Referals',
-        chunks: ['referal'],
-        pageContent: <Referals />,
+        title: 'Партнёрская программа',
+        chunks: ['partners'],
+        pageContent: <Referals chatId={chatId} />,
         redirect: user ? undefined : '/',
     };
 };

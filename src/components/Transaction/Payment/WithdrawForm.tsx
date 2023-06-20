@@ -16,6 +16,7 @@ import { composeValidators, minMaxValidator, requiredValidator } from '../../../
 import AmountWithCommissionInput from './AmountWithCommissionInput/AmountWithCommissionInput';
 import CornerLabel from './CornerLabel/CornerLabel';
 import { PaymentMethodsMobile } from './PaymentMethodsMobile';
+import Icon from '../../../components/Icon/Icon';
 
 export interface WithdrawFormProps {
     readonly mobile: boolean;
@@ -49,17 +50,13 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
             {({ handleSubmit, values: { method } }) => (
                 <form className={cnPayment()} onSubmit={handleSubmit}>
                     {!mobile && (
-                        <Field
+                        <Field<WithdrawMethod>
                             name="method"
                             validate={requiredValidator()}
                             initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
                         >
                             {({ input }) => (
-                                <PaymentMethods<WithdrawMethod>
-                                    methods={availableWithdrawMethods}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                />
+                                <PaymentMethods<WithdrawMethod> methods={availableWithdrawMethods} {...input} />
                             )}
                         </Field>
                     )}
@@ -68,7 +65,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                         <Scrollable disablePadding>
                             <div>
                                 {mobile && (
-                                    <Field
+                                    <Field<WithdrawMethod>
                                         name="method"
                                         validate={requiredValidator()}
                                         initialValue={availableWithdrawMethods && availableWithdrawMethods[0]}
@@ -76,8 +73,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                                         {({ input }) => (
                                             <PaymentMethodsMobile<WithdrawMethod>
                                                 methods={availableWithdrawMethods}
-                                                value={input.value}
-                                                onChange={input.onChange}
+                                                {...input}
                                             />
                                         )}
                                     </Field>
@@ -130,6 +126,13 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                                 <Text> — </Text>
 
                                 <TextIcon text={method?.maxAmount} color="white" icon="diamond" iconSize="xs" noGap />
+                            </div>
+                            <div className={cnPayment('Footer')}>
+                                <Text>Делись скрином выплат в нашей группе&nbsp;
+                                <a className={cnPayment('VK')} href="https://vk.com/willygame" target="_blank">
+                                    <span className={cnPayment('VK')}>&nbsp;Вконтакте</span>
+                                </a>    
+                                &nbsp;и получи возможность вернуть 5% назад на баланс.</Text>
                             </div>
                         </Scrollable>
                     </div>

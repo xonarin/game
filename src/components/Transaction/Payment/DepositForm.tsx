@@ -40,7 +40,7 @@ const AmountField: React.FC<AmountFieldProps> = ({ minAmount, maxAmount, mobile 
     <Field
         name="amount"
         validate={composeValidators(requiredValidator(), minMaxValidator(minAmount, maxAmount))}
-        initialValue={500}
+        initialValue={20}
     >
         {({ input, meta: { error } }) => (
             <>
@@ -95,17 +95,13 @@ export const DepositForm: React.FC<DepositFormProps> = ({ mobile }) => {
             {({ handleSubmit, values: { method } }) => (
                 <form className={cnPayment()} onSubmit={handleSubmit}>
                     {!mobile && (
-                        <Field
+                        <Field<PaymentMethod>
                             name="method"
                             validate={requiredValidator()}
                             initialValue={availablePaymentMethods && availablePaymentMethods[0]}
                         >
                             {({ input }) => (
-                                <PaymentMethods<PaymentMethod>
-                                    methods={availablePaymentMethods}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                />
+                                <PaymentMethods<PaymentMethod> methods={availablePaymentMethods} {...input} />
                             )}
                         </Field>
                     )}
@@ -114,7 +110,7 @@ export const DepositForm: React.FC<DepositFormProps> = ({ mobile }) => {
                         <Scrollable disablePadding>
                             <div>
                                 {mobile && (
-                                    <Field
+                                    <Field<PaymentMethod>
                                         name="method"
                                         validate={requiredValidator()}
                                         initialValue={availablePaymentMethods && availablePaymentMethods[0]}
@@ -122,8 +118,7 @@ export const DepositForm: React.FC<DepositFormProps> = ({ mobile }) => {
                                         {({ input }) => (
                                             <PaymentMethodsMobile<PaymentMethod>
                                                 methods={availablePaymentMethods}
-                                                value={input.value}
-                                                onChange={input.onChange}
+                                                {...input}
                                             />
                                         )}
                                     </Field>

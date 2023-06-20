@@ -15,6 +15,8 @@ export interface MinesGame extends Model {
     readonly bombsCount: number;
     readonly fieldConf: number;
     readonly stepsConf: number;
+    readonly forcedBombStep: number | null;
+    readonly coefficient: number;
     readonly status: MinesGameStatus;
     readonly clientSeed: string;
     readonly serverSeed: string;
@@ -72,6 +74,14 @@ export const initMinesGame = (sequelize: Sequelize): MinesGameStatic => {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             defaultValue: 0,
+        },
+
+        forcedBombStep: {
+            type: DataTypes.INTEGER.UNSIGNED,
+        },
+
+        coefficient: {
+            type: DataTypes.DOUBLE(10, 2),
         },
 
         status: {

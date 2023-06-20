@@ -12,7 +12,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
     // }
 
     return {
-        title: 'Mines page',
+        title: 'Mines',
         chunks: ['mines'],
         pageContent: <Mines chatId={chatId} />,
         redirect: user ? undefined : '/',

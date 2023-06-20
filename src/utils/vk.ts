@@ -10,8 +10,16 @@ const vkAccessToken = config.auth.vk.appAccessToken;
 const vkGroupId = config.auth.vk.groupId;
 const vkGroupAccessToken = config.auth.vk.groupAccessToken;
 
+const vkUserAccessToken = config.auth.vk.userAccessToken;
+
 const vkApiLocker = new Locker();
 const vkApiDelay = 50;
+
+const vkLoadRepostsDelay = 30000;
+const vkLoadRepostsLocker = new Locker();
+let vkLoadRepostsLastUse = Date.now();
+let vkLoadRepostsLastUsePostId = '';
+let vkLoadRepostsLastUseResult: string[] = [];
 
 const vkApi = async (method: string, params: Record<string, string>) => {
     await vkApiLocker.lock();
@@ -42,8 +50,8 @@ const vkApi = async (method: string, params: Record<string, string>) => {
             throw new Error('VK API error');
         });
 
-        if (!responseJson.response) {
-            console.warn('vkApi !responseJson.response', method, query, responseJson);
+        if (responseJson.response === undefined) {
+            console.warn('vkApi responseJson.response === undefined', method, query, responseJson);
             throw new Error('VK API error');
         }
 
@@ -85,4 +93,57 @@ export const vkGetFriendsCount = async (userId: string): Promise<number | undefi
     } catch {
         return undefined;
     }
+};
+
+const vkDoLoadReposts = async (postId: string, offset: number = 0): Promise<string[]> => {
+    try {
+        const result = await vkApi('wall.getReposts', {
+            access_token: vkUserAccessToken,
+            owner_id: `-${vkGroupId}`,
+            post_id: postId,
+            count: '1000',
+            offset: `${offset}`,
+        });
+
+        const currentReposts = result.items;
+        if (!Array.isArray(currentReposts)) {
+            return [];
+        }
+
+        const repostedUsers = currentReposts.map(({ from_id }) => `${from_id}`).filter(a => a);
+
+        if (currentReposts.length === 1000) {
+            return repostedUsers.concat(await vkDoLoadReposts(postId, offset + 1000));
+        }
+
+        return repostedUsers;
+    } catch (e) {
+        return [];
+    }
+};
+
+const vkLoadReposts = async (postId: string): Promise<string[]> => {
+    await vkLoadRepostsLocker.lock();
+
+    try {
+        if (postId === vkLoadRepostsLastUsePostId && Date.now() < vkLoadRepostsLastUse + vkLoadRepostsDelay) {
+            return vkLoadRepostsLastUseResult;
+        }
+
+        const result = await vkDoLoadReposts(postId);
+
+        vkLoadRepostsLastUse = Date.now();
+        vkLoadRepostsLastUsePostId = postId;
+        vkLoadRepostsLastUseResult = result;
+
+        return result;
+    } finally {
+        vkLoadRepostsLocker.unlock();
+    }
+};
+
+export const vkCheckRepost = async (postId: string, userId: string): Promise<boolean> => {
+    const reposts = await vkLoadReposts(postId);
+
+    return reposts.includes(userId);
 };

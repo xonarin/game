@@ -9,6 +9,7 @@ export enum WithdrawStatus {
     IN_PROGRESS = 'IN_PROGRESS',
     SUCCESS = 'SUCCESS',
     CANCELLED = 'CANCELLED',
+    BAD_PURSE = 'BAD_PURSE',
 }
 
 export interface UserWithdraw extends Model {

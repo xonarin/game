@@ -45,7 +45,7 @@ const Notifications: React.FC = () => {
         [deleteNotificationMutation],
     );
 
-    if (loading || !notifications) {
+    if (!notifications) {
         return <PreLoader />;
     }
 

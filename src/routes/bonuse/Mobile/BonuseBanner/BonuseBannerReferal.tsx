@@ -30,18 +30,7 @@ const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ d
         <div className={cnBonuseBannerMobile()}>
             <div className={cnBonuseBannerMobile('Header')}>
                 <div className={cnBonuseBannerMobile('Header-Info')}>
-                    <div className={cnBonuseBannerMobile('Header-Info-Count')}>
-                        {[...count].map((number, index) => {
-                            return (
-                                <TextInBox size="xxl" color="white" key={index}>
-                                    {number}
-                                </TextInBox>
-                            );
-                        })}
-                        <TextInBox size="xxl" color="white">
-                            <Icon type="diamond" size="m" />
-                        </TextInBox>
-                    </div>
+
                     <Text className={cnBonuseBannerMobile('Header-Description')} line="xl" color="white">
                         {description}{' '}
                     </Text>

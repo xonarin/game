@@ -1,7 +1,6 @@
 @import '../../../assets/styles/vars';
 
 .Referal {
- 
     &-Navigation {
         &-Active {
             border-bottom: 3px solid #a1e47b;
@@ -21,6 +20,7 @@
 
     &-Info {
         background-image: url('../../../assets/img//referalsBG.svg');
+        background-size: cover;
         background-color: black;
         margin-top: 30px;
         display: flex;
@@ -54,21 +54,28 @@
                 flex-direction: column;
             }
         }
+
+        span {
+            text-align: center;
+        }
     }
-    &-Period{
+
+    &-Period {
         position: absolute;
         display: flex;
         flex-direction: column;
         z-index: 100;
         background: #0f121b;
 
-        button{
+        button {
             margin-top: 5px;
-            &:focus{
+
+            &:focus {
                 outline: none;
             }
         }
     }
+
     &-Diagram {
         &-Btn,
         &-Btn-Active {
@@ -77,7 +84,8 @@
             margin-right: 15px;
             width: 76px;
             height: 26px;
-            &:focus{
+
+            &:focus {
                 outline: none;
             }
         }
@@ -95,6 +103,7 @@
             padding: 10px;
             background: $color-dark-gray;
             margin-bottom: 20px;
+
             &-Header {
                 display: flex;
                 justify-content: space-between;

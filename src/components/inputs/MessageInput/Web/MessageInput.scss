@@ -13,7 +13,7 @@
     & &-Editable {
         position: relative;
         width: 100%;
-        min-height: 60px;
+        min-height: 74px;
         max-height: 204px;
         border: 0 solid transparent;
         border-width: 22px 0;
@@ -79,5 +79,16 @@
         .MessageInput-Editable { padding-right: 145px; }
 
         .MessageInput-SmileButton { right: 100px; }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .MessageInput {
+        position: fixed !important;
+        bottom: 0 !important;
+
+        & &-Editable {
+            font-size: 16px !important;
+        }
     }
 }

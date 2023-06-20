@@ -29,20 +29,24 @@
     }
 
     &-Types {
-        width: 100%;
         display: flex;
+        width: 100%;
+        min-height: 0;
         justify-content: space-around;
     }
 
     &-Type {
         background: none;
-        border: none;
         height: 40px;
+        border: none;
+        margin: 0 10px;
         padding-left: 15px;
         padding-right: 15px;
         border-radius: 5px;
-        width: 190px;
+        white-space: nowrap;
         cursor: pointer;
+        flex-basis: 0;
+        flex-grow: 1;
 
         :last-child {
             margin-left: 10px;
@@ -50,12 +54,6 @@
 
         &:hover {
             background: #4986f5;
-
-            i {
-                fill: white;
-                color: white;
-                stroke: white;
-            }
 
             span {
                 color: white !important;
@@ -68,23 +66,9 @@
 
         &_active {
             background: #4986f5;
-            border: none;
-            height: 40px;
-            padding-left: 15px;
-            padding-right: 15px;
-            border-radius: 5px;
-            width: 190px;
-
-            :last-child {
-                margin-left: 10px;
-            }
 
             span {
                 color: white !important;
-            }
-
-            &:focus {
-                outline: none;
             }
         }
     }
@@ -98,7 +82,7 @@
         }
 
         .Transaction-Type {
-            white-space: nowrap;
+            margin: 0 4px;
 
             :last-child {
                 margin-left: 4px;

@@ -17,12 +17,16 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'welcome' */ './welcome'),
         },
         {
+            path: '/auth-wait',
+            load: () => import(/* webpackChunkName: 'auth-wait' */ './auth-wait'),
+        },
+        {
             path: '/balance',
             load: () => import(/* webpackChunkName: 'balance' */ './balance'),
         },
         {
-            path: '/all-games',
-            load: () => import(/* webpackChunkName: 'all-games' */ './AllGames'),
+            path: '/casino',
+            load: () => import(/* webpackChunkName: 'casino' */ './AllGames'),
         },
         {
             path: '/bonuse',
@@ -37,8 +41,12 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'bonuse' */ './bonuse'),
         },
         {
-            path: '/referal',
-            load: () => import(/* webpackChunkName: 'referal' */ './referals'),
+            path: '/partners',
+            load: () => import(/* webpackChunkName: 'partners' */ './referals'),
+        },
+        {
+            path: '/profile',
+            load: () => import(/* webpackChunkName: 'profile' */ './profile'),
         },
         {
             path: '/messages/:chatId?',
@@ -49,8 +57,8 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'classic' */ './classic'),
         },
         {
-            path: '/battle',
-            load: () => import(/* webpackChunkName: 'battle' */ './battle'),
+            path: '/classic-history',
+            load: () => import(/* webpackChunkName: 'classic-history' */ './classic-history'),
         },
         {
             path: '/mines',
@@ -69,7 +77,7 @@ const routes: Route<AppContextTypes, RouteResult> = {
         const route = await next();
 
         // Provide default values for title, description etc.
-        route.title = `${route.title || 'Untitled Page'} - PlayTime`;
+        route.title = `${route.title || 'Untitled Page'} - Willy`;
         route.description = route.description || '';
 
         // Render page content wrapped in page if exists

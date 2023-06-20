@@ -1,6 +1,5 @@
 .Sidebar {
     position: fixed;
-    z-index: 33;
     bottom: 0;
     display: flex;
     background: #090d15;
@@ -22,6 +21,12 @@
         &:focus {
             outline: none;
         }
+
+        .Sidebar-LogOut {
+            display: block;
+            border: 0;
+            height: auto;
+        }
     }
 
     &-Selector {
@@ -42,23 +47,43 @@
 
     &-Message {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: space-around;
         position: absolute;
-        left: 45%;
+        left: 0;
+        right: 0;
         bottom: 60px;
-        height: 100px;
+        height: 70px;
         background-color: #090d15;
         padding: 10px;
 
         &-Type {
             display: flex;
             align-items: center;
+            flex: 0 0 50%;
+            min-height: 70px;
+            max-height: 70px;
+            padding: 17px 15px 17px 20px;
+            border-bottom: 1px solid #181a29;
+            border-right: 1px solid #181a29;
+            text-align: left;
 
             button {
                 background: none;
                 border: none;
+            }
+
+            a::after,
+            button::before {
+                background: unset !important;
+                font-size: 14px !important;
+            }
+
+            &-Text {
+                color: #5e6b86;
+                font-weight: 700;
+                line-height: 16px;
+                font-size: 12px;
             }
         }
     }
@@ -78,5 +103,26 @@
         & span::after {
             content: unset !important;
         }
+    }
+
+    &-LogOut {
+        text-decoration: none;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid #181a29;
+        border-right: 1px solid #181a29;
+    }
+
+    &-LogOutText {
+        position: relative;
+        margin-left: 7px;
+        vertical-align: middle;
+        color: #5e6b86;
+        font-weight: 700;
+        line-height: 16px;
+        font-size: 12px;
     }
 }

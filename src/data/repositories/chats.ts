@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
 import { UserError } from '../../utils/errors';
@@ -29,11 +29,14 @@ class ChatsRepository extends BaseRepository {
         return this.db.ChatUser.findOne({ where: { chatId, userId } });
     }
 
-    async getAdminAnnouncementsChat(): Promise<Chat> {
-        let chat: Chat | null = await this.db.Chat.findOne({ where: { type: ChatType.AdminAnnouncements } });
+    async getAdminAnnouncementsChat(transaction?: Transaction): Promise<Chat> {
+        let chat: Chat | null = await this.db.Chat.findOne({
+            where: { type: ChatType.AdminAnnouncements },
+            transaction,
+        });
 
         if (!chat) {
-            chat = await this.createAdminAnnouncementsChat();
+            chat = await this.createAdminAnnouncementsChat(transaction);
         }
 
         return chat;
@@ -117,12 +120,15 @@ class ChatsRepository extends BaseRepository {
         return chat;
     }
 
-    async createAdminAnnouncementsChat(): Promise<Chat> {
-        return this.db.Chat.create({
-            type: ChatType.AdminAnnouncements,
-            title: await this.repositories.settings.getSettingAsString('chat::adminAnnouncementsTitle'),
-            image: await this.repositories.settings.getSettingAsString('chat::adminAnnouncementsImage'),
-        });
+    async createAdminAnnouncementsChat(transaction?: Transaction): Promise<Chat> {
+        return this.db.Chat.create(
+            {
+                type: ChatType.AdminAnnouncements,
+                title: await this.repositories.settings.getSettingAsString('chat::adminAnnouncementsTitle'),
+                image: await this.repositories.settings.getSettingAsString('chat::adminAnnouncementsImage'),
+            },
+            { transaction },
+        );
     }
 
     async createAdminAnnouncementsChatIfNotExists(): Promise<Chat> {

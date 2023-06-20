@@ -8,7 +8,6 @@ import Title from '../../../Title/Title';
 export interface BlockWithTitleProps {
     title?: string;
     className?: string;
-    children: React.ReactNode;
 }
 
 const cnBlockWithTitle = cn(s, 'BlockWithTitle');
@@ -25,8 +24,6 @@ const BlockWithTitle: React.FC<BlockWithTitleProps> = ({ title, className, child
                     </Title>
                 </div>
             ) : null}
-
-            <div className={cnBlockWithTitle('Content')}>{children}</div>
         </div>
     );
 };

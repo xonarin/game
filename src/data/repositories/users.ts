@@ -9,13 +9,13 @@ import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/gr
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
 import { PaymentStatus } from '../models/UserPayment';
 import { vkIsMemberOfGroup } from '../../utils/vk';
+import pubsub from '../pubsub';
 
 // TODO: Maybe move it to settings or config
 // Referral system settings
-const FREE_REFERRALS = 2;
-const REF_A = 40;
-const REF_D = 10;
-const INITIAL_REFERRAL_INCOME = 10;
+const FREE_REFERRALS = 5000;
+const REF_A = 1;
+const REF_D = 1;
 
 class UsersRepository extends BaseRepository {
     static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
@@ -24,38 +24,50 @@ class UsersRepository extends BaseRepository {
         [RefStatsPeriod.Year]: 'year',
     };
 
-    async createUser(socialType: SocialType, socialId: string, username: string, avatar: string): Promise<User> {
-        return this.db.User.create({
-            socialType,
-            socialId,
-            username,
-            avatar,
-            clientSeed: generateSeed(),
-            serverSeed: generateSeed(),
-        });
+    async createUser(
+        socialType: SocialType,
+        socialId: string,
+        username: string,
+        avatar: string,
+        transaction: Transaction,
+    ): Promise<User> {
+        return this.db.User.create(
+            {
+                socialType,
+                socialId,
+                username,
+                avatar,
+                clientSeed: generateSeed(),
+                serverSeed: generateSeed(),
+            },
+            { transaction },
+        );
     }
 
-    async authVk(profile: VkProfile): Promise<[User, boolean]> {
-        let user: User | null = await this.db.User.findOne({
-            where: {
-                socialType: SocialType.VK,
-                socialId: profile.id,
-            },
+    authVk(profile: VkProfile): Promise<[User, boolean]> {
+        return this.db.sequelize.transaction(async transaction => {
+            let user: User | null = await this.db.User.findOne({
+                where: {
+                    socialType: SocialType.VK,
+                    socialId: profile.id,
+                },
+                transaction,
+            });
+
+            const avatar = profile.photos ? profile.photos[0].value : 'default_avatar'; // TODO: default avatar
+
+            if (!user) {
+                user = await this.createUser(SocialType.VK, profile.id, profile.displayName, avatar, transaction);
+
+                // Add to chat for admin announcements
+                const aaChat = await this.repositories.chats.getAdminAnnouncementsChat(transaction);
+                await aaChat.addMember(user, { transaction });
+
+                return [user, true];
+            }
+
+            return [user, false];
         });
-
-        const avatar = profile.photos ? profile.photos[0].value : 'default_avatar'; // TODO: default avatar
-
-        if (!user) {
-            user = await this.createUser(SocialType.VK, profile.id, profile.displayName, avatar);
-
-            // Add to chat for admin announcements
-            const aaChat = await this.repositories.chats.getAdminAnnouncementsChat();
-            await aaChat.addMember(user);
-
-            return [user, true];
-        }
-
-        return [user, false];
     }
 
     async getUserById(userId: string, transaction?: Transaction): Promise<User | null> {
@@ -79,18 +91,21 @@ class UsersRepository extends BaseRepository {
     async giveMoney(userId: string, amount: number, transaction?: Transaction): Promise<User> {
         const f = async (tr: Transaction) => {
             const user = await this.getUserByIdStrict(userId, tr);
-
             const payments = await this.repositories.payments.getPaymentsByUserId(userId, PaymentStatus.FINISHED, tr);
 
-            if (payments.length === 0) {
-                const maxBalance = await this.repositories.settings.getSettingAsNumber(
-                    'user::maxBalanceWithoutDeposits',
-                );
+            const maxBalance =
+                payments.length === 0
+                    ? await this.repositories.settings.getSettingAsNumber('user::maxBalanceWithoutDeposits')
+                    : Infinity;
 
-                return user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
-            }
+            await user.update({ money: Math.min(maxBalance, user.money + amount) }, { transaction: tr });
+            const newUser: User = await user.reload({ transaction: tr });
 
-            return user.update({ money: user.money + amount }, { transaction: tr });
+            pubsub
+                .publish('balance', { userId, money: newUser.money, maxReached: newUser.money === maxBalance })
+                .then();
+
+            return newUser;
         };
 
         return transaction ? f(transaction) : this.db.sequelize.transaction(f);
@@ -104,7 +119,11 @@ class UsersRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_MONEY');
             }
 
-            return user.update({ money: user.money - amount }, { transaction: tr });
+            await user.update({ money: user.money - amount }, { transaction: tr });
+            const newUser: User = await user.reload({ transaction: tr });
+
+            pubsub.publish('balance', { userId, money: newUser.money, maxReached: false }).then();
+            return newUser;
         };
 
         return transaction ? f(transaction) : this.db.sequelize.transaction(f);
@@ -119,6 +138,7 @@ class UsersRepository extends BaseRepository {
                 ),
                 0,
             ) + FREE_REFERRALS;
+
         const actualReferralsCount = await this.db.User.count({
             where: {
                 refId: referrer.id,
@@ -131,6 +151,12 @@ class UsersRepository extends BaseRepository {
     }
 
     async setReferrer(userId: string, refId: string): Promise<User> {
+        const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
+            'referrals::plusUserMoney',
+        ); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEREF = await this.repositories.settings.getSettingAsNumber(
+            'referrals::plusRefMoney',
+        ); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             const user = await this.getUserByIdStrict(userId, transaction);
             const referrer = await this.getUserById(refId, transaction);
@@ -138,13 +164,17 @@ class UsersRepository extends BaseRepository {
             if (referrer) {
                 const referralsCountDelta = await this.calcReferralsCountDelta(referrer, transaction);
 
+                await this.giveMoney(user.id, INITIAL_REFERRAL_INCOMEREF, transaction);
+
                 if (referralsCountDelta > 0) {
-                    await user.update({ money: user.money + INITIAL_REFERRAL_INCOME }, { transaction });
-                    await referrer.update({ refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOME }, { transaction });
+                    await referrer.update(
+                        { refMoney: referrer.refMoney + INITIAL_REFERRAL_INCOMEUSER },
+                        { transaction },
+                    );
                     await this.repositories.referralIncomes.writeIncome(
                         referrer.id,
                         user.id,
-                        INITIAL_REFERRAL_INCOME,
+                        INITIAL_REFERRAL_INCOMEUSER, // записываем в таблицу сколько человек получил за реферала
                         transaction,
                     );
                 }
@@ -162,12 +192,12 @@ class UsersRepository extends BaseRepository {
         });
     }
 
-    async increaseTurnover(userId: string, amount: number): Promise<User> {
-        return this.db.sequelize.transaction(async transaction => {
-            let user = await this.getUserByIdStrict(userId, transaction);
-            user = await user.update({ turnover: user.turnover + amount }, { transaction });
+    async increaseTurnover(userId: string, amount: number, transaction?: Transaction): Promise<User> {
+        const f = async (tr: Transaction) => {
+            let user = await this.getUserByIdStrict(userId, tr);
+            user = await user.update({ turnover: user.turnover + amount }, { transaction: tr });
 
-            const referralsCountDelta = await this.calcReferralsCountDelta(user!, transaction);
+            const referralsCountDelta = await this.calcReferralsCountDelta(user!, tr);
             if (referralsCountDelta > 0) {
                 const newReferrals: User[] = await this.db.User.findAll({
                     where: {
@@ -176,55 +206,64 @@ class UsersRepository extends BaseRepository {
                     },
                     order: [['createdAt', 'ASC']],
                     limit: referralsCountDelta,
-                    transaction,
-                    lock: transaction.LOCK.UPDATE,
+                    transaction: tr,
+                    lock: tr.LOCK.UPDATE,
                 });
 
                 if (newReferrals.length === 0) {
                     return user;
                 }
 
+                const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
+                    'referrals::plusUserMoney',
+                ); // Сколько начислится за реферала
+
                 await Promise.all(
                     newReferrals.map(async referral => {
                         await referral.update(
                             {
-                                money: referral.money + INITIAL_REFERRAL_INCOME,
+                                money: referral.money + INITIAL_REFERRAL_INCOMEUSER,
                                 refStatus: RefStatus.Active,
                             },
-                            { transaction },
+                            { transaction: tr },
                         );
+
                         await this.repositories.referralIncomes.writeIncome(
                             user.id,
                             referral.id,
-                            INITIAL_REFERRAL_INCOME,
-                            transaction,
+                            INITIAL_REFERRAL_INCOMEUSER,
+                            tr,
                         );
                     }),
                 );
 
                 return user.update(
-                    { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOME },
-                    { transaction },
+                    { refMoney: user.refMoney + newReferrals.length * INITIAL_REFERRAL_INCOMEUSER },
+                    { transaction: tr },
                 );
             }
 
             return user;
-        });
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
-    async giveIncomeToReferrer(referralId: string, ourProfit: number): Promise<void> {
-        const referral = await this.getUserByIdStrict(referralId);
-        const { refId } = referral;
+    async giveIncomeToReferrer(referralId: string, ourProfit: number, transaction?: Transaction): Promise<void> {
+        const f = async (tr: Transaction) => {
+            const referral = await this.getUserByIdStrict(referralId);
+            const { refId } = referral;
 
-        if (refId) {
-            await this.db.sequelize.transaction(async transaction => {
-                const referrer = await this.getUserByIdStrict(refId, transaction);
+            if (refId) {
+                const referrer = await this.getUserByIdStrict(refId, tr);
                 const incomeAmount = (ourProfit * referrer.refPercent) / 100;
 
-                await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction });
-                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount, transaction);
-            });
-        }
+                await referrer.update({ refMoney: referrer.refMoney + incomeAmount }, { transaction: tr });
+                await this.repositories.referralIncomes.writeIncome(refId, referralId, incomeAmount, tr);
+            }
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
     async getReferralsCount(referrerId: string): Promise<number> {
@@ -249,7 +288,7 @@ class UsersRepository extends BaseRepository {
     }
 
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
-        const results = this.db.User.findAll({
+        return this.db.User.findAll({
             attributes: [
                 'id',
                 'username',
@@ -258,7 +297,7 @@ class UsersRepository extends BaseRepository {
                 [fn('IF', fn('STRCMP', col('refStatus'), 'Active'), 0, 1), 'isActive'],
                 'createdAt',
                 [fn('COUNT', col('referrerIncomes.id')), 'gamesCount'],
-                [fn('SUM', col('referrerIncomes.amount')), 'income'],
+                [fn('COALESCE', fn('SUM', col('referrerIncomes.amount')), 0), 'income'],
             ],
             where: {
                 refId: referrerId,
@@ -270,8 +309,6 @@ class UsersRepository extends BaseRepository {
             subQuery: false,
             raw: true,
         });
-
-        return results;
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
@@ -303,10 +340,15 @@ class UsersRepository extends BaseRepository {
                 throw new UserError('NOT_ENOUGH_REF_MONEY');
             }
 
-            await this.giveMoney(userId, user.refMoney, transaction);
-            await user.update({ refMoney: 0 }, { transaction });
+            const payments = await this.repositories.payments.getFinishedPaymentsSumByUserId(userId, transaction);
+            const minPayments = await this.repositories.settings.getSettingAsNumber('referrals::minDepsToGetMoney');
 
-            return user;
+            if (payments < minPayments) {
+                throw new UserError('GET_REF_MONEY_NOT_ENOUGH_DEPS');
+            }
+
+            await this.giveMoney(userId, user.refMoney, transaction);
+            return user.update({ refMoney: 0 }, { transaction });
         });
     }
 

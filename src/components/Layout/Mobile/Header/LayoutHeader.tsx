@@ -16,11 +16,12 @@ const cnLayoutHeader = cn(s, 'LayoutHeader');
 const LayoutHeaderMobile: React.FC = () => {
     useStyles(s);
 
-    const { me, loading } = useMeQuery();
+    const { me } = useMeQuery();
 
-    if (loading) {
+    if (!me) {
         return <PreLoader />;
     }
+
     return (
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>
@@ -40,7 +41,7 @@ const LayoutHeaderMobile: React.FC = () => {
                     <AnnouncementsWidget className={cnLayoutHeader('Button')} />
                 </div>
 
-                <Link to="/all-games">
+                <Link to="/casino">
                     <img className={cnLayoutHeader('LogoImg')} src={logoImg} alt="Рулетка" />
                 </Link>
                 <Balance money={me?.money || 0} />

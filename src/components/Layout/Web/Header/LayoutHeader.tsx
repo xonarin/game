@@ -18,10 +18,10 @@ const cnLayoutHeader = cn(s, 'LayoutHeader');
 const LayoutHeader: React.FC = () => {
     useStyles(s);
 
-    const { me, loading } = useMeQuery();
+    const { me } = useMeQuery();
     const { unreadCount } = useUnreadCountQuery();
 
-    if (loading) {
+    if (!me) {
         return <PreLoader />;
     }
 
@@ -29,7 +29,7 @@ const LayoutHeader: React.FC = () => {
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>
                 <nav className={cnLayoutHeader('Navigation')}>
-                    <HeaderNavigationItem to="/all-games" text="Все игры" icon="gamepad" iconHover="gamepadWhite" />
+                    <HeaderNavigationItem to="/casino" text="Лобби" icon="gamepad" iconHover="gamepadWhite" />
                     <HeaderNavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
                     <HeaderNavigationItem to="/faq" text="FAQ" icon="faq" iconHover="faqWhite" />
                 </nav>
@@ -49,7 +49,7 @@ const LayoutHeader: React.FC = () => {
                             )}
                         />
                         <AnnouncementsWidget className={cnLayoutHeader('Button')} />
-                        <Link
+                        {/* <Link
                             className={cnLayoutHeader('Button')}
                             to="/messages"
                             isSoft
@@ -61,7 +61,7 @@ const LayoutHeader: React.FC = () => {
                                     iconHover="messageWhite"
                                 />
                             )}
-                        />
+                        /> */}
                     </div>
                     <MiniProfile username={me?.username || ''} avatar={me?.avatar || ''} />
                 </div>

@@ -23,7 +23,10 @@ export interface UserCurrentClassicGameQueryResult {
 }
 
 const useCurrentClassicGameQuery = (): UserCurrentClassicGameQueryResult => {
-    const { data, loading, subscribeToMore } = useQuery<CurrentClassicGameQuery>(CurrentClassicGameDocument);
+    const { data, loading, subscribeToMore } = useQuery<CurrentClassicGameQuery>(CurrentClassicGameDocument, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
+    });
 
     useEffect(() => {
         const subscriptions: Function[] = [];

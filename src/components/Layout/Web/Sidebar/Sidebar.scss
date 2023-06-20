@@ -5,13 +5,15 @@
     align-items: center;
     min-width: 100px;
     width: 100px;
+    height: 100vh;
     padding: 30px 0;
+    background-color: #0e1420;
 
-    & &-Logo { 
+    & &-Logo {
         margin-bottom: 30px;
-    
+
         img {
-            width: 45px;
+            width: 68px;
         }
     }
 }

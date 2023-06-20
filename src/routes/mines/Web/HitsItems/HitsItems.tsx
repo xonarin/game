@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { animateScroll } from 'react-scroll/modules';
 
 import s from './HitsItems.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Scroller from '../../../../components/Scroller/Scroller';
-import HitsItemsGroup, { cnHitsItemsGroup } from './HitsItemsGroup/HitsItemsGroup';
+import HitsItemsGroup from './HitsItemsGroup/HitsItemsGroup';
 import { HitsItemProps } from './HitsItemsGroup/HitsItem/HitsItem';
 import useMeasure from '../../../../hooks/useMeasure';
 
@@ -19,6 +20,7 @@ const HitsItems: React.FC<HitsItemsProps> = ({ current, items }) => {
     useStyles(s);
 
     const scrollerRef = useRef<HTMLDivElement | null>(null);
+    const scrollerViewportRef = useRef<HTMLDivElement | null>(null);
     const { width } = useMeasure(scrollerRef);
 
     const maxItemsInGroup = width <= 478 ? 3 : 4;
@@ -45,22 +47,33 @@ const HitsItems: React.FC<HitsItemsProps> = ({ current, items }) => {
 
     useEffect(() => {
         if (!scrollerRef.current) return;
-
-        const $currentGroup = scrollerRef.current.getElementsByClassName(cnHitsItemsGroup())[
-            current !== 0 ? Math.floor((current - 1) / maxItemsInGroup) : 0
-        ];
-        $currentGroup.scrollIntoView;
-        if ($currentGroup) {
-            $currentGroup.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+        if (width === 0) {
+            return;
         }
-    }, [current, maxItemsInGroup]);
+
+        const scrollerViewport = scrollerViewportRef.current;
+
+        if (!scrollerViewport) {
+            return;
+        }
+
+        const currentGroup = current !== 0 ? Math.floor((current - 1) / maxItemsInGroup) : 0;
+        const scrollX = currentGroup * scrollerViewport.offsetWidth;
+
+        // noinspection JSSuspiciousNameCombination
+        animateScroll.scrollTo(scrollX, {
+            container: scrollerViewport,
+            duration: 500,
+            horizontal: true,
+        });
+    }, [current, maxItemsInGroup, width]);
 
     if (groups.length === 0) {
         return null;
     }
 
     return (
-        <Scroller className={cnHitsItems()} withControls ref={scrollerRef}>
+        <Scroller className={cnHitsItems()} withControls ref={scrollerRef} viewportRef={scrollerViewportRef}>
             {groups.map(group => (
                 <HitsItemsGroup items={group} key={group[0].coef} />
             ))}

@@ -47,17 +47,6 @@
         z-index: 1;
     }
 
-    &-Content {
-        padding-top: 100px;
-        height: 420px;
-        border-radius: 6px;
-        background-color: #1d213e;
-        background-image: url('../../../../assets/img/gleams.svg');
-        background-position: center top;
-        background-repeat: no-repeat;
-        overflow: hidden;
-    }
-
     @include mq(max-width 1279px) {
         &-Head {
             width: 260px;
@@ -69,29 +58,5 @@
         }
 
         & &-Title .Text { font-size: 20px; }
-    }
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: url('../../../../assets/img/syndyk2.png') 0 0 no-repeat;
-        background-size: cover;
-        left: 10px;
-        width: 270px;
-        height: 255px;
-    }
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: url('../../../../assets/img/syndyk1.png') 0 0 no-repeat;
-        background-size: cover;
-        right: 10px;
-        width: 270px;
-        height: 255px;
     }
 }

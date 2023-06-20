@@ -11,10 +11,6 @@
     padding: 25px 20px;
     white-space: initial;
 
-    @include mq(max-width 576px) { 
-        flex: 0 0 80%;
-     }
-
     &::before {
         content: '';
         position: absolute;
@@ -27,16 +23,25 @@
         z-index: 0;
     }
 
-    &_type_classic::before { 
+    &_type_classic::before {
         background: url('../../../../../assets/img/classicback.png') center center no-repeat;
         background-size: cover;
     }
-    &_type_mines::before { 
+
+    &_type_mines::before {
         background: url('../../../../../assets/img/minesback.png') center center no-repeat;
         background-size: cover;
     }
-    &_type_knb::before { background-color: #1f6077; }
-    &_type_battle::before { background-color: #8c2a2a; }
+
+    &_type_darts::before {
+        background: url('../../../../../assets/img/darts.png') center center no-repeat;
+        background-size: cover;
+    }
+
+    &_type_knb::before {
+        background: url('../../../../../assets/img/knb.png') center center no-repeat;
+        background-size: cover;
+    }
 
     & &-Title {
         position: relative;
@@ -52,11 +57,15 @@
         .Text { color: $color-white; }
     }
 
-    & + & { 
-        margin-left: 40px; 
-    
-        @include mq(max-width 576px) { 
-            margin-left: 15px!important;
-         }
+    & + & {
+        margin-left: 40px;
+
+        @include mq(max-width 576px) {
+            margin-left: 15px !important;
+        }
+    }
+
+    @include mq(max-width 576px) {
+        flex: 0 0 80%;
     }
 }

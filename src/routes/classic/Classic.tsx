@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-
 import s from './Classic.scss';
 import { cn } from '../../utils/bem-css-module';
 import useCurrentClassicGameQuery from '../../hooks/graphql/classicGame/useCurrentClassicGameQuery';
@@ -8,8 +7,8 @@ import Layout31WithChat from '../../components/Layout/Web/containers/Layout31Wit
 import Panel from '../../components/Panel/Panel';
 import Text from '../../components/Text/Text';
 import Icon from '../../components/Icon/Icon';
+import Link from '../../components/Link/Link';
 import BetsTable from './Web/BetsTable/BetsTable';
-import HistoryTable from './Web/HistoryTable/HistoryTable';
 import ClassicGame from './Web/ClassicGame/ClassicGame';
 import LayoutMobileGame from '../../components/Layout/Mobile/containers/LayoutMobileGame';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
@@ -19,15 +18,6 @@ import HistoryTableMobile from './Mobile/HistoryTable/HistoryTable';
 export interface ClassicProps {
     chatId: string;
 }
-
-const items = [
-    { id: 1, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 2, game: 'dice' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 3, game: 'knb' as const, winner: 'Donald', chance: 10, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 4, game: 'dice' as const, winner: 'Donald', chance: 83, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 5, game: 'knb' as const, winner: 'Donald', chance: 67, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-    { id: 6, game: 'battle' as const, winner: 'Donald', chance: 36, bet: 10, fund: 2500, time: '25.10.2019 в 21:46' },
-];
 
 const cnClassic = cn(s, 'Classic');
 
@@ -46,11 +36,12 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
 
     useStyles(s);
 
-    const { loading: gameLoading, currentClassicGame } = useCurrentClassicGameQuery();
+    const { currentClassicGame } = useCurrentClassicGameQuery();
 
-    if (gameLoading || !currentClassicGame) {
+    if (!currentClassicGame) {
         return <PreLoader />;
     }
+
     if (mobile) {
         return (
             <LayoutMobileGame
@@ -64,7 +55,11 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                                 Ставки
                             </Text>
                         }
-                        rightHead={<Icon type="guard" />}
+                        rightHead={
+                            <>
+                             {/* <Icon type="guard" /> */}
+                             </>
+                        }
                     >
                         <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
                     </Panel>
@@ -85,23 +80,22 @@ const Classic: React.FC<ClassicProps> = ({ chatId }) => {
                             Ставки
                         </Text>
                     }
-                    rightHead={<Icon type="guard" />}
+                    rightHead={
+                        <>
+                            <Link to={'#'}>
+                                <Icon type={'guard'} size="m" />
+                            </Link>
+
+                            <Link to={'/classic-history'}>
+                                <Icon type={'clock'} size="m" />
+                            </Link>
+                        </>
+                    }
                 >
                     <BetsTable players={currentClassicGame.players} bets={currentClassicGame.bets} />
                 </Panel>
             }
             rightContent={<ClassicGame game={currentClassicGame} />}
-            bottomContent={
-                <Panel
-                    leftHead={
-                        <Text className={cnClassic('HistoryTitle')} font="Rubik" size="l" color="white" upper>
-                            Последние игры
-                        </Text>
-                    }
-                >
-                    <HistoryTable />
-                </Panel>
-            }
         />
     );
 };

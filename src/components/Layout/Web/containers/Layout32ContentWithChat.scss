@@ -3,7 +3,7 @@
 .Layout32ContentWithChat {
     &-Top {
         display: flex;
-        height: 605px;
+        height: 100%;
         margin-bottom: 30px;
     }
 
@@ -16,7 +16,7 @@
     &-RightContent {
         flex: 1 1 500px;
         min-width: 0;
-        margin-right: 65px;
+        margin-right: 15px;
     }
 
     &-Chat.Chat {

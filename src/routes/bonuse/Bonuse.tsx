@@ -6,8 +6,6 @@ import LayoutBonuse from '../../components/Layout/Web/containers/LayoutBonuse';
 import LayoutBonuseMobile from '../../components/Layout/Mobile/containers/LayoutBonuseMobile';
 import Text from '../../components/Text/Text';
 import BonuseBannerPlayer from './Web/BonuseBanner/BonuseBannerPlayer';
-import BonuseBannerReferal from './Web/BonuseBanner/BonuseBannerReferal';
-import MonthlyBonuse from './Web/MonthlyBonuse/MonthlyBonuse';
 import MonthlyBonuseMobile from './Mobile/MonthlyBonuse/MonthlyBonuse';
 import useIsomorphicLayoutEffect from '../../hooks/useIsomorphicLayoutEffect';
 import BonuseBannerPlayerMobile from './Mobile/BonuseBanner/BonuseBannerPlayer';
@@ -16,7 +14,11 @@ import s from './Bonuse.scss';
 
 const cnBonuse = cn(s, 'Bonuse');
 
-const Bonuse: React.FC = () => {
+export interface BonuseProps {
+    chatId: string;
+}
+
+const Bonuse: React.FC<BonuseProps> = ({ chatId }) => {
     const [mobile, setMobile] = useState(false);
     const [selectedScreen, setSelectedScreen] = useState('bonuse');
     useStyles(s);
@@ -55,7 +57,7 @@ const Bonuse: React.FC = () => {
                                     ставок по сумме.
                                 </>
                             }
-                            count="5000"
+                            count="3000"
                         />
                     ) : (
                         <BonuseBannerReferalMobile
@@ -89,35 +91,24 @@ const Bonuse: React.FC = () => {
     }
     return (
         <LayoutBonuse
+            chatId={chatId} 
             title="Турниры"
-            TopContent={<MonthlyBonuse />}
-            LeftContent={
+
+            TopContent={
                 <BonuseBannerPlayer
                     title="Активный игрок"
                     description={
-                        <>
-                            {' '}
+                    <>
+                        {' '}
                             Каждую <Text color="white"> неделю </Text> мы разыгрываем призы среди{' '}
                             <Text color="white"> 3 </Text> самых активных игроков, которые сделали больше всех ставок по
                             сумме.
                         </>
                     }
-                    count="5000"
-                />
-            }
-            RightContent={
-                <BonuseBannerReferal
-                    title="Бонус-партнёр"
-                    description={
-                        <>
-                            {' '}
-                            Приглашай людей на сайт и каждые <Text color="white"> 30 дней </Text> и лучшие партнёры по
-                            количеству рефералов получат повышенные % отчисления!
-                        </>
-                    }
                     count="3000"
                 />
             }
+
         />
     );
 };

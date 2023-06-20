@@ -24,13 +24,14 @@ export const History = forwardRef<HistoryRef, HistoryProps>(({ mobile }, ref) =>
     const [selectedType, setSelectedType] = useState<SelectedTypeType>('deposits');
     useStyles(s);
 
+    const { payments, withdraws, refetch } = usePaymentsAndWithdrawsQuery();
+
     useImperativeHandle(ref, () => ({
-        openWithdrawHistory: () => {
+        openWithdrawHistory: async () => {
+            await refetch();
             setSelectedType('withdraws');
         },
     }));
-
-    const { payments, withdraws } = usePaymentsAndWithdrawsQuery();
 
     const paymentsRender = useMemo(
         () => payments?.map(payment => <DepositHistoryItem key={payment.id} payment={payment} />),

@@ -7,12 +7,16 @@ type Query {
     withdraws: [Withdraw!]!
 
     payedTotal: Float!
+
+    qiwiWithdrawStats: QiwiWithdrawStats!
 }
 
 type Mutation {
     doDeposit(amount: Float!, method: ID!): String!
     doWithdraw(amount: Float!, method: ID!, purse: String!): Withdraw!
     cancelWithdraw(id: ID!): Withdraw!
+
+    doQiwiWithdraw(amount: Float!, method: QiwiWithdrawMethod!, purse: QiwiWithdrawPurse!): String!
 }
 
 type PaymentMethod {
@@ -53,6 +57,7 @@ enum WithdrawStatus {
     IN_PROGRESS,
     SUCCESS,
     CANCELLED,
+    BAD_PURSE,
 }
 
 type Withdraw {
@@ -61,4 +66,39 @@ type Withdraw {
     amount: Float!
     status: WithdrawStatus!
     createdAt: DateTime!
+}
+
+type QiwiWithdrawStats {
+    turnover: QiwiLimit
+    restrictions: [String!]
+    balance: Float
+}
+
+type QiwiLimit {
+    type: String!
+    currency: String!
+    rest: Float!
+    max: Float!
+    spent: Float!
+    interval: QiwiLimitInterval!
+}
+
+type QiwiLimitInterval {
+    dateFrom: String!
+    dateTill: String!
+}
+
+enum QiwiWithdrawMethod {
+    Visa, YooMoney, Wmz, Qiwi
+}
+
+input QiwiWithdrawPurse {
+    account: String!
+    remName: String
+    remNameF: String
+    recAddress: String
+    recCity: String
+    recCountry: String
+    regName: String
+    regNameF: String
 }

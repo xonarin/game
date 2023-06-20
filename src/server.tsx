@@ -15,7 +15,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import depthLimit from 'graphql-depth-limit';
 
-import { AppContextTypes } from './context';
+import { AppContextTypes, GlobalChatType } from './context';
 import createApolloClient from './utils/apollo/createApolloClient.server';
 import App from './components/App';
 import Html, { HtmlProps } from './components/Html';
@@ -102,8 +102,20 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.use(passport.initialize());
 
 // Vk authentication
+let lastVkAuth = Date.now();
+
 app.get(
     '/auth/vk',
+    (_0, res, next) => {
+        const now = Date.now();
+
+        if (now - lastVkAuth < 1000) {
+            res.redirect('/');
+        } else {
+            lastVkAuth = Date.now();
+            next();
+        }
+    },
     passport.authenticate('vkontakte', {
         failureRedirect: '/',
         session: false,
@@ -167,15 +179,21 @@ const server = new ApolloServer({
     validationRules: [depthLimit(5)],
     context: ({ req, res, connection }) => createContext(req, res, connection),
     subscriptions: {
-        onConnect: connectionParams => {
-            const context = createWebSocketContext(connectionParams);
+        onConnect: async connectionParams => {
+            const context = await createWebSocketContext(connectionParams);
 
-            increaseOnline();
+            if (context.user) {
+                await increaseOnline(context.user.id);
+            }
 
             return context;
         },
-        onDisconnect: () => {
-            decreaseOnline();
+        onDisconnect: async (_0, context) => {
+            const user = (await context.initPromise)?.user;
+
+            if (user && typeof user.id === 'string') {
+                await decreaseOnline(user.id);
+            }
         },
     },
 });
@@ -184,7 +202,7 @@ server.applyMiddleware({ app });
 //
 // Ids for different chats
 // -----------------------------------------------------------------------------
-let chats: Record<string, string> = {};
+let chats: Record<GlobalChatType, string> = { game: '' };
 
 //
 // Register server-side rendering middleware

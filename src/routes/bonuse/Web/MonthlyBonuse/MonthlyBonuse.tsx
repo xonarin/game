@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-
+import { moneyRound } from "../../../../utils/money";
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
@@ -91,7 +91,7 @@ const MonthlyBonuse = () => {
                                     </Text>
                                     <TextIcon
                                         className={cnMonthlyBonuse('Value')}
-                                        text={user.amount}
+                                        text={moneyRound(user.amount)}
                                         icon="diamond"
                                         color="white"
                                         upper

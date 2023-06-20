@@ -141,6 +141,7 @@ export const resolvers: ChatResolvers = {
             const chat = await repositories.chats.getChatByIdStrict(chatId);
 
             // Проверка на бан чата
+            // if (user!.chatWarns > 0) Все чаты
             if (chat.type === ChatTypeEnum.Game && user!.chatWarns > 0) {
                 const now = Date.now();
                 const banEndTime = getBanEndTime(user!.chatWarnsUpdatedAt, user!.chatWarns);
@@ -152,6 +153,17 @@ export const resolvers: ChatResolvers = {
 
             if (!(await chat.canWrite(user))) {
                 throw new UserError('CHAT_NOT_ALLOWED');
+            }
+
+            // Проверка депозитов
+            const gameChats = await repositories.chats.getAllGameChats();
+            if (gameChats.some(gameChat => gameChat.id === chatId)) {
+                const payments = await repositories.payments.getFinishedPaymentsSumByUserId(user!.id);
+                const minPayments = await repositories.settings.getSettingAsNumber('chat::minDepsToSendGlobalMessage');
+
+                if (payments < minPayments) {
+                    throw new UserError('SEND_MESSAGE_NOT_ENOUGH_DEPS');
+                }
             }
 
             const sentMessage = await repositories.messages.addMessage(chatId, user!.id, message);

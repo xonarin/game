@@ -64,14 +64,14 @@
         align-items: center;
         width: 40px;
         height: 35px;
-        cursor: pointer; 
+        cursor: pointer;
 
         &-Text {
             display: none;
         }
-        
-        &:after {
-            content: "";
+
+        &::after {
+            content: '';
             position: absolute;
             display: block;
             width: 40px;
