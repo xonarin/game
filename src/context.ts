@@ -16,6 +16,7 @@ export interface AppContextTypes {
     authProviders?: {
         vk: boolean;
         google: boolean;
+        steam: boolean;
         telegramBot: string | null;
         telegramChannel: string | null;
         dev: boolean;

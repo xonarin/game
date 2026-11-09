@@ -13,7 +13,14 @@ const action = ({ user, query, authProviders }: AppContextTypes): RouteResult =>
         pageContent: (
             <Login
                 providers={
-                    authProviders || { vk: false, google: false, telegramBot: null, telegramChannel: null, dev: false }
+                    authProviders || {
+                        vk: false,
+                        google: false,
+                        steam: false,
+                        telegramBot: null,
+                        telegramChannel: null,
+                        dev: false,
+                    }
                 }
                 error={error}
             />

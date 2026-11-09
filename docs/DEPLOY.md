@@ -90,10 +90,15 @@ docker run --env-file .env -p 3000:3000 plant
   Authorized redirect URI `https://<домен>/auth/google/return`
   (для dev добавить `https://dev.<домен>/auth/google/return`),
   значения — в `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`.
+- **Steam**: OpenID 2.0 (отдельного приложения не требует). Получить
+  Web API key на [steamcommunity.com/dev/apikey](https://steamcommunity.com/dev/apikey)
+  (в поле домена — ваш домен), значение — в `STEAM_API_KEY`. Ключ нужен для
+  имени и аватара игрока и включает кнопку входа. Домен возврата —
+  `<PUBLIC_URL>/auth/steam/return` (регистрировать отдельно не нужно).
 - **Telegram**: бот из @BotFather, домен сайта через `/setdomain`,
   токен и имя бота — в `TELEGRAM_BOT_TOKEN` / `TELEGRAM_BOT_USERNAME`.
 
-На `/login` показываются только настроенные провайдеры (пустой `*_ID` = провайдер скрыт).
+На `/login` показываются только настроенные провайдеры (пустой `*_ID`/`*_KEY` = провайдер скрыт).
 
 Старые пользователи ВК сохраняют аккаунты: VK ID возвращает тот же ID пользователя ВКонтакте.
 

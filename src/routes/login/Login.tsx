@@ -12,6 +12,8 @@ const ERROR_TEXT: Record<string, string> = {
     vk_disabled: 'Вход через VK ID пока не настроен.',
     google: 'Не удалось войти через Google. Попробуйте ещё раз.',
     google_disabled: 'Вход через Google пока не настроен.',
+    steam: 'Не удалось войти через Steam. Попробуйте ещё раз.',
+    steam_disabled: 'Вход через Steam пока не настроен.',
     telegram: 'Не удалось подтвердить вход через Telegram. Попробуйте ещё раз.',
     telegram_disabled: 'Вход через Telegram пока не настроен.',
 };
@@ -53,7 +55,7 @@ export interface LoginProps {
 const Login: React.FC<LoginProps> = ({ providers, error }) => {
     useStyles(s);
 
-    const hasProviders = providers.vk || providers.google || Boolean(providers.telegramBot);
+    const hasProviders = providers.vk || providers.google || providers.steam || Boolean(providers.telegramBot);
 
     return (
         <div className={cnLogin()}>
@@ -75,7 +77,13 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
                     </a>
                 )}
 
-                {(providers.vk || providers.google) && providers.telegramBot && (
+                {providers.steam && (
+                    <a className={cnLogin('Steam')} href="/auth/steam">
+                        Войти через Steam
+                    </a>
+                )}
+
+                {(providers.vk || providers.google || providers.steam) && providers.telegramBot && (
                     <div className={cnLogin('Divider')}>или</div>
                 )}
 

@@ -57,6 +57,12 @@ const config = {
             clientSecret: env('GOOGLE_CLIENT_SECRET'),
         },
 
+        // Steam sign-in (OpenID 2.0). The Web API key (https://steamcommunity.com/dev/apikey)
+        // is used to read the player name/avatar and gates whether the button is shown.
+        steam: {
+            apiKey: env('STEAM_API_KEY'),
+        },
+
         // Telegram Login Widget: bot from @BotFather, domain linked via /setdomain
         telegram: {
             botToken: env('TELEGRAM_BOT_TOKEN'),

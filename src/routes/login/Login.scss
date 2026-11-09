@@ -75,6 +75,23 @@
         }
     }
 
+    &-Steam {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 44px;
+        border-radius: 8px;
+        background: #171a21;
+        color: $color-white;
+        font-size: $font-size-m;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            background: #2a475e;
+        }
+    }
+
     &-Telegram {
         display: flex;
         justify-content: center;
