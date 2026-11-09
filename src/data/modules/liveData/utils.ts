@@ -1,26 +1,10 @@
 import { getOnline } from '../../../services/LiveData/LiveDataStorage';
 import { repositories } from '../../database';
 import config from '../../../config';
-import { ClassicGame } from '../../models/ClassicGame';
 import { MinesGame } from '../../models/MinesGame';
 import { getMinesCoef } from '../../../utils/mines';
 import { countOnes } from '../../../utils/number';
 import { moneyRound } from '../../../utils/money';
-
-const getClassicLiveDataGame = async (game: ClassicGame) => {
-    const winner = game.winner || (await game.getWinner());
-
-    return {
-        id: game.id,
-        game: 'classic',
-        winner: winner?.username,
-        avatar: winner?.avatar,
-        chance: game.winnerChance || 0,
-        bet: game.winnerBetsPrice || 0,
-        fund: game.fund,
-        time: game.finishedAt || new Date(),
-    };
-};
 
 const getMinesLiveDataGame = (game: MinesGame) => {
     // eslint-disable-next-line no-bitwise
@@ -58,4 +42,4 @@ const getCalculatedOnline = async (): Promise<number> => {
     );
 };
 
-export { getClassicLiveDataGame, getMinesLiveDataGame, getCalculatedOnline };
+export { getMinesLiveDataGame, getCalculatedOnline };

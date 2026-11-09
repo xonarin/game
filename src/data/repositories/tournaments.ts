@@ -45,15 +45,6 @@ class TournamentsRepository extends BaseRepository {
         switch (tournament.type) {
             case TournamentType.Monthly:
             case TournamentType.Activity: {
-                const classicGames = await this.db.ClassicGameBet.findAll({
-                    attributes: ['userId', [fn('SUM', col('amount')), 'sum']],
-                    where: {
-                        createdAt: { [Op.between]: [tournament.start, tournament.finish] },
-                    },
-                    group: [col('userId')],
-                    raw: true,
-                });
-
                 const minesGames = await this.db.MinesGame.findAll({
                     attributes: ['userId', [fn('SUM', col('betAmount')), 'sum']],
                     where: {
@@ -61,15 +52,6 @@ class TournamentsRepository extends BaseRepository {
                     },
                     group: [col('userId')],
                     raw: true,
-                });
-
-                classicGames.forEach((game: { userId: number; sum: number }) => {
-                    const key = game.userId.toString();
-
-                    if (!results[key]) {
-                        results[key] = 0;
-                    }
-                    results[key] += game.sum;
                 });
 
                 minesGames.forEach((game: { userId: number; sum: number }) => {

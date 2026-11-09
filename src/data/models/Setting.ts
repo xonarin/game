@@ -2,16 +2,6 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 
 import { ModelStatic } from './index';
 
-export type ClassicGameSettingName =
-    | 'classic::countdownTimer'
-    | 'classic::culminationTimer'
-    | 'classic::endedTimer'
-    | 'classic::minBetAmount'
-    | 'classic::minPlayersToStartCountdown'
-    | 'classic::commissionPercent'
-    | 'classic::turnsCount'
-    | 'classic::maxSummaryBet';
-
 export type ChatSettingName =
     | 'chat::adminAnnouncementsTitle'
     | 'chat::adminAnnouncementsImage'
@@ -39,11 +29,7 @@ export type PaymentsSettings =
 
 export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
-export type MinesSettings =
-    | 'mines::maxBetAmount'
-    | 'mines::maxProfitAmount'
-    | 'mines::antiMinus'
-    | 'mines::antiMinusSteps';
+export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
 
 export type BonusSettings =
     | 'bonus::minsBetweenBonuses'
@@ -56,7 +42,6 @@ export type BonusSettings =
     | 'bonus::usePromoCodeFrequencyLimitWithoutDeps';
 
 export type SettingName =
-    | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName
     | AppSettingsName

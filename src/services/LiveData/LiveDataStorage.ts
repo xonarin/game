@@ -1,11 +1,10 @@
 import Redis, { RedisOptions } from 'ioredis';
 
 import config from '../../config';
-import { getClassicLiveDataGame, getMinesLiveDataGame } from '../../data/modules/liveData/utils';
+import { getMinesLiveDataGame } from '../../data/modules/liveData/utils';
 import { repositories } from '../../data/database';
 import { LiveDataGameParent } from '../../data/modules/liveData/resolvers';
 import { MinesGame } from '../../data/models/MinesGame';
-import { ClassicGame } from '../../data/models/ClassicGame';
 import { getTime } from '../../utils/time';
 
 const redisOptions: RedisOptions = {
@@ -46,12 +45,7 @@ const getGames = async () => {
 
     if (items.length === 0) {
         const newItems: (Omit<LiveDataGameParent, 'time'> & { time: Date })[] = [];
-        const classicGames = await repositories.classicGames.getLastGames(6);
         const minesGames = await repositories.minesGames.getLastGames(6);
-
-        classicGames.forEach(async game => {
-            newItems.push(await getClassicLiveDataGame(game));
-        });
 
         minesGames.forEach(game => {
             newItems.push(getMinesLiveDataGame(game));
@@ -81,18 +75,6 @@ const getGames = async () => {
     return items.map(item => JSON.parse(item));
 };
 
-const addClassicGame = async (game: ClassicGame) => {
-    const formattedGame = await getClassicLiveDataGame(game);
-
-    await redis.rpush(
-        LiveDataStorageKeys.QUEUE_GAMES,
-        JSON.stringify({
-            ...formattedGame,
-            time: getTime(formattedGame.time),
-        }),
-    );
-};
-
 const addMinesGame = async (game: MinesGame) => {
     const formattedGame = getMinesLiveDataGame(game);
     await redis.rpush(
@@ -120,14 +102,4 @@ const getGameFromQueue = async () => {
     return null;
 };
 
-export {
-    resetOnline,
-    increaseOnline,
-    decreaseOnline,
-    getOnline,
-    resetGames,
-    getGames,
-    addClassicGame,
-    addMinesGame,
-    getGameFromQueue,
-};
+export { resetOnline, increaseOnline, decreaseOnline, getOnline, resetGames, getGames, addMinesGame, getGameFromQueue };

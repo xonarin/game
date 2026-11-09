@@ -117,7 +117,6 @@ const Chat: React.FC<ChatProps> = ({ chatId, className }) => {
                                     chat.messages.map(message => (
                                         <ChatMessage
                                             {...message}
-                                            showPm={message.sender.id !== me?.id}
                                             showControls={me?.role === 'Admin'}
                                             deleteMessage={deleteMessage}
                                             warnChat={warnChat}

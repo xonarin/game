@@ -8,8 +8,7 @@ import { cn } from '../../utils/bem-css-module';
 import { History, HistoryRef } from './History/History';
 import { DepositForm } from './Payment/DepositForm';
 import { WithdrawForm } from './Payment/WithdrawForm';
-import QiwiWithdrawForm from './Payment/QiwiWithdrawForm/QiwiWithdrawForm';
-import { MeQuery, UserRole } from '../../__generated__/graphql';
+import { MeQuery } from '../../__generated__/graphql';
 import useMeQuery from '../../hooks/graphql/users/useMeQuery';
 
 export interface TransactionProps {
@@ -17,14 +16,13 @@ export interface TransactionProps {
     close?: () => void;
 }
 
-type SelectedTypeType = 'deposit' | 'withdraw' | 'qiwiWithdraw' | 'history';
+type SelectedTypeType = 'deposit' | 'withdraw' | 'history';
 
 const cnTransaction = cn(s, 'Transaction');
 
 const types: [SelectedTypeType, IconProps['type'], React.ReactNode, (me: MeQuery['me'] | undefined) => boolean][] = [
     ['deposit', 'add', 'Пополнение', () => true],
     ['withdraw', 'minus', 'Вывод', () => true],
-    ['qiwiWithdraw', 'qiwi', 'Вывод с Qiwi', me => me?.role === UserRole.Admin],
     ['history', 'clock', 'История', () => true],
 ];
 
@@ -75,7 +73,6 @@ export const Transaction: React.FC<TransactionProps> = ({ mobile = false, close 
 
             {selectedType === 'deposit' && <DepositForm mobile={mobile} />}
             {selectedType === 'withdraw' && <WithdrawForm mobile={mobile} openWithdrawHistory={openWithdrawHistory} />}
-            {me?.role === UserRole.Admin && selectedType === 'qiwiWithdraw' && <QiwiWithdrawForm />}
             {selectedType === 'history' && <History mobile={mobile} ref={historyRef} />}
         </div>
     );

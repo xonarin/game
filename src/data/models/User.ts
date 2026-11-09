@@ -14,15 +14,12 @@ import { AssociableModelStatic } from './index';
 import { ReferralIncome } from './ReferralIncome';
 import { Message } from './Message';
 import { Chat } from './Chat';
-import { ClassicGame } from './ClassicGame';
-import { ClassicGameBet } from './ClassicGameBet';
 import { MinesGame } from './MinesGame';
 import { UserPayment } from './UserPayment';
 import { UserWithdraw } from './UserWithdraw';
 import { Bonus } from './Bonus';
 import { PromoCode } from './PromoCode';
 import { PromoCodeUse } from './PromoCodeUse';
-import { QiwiWithdraw } from './QiwiWithdraw';
 
 export enum SocialType {
     Steam = 'Steam',
@@ -66,8 +63,6 @@ export interface User extends Model {
     getReferrals: HasManyGetAssociationsMixin<User>;
     getChats: BelongsToManyGetAssociationsMixin<Chat>;
     getMessages: HasManyGetAssociationsMixin<Message>;
-    getWonClassicGames: HasManyGetAssociationsMixin<ClassicGame>;
-    getClassicGameBets: HasManyGetAssociationsMixin<ClassicGameBet>;
 }
 
 export type UserStatic = AssociableModelStatic<
@@ -79,15 +74,12 @@ export type UserStatic = AssociableModelStatic<
         ReferralIncome: HasMany<User, ReferralIncome>;
         Chat: BelongsToMany<User, Chat>;
         Message: HasMany<User, Message>;
-        WonClassicGame: HasMany<User, ClassicGame>;
-        ClassicGameBet: HasMany<User, ClassicGameBet>;
         MinesGame: HasMany<User, MinesGame>;
         UserPayment: HasMany<User, UserPayment>;
         UserWithdraw: HasMany<User, UserWithdraw>;
         Bonus: HasMany<User, Bonus>;
         PromoCode: HasMany<User, PromoCode>;
         PromoCodeUse: HasMany<User, PromoCodeUse>;
-        QiwiWithdraw: HasMany<User, QiwiWithdraw>;
     }
 >;
 
@@ -217,14 +209,11 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             foreignKey: 'userId',
         });
         User.Message = User.hasMany(database.Message, { as: 'messages', foreignKey: 'senderId' });
-        User.WonClassicGame = User.hasMany(database.ClassicGame, { as: 'wonClassicGames', foreignKey: 'winnerId' });
-        User.ClassicGameBet = User.hasMany(database.ClassicGameBet, { as: 'classicGameBets', foreignKey: 'userId' });
         User.UserPayment = User.hasMany(database.UserPayment, { as: 'payments', foreignKey: 'userId' });
         User.UserWithdraw = User.hasMany(database.UserWithdraw, { as: 'withdraws', foreignKey: 'userId' });
         User.Bonus = User.hasMany(database.Bonus, { as: 'bonuses', foreignKey: 'userId' });
         User.PromoCode = User.hasMany(database.PromoCode, { as: 'promoCodes', foreignKey: 'userId' });
         User.PromoCodeUse = User.hasMany(database.PromoCodeUse, { as: 'promoCodeUses', foreignKey: 'userId' });
-        User.QiwiWithdraw = User.hasMany(database.QiwiWithdraw, { as: 'qiwiWithdraws', foreignKey: 'userId' });
     };
 
     return User;

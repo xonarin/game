@@ -12,9 +12,6 @@ type TranslationCode =
     | 'INVALID_MESSAGE_MIN'
     | 'INVALID_MESSAGE_MAX'
     | 'INVALID_MESSAGE_MATCHES'
-    | 'CLASSIC_GAME_MIN_BET_PRICE_ERROR'
-    | 'CLASSIC_GAME_IN_PROGRESS_ERROR'
-    | 'CLASSIC_GAME_ENDED_ERROR'
     | 'INVALID_AMOUNT_REQUIRED'
     | 'INVALID_AMOUNT_MORE_THAN'
     | 'INVALID_BET_AMOUNT_MORE_THAN'
@@ -81,16 +78,6 @@ const translations: Record<TranslationCode, Translation> = {
         ru: 'Недопустимые символы в сообщении',
     },
 
-    // Classic game errors
-    CLASSIC_GAME_MIN_BET_PRICE_ERROR: {
-        ru: 'Слишком маленькая ставка',
-    },
-    CLASSIC_GAME_IN_PROGRESS_ERROR: {
-        ru: 'Игры уже началась',
-    },
-    CLASSIC_GAME_ENDED_ERROR: {
-        ru: 'Игры уже закончилась',
-    },
     INVALID_AMOUNT_REQUIRED: {
         ru: 'Вы не ввели сумму',
     },
@@ -101,7 +88,8 @@ const translations: Record<TranslationCode, Translation> = {
         ru: 'Мин.ставка не может быть меньше 1 рубля',
     },
     NOT_ENOUGH_BETS: {
-        ru: 'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
+        ru:
+            'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
     },
     MINES_GAME_BET_TOO_HIGH: {
         ru: 'Максимальная ставка не более 100 рублей.',
@@ -128,20 +116,20 @@ const translations: Record<TranslationCode, Translation> = {
         ru: 'Для вывода с реферальского баланса нужно не менее 15 рублей',
     },
     NOT_ENOUGH_DEPOSITS: {
-        ru: 'Сделайте депозит в 50 рублей для вывода средств.'
+        ru: 'Сделайте депозит в 50 рублей для вывода средств.',
     },
     MAX_BALANCE_REACHED: {
-        ru: 'Без депозита в 50 рублей, ваш баланс не может превышать сумму больше 100 рублей.'
+        ru: 'Без депозита в 50 рублей, ваш баланс не может превышать сумму больше 100 рублей.',
     },
     SEND_MESSAGE_NOT_ENOUGH_DEPS: {
-        ru: 'Для возможности писать в чат, сделайте депозит в 30 рублей.'
+        ru: 'Для возможности писать в чат, сделайте депозит в 30 рублей.',
     },
     PROMO_CODE_FREQ_LIMIT_REACHED: {
-        ru: 'Промокод больше не активен.'
+        ru: 'Промокод больше не активен.',
     },
     PROMO_CODE_NOT_ENOUGH_DEPOSITS: {
-        ru: 'Для создания промокода нужно сделать пополнение.'
-    }
+        ru: 'Для создания промокода нужно сделать пополнение.',
+    },
 };
 
 export const getTranslation = (code: TranslationCode, language: keyof Translation = 'ru') => {

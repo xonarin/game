@@ -39,18 +39,12 @@ services:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
       # src/config.ts falls back to real production keys; override them so local
-      # dev never touches live FreeKassa / Qiwi / VK group accounts.
+      # dev never touches live FreeKassa / VK group accounts.
       FK_MERCHANT_ID: local-disabled
       FK_SECRET: local-disabled
       FK_SECRET2: local-disabled
       FK_WALLET_ID: local-disabled
       FK_API_KEY: local-disabled
-      QIWI_PROXY_HOST: proxy.invalid
-      QIWI_PROXY_USER: local-disabled
-      QIWI_PROXY_PASSWORD: local-disabled
-      QIWI_PERSON_ID: local-disabled
-      QIWI_PERSON_TOKEN: local-disabled
-      QIWI_P2P_SECRET: local-disabled
       VK_APP_TOKEN: local-disabled
       VK_USER_TOKEN: local-disabled
       VK_GROUP_TOKEN: local-disabled

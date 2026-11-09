@@ -224,17 +224,6 @@ class PaymentsRepository extends BaseRepository {
             await withdraw.update({ status: WithdrawStatus.BAD_PURSE }, { transaction });
         });
     }
-
-    async addQiwiWithdraw(
-        methodId: string,
-        purse: string,
-        paymentId: string,
-        amount: number,
-        transactionId: string,
-        userId: string,
-    ) {
-        await this.db.QiwiWithdraw.create({ userId, purse, methodId, paymentId, transactionId, amount });
-    }
 }
 
 export default PaymentsRepository;

@@ -7,9 +7,8 @@ import { PaymentMethod, WithdrawMethod } from '../../../__generated__/graphql';
 import Text from '../../Text/Text';
 import CornerLabel from './CornerLabel/CornerLabel';
 import Icon from '../../Icon/Icon';
-import { QiwiWithdrawMethod } from './QiwiWithdrawForm/QiwiWithdrawForm';
 
-type PaymentMethodType = PaymentMethod | WithdrawMethod | QiwiWithdrawMethod;
+type PaymentMethodType = PaymentMethod | WithdrawMethod;
 
 export interface PaymentMethodsMobileProps<T extends PaymentMethodType> {
     readonly methods?: T[];

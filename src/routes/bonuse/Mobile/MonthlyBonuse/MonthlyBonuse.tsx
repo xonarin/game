@@ -1,12 +1,11 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-import { moneyRound } from "../../../../utils/money";
+import { moneyRound } from '../../../../utils/money';
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Button from '../../../../components/Button/Button';
 import TextIcon from '../../../../components/TextIcon/TextIcon';
-import PeopleCircles from '../../../welcome/Banner/PeopleCircles/PeopleCircles';
 import s from './MonthlyBonuse.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../../components/Text/Text';

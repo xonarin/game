@@ -1,5 +1,0 @@
-query ClassicGamesHistory {
-    classicGamesHistory {
-        ...ClassicGamesHistoryItem
-    }
-}

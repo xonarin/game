@@ -14,17 +14,13 @@ enum ChatType {
 }
 
 type Query {
-    chats(search: String, offset: Int): ChatsPayload!
     chat(chatId: ID!): Chat!
-    unreadCount: Int!
 }
 
 type Mutation {
     sendMessage(input: SendMessageInput!): Message!
     deleteMessage(input: DeleteMessageInput!): DeletedMessagePayload!
     warnChat(input: WarnChatInput!): DeletedMessagesBySenderPayload!
-    createPmChat(input: CreatePmChatInput!): Chat!
-    readChat(chatId: ID!): Int!
 }
 
 type Subscription {
@@ -54,11 +50,6 @@ type Message {
     createdAt: DateTime!
 }
 
-type ChatsPayload {
-    items: [Chat!]!
-    count: Int!
-}
-
 input SendMessageInput {
     chatId: ID!
     message: String!
@@ -80,9 +71,4 @@ input WarnChatInput {
 type DeletedMessagesBySenderPayload {
     chatIds: [ID!]!
     senderId: ID!
-}
-
-input CreatePmChatInput {
-    userId: ID!
-    message: String!
 }

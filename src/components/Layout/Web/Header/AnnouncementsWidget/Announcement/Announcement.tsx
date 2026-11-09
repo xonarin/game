@@ -7,7 +7,6 @@ import { cn } from '../../../../../../utils/bem-css-module';
 import { AnnouncementFragment } from '../../../../../../__generated__/graphql';
 import TextBlock from '../../../../../TextBlock/TextBlock';
 import Text from '../../../../../Text/Text';
-import Link from '../../../../../Link/Link';
 
 export interface AnnouncementProps extends AnnouncementFragment {
     now: Date;
@@ -18,7 +17,7 @@ const ONE_MINUTE = 60000;
 
 const cnAnnouncement = cn(s, 'Announcement');
 
-const Announcement: React.FC<AnnouncementProps> = ({ chatId, text, image, createdAt, now, onCloseWidget }) => {
+const Announcement: React.FC<AnnouncementProps> = ({ text, image, createdAt, now }) => {
     useStyles(s);
 
     const transformedDateTime = useMemo(() => {
@@ -31,7 +30,7 @@ const Announcement: React.FC<AnnouncementProps> = ({ chatId, text, image, create
     }, [createdAt, now]);
 
     return (
-        <Link className={cnAnnouncement()} to={`/messages/${chatId}`} onClick={onCloseWidget}>
+        <div className={cnAnnouncement()}>
             {image && <img className={cnAnnouncement('Image')} src={image} alt="" />}
             <div className={cnAnnouncement('Main')}>
                 <TextBlock className={cnAnnouncement('Text')} maxLines={5} color="white">
@@ -39,7 +38,7 @@ const Announcement: React.FC<AnnouncementProps> = ({ chatId, text, image, create
                 </TextBlock>
                 <Text>{transformedDateTime}</Text>
             </div>
-        </Link>
+        </div>
     );
 };
 

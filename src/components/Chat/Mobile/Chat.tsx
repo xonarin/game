@@ -124,13 +124,11 @@ const Chat: React.FC<ChatProps> = ({ chatId, className, closeChat }) => {
                                     chat.messages.map(message => (
                                         <ChatMessage
                                             {...message}
-                                            showPm={message.sender.id !== me?.id}
                                             showControls={me?.role === 'Admin'}
                                             deleteMessage={deleteMessage}
                                             warnChat={warnChat}
                                             key={message.id}
                                             addUsernameToChat={form.mutators.onUsernameClick}
-                                            closeChat={() => closeChat()}
                                         />
                                     ))}
                             </div>

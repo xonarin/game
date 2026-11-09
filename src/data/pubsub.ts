@@ -4,20 +4,10 @@ import { PubSubEngine } from 'apollo-server-express';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 import config from '../config';
-import {
-    DeletedMessagePayload,
-    DeletedMessagesBySenderPayload,
-    SwitchedToClassicGameStateCulminationPayload,
-} from '../__generated__/graphql';
+import { DeletedMessagePayload, DeletedMessagesBySenderPayload } from '../__generated__/graphql';
 import { SerializedModel } from '../interfaces/sequelize';
 import { OriginMessageParent } from './modules/chat/resolvers';
 import { OriginAnnouncementType } from './modules/announcements/resolvers';
-import {
-    OriginClassicGameParent,
-    OriginClassicGamesHistoryItemParent,
-    OriginPlacedClassicGameBetPayloadParent,
-    OriginUpdatedClassicGameTimerPayloadParent,
-} from './modules/classicGame/resolvers';
 import { LiveDataGameParent, OnlinePayloadParent } from './modules/liveData/resolvers';
 
 export interface BalanceSubscriptionPayload {
@@ -34,13 +24,6 @@ export interface PubSubEventPayloads {
 
     // Announcements
     updatedAnnouncement: OriginAnnouncementType;
-
-    // ClassicGame
-    placedClassicGameBet: OriginPlacedClassicGameBetPayloadParent;
-    startedClassicGame: OriginClassicGameParent;
-    updatedClassicGameTimer: OriginUpdatedClassicGameTimerPayloadParent;
-    switchedToClassicGameStateCulmination: SwitchedToClassicGameStateCulminationPayload;
-    switchedToClassicGameStateEnded: OriginClassicGamesHistoryItemParent;
 
     // Live Data
     games: LiveDataGameParent;

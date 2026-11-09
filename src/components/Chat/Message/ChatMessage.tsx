@@ -9,10 +9,8 @@ import { transformDateToTime } from '../../../utils/strings';
 import Text from '../../Text/Text';
 import TextBlock from '../../TextBlock/TextBlock';
 import Button from '../../Button/Button';
-import Link from '../../Link/Link';
 
 export interface ChatMessageProps extends MessageFragment {
-    showPm?: boolean;
     showControls?: boolean;
     deleteMessage: (messageId: string) => void;
     warnChat: (userId: string) => void;
@@ -26,7 +24,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     sender,
     message,
     createdAt,
-    showPm,
     showControls,
     deleteMessage,
     warnChat,
@@ -61,11 +58,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                     />
                     <Button className={cnChatMessage('ControlsButton')} icon="ban" clear onClick={onClickWarnChat} />
                 </div>
-            )}
-            {showPm && (
-                <Link to={`/messages?userId=${sender.id}`}>
-                    <Button className={cnChatMessage('PmButton')} icon="letter" iconHover="letterWhite" clear />
-                </Link>
             )}
         </div>
     );

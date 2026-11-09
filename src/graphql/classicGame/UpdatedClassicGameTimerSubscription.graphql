@@ -1,7 +1,0 @@
-subscription UpdatedClassicGameTimer {
-    updatedClassicGameTimer {
-        state
-        timer
-        maxTimer
-    }
-}

@@ -12,14 +12,11 @@ import {
     DeletedMessagesBySenderPayload,
     Message,
     Mutation,
-    MutationCreatePmChatArgs,
     MutationDeleteMessageArgs,
-    MutationReadChatArgs,
     MutationSendMessageArgs,
     MutationWarnChatArgs,
     Query,
     QueryChatArgs,
-    QueryChatsArgs,
     Subscription,
     SubscriptionDeletedMessageArgs,
     SubscriptionDeletedMessagesBySenderArgs,
@@ -38,13 +35,9 @@ import { buildMessageToAnnouncement } from '../../../utils/announcements';
 
 export type OriginChatParent = ChatBackend;
 export type OriginMessageParent = MessageBackend;
-export type OriginChatsPayloadParent = {
-    items: OriginChatParent[];
-    count: number;
-};
 
-type QueryType = Pick<Query, 'chats' | 'chat' | 'unreadCount'>;
-type MutationType = Pick<Mutation, 'sendMessage' | 'deleteMessage' | 'warnChat' | 'createPmChat' | 'readChat'>;
+type QueryType = Pick<Query, 'chat'>;
+type MutationType = Pick<Mutation, 'sendMessage' | 'deleteMessage' | 'warnChat'>;
 type SubscriptionType = Pick<Subscription, 'sentMessage' | 'deletedMessage' | 'deletedMessagesBySender'>;
 type ChatType = Pick<
     Chat,
@@ -53,17 +46,13 @@ type ChatType = Pick<
 type MessageType = Pick<Message, 'id' | 'chatId' | 'chatType' | 'sender' | 'message' | 'createdAt'>;
 
 interface QueryMapping {
-    chats: Resolver<OriginChatsPayloadParent, QueryChatsArgs>;
     chat: Resolver<OriginChatParent, QueryChatArgs>;
-    unreadCount: Resolver<number>;
 }
 
 interface MutationMapping {
     sendMessage: Resolver<OriginMessageParent, MutationSendMessageArgs>;
     deleteMessage: Resolver<DeletedMessagePayload, MutationDeleteMessageArgs>;
     warnChat: Resolver<DeletedMessagesBySenderPayload, MutationWarnChatArgs>;
-    createPmChat: Resolver<OriginChatParent, MutationCreatePmChatArgs>;
-    readChat: Resolver<number, MutationReadChatArgs>;
 }
 
 interface SubscriptionMapping {
@@ -74,7 +63,6 @@ interface SubscriptionMapping {
         DeletedMessagesBySenderPayload,
         SubscriptionDeletedMessagesBySenderArgs
     >;
-    createdPmChat: ResolverSubscriber<OriginChatParent, SerializedModel<OriginChatParent>>;
 }
 
 interface ChatMapping {
@@ -100,29 +88,15 @@ type ChatResolvers = Resolvers<
 >;
 
 export const rules: IRules = {
-    Query: {
-        chats: isAuth,
-    },
     Mutation: {
         sendMessage: chain(limit(15, 'chat'), isAuth, checkSendMessageArgs),
         deleteMessage: isAdminOrModerator,
         warnChat: isAdminOrModerator,
-        createPmChat: isAuth,
-        readChat: isAuth,
     },
 };
 
 export const resolvers: ChatResolvers = {
     Query: {
-        chats: async (_0, { search, offset }, { user, repositories }) => {
-            const items = await repositories.chats.getAllUserChats(user!.id, search || undefined, offset || undefined);
-            const count = await repositories.chats.countAllUserChats(user!.id, search || undefined);
-
-            return {
-                items,
-                count,
-            };
-        },
         chat: async (_0, { chatId }, { user, repositories }) => {
             const chat = await repositories.chats.getChatByIdStrict(chatId);
 
@@ -131,9 +105,6 @@ export const resolvers: ChatResolvers = {
             }
 
             return chat;
-        },
-        unreadCount: async (_0, _1, { user, repositories }) => {
-            return user ? repositories.chats.getAllUnreadMessagesCount(user.id) : 0;
         },
     },
     Mutation: {
@@ -211,18 +182,6 @@ export const resolvers: ChatResolvers = {
             });
 
             return payload;
-        },
-        createPmChat: async (_0, { input: { userId, message: messageText } }, { user, repositories }) => {
-            const chat = await repositories.chats.createPmChat(user!.id, userId);
-            const sentMessage = await repositories.messages.addMessage(chat.id, user!.id, messageText);
-            await repositories.chats.readChat(chat.id, user!.id);
-
-            pubsub.publish('sentMessage', sentMessage, [user!.id, userId]).then();
-
-            return chat;
-        },
-        readChat: (_0, { chatId }, { user, repositories }) => {
-            return repositories.chats.readChat(chatId, user!.id);
         },
     },
     Subscription: {

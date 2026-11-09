@@ -1,5 +1,3 @@
-import { md5Hash } from './utils/crypto';
-
 if (process.env.BROWSER) {
     throw new Error('Do not import `config.js` from inside the client-side code.');
 }
@@ -27,17 +25,11 @@ export default {
         process.env.DATABASE_URL ||
         process.env.CLEARDB_DATABASE_URL ||
         //'mysql://root:2644824@localhost:3306/playtime',
-     'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
+        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
 
     // Redis
     redisUrl: process.env.REDIS_URL || 'localhost',
     // 'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
-
-    // Web analytics
-    analytics: {
-        // https://analytics.google.com/
-        googleTrackingId: process.env.GOOGLE_TRACKING_ID || 'UA-30115745-1', // UA-XXXXX-X
-    },
 
     // Authentication
     auth: {
@@ -92,27 +84,6 @@ export default {
             secret2: process.env.FK_SECRET2 || 'ul5a01ql',
             walletId: process.env.FK_WALLET_ID || 'F100481963',
             apiKey: process.env.FK_API_KEY || 'F89FA8AE6F56780C48FD8A5E5EB34BEF',
-        },
-
-        qiwi: {
-            proxy: {
-                protocol: process.env.QIWI_PROXY_PROTOCOL || 'socks5h:',
-                hostname: process.env.QIWI_PROXY_HOST || '45.132.20.180',
-                port: process.env.QIWI_PROXY_PORT || '8000',
-                userId: process.env.QIWI_PROXY_USER || 'czfagH',
-                password: process.env.QIWI_PROXY_PASSWORD || 'aywpBJ',
-            },
-            personId: process.env.QIWI_PERSON_ID || '79609646995',
-            personToken: process.env.QIWI_PERSON_TOKEN || '38fe2a4662dff7c79c5d829be049aca1',
-            p2pSecret:
-                process.env.QIWI_P2P_SECRET ||
-                'eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6Imgwbmt2Mi0wMCIsInVzZXJfaWQiOiI3OTYwOTY0Njk5NSIsInNlY3JldCI6IjY3NzM1MDA0YjlhZTE3NWE0NThlMmI2NTU2YzI3MWE3MTY2NTgyNTRlYTFiNDVjMTFmNjMzMjRkOTNkNTJlNGYifX0=',
-            mediatorLink: (url: string): string => {
-                const baseUrl = 'https://prokladka.xonaruz.ru/to.php';
-                const sign = md5Hash(`SuPeR SeCrEt PhRaSe${url}`);
-
-                return `${baseUrl}?t=${encodeURIComponent(url)}&s=${sign}`;
-            },
         },
     },
 

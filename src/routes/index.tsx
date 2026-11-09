@@ -22,10 +22,6 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'login' */ './login'),
         },
         {
-            path: '/auth-wait',
-            load: () => import(/* webpackChunkName: 'auth-wait' */ './auth-wait'),
-        },
-        {
             path: '/balance',
             load: () => import(/* webpackChunkName: 'balance' */ './balance'),
         },
@@ -53,18 +49,6 @@ const routes: Route<AppContextTypes, RouteResult> = {
         {
             path: '/profile',
             load: () => import(/* webpackChunkName: 'profile' */ './profile'),
-        },
-        {
-            path: '/messages/:chatId?',
-            load: () => import(/* webpackChunkName: 'messages' */ './messages'),
-        },
-        {
-            path: '/classic',
-            load: () => import(/* webpackChunkName: 'classic' */ './classic'),
-        },
-        {
-            path: '/classic-history',
-            load: () => import(/* webpackChunkName: 'classic-history' */ './classic-history'),
         },
         {
             path: '/mines',

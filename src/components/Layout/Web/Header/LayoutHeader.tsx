@@ -11,7 +11,6 @@ import MiniProfile from './MiniProfile/MiniProfile';
 import Link from '../../../Link/Link';
 import Button from '../../../Button/Button';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
-import useUnreadCountQuery from '../../../../hooks/graphql/chat/useUnreadCountQuery';
 import PreLoader from '../../../PreLoader/PreLoader';
 import AppContext from '../../../../context';
 
@@ -22,7 +21,6 @@ const LayoutHeader: React.FC = () => {
 
     const { user } = useContext(AppContext);
     const { me } = useMeQuery();
-    const { unreadCount } = useUnreadCountQuery();
 
     const navigation = (
         <nav className={cnLayoutHeader('Navigation')}>
@@ -79,19 +77,6 @@ const LayoutHeader: React.FC = () => {
                             )}
                         />
                         <AnnouncementsWidget className={cnLayoutHeader('Button')} />
-                        {/* <Link
-                            className={cnLayoutHeader('Button')}
-                            to="/messages"
-                            isSoft
-                            render={isActive => (
-                                <AlarmButton
-                                    className={cnLayoutHeader('InnerButton', { isActive })}
-                                    isAlarm={Boolean(unreadCount && unreadCount > 0)}
-                                    icon="message"
-                                    iconHover="messageWhite"
-                                />
-                            )}
-                        /> */}
                     </div>
                     <MiniProfile username={me?.username || ''} avatar={me?.avatar || ''} />
                 </div>

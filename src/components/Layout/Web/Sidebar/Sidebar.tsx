@@ -19,8 +19,7 @@ const Sidebar: React.FC = () => {
             </Link>
             <nav className={cnSidebar('NavigationBarList')}>
                 <SidebarNavigationItem to="/" icon="sword" iconHover="swordWhite" title={'Casino'} />
-                <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" title={'Classic'} />
-                <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite"  title={'Mines'} />
+                <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite" title={'Mines'} />
             </nav>
         </aside>
     );

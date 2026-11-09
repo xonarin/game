@@ -13,8 +13,6 @@ import liveDataTypeDefs from './liveData/schema.graphql';
 import { resolvers as liveDataResolvers } from './liveData/resolvers';
 import announcementsTypeDefs from './announcements/schema.graphql';
 import { rules as announcementsRules, resolvers as announcementsResolvers } from './announcements/resolvers';
-import classicGameTypeDefs from './classicGame/schema.graphql';
-import { rules as classicGameRules, resolvers as classicGameResolvers } from './classicGame/resolvers';
 import minesGameTypeDefs from './minesGame/schema.graphql';
 import { rules as minesGameRules, resolvers as minesGameResolvers } from './minesGame/resolvers';
 import { resolvers as tournamentsResolvers } from './tournaments/resolvers';
@@ -31,7 +29,6 @@ const typeDefs = mergeTypeDefs([
     chatTypeDefs,
     liveDataTypeDefs,
     announcementsTypeDefs,
-    classicGameTypeDefs,
     minesGameTypeDefs,
     tournamentsTypeDefs,
     paymentsTypeDefs,
@@ -44,7 +41,6 @@ const resolvers = mergeResolvers([
     chatResolvers,
     liveDataResolvers,
     announcementsResolvers,
-    classicGameResolvers,
     minesGameResolvers,
     tournamentsResolvers,
     paymentsResolvers,
@@ -57,7 +53,6 @@ const schema = applyMiddleware(
     shield(referralsRules, shieldConfig),
     shield(chatRules, shieldConfig),
     shield(announcementsRules, shieldConfig),
-    shield(classicGameRules, shieldConfig),
     shield(minesGameRules, shieldConfig),
     shield(paymentRules, shieldConfig),
     shield(bonusRules, shieldConfig),
