@@ -8,7 +8,7 @@ interface Props {
     id: string;
     question: {
         title: string;
-        answer: string;
+        answer: React.ReactNode;
     };
 }
 const cnFaq = cn(s, 'Faq');

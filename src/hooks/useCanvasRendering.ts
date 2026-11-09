@@ -12,7 +12,7 @@ export interface OnResizeFunction {
 }
 
 const useCanvasRendering = <T extends HTMLCanvasElement>(
-    canvasRef: RefObject<T>,
+    canvasRef: RefObject<T | null>,
     render: RenderFunction,
     onResize: OnResizeFunction = () => {},
     deps: DependencyList = [],

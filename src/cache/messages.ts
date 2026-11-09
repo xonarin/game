@@ -18,14 +18,16 @@ export const addMessageIfNotExist = (
     cache.modify({
         id: chatCacheId,
         fields: {
-            updatedAt: (currentUpdatedAt?: Date) => {
+            updatedAt: currentUpdatedAt => {
                 const updatedAt = new Date(message.createdAt);
-                if (currentUpdatedAt && currentUpdatedAt >= updatedAt) {
+                const current = currentUpdatedAt ? new Date(currentUpdatedAt as string) : undefined;
+                if (current && current >= updatedAt) {
                     return currentUpdatedAt;
                 }
-                return updatedAt;
+                return updatedAt.toISOString();
             },
-            messages: (existingMessageRefs: Reference[] = [], { readField, toReference }) => {
+            messages: (existing, { readField, toReference }) => {
+                const existingMessageRefs = (existing || []) as Reference[];
                 if (existingMessageRefs.some(ref => readField('id', ref) === message.id)) {
                     return existingMessageRefs;
                 }

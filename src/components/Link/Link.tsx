@@ -16,6 +16,7 @@ export interface LinkProps {
     render?: (isActive: boolean) => React.ReactNode;
 
     className?: string;
+    children?: React.ReactNode;
 }
 
 const cnLink = cn(s, 'Link');
@@ -47,10 +48,10 @@ const Link: React.FC<LinkProps> = ({
         }
 
         event.preventDefault();
-        history.push(to);
+        if (to) history.push(to);
     };
 
-    const isActive = useIsOnPath(to, isSoft);
+    const isActive = useIsOnPath(to || '', isSoft);
 
     return (
         <a

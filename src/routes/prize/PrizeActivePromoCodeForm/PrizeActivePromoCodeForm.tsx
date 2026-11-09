@@ -14,7 +14,7 @@ const PrizeActivePromoCodeForm: React.FC = () => {
 
     const usePromoCodeMutation = useUsePromoCodeMutation();
     const onSubmit = useCallback(
-        async ({ promoCode }) => {
+        async ({ promoCode }: { promoCode: string }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             await usePromoCodeMutation(promoCode);
         },

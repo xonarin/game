@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import { animated, useTransition } from 'react-spring';
+import { animated, useTransition } from '@react-spring/web';
 import { easeCubicInOut } from 'd3-ease';
 
 import s from './Notifications.scss';
@@ -16,9 +16,10 @@ const cnNotifications = cn(s, 'Notifications');
 const Notifications: React.FC = () => {
     useStyles(s);
 
-    const { loading, notifications } = useNotificationsQuery();
+    const { notifications } = useNotificationsQuery();
 
-    const springNotifications = useTransition(notifications || [], item => item.id, {
+    const transitions = useTransition(notifications || [], {
+        keys: item => item.id,
         from: {
             opacity: 0,
             transform: 'translateX(100%)',
@@ -51,13 +52,12 @@ const Notifications: React.FC = () => {
 
     return (
         <div className={cnNotifications({ isHidden: notifications.length === 0 })}>
-            {springNotifications.map(({ item: { id, title, message, level }, key, props }) => (
+            {transitions((style, { id, title, message, level }) => (
                 // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                 <animated.div
                     className={cnNotifications('Item', { level })}
                     onClick={() => deleteNotification(id)}
-                    style={props}
-                    key={key}
+                    style={style}
                 >
                     <Text className={cnNotifications('ItemTitle')} size="s" color="white">
                         {title}

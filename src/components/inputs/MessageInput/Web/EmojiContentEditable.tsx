@@ -7,13 +7,13 @@ import emojiStyles from '../../../../assets/emojis/emoji.scss';
 import { htmlToText, isEmojiAlt, matchEmojiAlt, textToHtml } from '../../../../utils/message';
 import { placeCaretAfter } from '../../../../utils/dom';
 
-type DivProps = JSX.IntrinsicElements['div'];
+type DivProps = React.JSX.IntrinsicElements['div'];
 
 export interface EmojiContentEditableProps extends DivProps {
     content: string;
     emojiSize?: EmojiSize;
     onContentChange: (content: string) => void;
-    innerRef?: React.RefObject<HTMLDivElement>;
+    innerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 const isImgElement = (elem: Element): elem is HTMLImageElement => {

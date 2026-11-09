@@ -8,11 +8,12 @@ import Title from '../../../Title/Title';
 export interface BlockWithTitleProps {
     title?: string;
     className?: string;
+    children?: React.ReactNode;
 }
 
 const cnBlockWithTitle = cn(s, 'BlockWithTitle');
 
-const BlockWithTitle: React.FC<BlockWithTitleProps> = ({ title, className, children }) => {
+const BlockWithTitle: React.FC<BlockWithTitleProps> = ({ title, className }) => {
     useStyles(s);
 
     return (

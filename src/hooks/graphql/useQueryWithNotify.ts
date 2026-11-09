@@ -4,7 +4,7 @@ import { OperationVariables, QueryHookOptions, useApolloClient, useQuery } from 
 import { AddNotificationDocument, AddNotificationMutationVariables, Notification } from '../../__generated__/graphql';
 import { makeNotificationFromError } from '../../utils/apollo/notifications';
 
-const useQueryWithNotify = <TData = unknown, TVariables = OperationVariables>(
+const useQueryWithNotify = <TData = unknown, TVariables extends OperationVariables = OperationVariables>(
     query: DocumentNode,
     options?: QueryHookOptions<TData, TVariables>,
 ) => {

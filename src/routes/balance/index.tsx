@@ -5,8 +5,7 @@ import { RouteResult } from '../../router';
 import Layout from '../../components/Layout/Layout';
 import { Transaction } from '../../components/Transaction/Transaction';
 
-const action = ({ user, chats }: AppContextTypes): RouteResult => {
-    const chatId = chats.game;
+const action = ({ user }: AppContextTypes): RouteResult => {
 
     // if (!chatId) {
     //     throw new Error('Chat for classic is not defined');

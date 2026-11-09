@@ -7,7 +7,7 @@ import { RouteResult } from '../router';
 import Page from '../components/Page/Page';
 
 // The top-level (parent) route
-const routes: Route<AppContextTypes, RouteResult> = {
+const routes: Route<RouteResult, AppContextTypes> = {
     path: '',
 
     // Keep in mind, routes are evaluated in order

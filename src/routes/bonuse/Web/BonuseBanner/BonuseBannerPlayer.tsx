@@ -25,7 +25,7 @@ const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, descript
     const nowDateTime = DateTime.local();
     const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
     const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
-    const amountRound = moneyRound(amount);
+    const amountRound = moneyRound(amount || 0);
     return (
         <div className={cnBonuseBanner()}>
             <div className={cnBonuseBanner('Header')}>

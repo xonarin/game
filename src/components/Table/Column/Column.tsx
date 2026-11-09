@@ -13,7 +13,7 @@ export type ColumnElement<T> = React.ReactElement<ColumnProps<T>, 'Column'>;
 const Column = <T extends object>(props: ColumnProps<T>): ColumnElement<T> => ({
     type: 'Column',
     props,
-    key: props.columnKey,
+    key: props.columnKey === undefined || props.columnKey === null ? null : String(props.columnKey),
 });
 
 export default Column;

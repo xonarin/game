@@ -3,7 +3,6 @@ import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './LayoutReferal.scss';
 import { cn } from '../../../../utils/bem-css-module';
-import Layout from '../../Layout';
 
 export interface LayoutReferalProps {
     TopContent: React.ReactNode;

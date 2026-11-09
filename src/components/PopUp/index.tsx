@@ -20,8 +20,8 @@ const PopUp: React.FC<PopUpProps> = ({ close, type, mobile }) => {
     useStyles(s);
 
     const handleClick = useCallback(
-        e => {
-            if (e.target.id === 'shadow') {
+        (e: React.MouseEvent<HTMLElement>) => {
+            if ((e.target as HTMLElement).id === 'shadow') {
                 close();
             }
         },

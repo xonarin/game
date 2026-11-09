@@ -12,7 +12,7 @@ interface Props {
         questions: {
             id: number;
             title: string;
-            answer: string;
+            answer: React.ReactNode;
         }[];
     };
 }

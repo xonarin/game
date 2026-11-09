@@ -1,5 +1,4 @@
 import { RefObject, useMemo, useState } from 'react';
-import ResizeObserver from 'resize-observer-polyfill';
 
 import useIsomorphicLayoutEffect from './useIsomorphicLayoutEffect';
 
@@ -13,7 +12,8 @@ const useMeasure = <T extends HTMLElement>(ref: RefObject<T | null>, dontObserve
 
     const resizeObserver = useMemo(
         () =>
-            dontObserve
+            // no ResizeObserver during server-side rendering
+            dontObserve || typeof ResizeObserver === 'undefined'
                 ? null
                 : new ResizeObserver(entries => {
                       const { offsetWidth: width, offsetHeight: height } = entries[0].target as HTMLElement;

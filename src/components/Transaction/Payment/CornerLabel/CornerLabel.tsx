@@ -8,6 +8,7 @@ import Text from '../../../Text/Text';
 
 export interface CornerLabelProps {
     readonly className?: string;
+    children?: React.ReactNode;
 }
 
 const cnCornerLabel = cn(s, 'CornerLabel');

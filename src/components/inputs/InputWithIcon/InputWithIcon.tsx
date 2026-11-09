@@ -11,6 +11,7 @@ const cnInputWithIcon = cn(s, 'InputWithIcon');
 export interface InputWithIconProps {
     icon?: string;
     error?: string;
+    children?: React.ReactNode;
 }
 
 const InputWithIcon: React.FC<InputWithIconProps> = ({ icon, error, children }) => {

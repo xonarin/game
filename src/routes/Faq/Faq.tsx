@@ -9,7 +9,7 @@ import FaqTheme from './FaqTheme';
 import FaqMobile from './Mobile/Faq';
 
 export interface FaqProps {
-    title: string;
+    title?: string;
     chatId: string;
 }
 

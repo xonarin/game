@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './ReferalsTable.scss';
@@ -11,13 +11,13 @@ import Button from '../../../../components/Button/Button';
 import useReferralsQuery from '../../../../hooks/graphql/referrals/useReferralsQuery';
 
 interface Referal {
-    id: number;
+    id: string;
     username: string;
     avatar: string;
     gamesCount: number;
     income: number;
     isActive: boolean;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export interface ReferalsTableProps {}

@@ -31,7 +31,7 @@ const Scroller = React.forwardRef<HTMLDivElement, ScrollerProps>(
         }, []);
 
         const onClickControl = useCallback(
-            isRight => {
+            (isRight: boolean) => {
                 if (!viewport.current) return;
 
                 const options = {

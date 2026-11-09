@@ -5,7 +5,6 @@ import { DateTime } from 'luxon';
 import s from './BonuseBanner.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../../components/Text/Text';
-import TextInBox from '../../../../components/TextInBox/TextInBox';
 import Icon from '../../../../components/Icon/Icon';
 import BonuseTableReferal from '../BonuseTable/BonuseTableReferal';
 import useTournamentQuery from '../../../../hooks/graphql/tournaments/useTournamentQuery';
@@ -18,7 +17,7 @@ export interface BonuseBannerReferalMobileProps {
 }
 const cnBonuseBannerMobile = cn(s, 'BonuseBanner');
 
-const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ description, count }) => {
+const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ description }) => {
     useStyles(s);
 
     const { position, amount, finish, users } = useTournamentQuery(RefTournamentType.Referrals);

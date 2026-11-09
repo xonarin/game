@@ -1,7 +1,9 @@
 import { createContext } from 'react';
-import { QueryParams } from 'universal-router';
 
 export type GlobalChatType = 'game';
+
+/** Parsed URL query string (?a=1&b=2) */
+export type QueryParams = Record<string, string | string[] | null | undefined>;
 
 export interface AppContextTypes {
     pathname: string;

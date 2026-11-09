@@ -13,7 +13,7 @@ import useMutationWithNotify from '../useMutationWithNotify';
 import { addMessageIfNotExist } from '../../../cache/messages';
 
 export interface UseSendMessageMutationResult {
-    (input: SendMessageInput): Promise<FetchResult<SendMessageMutation>>;
+    (input: SendMessageInput): Promise<FetchResult<SendMessageMutation> | undefined>;
 }
 
 const useSendMessageMutation = (): UseSendMessageMutationResult => {

@@ -10,10 +10,10 @@ const cnDiagram = cn(s, 'Diagram');
 
 export interface DiagramProps {
     color: string;
-    items: { value: number; date: string }[];
+    items?: { value: number; date: string }[];
     mobile?: boolean;
 }
-const Diagram: React.FC<DiagramProps> = ({ color, items, mobile }) => {
+const Diagram: React.FC<DiagramProps> = ({ color, items = [], mobile }) => {
     useStyles(s);
     const [selectedTime, setSelectedTime] = useState('');
 
@@ -55,7 +55,10 @@ const Diagram: React.FC<DiagramProps> = ({ color, items, mobile }) => {
                             fillOpacity={1}
                             dot
                             fill={color === '#347dfe' ? 'url(#colorPv)' : 'url(#colorUv)'}
-                            activeDot={{ onClick: (item: { index: number }) => handleSelect(item.index) }}
+                            activeDot={{
+                                // recharts calls the handler with the hovered point (it has `index`)
+                                onClick: (point: unknown) => handleSelect((point as { index: number }).index),
+                            }}
                         />
                     </AreaChart>
                 </ResponsiveContainer>
@@ -91,7 +94,10 @@ const Diagram: React.FC<DiagramProps> = ({ color, items, mobile }) => {
                         fillOpacity={1}
                         dot
                         fill={color === '#347dfe' ? 'url(#colorPv)' : 'url(#colorUv)'}
-                        activeDot={{ onClick: (item: { index: number }) => handleSelect(item.index) }}
+                        activeDot={{
+                                // recharts calls the handler with the hovered point (it has `index`)
+                                onClick: (point: unknown) => handleSelect((point as { index: number }).index),
+                            }}
                     />
                 </AreaChart>
             </ResponsiveContainer>

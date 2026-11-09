@@ -25,7 +25,7 @@ const BonuseBannerPlayerMobile: React.FC<BonuseBannerPlayerMobileProps> = ({ des
     const nowDateTime = DateTime.local();
     const finishDateTime = DateTime.fromJSDate(new Date(finish || ''));
     const diffTime = finishDateTime.diff(nowDateTime, ['days', 'hours', 'minutes']).toObject();
-    const amountRound = moneyRound(amount);
+    const amountRound = moneyRound(amount || 0);
     return (
         <div className={cnBonuseBannerMobile()}>
             <div className={cnBonuseBannerMobile('Header')}>

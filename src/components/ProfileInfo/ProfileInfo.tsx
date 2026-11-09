@@ -1,16 +1,17 @@
 import React from "react";
 import { cn } from "../../utils/bem-css-module";
 import { getDateDMY } from "../../utils/time";
+import { MeQuery } from "../../__generated__/graphql";
 import useStyles from 'isomorphic-style-loader/useStyles';
 import s from './ProfileInfo.scss';
 
 export interface ProfileInfoProps {
-    profile: string[];
+    profile: NonNullable<MeQuery['me']>;
 }
 
 const cnProfile = cn(s, 'Profile');
 
-const ProfileInfo = ({ profile }) => {
+const ProfileInfo = ({ profile }: ProfileInfoProps) => {
     useStyles(s);
 
     return (

@@ -10,7 +10,7 @@ import SelectableEmoji from './SelectableEmoji/SelectableEmoji';
 import { placeCaretAfter } from '../../../../../utils/dom';
 
 export interface EmojiSelectProps {
-    editableElement?: React.RefObject<HTMLDivElement>;
+    editableElement?: React.RefObject<HTMLDivElement | null>;
 }
 
 const cnEmojiSelect = cn(s, 'EmojiSelect');

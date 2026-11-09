@@ -5,7 +5,6 @@ import { createServer } from 'http';
 import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import { expressjwt, UnauthorizedError as Jwt401Error } from 'express-jwt';
-import { QueryParams } from 'universal-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
@@ -19,7 +18,7 @@ import { specifiedRules, validate } from 'graphql';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import depthLimit from 'graphql-depth-limit';
 
-import { AppContextTypes, GlobalChatType } from './context';
+import { AppContextTypes, GlobalChatType, QueryParams } from './context';
 import createApolloClient from './utils/apollo/createApolloClient.server';
 import App from './components/App';
 import Html, { HtmlProps } from './components/Html';
@@ -241,7 +240,6 @@ app.get('/{*path}', async (req, res, next) => {
             }
         };
         addChunk('client');
-        addChunk('polyfills');
         if (route.chunk) addChunk(route.chunk);
         if (route.chunks) route.chunks.forEach(addChunk);
 

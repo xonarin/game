@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, RefObject } from 'react';
 
-export type UseDropdownResult<T extends Element> = [RefObject<T>, boolean, () => void, () => void, () => void];
+export type UseDropdownResult<T extends Element> = [RefObject<T | null>, boolean, () => void, () => void, () => void];
 
 const ESC_KEY = 27;
 

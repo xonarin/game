@@ -16,7 +16,6 @@ import { composeValidators, minMaxValidator, requiredValidator } from '../../../
 import AmountWithCommissionInput from './AmountWithCommissionInput/AmountWithCommissionInput';
 import CornerLabel from './CornerLabel/CornerLabel';
 import { PaymentMethodsMobile } from './PaymentMethodsMobile';
-import Icon from '../../../components/Icon/Icon';
 
 export interface WithdrawFormProps {
     readonly mobile: boolean;

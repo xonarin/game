@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import ItemsCarousel from 'react-items-carousel';
+import React, { useRef } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
 import { moneyRound } from '../../../../utils/money';
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
-import Button from '../../../../components/Button/Button';
 import TextIcon from '../../../../components/TextIcon/TextIcon';
 import s from './MonthlyBonuse.scss';
 import { cn } from '../../../../utils/bem-css-module';
@@ -17,8 +15,12 @@ const cnMonthlyBonuse = cn(s, 'MonthlyBonuse');
 
 const MonthlyBonuse = () => {
     useStyles(s);
-    const [activeItemIndex, setActiveItemIndex] = useState(0);
-    const chevronWidth = 40;
+    // Horizontal list of winners scrolled with the chevron buttons (6 cards per view)
+    const sliderRef = useRef<HTMLDivElement>(null);
+    const scrollSlider = (direction: -1 | 1) => {
+        const slider = sliderRef.current;
+        if (slider) slider.scrollBy({ left: direction * slider.clientWidth, behavior: 'smooth' });
+    };
 
     const { finish, users } = useTournamentQuery(RefTournamentType.Monthly);
     const nowDateTime = DateTime.local();
@@ -67,18 +69,16 @@ const MonthlyBonuse = () => {
                 </div>
             </div>
             <div className={cnMonthlyBonuse('Slider')}>
-                <div style={{ padding: `0 ${chevronWidth}px`, width: '100%' }}>
-                    <ItemsCarousel
-                        requestToChangeActive={setActiveItemIndex}
-                        activeItemIndex={activeItemIndex}
-                        numberOfCards={6}
-                        gutter={10}
-                        leftChevron={<Icon type="left" />}
-                        rightChevron={<Icon type="right" />}
-                        outsideChevron
-                        chevronWidth={chevronWidth}
-                    >
-                        {users.map((user, index) => (
+                <button
+                    type="button"
+                    className={cnMonthlyBonuse('Chevron')}
+                    onClick={() => scrollSlider(-1)}
+                    aria-label="Назад"
+                >
+                    <Icon type="left" />
+                </button>
+                <div className={cnMonthlyBonuse('Track')} ref={sliderRef}>
+                        {(users || []).map((user, index) => (
                             <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
                                 <div
                                     className={cnMonthlyBonuse('WinnerAvatar')}
@@ -98,8 +98,15 @@ const MonthlyBonuse = () => {
                                 </div>
                             </div>
                         ))}
-                    </ItemsCarousel>
                 </div>
+                <button
+                    type="button"
+                    className={cnMonthlyBonuse('Chevron')}
+                    onClick={() => scrollSlider(1)}
+                    aria-label="Вперёд"
+                >
+                    <Icon type="right" />
+                </button>
             </div>
         </div>
     );

@@ -71,7 +71,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         iconHover={allToggle ? 'plusWhite' : 'plusWhite'}
                     />
                 </button>
-                <button type="button" className={cnSidebar('Selector')}>
+                <div className={cnSidebar('Selector')}>
                     <AlarmButton
                         icon="message"
                         iconHover="messageWhite"
@@ -82,9 +82,9 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         }}
                         className={cnSidebar('Selector')}
                     />
-                </button>
+                </div>
 
-                <button type="button" className={cnSidebar('Selector')}>
+                <div className={cnSidebar('Selector')}>
                     <AlarmButton
                         icon="share"
                         iconHover="sharehover"
@@ -94,7 +94,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
                         }}
                         className={cnSidebar('Selector')}
                     />
-                </button>
+                </div>
 
                 {shareToggle ? (
                     <div className={cnSidebar('Message')}>

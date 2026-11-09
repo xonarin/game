@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import { animated, useTransition } from 'react-spring';
+import { animated, useTransition } from '@react-spring/web';
 import { easeCubicInOut } from 'd3-ease';
 
 import s from './Table.scss';
@@ -37,7 +37,9 @@ const TableSpring = <
     const columns = useMemo(() => children.map(child => child.props), [children]);
     const columnWidths = useColumns(anchor, columns);
 
-    const springItems = useTransition(items, item => getRowKey(item), {
+    type RowStyle = { maxHeight: number; marginBottom: number; opacity: number; transform: string };
+    const transitions = useTransition<T, RowStyle>(items, {
+        keys: (item: T) => String(getRowKey(item)),
         initial: {
             maxHeight: 65,
             marginBottom: 10,
@@ -84,8 +86,8 @@ const TableSpring = <
                     ))}
                 </div>
                 <div className={cnTable('Body')}>
-                    {springItems.map(({ item, key, props: { maxHeight, marginBottom, opacity, transform } }, index) => (
-                        <animated.div className={cnTable('RowContainer')} style={{ maxHeight, marginBottom }} key={key}>
+                    {transitions(({ maxHeight, marginBottom, opacity, transform }, item, _transition, index) => (
+                        <animated.div className={cnTable('RowContainer')} style={{ maxHeight, marginBottom }}>
                             <animated.div
                                 className={cnTable('Row', [...getRowClassName(item)])}
                                 style={{ opacity, transform }}

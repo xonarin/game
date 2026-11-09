@@ -13,6 +13,7 @@ export interface PrizeTabProps {
 
     readonly selectedTab: TabNameType;
     readonly setSelectedTab: (value: TabNameType) => void;
+    readonly children?: React.ReactNode;
 }
 
 const cnPrize = cn(s, 'Prize');

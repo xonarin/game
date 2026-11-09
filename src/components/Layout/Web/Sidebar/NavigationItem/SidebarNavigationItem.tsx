@@ -19,7 +19,7 @@ const cnSidebarNavigationItem = cn(s, 'SidebarNavigationItem');
 const SidebarNavigationItem: React.FC<SidebarNavigationItemProps> = ({ to, icon, iconHover, title }) => {
     useStyles(s);
 
-    const active = useIsOnPath(to);
+    const active = useIsOnPath(to || '');
 
     return (
         <Link className={cnSidebarNavigationItem({ active })} to={to}>

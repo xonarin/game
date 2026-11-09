@@ -21,10 +21,35 @@
     }
 
     &-Slider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         border-top: rgba(196, 196, 196, 0.05) 2px solid;
         width: 100%;
         padding-top: 20px;
         padding-bottom: 20px;
+    }
+
+    &-Track {
+        display: grid;
+        flex: 1;
+        grid-auto-columns: calc((100% - 50px) / 6); // 6 cards per view, 10px gaps
+        grid-auto-flow: column;
+        gap: 10px;
+        min-width: 0;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar { display: none; }
+    }
+
+    &-Chevron {
+        flex: 0 0 30px;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
     }
 
     &-WinnerAvatar {
@@ -45,6 +70,8 @@
 
     &-SingleSlide {
         display: flex;
+        min-width: 0;
+        scroll-snap-align: start;
     }
 
     &-WinnerInfo {

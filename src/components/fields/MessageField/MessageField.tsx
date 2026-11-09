@@ -2,7 +2,7 @@ import React from 'react';
 import { Field } from 'react-final-form';
 
 import MessageInputMobile from '../../inputs/MessageInput/Mobile/MessageInput';
-import MessageInput, { MessageInputProps } from '../../inputs/MessageInput/Web/MessageInput';
+import MessageInput, { MessageInputMobileProps as MessageInputProps } from '../../inputs/MessageInput/Web/MessageInput';
 
 export interface MessageFieldProps {
     name: string;

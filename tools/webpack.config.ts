@@ -199,12 +199,6 @@ const config: webpack.Configuration = {
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
-        alias: isDebug
-            ? {}
-            : {
-                  // dev-only helper used for hot reload in src/client.tsx
-                  'react-deep-force-update': false,
-              },
     },
 
     // Don't attempt to continue if there are any errors.
@@ -245,7 +239,6 @@ const clientConfig: webpack.Configuration = {
 
     entry: {
         client: ['./src/client'],
-        polyfills: ['./src/polyfills'],
     },
 
     plugins: [

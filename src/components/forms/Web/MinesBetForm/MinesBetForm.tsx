@@ -72,7 +72,7 @@ const MinesBetForm: React.FC<MinesBetFormProps> = ({
         form =>
             form.subscribe(
                 ({ values, errors }) => {
-                    if (!errors.bombsCount && onChangeBombsCount) {
+                    if (!(errors && errors.bombsCount) && onChangeBombsCount) {
                         onChangeBombsCount(values.bombsCount);
                     }
                 },
