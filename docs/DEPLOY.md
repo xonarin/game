@@ -44,6 +44,8 @@ mysql -u root -p --default-character-set=utf8mb4 playtime < playtime-57.sql
 | Файл | Обязательно | Что делает |
 |---|---|---|
 | `2026-11-06-telegram-auth.sql` | **да**, до запуска нового кода | добавляет `Telegram` в `User.socialType` |
+| `2026-11-10-user-telegram-id.sql` | **да**, до запуска нового кода | добавляет `User.telegramId` (привязка Telegram для бонуса) |
+| `2026-11-10-google-auth.sql` | **да**, до запуска нового кода | добавляет `Google` в `User.socialType` |
 | `2026-11-09-remove-modules-cleanup.sql` | нет | удаляет таблицы Classic и Qiwi, колонку анти-минуса; **необратимо**, сначала бэкап |
 
 Таблицы создаются автоматически (`sequelize.sync()`), но существующие колонки он не меняет —
@@ -83,8 +85,15 @@ docker run --env-file .env -p 3000:3000 plant
 
 - **VK ID**: создать веб-приложение в кабинете VK ID, доверенный redirect URL
   `https://<домен>/auth/vk/return`, ID приложения — в `VKID_APP_ID`.
+- **Google**: создать OAuth-клиент типа «Web application» в
+  [Google Cloud Console](https://console.cloud.google.com/apis/credentials),
+  Authorized redirect URI `https://<домен>/auth/google/return`
+  (для dev добавить `https://dev.<домен>/auth/google/return`),
+  значения — в `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`.
 - **Telegram**: бот из @BotFather, домен сайта через `/setdomain`,
   токен и имя бота — в `TELEGRAM_BOT_TOKEN` / `TELEGRAM_BOT_USERNAME`.
+
+На `/login` показываются только настроенные провайдеры (пустой `*_ID` = провайдер скрыт).
 
 Старые пользователи ВК сохраняют аккаунты: VK ID возвращает тот же ID пользователя ВКонтакте.
 

@@ -15,6 +15,7 @@ export interface AppContextTypes {
     // Sign-in methods available on /login (filled on the server, see src/auth)
     authProviders?: {
         vk: boolean;
+        google: boolean;
         telegramBot: string | null;
         telegramChannel: string | null;
         dev: boolean;

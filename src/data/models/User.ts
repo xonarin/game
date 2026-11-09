@@ -25,6 +25,7 @@ export enum SocialType {
     Steam = 'Steam',
     VK = 'VK',
     Telegram = 'Telegram',
+    Google = 'Google',
 }
 
 export enum UserRole {

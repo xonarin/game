@@ -50,6 +50,13 @@ const config = {
             appId: env('VKID_APP_ID'),
         },
 
+        // Google sign-in (OAuth 2.0 + PKCE), OAuth client from https://console.cloud.google.com/apis/credentials
+        // Authorized redirect URI: <PUBLIC_URL>/auth/google/return
+        google: {
+            clientId: env('GOOGLE_CLIENT_ID'),
+            clientSecret: env('GOOGLE_CLIENT_SECRET'),
+        },
+
         // Telegram Login Widget: bot from @BotFather, domain linked via /setdomain
         telegram: {
             botToken: env('TELEGRAM_BOT_TOKEN'),

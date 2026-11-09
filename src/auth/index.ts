@@ -4,11 +4,13 @@ import config from '../config';
 import { SocialType } from '../data/models/User';
 import { initVkId, isVkIdEnabled } from './vkid';
 import { initTelegram, isTelegramEnabled } from './telegram';
+import { initGoogle, isGoogleEnabled } from './google';
 import { isTelegramBonusEnabled } from '../utils/telegram';
 import { getDefaultAvatar, signIn } from './session';
 
 export interface AuthProviders {
     vk: boolean;
+    google: boolean;
     telegramBot: string | null;
     // Public bonus channel username (without "@"), or null for a private/id-only channel.
     telegramChannel: string | null;
@@ -26,6 +28,7 @@ const getPublicBonusChannel = (): string | null => {
 /** Which sign-in methods the /login page should offer. */
 export const getAuthProviders = (): AuthProviders => ({
     vk: isVkIdEnabled(),
+    google: isGoogleEnabled(),
     telegramBot: isTelegramEnabled() ? config.auth.telegram.botUsername : null,
     telegramChannel: getPublicBonusChannel(),
     dev: isDevLoginEnabled(),
@@ -59,6 +62,7 @@ const initDevLogin = (app: Express) => {
 
 export const initAuth = (app: Express) => {
     initVkId(app);
+    initGoogle(app);
     initTelegram(app);
     initDevLogin(app);
 };

@@ -10,7 +10,14 @@ const action = ({ user, query, authProviders }: AppContextTypes): RouteResult =>
     return {
         title: 'Вход',
         chunks: ['login'],
-        pageContent: <Login providers={authProviders || { vk: false, telegramBot: null, telegramChannel: null, dev: false }} error={error} />,
+        pageContent: (
+            <Login
+                providers={
+                    authProviders || { vk: false, google: false, telegramBot: null, telegramChannel: null, dev: false }
+                }
+                error={error}
+            />
+        ),
         redirect: user && '/',
     };
 };

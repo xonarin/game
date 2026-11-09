@@ -10,6 +10,8 @@ const cnLogin = cn(s, 'Login');
 const ERROR_TEXT: Record<string, string> = {
     vk: 'Не удалось войти через VK ID. Попробуйте ещё раз.',
     vk_disabled: 'Вход через VK ID пока не настроен.',
+    google: 'Не удалось войти через Google. Попробуйте ещё раз.',
+    google_disabled: 'Вход через Google пока не настроен.',
     telegram: 'Не удалось подтвердить вход через Telegram. Попробуйте ещё раз.',
     telegram_disabled: 'Вход через Telegram пока не настроен.',
 };
@@ -51,7 +53,7 @@ export interface LoginProps {
 const Login: React.FC<LoginProps> = ({ providers, error }) => {
     useStyles(s);
 
-    const hasProviders = providers.vk || Boolean(providers.telegramBot);
+    const hasProviders = providers.vk || providers.google || Boolean(providers.telegramBot);
 
     return (
         <div className={cnLogin()}>
@@ -67,7 +69,15 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
                     </a>
                 )}
 
-                {providers.vk && providers.telegramBot && <div className={cnLogin('Divider')}>или</div>}
+                {providers.google && (
+                    <a className={cnLogin('Google')} href="/auth/google">
+                        Войти через Google
+                    </a>
+                )}
+
+                {(providers.vk || providers.google) && providers.telegramBot && (
+                    <div className={cnLogin('Divider')}>или</div>
+                )}
 
                 {providers.telegramBot && <TelegramWidget bot={providers.telegramBot} />}
 

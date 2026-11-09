@@ -36,6 +36,8 @@ services:
       # (not committed). The /login page shows only the configured ones.
       PUBLIC_URL: ${PUBLIC_URL:-}
       VKID_APP_ID: ${VKID_APP_ID:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
       TELEGRAM_BONUS_CHANNEL: ${TELEGRAM_BONUS_CHANNEL:-}
