@@ -37,7 +37,9 @@ class MinesGamesRepository extends BaseRepository {
             },
             order: [['id', 'DESC']],
             include: [this.db.MinesGame.User],
-            transaction,
+            // Lock the game row inside a transaction so concurrent makeStep/endGame calls serialize
+            // instead of all reading the same active game and paying out several times.
+            ...(transaction && { transaction, lock: transaction.LOCK.UPDATE }),
         });
     }
 

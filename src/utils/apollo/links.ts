@@ -5,7 +5,6 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-import { getCookie } from '../cookies';
 
 const loggableErrorCodes = new Set(['INTERNAL_SERVER_ERROR', 'DOWNSTREAM_SERVICE_ERROR']);
 
@@ -47,8 +46,7 @@ export const wsLink = () => {
             lazy: true,
             retryAttempts: Infinity,
             shouldRetry: () => true,
-            // The server also reads the session cookie from the upgrade request
-            connectionParams: () => ({ authToken: getCookie('idToken') }),
+            // Auth comes from the httpOnly session cookie sent with the WS upgrade (see getWebSocketUser)
         }),
     );
 };

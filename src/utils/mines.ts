@@ -53,5 +53,10 @@ export const getMinesCoef = (bombsCount: number, step: number): number => {
         minesCoefsCache = generateMinesCoefs();
     }
 
+    // No cells opened yet: the player just gets the stake back (coef 1), not undefined -> NaN.
+    if (step <= 0) {
+        return 1;
+    }
+
     return minesCoefsCache[bombsCount - MIN_BOMBS_COUNT][step - 1];
 };

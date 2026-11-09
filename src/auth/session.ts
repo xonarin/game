@@ -43,6 +43,9 @@ export const signIn = async (req: Request, res: Response, profile: SocialProfile
     const token = jwt.sign({ id: user.id }, config.auth.jwt.secret, { expiresIn: SESSION_TTL_SECONDS });
     res.cookie(config.auth.tokenKey, token, {
         maxAge: 1000 * SESSION_TTL_SECONDS,
+        // Not readable from JavaScript: an XSS cannot steal the session. The WebSocket
+        // server reads the same cookie from the upgrade request (see getWebSocketUser).
+        httpOnly: true,
         sameSite: 'lax',
         secure: isSecureRequest(req),
     });
