@@ -36,6 +36,8 @@ type User {
     turnover: Float
     chatWarns: String!
     createdAt: DateTime!
+    # Whether a Telegram account is connected (for the bonus); only visible for the user themselves.
+    telegramLinked: Boolean
 }
 
 type FairPlayPayload {

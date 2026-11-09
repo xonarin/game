@@ -402,14 +402,44 @@ class UsersRepository extends BaseRepository {
     }
 
     /** Telegram user id of the account, or throws if the user did not sign in with Telegram. */
+    /** Telegram id linked to the account (via login or "connect Telegram"), or null. */
+    // eslint-disable-next-line class-methods-use-this
+    getLinkedTelegramId(user: User): string | null {
+        // Telegram-login users also have it in socialId (older rows may predate the telegramId column).
+        return user.telegramId || (user.socialType === SocialType.Telegram ? user.socialId : null);
+    }
+
+    /** Linked Telegram id, or throws if the user has not connected a Telegram account. */
     async getTelegramIdStrict(userId: string): Promise<string> {
         const user = await this.getUserByIdStrict(userId);
+        const telegramId = this.getLinkedTelegramId(user);
 
-        if (user.socialType !== SocialType.Telegram) {
-            throw new UserError('NOT_TELEGRAM_USER');
+        if (!telegramId) {
+            throw new UserError('TELEGRAM_NOT_LINKED');
         }
 
-        return user.socialId;
+        return telegramId;
+    }
+
+    /**
+     * Connects a Telegram account to the user. Fails if that Telegram id is already linked
+     * to a different account.
+     */
+    async linkTelegram(userId: string, telegramId: string): Promise<void> {
+        await this.db.sequelize.transaction(async transaction => {
+            const owner = await this.db.User.findOne({
+                where: { telegramId },
+                transaction,
+                lock: transaction.LOCK.UPDATE,
+            });
+
+            if (owner && owner.id !== userId) {
+                throw new UserError('TELEGRAM_ALREADY_LINKED');
+            }
+
+            const user = await this.getUserByIdStrict(userId, transaction);
+            await user.update({ telegramId }, { transaction });
+        });
     }
 }
 

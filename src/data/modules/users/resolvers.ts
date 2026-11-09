@@ -27,7 +27,10 @@ export type OriginUserParent = UserBackend;
 type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay' | 'usersTotal'>;
 type MutationType = Pick<Mutation, 'updateClientSeed' | 'updateServerSeed'>;
 type SubscriptionType = Pick<Subscription, 'balance'>;
-type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money' | 'turnover' | 'refPercent'>;
+type UserType = Pick<
+    User,
+    'id' | 'role' | 'username' | 'avatar' | 'money' | 'turnover' | 'refPercent' | 'telegramLinked'
+>;
 type BalanceSubscriptionType = Pick<BalanceSubscription, 'money' | 'maxReached'>;
 
 interface QueryMapping {
@@ -115,6 +118,8 @@ export const resolvers: UsersResolvers = {
         refPercent: (parent, _0, { user }) => (user && user.id === parent.id ? parent.refPercent : undefined),
         // role is non-null; others always appear as Default
         role: (parent, _0, { user }) => (user && user.id === parent.id ? parent.role : UserRole.Default),
+        telegramLinked: (parent, _0, { user, repositories }) =>
+            user && user.id === parent.id ? Boolean(repositories.users.getLinkedTelegramId(parent)) : undefined,
     },
     URL: GraphQLURL,
 };

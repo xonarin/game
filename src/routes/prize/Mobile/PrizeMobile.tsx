@@ -6,6 +6,7 @@ import { cn } from '../../../utils/bem-css-module';
 import Layout33Content from '../../../components/Layout/Mobile/containers/Layout33Content';
 import { PrizeInfo, TabNameType } from '../PrizeInfo/PrizeInfo';
 import { PrizeTabMobile } from './PrizeTabMobile';
+import TelegramConnect from '../../../components/TelegramConnect/TelegramConnect';
 import GiftBox from '../bonusicon/giftbox.svg';
 import PomoCode from '../bonusicon/promo.svg';
 import NewPromoCode from '../bonusicon/add.svg';
@@ -21,6 +22,7 @@ const PrizeMobile: React.FC = () => {
         <Layout33Content
             centerContent={
                 <div className={cnPrizeMobile()}>
+                    <TelegramConnect />
                     <div className={cnPrizeMobile('Nav')}>
                         <PrizeTabMobile
                             tabName="freeCoins"

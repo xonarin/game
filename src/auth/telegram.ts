@@ -10,6 +10,8 @@ import { Express, Request } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
+import { repositories } from '../data/database';
+import { UserError } from '../utils/errors';
 import { getDefaultAvatar, signIn } from './session';
 
 const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24; // reject logins older than 1 day
@@ -74,6 +76,42 @@ export const initTelegram = (app: Express) => {
             });
 
             res.redirect('/');
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    // Connect a Telegram account to the already-logged-in user (for the bonus), regardless of
+    // how they signed in. The Telegram login widget on the bonus page posts here.
+    app.get('/auth/telegram/link', async (req, res, next) => {
+        try {
+            if (!req.user) {
+                res.redirect('/login');
+                return;
+            }
+            if (!isTelegramEnabled()) {
+                res.redirect('/bonuse?telegram=disabled');
+                return;
+            }
+
+            const data = readAuthData(req);
+            if (!verifyTelegramAuth(data, config.auth.telegram.botToken)) {
+                console.error('[telegram] invalid or expired link data for id', data.id);
+                res.redirect('/bonuse?telegram=error');
+                return;
+            }
+
+            try {
+                await repositories.users.linkTelegram(req.user.id, data.id);
+            } catch (e) {
+                if (e instanceof UserError && e.message === 'TELEGRAM_ALREADY_LINKED') {
+                    res.redirect('/bonuse?telegram=taken');
+                    return;
+                }
+                throw e;
+            }
+
+            res.redirect('/bonuse?telegram=linked');
         } catch (e) {
             next(e);
         }

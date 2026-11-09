@@ -1,0 +1,29 @@
+@import '../../assets/styles/vars';
+
+.TelegramConnect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    background: $color-dark-gray;
+    text-align: center;
+
+    &-Text {
+        color: $color-white;
+        font-size: $font-size-m;
+    }
+
+    &-Status {
+        color: $color-gold;
+        font-size: $font-size-s;
+    }
+
+    &-Widget {
+        display: flex;
+        justify-content: center;
+        min-height: 44px;
+    }
+}

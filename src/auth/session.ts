@@ -40,6 +40,11 @@ export const signIn = async (req: Request, res: Response, profile: SocialProfile
         profile.avatar,
     );
 
+    // A Telegram login also counts as a linked Telegram account for the bonus.
+    if (profile.socialType === SocialType.Telegram && !user.telegramId) {
+        await repositories.users.linkTelegram(user.id, profile.socialId);
+    }
+
     const token = jwt.sign({ id: user.id }, config.auth.jwt.secret, { expiresIn: SESSION_TTL_SECONDS });
     res.cookie(config.auth.tokenKey, token, {
         maxAge: 1000 * SESSION_TTL_SECONDS,

@@ -21,7 +21,8 @@ type TranslationCode =
     | 'BAD_PROMO_CODE'
     | 'NO_PROMO_CODE'
     | 'LAST_PROMO_CODE_DIDNT_BET'
-    | 'NOT_TELEGRAM_USER'
+    | 'TELEGRAM_NOT_LINKED'
+    | 'TELEGRAM_ALREADY_LINKED'
     | 'TELEGRAM_NOT_SUBSCRIBED'
     | 'TELEGRAM_BOT_NOT_STARTED'
     | 'BONUS_NOT_CONFIGURED'
@@ -107,8 +108,11 @@ const translations: Record<TranslationCode, Translation> = {
     LAST_PROMO_CODE_DIDNT_BET: {
         ru: 'Последний раз вы брали промокод и не сделали на его сумму ставок. Сделайте ставки.',
     },
-    NOT_TELEGRAM_USER: {
-        ru: 'Войдите через Telegram, чтобы получить бонус.',
+    TELEGRAM_NOT_LINKED: {
+        ru: 'Подключите Telegram, чтобы получить бонус.',
+    },
+    TELEGRAM_ALREADY_LINKED: {
+        ru: 'Этот Telegram уже привязан к другому аккаунту.',
     },
     TELEGRAM_NOT_SUBSCRIBED: {
         ru: 'Подпишитесь на наш Telegram-канал, чтобы получить бонус.',

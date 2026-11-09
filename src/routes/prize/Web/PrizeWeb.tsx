@@ -5,6 +5,7 @@ import s from './Prize.scss';
 import { cn } from '../../../utils/bem-css-module';
 import { PrizeTab } from './PrizeTab';
 import { PrizeInfo, TabNameType } from '../PrizeInfo/PrizeInfo';
+import TelegramConnect from '../../../components/TelegramConnect/TelegramConnect';
 import GiftBox from '../bonusicon/giftbox.svg';
 import PomoCode from '../bonusicon/promo.svg';
 import NewPromoCode from '../bonusicon/add.svg';
@@ -17,6 +18,7 @@ const PrizeWeb: React.FC = () => {
 
     return (
         <div className={cnPrize()}>
+            <TelegramConnect />
             <div className={cnPrize('Nav')}>
                 <PrizeTab
                     tabName="freeCoins"

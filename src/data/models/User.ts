@@ -42,6 +42,8 @@ export interface User extends Model {
     readonly id: string;
     readonly socialType: SocialType;
     readonly socialId: string;
+    // Linked Telegram user id (for the bonus), independent of the login method. Null until linked.
+    readonly telegramId: string | null;
     readonly role: UserRole;
     readonly username: string;
     readonly avatar: string;
@@ -104,6 +106,12 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             socialId: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+
+            telegramId: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                unique: true,
             },
 
             role: {
