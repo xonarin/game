@@ -1,11 +1,13 @@
-import { uuid } from 'uuidv4';
-import { ApolloError } from 'apollo-server';
+import { randomUUID } from 'crypto';
+import { GraphQLError } from 'graphql';
 
-export class UserError extends ApolloError {
+/**
+ * Expected business error shown to the user (message is a translation key, see utils/translation).
+ * Sent to the client as `extensions.code = 'USER_ERROR'`.
+ */
+export class UserError extends GraphQLError {
     constructor(message: string, extensions?: Record<string, unknown>) {
-        super(message, 'USER_ERROR', extensions);
-
-        Error.captureStackTrace(this);
+        super(message, { extensions: { ...extensions, code: 'USER_ERROR' } });
     }
 }
 
@@ -13,6 +15,10 @@ const isError = (err: unknown): err is Error => {
     return err instanceof Error;
 };
 
+/**
+ * graphql-shield fallback: user errors pass through, anything else is logged with an id
+ * and replaced by a generic message so internals don't leak to the client.
+ */
 export const fallbackError = (err: unknown): Error => {
     if (err === null) {
         return new Error('ERROR');
@@ -22,12 +28,10 @@ export const fallbackError = (err: unknown): Error => {
         return err;
     }
 
-    const errId = uuid();
+    const errId = randomUUID();
 
     if (isError(err)) {
-        // eslint-disable-next-line no-param-reassign
-        err.message = `${err.message}: ${errId}`;
-        console.error(err.stack || err);
+        console.error(`[${errId}]`, err.stack || err);
     } else {
         console.error(`Extraordinary error: ${errId}`);
         console.error(err);

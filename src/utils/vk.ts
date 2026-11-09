@@ -1,5 +1,4 @@
 import * as queryString from 'querystring';
-import fetch from 'node-fetch';
 
 import config from '../config';
 import Locker from './locker';

@@ -1,5 +1,15 @@
 import { range } from 'lodash';
-import { combinations } from 'mathjs';
+
+/** Binomial coefficient C(n, k): number of k-element subsets of an n-element set. */
+const combinations = (n: number, k: number): number => {
+    if (k < 0 || k > n) return 0;
+    const kk = Math.min(k, n - k);
+    let result = 1;
+    for (let i = 1; i <= kk; i++) {
+        result = (result * (n - kk + i)) / i;
+    }
+    return Math.round(result);
+};
 
 export const FIELD_SIZE = 25;
 export const PROFIT_PERCENT = -0.05;

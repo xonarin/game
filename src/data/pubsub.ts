@@ -1,6 +1,6 @@
 import { Model } from 'sequelize';
 import Redis, { RedisOptions } from 'ioredis';
-import { PubSubEngine } from 'apollo-server-express';
+import { PubSubEngine } from 'graphql-subscriptions';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 import config from '../config';

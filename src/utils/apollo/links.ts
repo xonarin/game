@@ -1,7 +1,8 @@
 import { HttpLink, HttpOptions, split } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { SchemaLink } from '@apollo/client/link/schema';
-import { WebSocketLink } from '@apollo/client/link/ws';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 import { getCookie } from '../cookies';
@@ -14,7 +15,7 @@ export const errorLink = () => {
 
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path, extensions }) => {
-                if (!extensions || loggableErrorCodes.has(extensions.code)) {
+                if (!extensions || loggableErrorCodes.has(String(extensions.code))) {
                     console.warn(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
                 }
             });
@@ -38,26 +39,26 @@ export const httpLink = (options: HttpOptions = {}) => {
     });
 };
 
-export const wsLink = (config: Partial<WebSocketLink.Configuration> = {}) => {
+export const wsLink = () => {
     const { protocol: originalProtocol, hostname, host: originalHost } = window.location;
-    // Порт 3002 берется из файла config. Дорого делать отдельный клиентский конфиг и связывать его с серверным.
+    // In development the WebSocket server listens on its own port (config.devPort = 3002)
     const host = __DEV__ ? `${hostname}:3002` : originalHost;
     const protocol = originalProtocol === 'https:' ? 'wss:' : 'ws:';
 
-    return new WebSocketLink({
-        uri: `${protocol}//${host}/graphql`,
-        options: {
-            reconnect: true,
-            connectionParams: {
-                authToken: getCookie('idToken'),
-            },
-        },
-        ...config,
-    });
+    return new GraphQLWsLink(
+        createClient({
+            url: `${protocol}//${host}/graphql`,
+            lazy: true,
+            retryAttempts: Infinity,
+            shouldRetry: () => true,
+            // The server also reads the session cookie from the upgrade request
+            connectionParams: () => ({ authToken: getCookie('idToken') }),
+        }),
+    );
 };
 
 // eslint-disable-next-line no-shadow
-export const requestLink = ({ wsLink, httpLink }: { wsLink: WebSocketLink; httpLink: HttpLink }) => {
+export const requestLink = ({ wsLink, httpLink }: { wsLink: GraphQLWsLink; httpLink: HttpLink }) => {
     return split(
         ({ query }) => {
             const definition = getMainDefinition(query);

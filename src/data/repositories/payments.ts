@@ -96,7 +96,7 @@ class PaymentsRepository extends BaseRepository {
             transaction,
         });
 
-        return result.sum;
+        return result ? Number(result.sum) : 0;
     }
 
     async createPayment(userId: string, methodId: string, amount: number): Promise<string> {

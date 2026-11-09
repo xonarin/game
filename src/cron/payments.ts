@@ -1,5 +1,4 @@
 import cron from 'node-cron';
-import fetch from 'node-fetch';
 
 import config from '../config';
 import { repositories } from '../data/database';

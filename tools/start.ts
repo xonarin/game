@@ -158,7 +158,7 @@ async function start() {
     }
 
     serverCompiler.watch(watchOptions, (error, stats) => {
-        if (app && !error && !stats.hasErrors()) {
+        if (typeof app !== 'undefined' && !error && stats && !stats.hasErrors()) {
             checkForUpdate().then(() => {
                 appPromiseIsResolved = true;
                 appPromiseResolve();

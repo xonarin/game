@@ -1,51 +1,39 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { ExecutionParams } from 'subscriptions-transport-ws';
 import { createContext as createDataloaderSequelizeContext, EXPECTED_OPTIONS_KEY } from 'dataloader-sequelize';
 
-import { ApolloUserContext, ApolloContext } from '../../interfaces/apollo';
+import { ApolloContext } from '../../interfaces/apollo';
 import { SequelizeContext } from '../../interfaces/sequelize';
 import { database, repositories } from '../../data/database';
 import initRepositories from '../../data/repositories';
+import { User } from '../../data/models/User';
 import config from '../../config';
-
-export interface ConnectionParams {
-    authToken: string;
-}
 
 export interface Payload {
     id: string;
 }
 
-export const isValidConnectionParams = (connectionParams: object): connectionParams is ConnectionParams => {
+export const isValidPayload = (payload: unknown): payload is Payload => {
     return (
-        'authToken' in connectionParams && typeof (connectionParams as { authToken: unknown }).authToken === 'string'
+        typeof payload === 'object' &&
+        payload !== null &&
+        'id' in payload &&
+        typeof (payload as { id: unknown }).id === 'string'
     );
 };
 
-export const isValidPayload = (payload: object | string): payload is Payload => {
-    return typeof payload === 'object' && 'id' in payload && typeof (payload as { id: unknown }).id === 'string';
-};
-
-// Request can be undefined because apollo doesn't provide this for websocket connection
-export const createContext = async (
-    req?: Request,
-    res?: Response,
-    connection?: ExecutionParams,
-): Promise<ApolloContext> => {
+const createCommonContext = (): ApolloContext => {
     const sequelizeContext: SequelizeContext = {
         [EXPECTED_OPTIONS_KEY]: createDataloaderSequelizeContext(database.sequelize),
     };
-    const commonContext = {
+    return {
         repositories: initRepositories(database, sequelizeContext),
     };
+};
 
-    if (connection) {
-        return {
-            ...commonContext,
-            ...connection.context,
-        };
-    }
+/** Context for HTTP GraphQL requests and server-side rendering (user comes from express-jwt). */
+export const createContext = async (req?: Request, res?: Response): Promise<ApolloContext> => {
+    const commonContext = createCommonContext();
 
     if (!req) return commonContext;
 
@@ -57,17 +45,38 @@ export const createContext = async (
     };
 };
 
-export const createWebSocketContext = async (connectionParams: object): Promise<ApolloUserContext> => {
-    if (!isValidConnectionParams(connectionParams)) {
-        return {};
-    }
+/** Context for a WebSocket subscription operation, the user is resolved once per connection. */
+export const createSubscriptionContext = (user?: User): ApolloContext => ({
+    ...createCommonContext(),
+    user,
+});
 
-    const payload = jwt.verify(connectionParams.authToken, config.auth.jwt.secret);
-    if (!isValidPayload(payload)) {
-        return {};
-    }
+const readCookie = (cookieHeader: string | undefined, name: string): string | undefined => {
+    if (!cookieHeader) return undefined;
+    const pair = cookieHeader
+        .split(';')
+        .map(part => part.trim())
+        .find(part => part.startsWith(`${name}=`));
+    return pair ? decodeURIComponent(pair.slice(name.length + 1)) : undefined;
+};
 
-    return {
-        user: (await repositories.users.getUserById(payload.id)) || undefined,
-    };
+/**
+ * Resolves the user of a WebSocket connection: the session cookie sent with the upgrade request,
+ * or `authToken` from connection params (older clients). Invalid tokens mean "guest".
+ */
+export const getWebSocketUser = async (
+    connectionParams: Record<string, unknown> | undefined,
+    cookieHeader: string | undefined,
+): Promise<User | undefined> => {
+    const fromParams = connectionParams && connectionParams.authToken;
+    const token = readCookie(cookieHeader, config.auth.tokenKey) || (typeof fromParams === 'string' ? fromParams : '');
+    if (!token) return undefined;
+
+    try {
+        const payload = jwt.verify(token, config.auth.jwt.secret, { algorithms: ['HS256'] });
+        if (!isValidPayload(payload)) return undefined;
+        return (await repositories.users.getUserById(payload.id)) || undefined;
+    } catch {
+        return undefined;
+    }
 };

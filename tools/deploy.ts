@@ -1,9 +1,8 @@
 import path from 'path';
-import fetch from 'node-fetch';
 import { Options } from 'execa';
 
 import { spawn } from './lib/cp';
-import { makeDir, moveDir, cleanDir } from './lib/fs';
+import { makeDir } from './lib/fs';
 import run from './run';
 
 type RemoteDefs = {
@@ -11,7 +10,6 @@ type RemoteDefs = {
     url: string;
     branch: string;
     website: string;
-    static?: boolean;
 };
 
 // GitHub Pages
@@ -20,7 +18,6 @@ type RemoteDefs = {
 //     url: 'https://github.com/<user>/<repo>.git',
 //     branch: 'gh-pages',
 //     website: 'https://<user>.github.io/<repo>/',
-//     static: true,
 // };
 
 // Heroku
@@ -78,16 +75,7 @@ async function deploy() {
     // Build the project in RELEASE mode which
     // generates optimized and minimized bundles
     process.argv.push('--release');
-    if (remote.static) process.argv.push('--static');
     await run(require('./build').default); // eslint-disable-line global-require
-    if (process.argv.includes('--static')) {
-        await cleanDir('build/*', {
-            nosort: true,
-            dot: true,
-            ignore: ['build/.git', 'build/public'],
-        });
-        await moveDir('build/public', 'build');
-    }
 
     // Push the contents of the build folder to the remote server via Git
     await spawn('git', ['add', '.', '--all'], options);

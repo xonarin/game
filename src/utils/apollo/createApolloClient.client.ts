@@ -3,7 +3,6 @@ import apolloLogger from 'apollo-link-logger';
 
 import createCache from './createCache';
 import { errorLink, httpLink, requestLink, wsLink } from './links';
-import schema from '../../data/modules/clientState/schema';
 import { resolvers } from '../../data/modules/clientState/resolvers';
 
 const createApolloClient = () => {
@@ -22,7 +21,6 @@ const createApolloClient = () => {
     return new ApolloClient({
         link,
         cache,
-        typeDefs: schema,
         resolvers,
         queryDeduplication: true,
         connectToDevTools: true,

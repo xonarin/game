@@ -82,17 +82,20 @@ export const initChat = (sequelize: Sequelize): ChatStatic => {
         Chat.Message = Chat.hasMany(database.Message, { as: 'messages', foreignKey: 'chatId' });
     };
 
-    Chat.prototype.canRead = async function canRead(this: Chat, user?: User): Promise<boolean> {
-        return this.type !== ChatType.Pm || (user && this.hasMember(user));
+    // instance methods (declared in the Chat interface above)
+    const chatPrototype = Chat.prototype as unknown as Chat;
+
+    chatPrototype.canRead = async function canRead(this: Chat, user?: User): Promise<boolean> {
+        return this.type !== ChatType.Pm || (Boolean(user) && this.hasMember(user!));
     };
 
-    Chat.prototype.canWrite = async function canWrite(this: Chat, user?: User): Promise<boolean> {
+    chatPrototype.canWrite = async function canWrite(this: Chat, user?: User): Promise<boolean> {
         return this.type === ChatType.AdminAnnouncements
             ? Boolean(user && user.role === UserRole.Admin)
             : this.canRead(user);
     };
 
-    Chat.prototype.getTarget = async function getTarget(
+    chatPrototype.getTarget = async function getTarget(
         this: Chat,
         excludeIds?: User['id'][],
     ): Promise<User['id'][] | undefined> {

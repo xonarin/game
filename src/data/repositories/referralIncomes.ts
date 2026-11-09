@@ -1,12 +1,12 @@
 import { col, fn, Op, Transaction } from 'sequelize';
-import { DateTime, DurationUnit } from 'luxon';
+import { DateTime, DateTimeUnit } from 'luxon';
 
 import BaseRepository from './base';
 import { ReferralIncome } from '../models/ReferralIncome';
 import { GraphDataEntry, RefStatsPeriod } from '../../__generated__/graphql';
 
 class ReferralIncomesRepository extends BaseRepository {
-    static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
+    static periodMapping: Record<RefStatsPeriod, DateTimeUnit> = {
         [RefStatsPeriod.Week]: 'week',
         [RefStatsPeriod.Month]: 'month',
         [RefStatsPeriod.Year]: 'year',
@@ -29,7 +29,8 @@ class ReferralIncomesRepository extends BaseRepository {
     }
 
     async getTopUserId(start: Date, finish: Date): Promise<{ referrerId: string; value: number } | null> {
-        return this.db.ReferralIncome.findOne({
+        // raw aggregate row, not a model instance
+        return (this.db.ReferralIncome.findOne({
             attributes: ['referrerId', [fn('SUM', col('amount')), 'value']],
             where: {
                 createdAt: { [Op.between]: [start, finish] },
@@ -38,7 +39,7 @@ class ReferralIncomesRepository extends BaseRepository {
             order: [[col('value'), 'DESC']],
             limit: 1,
             raw: true,
-        });
+        }) as unknown) as Promise<{ referrerId: string; value: number } | null>;
     }
 
     async getIncomeStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
@@ -47,7 +48,8 @@ class ReferralIncomesRepository extends BaseRepository {
             .toSQL();
         const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
-        return this.db.ReferralIncome.findAll({
+        // raw aggregate rows, not model instances
+        const rows = await this.db.ReferralIncome.findAll({
             attributes: [
                 [fn('DATE_FORMAT', col('createdAt'), format), 'date'],
                 [fn('SUM', col('amount')), 'value'],
@@ -59,6 +61,7 @@ class ReferralIncomesRepository extends BaseRepository {
             group: col('date'),
             raw: true,
         });
+        return (rows as unknown) as GraphDataEntry[];
     }
 }
 

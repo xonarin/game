@@ -4,7 +4,6 @@ import { SchemaLink } from '@apollo/client/link/schema';
 
 import createCache from './createCache';
 import { errorLink, schemaLink } from './links';
-import schema from '../../data/modules/clientState/schema';
 import { defaults, resolvers } from '../../data/modules/clientState/resolvers';
 
 // TODO: write typings for partialCacheDefaults
@@ -17,7 +16,6 @@ const createApolloClient = (schemaOptions: SchemaLink.Options, partialCacheDefau
     return new ApolloClient({
         link,
         cache,
-        typeDefs: schema,
         resolvers,
         ssrMode: true,
         queryDeduplication: true,

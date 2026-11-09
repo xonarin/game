@@ -9,7 +9,6 @@
  */
 import crypto from 'crypto';
 import { Express, Request, Response } from 'express';
-import fetch from 'node-fetch';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';

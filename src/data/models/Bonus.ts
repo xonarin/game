@@ -1,4 +1,4 @@
-import { Model } from 'sequelize/types';
+import { Model } from 'sequelize';
 import { BelongsTo, BelongsToGetAssociationMixin, DataTypes, Sequelize } from 'sequelize';
 
 import { User } from './User';

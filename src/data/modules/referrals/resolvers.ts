@@ -31,7 +31,7 @@ interface QueryMapping {
 }
 
 interface MutationMapping {
-    getReferralMoney: Resolver<string, GetReferralMoneyMutationVariables>;
+    getReferralMoney: Resolver<number, GetReferralMoneyMutationVariables>;
 }
 
 type ReferralsResolvers = Resolvers<

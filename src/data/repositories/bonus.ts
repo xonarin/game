@@ -152,7 +152,7 @@ class BonusRepository extends BaseRepository {
         return promoCode;
     }
 
-    async usePromoCode(userId: string, code: string): Promise<PromoCode> {
+    async usePromoCode(userId: string, code: string): Promise<PromoCodeUse> {
         const lastUse: PromoCodeUse | null = await this.db.PromoCodeUse.findOne({
             where: { userId },
             order: [['createdAt', 'DESC']],
@@ -216,7 +216,7 @@ class BonusRepository extends BaseRepository {
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {
-            const promoCodeUses: PromoCode[] = await this.db.PromoCodeUse.findAll({
+            const promoCodeUses: PromoCodeUse[] = await this.db.PromoCodeUse.findAll({
                 where: { code: fixedCode },
                 transaction,
             });

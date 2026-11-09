@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { rule } from 'graphql-shield';
-import Redis, { RedisOptions } from 'ioredis';
+import Redis, { RedisOptions, Result } from 'ioredis';
 
 import { User } from '../../data/models/User';
 import config from '../../config';
@@ -9,6 +9,13 @@ import { UserError } from '../errors';
 const redisOptions: RedisOptions = {
     retryStrategy: times => Math.min(times * 50, 2000),
 };
+
+// custom Lua command registered below with defineCommand
+declare module 'ioredis' {
+    interface RedisCommander<Context> {
+        gqlslIncr(key: string, points: number, secDuration: number): Result<[number, number], Context>;
+    }
+}
 
 const redis = new Redis(config.redisUrl, redisOptions);
 
@@ -48,7 +55,8 @@ export const limit = (
     points: number = 1,
     error: (key: string, ttl: number) => Error = () => new UserError('FREQUENT_REQUESTS'),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    keyGetter: (ctx: any) => string = (ctx: { req: Request; user?: User }) => (ctx.user ? ctx.user.id : ctx.req.ip),
+    keyGetter: (ctx: any) => string = (ctx: { req?: Request; user?: User }) =>
+        ctx.user ? ctx.user.id : (ctx.req && ctx.req.ip) || 'unknown',
 ) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return rule({ cache: 'no_cache' })(async (_0, _1, ctx: any) => {

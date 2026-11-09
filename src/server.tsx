@@ -1,17 +1,21 @@
-import 'reflect-metadata';
 import './utils/nodeCompat';
 
 import path from 'path';
 import { createServer } from 'http';
 import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import { expressjwt, UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { QueryParams } from 'universal-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@as-integrations/express5';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
+import { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/use/ws';
+import { specifiedRules, validate } from 'graphql';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import depthLimit from 'graphql-depth-limit';
 
@@ -27,7 +31,9 @@ import { database, repositories } from './data/database';
 import AppModule from './data/modules/app';
 import { startServices } from './services';
 import rateLimiterMiddleware from './utils/middlewares/rateLimiterRedis';
-import { createContext, createWebSocketContext } from './utils/apollo/createContext';
+import { createContext, createSubscriptionContext, getWebSocketUser } from './utils/apollo/createContext';
+import { User } from './data/models/User';
+import { ApolloContext } from './interfaces/apollo';
 import { configureLuxon } from './utils/luxon';
 // import assets from './asset-manifest.json'; // eslint-disable-line import/no-unresolved
 // @ts-ignore
@@ -58,8 +64,8 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //
 // Enable rate-limit
@@ -112,45 +118,67 @@ resetOnline();
 resetGames();
 
 //
-// Register API middleware
+// GraphQL API: HTTP via Apollo Server, subscriptions via graphql-ws (WebSocket on /graphql)
 // -----------------------------------------------------------------------------
-// https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-express
-const server = new ApolloServer({
-    schema: AppModule,
-    uploads: false,
-    introspection: __DEV__,
-    debug: __DEV__,
-    tracing: __DEV__,
-    playground: __DEV__
-        ? {
-              settings: {
-                  'request.credentials': 'include',
-              },
-              subscriptionEndpoint: 'ws://localhost:3002/graphql',
-          }
-        : false,
-    validationRules: [depthLimit(5)],
-    context: ({ req, res, connection }) => createContext(req, res, connection),
-    subscriptions: {
-        onConnect: async connectionParams => {
-            const context = await createWebSocketContext(connectionParams);
+// In production the HTTP server serves both the app and the WebSocket endpoint; in development
+// requests come through tools/start.ts and this server only handles WebSockets (port 3002).
+app.server = createServer(module.hot ? undefined : app);
 
-            if (context.user) {
-                await increaseOnline(context.user.id);
+const wsServer = new WebSocketServer({ server: app.server, path: '/graphql' });
+const wsCleanup = useServer<Record<string, unknown> | undefined, { user?: User }>(
+    {
+        schema: AppModule,
+        // same query depth limit as for HTTP requests
+        validate: (schema, document) => validate(schema, document, [...specifiedRules, depthLimit(5)]),
+        onConnect: async ctx => {
+            const user = await getWebSocketUser(ctx.connectionParams, ctx.extra.request.headers.cookie);
+            // eslint-disable-next-line no-param-reassign
+            ctx.extra.user = user;
+            if (user) {
+                await increaseOnline(user.id);
             }
-
-            return context;
+            return true;
         },
-        onDisconnect: async (_0, context) => {
-            const user = (await context.initPromise)?.user;
-
-            if (user && typeof user.id === 'string') {
+        onDisconnect: async ctx => {
+            const { user } = ctx.extra;
+            if (user) {
                 await decreaseOnline(user.id);
             }
         },
+        context: ctx => createSubscriptionContext(ctx.extra.user),
     },
+    wsServer,
+);
+
+const apolloServer = new ApolloServer<ApolloContext>({
+    schema: AppModule,
+    introspection: __DEV__,
+    includeStacktraceInErrorResponses: __DEV__,
+    validationRules: [depthLimit(5)],
+    plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer: app.server }),
+        {
+            async serverWillStart() {
+                return {
+                    async drainServer() {
+                        await wsCleanup.dispose();
+                    },
+                };
+            },
+        },
+        ...(__DEV__ ? [] : [ApolloServerPluginLandingPageDisabled()]),
+    ],
 });
-server.applyMiddleware({ app });
+
+// Apollo Server starts asynchronously: hold /graphql requests until it is ready
+const graphqlMiddleware = apolloServer.start().then(() =>
+    expressMiddleware(apolloServer, {
+        context: ({ req, res }) => createContext(req, res),
+    }),
+);
+app.use('/graphql', (req, res, next) => {
+    graphqlMiddleware.then(middleware => middleware(req, res, next)).catch(next);
+});
 
 //
 // Ids for different chats
@@ -159,7 +187,7 @@ let chats: Record<GlobalChatType, string> = { game: '' };
 
 //
 // Register server-side rendering middleware
-app.get('*', async (req, res, next) => {
+app.get('/{*path}', async (req, res, next) => {
     try {
         const css = new Set();
 
@@ -270,9 +298,6 @@ app.use((err: any, _0: Request, res: Response, _next: NextFunction) => {
 //
 // Launch the server
 // -----------------------------------------------------------------------------
-app.server = createServer(module.hot ? undefined : app);
-server.installSubscriptionHandlers(app.server);
-
 const port = module.hot ? config.devPort : config.port;
 const serverSync = database.sequelize
     .sync()

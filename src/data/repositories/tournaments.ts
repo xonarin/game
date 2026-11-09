@@ -54,7 +54,7 @@ class TournamentsRepository extends BaseRepository {
                     raw: true,
                 });
 
-                minesGames.forEach((game: { userId: number; sum: number }) => {
+                (minesGames as unknown as { userId: number; sum: number }[]).forEach(game => {
                     const key = game.userId.toString();
 
                     if (!results[key]) {
@@ -78,7 +78,7 @@ class TournamentsRepository extends BaseRepository {
                     raw: true,
                 });
 
-                referrals.forEach((game: { userId: number; sum: number }) => {
+                (referrals as unknown as { userId: number; sum: number }[]).forEach(game => {
                     const key = game.userId.toString();
 
                     if (!results[key]) {

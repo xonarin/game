@@ -1,4 +1,4 @@
-import { DateTime, DurationUnit } from 'luxon';
+import { DateTime, DateTimeUnit } from 'luxon';
 import { col, fn, Op, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
@@ -17,7 +17,7 @@ const REF_A = 1;
 const REF_D = 1;
 
 class UsersRepository extends BaseRepository {
-    static periodMapping: Record<RefStatsPeriod, DurationUnit> = {
+    static periodMapping: Record<RefStatsPeriod, DateTimeUnit> = {
         [RefStatsPeriod.Week]: 'week',
         [RefStatsPeriod.Month]: 'month',
         [RefStatsPeriod.Year]: 'year',
@@ -273,7 +273,8 @@ class UsersRepository extends BaseRepository {
     }
 
     async getTopReferralUserId(start: Date, finish: Date): Promise<{ refId: string; value: number } | null> {
-        return this.db.User.findOne({
+        // raw aggregate row, not a model instance
+        return (this.db.User.findOne({
             attributes: ['refId', [fn('SUM', col('amount')), 'value']],
             where: {
                 createdAt: { [Op.between]: [start, finish] },
@@ -282,11 +283,12 @@ class UsersRepository extends BaseRepository {
             order: [[col('value'), 'DESC']],
             limit: 1,
             raw: true,
-        });
+        }) as unknown) as Promise<{ refId: string; value: number } | null>;
     }
 
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
-        return this.db.User.findAll({
+        // raw aggregate rows, not model instances
+        const rows = await this.db.User.findAll({
             attributes: [
                 'id',
                 'username',
@@ -307,6 +309,7 @@ class UsersRepository extends BaseRepository {
             subQuery: false,
             raw: true,
         });
+        return (rows as unknown) as Referral[];
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
@@ -315,7 +318,8 @@ class UsersRepository extends BaseRepository {
             .toSQL();
         const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
-        return this.db.User.findAll({
+        // raw aggregate rows, not model instances
+        const rows = await this.db.User.findAll({
             attributes: [
                 [fn('DATE_FORMAT', col('createdAt'), format), 'date'],
                 [fn('COUNT', '*'), 'value'],
@@ -327,6 +331,7 @@ class UsersRepository extends BaseRepository {
             group: col('date'),
             raw: true,
         });
+        return (rows as unknown) as GraphDataEntry[];
     }
 
     getReferralMoney(userId: string) {

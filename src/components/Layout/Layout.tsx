@@ -47,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullScreen }) => {
     useSubscription<BalanceSubscriptionSubscription, BalanceSubscriptionSubscriptionVariables>(
         BalanceSubscriptionDocument,
         {
-            onSubscriptionData: async ({ client, subscriptionData }) => {
+            onData: async ({ client, data: subscriptionData }) => {
                 const { data } = subscriptionData;
 
                 if (data?.balance === undefined || data.balance === null) {

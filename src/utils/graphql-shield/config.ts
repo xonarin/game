@@ -1,8 +1,8 @@
-import { IOptionsConstructor } from 'graphql-shield/dist/types';
+import { shield } from 'graphql-shield';
 
 import { fallbackError } from '../errors';
 
-const shieldConfig: IOptionsConstructor = {
+const shieldConfig: Parameters<typeof shield>[1] = {
     allowExternalErrors: false,
     debug: false,
     fallbackError,
