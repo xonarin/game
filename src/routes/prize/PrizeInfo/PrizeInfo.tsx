@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './PrizeInfo.scss';
 import { cn } from '../../../utils/bem-css-module';
 import Text from '../../../components/Text/Text';
+import AppContext from '../../../context';
 import PrizeActivePromoCodeForm from '../PrizeActivePromoCodeForm/PrizeActivePromoCodeForm';
 import PrizeCreatePromoCodeForm from '../PrizeCreatePromoCodeForm/PrizeCreatePromoCodeForm';
 import useHasBonusQuery from '../../../hooks/graphql/bonus/useHasBonusQuery';
@@ -20,7 +21,11 @@ const cnPrizeInfo = cn(s, 'PrizeInfo');
 export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
     useStyles(s);
 
-    const { hasBonus, refetchHasBonus } = useHasBonusQuery();
+    const { authProviders } = useContext(AppContext);
+    const bot = authProviders?.telegramBot || null;
+    const channel = authProviders?.telegramChannel || null;
+
+    const { refetchHasBonus } = useHasBonusQuery();
 
     const { getBonusMutation, getBonusResult } = useGetBonusMutation();
     const onGetBonusClick = useCallback(async () => {
@@ -31,17 +36,31 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
     return (
         <div className={cnPrizeInfo()}>
             <div className={cnPrizeInfo('Header')}>
-                {selectedTab === 'freeCoins' ? <span>НАШИ ГРУППЫ</span> : <span>ПРОМОКОДЫ В ГРУППАХ</span>}
+                <span>НАШ TELEGRAM</span>
             </div>
 
             <div className={cnPrizeInfo('Groups')}>
-                <a href="https://vk.com/willygame" className={cnPrizeInfo('Btn')}>
-                    Вконтакте
-                </a>
+                {channel && (
+                    <a
+                        href={`https://t.me/${channel}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cnPrizeInfo('Btn')}
+                    >
+                        Наш канал
+                    </a>
+                )}
 
-                <a href="https://t.me/willygames" className={cnPrizeInfo('Btn')}>
-                    Телеграм
-                </a>
+                {bot && (
+                    <a
+                        href={`https://t.me/${bot}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cnPrizeInfo('Btn')}
+                    >
+                        Запустить бота
+                    </a>
+                )}
             </div>
 
             <div className={cnPrizeInfo('Content')}>
@@ -49,30 +68,30 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
                     <div>
                         <Text color="white">Чтобы получать каждый день до 3 рублей, нужно:</Text>
                         <ul>
-                            <li>Быть подписаным на группу ВК.</li>
-                            <li>Открытый профиль в ВК.</li>
-                            <li>Сделать репост последней записи в ВК группе.</li>
+                            <li>Подключить Telegram (если вход был через VK ID).</li>
+                            <li>Подписаться на наш Telegram-канал.</li>
+                            <li>Запустить бота (нажать «Старт»).</li>
                         </ul>
                     </div>
                 )}
 
                 {selectedTab === 'activePromoCode' && (
                     <div>
-                        <Text color="white">Для активации промокодов, вы должны:</Text>
+                        <Text color="white">Для активации промокодов вы должны:</Text>
                         <ul>
-                            <li>Быть подписаным на группу ВК.</li>
-                            <li>Открытый профиль в ВК.</li>
-                            <li>Иметь не менее 20 друзей в ВК.</li>
+                            <li>Подключить Telegram (если вход был через VK ID).</li>
+                            <li>Подписаться на наш Telegram-канал.</li>
+                            <li>Запустить бота (нажать «Старт»).</li>
                         </ul>
                     </div>
                 )}
 
                 {selectedTab === 'createPromoCode' && (
                     <div>
-                        <Text color="white">Для создания промокодов, вы должны:</Text>
+                        <Text color="white">Для создания промокодов вы должны:</Text>
                         <ul>
                             <li>Иметь пополнений на сумму не менее 50 рублей.</li>
-                            <li>Подписаным на группу ВК.</li>
+                            <li>Подписаться на наш Telegram-канал и запустить бота.</li>
                         </ul>
                     </div>
                 )}
@@ -86,7 +105,7 @@ export const PrizeInfo: React.FC<PrizeInfoProps> = ({ selectedTab }) => {
                         <button
                             type="button"
                             className={cnPrizeInfo('Btn')}
-                            disabled={!hasBonus}
+                            disabled={getBonusResult.loading}
                             onClick={onGetBonusClick}
                         >
                             Получить
