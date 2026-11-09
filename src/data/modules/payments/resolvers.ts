@@ -109,7 +109,7 @@ export const resolvers: PaymentsResolvers = {
                 throw new UserError('NO_PAYMENT_METHOD');
             }
 
-            if (amount < paymentMethod.minAmount || amount > paymentMethod.maxAmount) {
+            if (amount <= 0 || amount < paymentMethod.minAmount || amount > paymentMethod.maxAmount) {
                 throw new UserError('BAD_AMOUNT');
             }
 
@@ -130,7 +130,7 @@ export const resolvers: PaymentsResolvers = {
                 throw new UserError('NO_WITHDRAW_METHOD');
             }
 
-            if (amount < paymentMethod.minAmount || amount > paymentMethod.maxAmount) {
+            if (amount <= 0 || amount < paymentMethod.minAmount || amount > paymentMethod.maxAmount) {
                 throw new UserError('BAD_AMOUNT');
             }
 
