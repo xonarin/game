@@ -3,9 +3,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ModelStatic } from './index';
 
 export type ChatSettingName =
-    | 'chat::adminAnnouncementsTitle'
-    | 'chat::adminAnnouncementsImage'
-    | 'chat::minDepsToSendGlobalMessage';
+    'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage' | 'chat::minDepsToSendGlobalMessage';
 
 export type ReferralsSettingName =
     | 'referrals::minTurnoverCoef'
@@ -23,9 +21,7 @@ export type TournamentSettingsName =
     | 'tournament::referralsPauseDays';
 
 export type PaymentsSettings =
-    | 'payments::defaultDepositCommission'
-    | 'payments::minBetToWithdraw'
-    | 'payments::minDepositToWithdraw';
+    'payments::defaultDepositCommission' | 'payments::minBetToWithdraw' | 'payments::minDepositToWithdraw';
 
 export type UserSettings = 'user::maxBalanceWithoutDeposits';
 
@@ -91,8 +87,8 @@ export interface Setting extends Model {
 
 export type SettingStatic = ModelStatic<Setting>;
 
-export const initSetting = (sequelize: Sequelize): SettingStatic => {
-    return sequelize.define(
+export const initSetting = (sequelize: Sequelize): SettingStatic =>
+    sequelize.define(
         'Setting',
         {
             name: {
@@ -104,7 +100,7 @@ export const initSetting = (sequelize: Sequelize): SettingStatic => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 get(this: Setting) {
-                    return new SettingValue((this.getDataValue('value') as unknown) as string | null);
+                    return new SettingValue(this.getDataValue('value') as unknown as string | null);
                 },
             },
 
@@ -114,4 +110,3 @@ export const initSetting = (sequelize: Sequelize): SettingStatic => {
         },
         { timestamps: false },
     ) as SettingStatic;
-};

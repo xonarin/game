@@ -16,7 +16,7 @@ const memoizedThrottle = <T extends (...args: any[]) => any>(
     const memoizedFunc = memoize(() => throttle(func, wait, options), options.resolver);
 
     // eslint-disable-next-line func-names
-    return function(this: unknown, ...args: unknown[]) {
+    return function (this: unknown, ...args: unknown[]) {
         // Powerful casting types (don't do like that)
         memoizedFunc.apply(this, args as []).apply(this, args as Parameters<T>);
     } as T;

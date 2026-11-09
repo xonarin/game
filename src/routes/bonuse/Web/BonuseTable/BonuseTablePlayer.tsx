@@ -1,5 +1,6 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
+
 import s from './BonuseTable.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import SafeTable from '../../../../components/Table/containers/SafeTable';

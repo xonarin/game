@@ -32,9 +32,7 @@ export interface PolarWaveProps {
 
 const PI2 = Math.PI * 2;
 
-const mid = (a: number, b: number) => {
-    return a + (b - a) / 2;
-};
+const mid = (a: number, b: number) => a + (b - a) / 2;
 
 const PolarWave: React.FC<PolarWaveProps> = ({
     color,

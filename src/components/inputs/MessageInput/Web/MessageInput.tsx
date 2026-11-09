@@ -109,13 +109,7 @@ const MessageInputMobile: React.FC<MessageInputMobileProps> = ({
             </Text>
             <Button className={cnMessageInput('SmileButton')} icon="smile" clear />
             <EmojiSelect editableElement={editableRef} />
-                <Button
-                    className={cnMessageInput('SendButton')}
-                    icon="send"
-                    iconSize="s"
-                    size="xs"
-                    onClick={onSubmit}
-                />
+            <Button className={cnMessageInput('SendButton')} icon="send" iconSize="s" size="xs" onClick={onSubmit} />
         </div>
     );
 };

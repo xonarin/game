@@ -15,4 +15,4 @@ export const getDateDMY = (time: Date): string => {
     const year = time.getFullYear();
 
     return `${date}.${month < 10 ? `0${month}` : month}.${year}`;
-}
+};

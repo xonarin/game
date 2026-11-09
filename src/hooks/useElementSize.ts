@@ -5,9 +5,8 @@ export interface ElementSizeSnapshot {
     height: number;
 }
 
-const getPxValue = (style: CSSStyleDeclaration, propertyName: string): number => {
-    return parseFloat(style.getPropertyValue(propertyName).slice(0, -2));
-};
+const getPxValue = (style: CSSStyleDeclaration, propertyName: string): number =>
+    parseFloat(style.getPropertyValue(propertyName).slice(0, -2));
 
 const useElementSize = <T extends HTMLElement>(
     ref: RefObject<T | null>,

@@ -68,19 +68,13 @@ export const rules: IRules = {
 
 export const resolvers: UsersResolvers = {
     Query: {
-        me: (_0, _1, { user }) => {
-            return user || null;
-        },
-        user: (_0, { userId }, { repositories }) => {
-            return repositories.users.getUserById(userId);
-        },
-        fairPlay: (_0, _1, { user }) => {
-            return {
-                clientSeed: user!.clientSeed,
-                serverSeedHash: sha256Hash(user!.serverSeed),
-                nonce: user!.nonce,
-            };
-        },
+        me: (_0, _1, { user }) => user || null,
+        user: (_0, { userId }, { repositories }) => repositories.users.getUserById(userId),
+        fairPlay: (_0, _1, { user }) => ({
+            clientSeed: user!.clientSeed,
+            serverSeedHash: sha256Hash(user!.serverSeed),
+            nonce: user!.nonce,
+        }),
         usersTotal: () => database.User.count(),
     },
     Mutation: {
@@ -111,9 +105,7 @@ export const resolvers: UsersResolvers = {
         },
     },
     User: {
-        money: (parent, _0, { user }) => {
-            return user && user.id === parent.id ? parent.money : undefined;
-        },
+        money: (parent, _0, { user }) => (user && user.id === parent.id ? parent.money : undefined),
     },
     URL: GraphQLURL,
 };

@@ -16,12 +16,10 @@ const getColor = (chance: number): BadgeProps['color'] => {
     return 'blue';
 };
 
-const ChanceBadge: React.FC<ChanceBadgeProps> = ({ chance, forceColor }) => {
-    return (
-        <Badge color={forceColor ? undefined : getColor(chance)} rawColor={forceColor}>
-            {chance}
-        </Badge>
-    );
-};
+const ChanceBadge: React.FC<ChanceBadgeProps> = ({ chance, forceColor }) => (
+    <Badge color={forceColor ? undefined : getColor(chance)} rawColor={forceColor}>
+        {chance}
+    </Badge>
+);
 
 export default ChanceBadge;

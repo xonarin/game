@@ -12,8 +12,8 @@ export type GetRowKey<T> = (item: T) => React.Key;
 export type GetRowClassName<T> = (item: T) => string | string[];
 
 export interface TableProps<
-    T extends K extends keyof T ? { [KE in K]: React.Key } : object,
-    K extends keyof T | GetRowKey<T> = GetRowKey<T>
+    T extends (K extends keyof T ? { [KE in K]: React.Key } : object),
+    K extends keyof T | GetRowKey<T> = GetRowKey<T>,
 > {
     rowKey: K;
     rowClassName?: GetRowClassName<T> | string | string[];
@@ -26,8 +26,8 @@ export interface TableProps<
 const cnTable = cn(s, 'Table');
 
 const Table = <
-    T extends K extends keyof T ? { [KE in K]: React.Key } : object,
-    K extends keyof T | GetRowKey<T> = GetRowKey<T>
+    T extends (K extends keyof T ? { [KE in K]: React.Key } : object),
+    K extends keyof T | GetRowKey<T> = GetRowKey<T>,
 >({
     rowKey,
     rowClassName,

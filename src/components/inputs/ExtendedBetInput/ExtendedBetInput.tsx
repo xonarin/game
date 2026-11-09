@@ -35,13 +35,9 @@ const ExtendedBetInput: React.FC<ExtendedBetInputProps> = ({
         onChange(1);
     }, [onChange]);
 
-    const buildOnMultiply = (multiplier: number) => {
-        return () => onChange(Number((value * multiplier).toFixed(2)));
-    };
+    const buildOnMultiply = (multiplier: number) => () => onChange(Number((value * multiplier).toFixed(2)));
 
-    const buildOnAdd = (inc: number) => {
-        return () => onChange(Number((value + inc).toFixed(2)));
-    };
+    const buildOnAdd = (inc: number) => () => onChange(Number((value + inc).toFixed(2)));
 
     return (
         <div className={cnExtendedBetInput(null, [className])}>

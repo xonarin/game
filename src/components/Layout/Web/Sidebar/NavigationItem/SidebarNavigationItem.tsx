@@ -26,7 +26,7 @@ const SidebarNavigationItem: React.FC<SidebarNavigationItemProps> = ({ to, icon,
             <Icon className={cnSidebarNavigationItem('Icon')} type={icon} hover={iconHover} size="m" />
             <div className={cnSidebarNavigationItem('Info')}>
                 <span className={cnSidebarNavigationItem('Title')}>{title}</span>
-                <span className={cnSidebarNavigationItem('Total')}>500</span>    
+                <span className={cnSidebarNavigationItem('Total')}>500</span>
             </div>
         </Link>
     );

@@ -16,9 +16,7 @@ export interface EmojiContentEditableProps extends DivProps {
     innerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const isImgElement = (elem: Element): elem is HTMLImageElement => {
-    return elem.tagName === 'IMG';
-};
+const isImgElement = (elem: Element): elem is HTMLImageElement => elem.tagName === 'IMG';
 
 class EmojiContentEditable extends React.Component<EmojiContentEditableProps> {
     static defaultProps: Partial<EmojiContentEditableProps> = {

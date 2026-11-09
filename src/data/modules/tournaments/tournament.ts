@@ -11,9 +11,7 @@ const checkMonthlyWinner = async () => {
     if (activeTournament === null) {
         const lastTournament = await repositories.tournaments.getLastTournament(RefTournamentType.Monthly);
         if (lastTournament) {
-            const nextStart = DateTime.fromJSDate(lastTournament.start)
-                .plus({ month: 1 })
-                .toJSDate();
+            const nextStart = DateTime.fromJSDate(lastTournament.start).plus({ month: 1 }).toJSDate();
 
             if (nextStart.getTime() > nowDate.getTime()) {
                 return;
@@ -22,12 +20,8 @@ const checkMonthlyWinner = async () => {
 
         await repositories.tournaments.createTournament(
             TournamentType.Monthly,
-            DateTime.local()
-                .startOf('month')
-                .toJSDate(),
-            DateTime.local()
-                .endOf('month')
-                .toJSDate(),
+            DateTime.local().startOf('month').toJSDate(),
+            DateTime.local().endOf('month').toJSDate(),
         );
         return;
     }
@@ -55,9 +49,7 @@ const checkActivityWinner = async () => {
         const lastTournament = await repositories.tournaments.getLastTournament(RefTournamentType.Activity);
         if (lastTournament) {
             const pauseDays = await repositories.settings.getSettingAsNumber('tournament::activityPauseDays');
-            const nextStart = DateTime.fromJSDate(lastTournament.finish)
-                .plus({ day: pauseDays })
-                .toJSDate();
+            const nextStart = DateTime.fromJSDate(lastTournament.finish).plus({ day: pauseDays }).toJSDate();
 
             if (nextStart.getTime() > nowDate.getTime()) {
                 return;
@@ -67,13 +59,8 @@ const checkActivityWinner = async () => {
         const lengthDays = await repositories.settings.getSettingAsNumber('tournament::activityLengthDays');
         await repositories.tournaments.createTournament(
             TournamentType.Activity,
-            DateTime.local()
-                .startOf('day')
-                .toJSDate(),
-            DateTime.local()
-                .endOf('day')
-                .plus({ day: lengthDays })
-                .toJSDate(),
+            DateTime.local().startOf('day').toJSDate(),
+            DateTime.local().endOf('day').plus({ day: lengthDays }).toJSDate(),
         );
         return;
     }
@@ -101,9 +88,7 @@ const checkReferralsWinner = async () => {
         const lastTournament = await repositories.tournaments.getLastTournament(RefTournamentType.Referrals);
         if (lastTournament) {
             const pauseDays = await repositories.settings.getSettingAsNumber('tournament::referralsPauseDays');
-            const nextStart = DateTime.fromJSDate(lastTournament.finish)
-                .plus({ day: pauseDays })
-                .toJSDate();
+            const nextStart = DateTime.fromJSDate(lastTournament.finish).plus({ day: pauseDays }).toJSDate();
 
             if (nextStart.getTime() > nowDate.getTime()) {
                 return;
@@ -113,13 +98,8 @@ const checkReferralsWinner = async () => {
         const lengthDays = await repositories.settings.getSettingAsNumber('tournament::referralsLengthDays');
         await repositories.tournaments.createTournament(
             TournamentType.Referrals,
-            DateTime.local()
-                .startOf('day')
-                .toJSDate(),
-            DateTime.local()
-                .endOf('day')
-                .plus({ day: lengthDays })
-                .toJSDate(),
+            DateTime.local().startOf('day').toJSDate(),
+            DateTime.local().endOf('day').plus({ day: lengthDays }).toJSDate(),
         );
         return;
     }

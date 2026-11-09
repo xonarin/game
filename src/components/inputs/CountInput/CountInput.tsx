@@ -30,9 +30,7 @@ const CountInput: React.FC<CountInputProps> = ({ value, error, onChange, onFocus
         setCustom(true);
     }, []);
 
-    const buildOnSet = (newValue: number) => {
-        return () => onChange(newValue);
-    };
+    const buildOnSet = (newValue: number) => () => onChange(newValue);
 
     return (
         <div className={cnCountInput(null, [className])}>

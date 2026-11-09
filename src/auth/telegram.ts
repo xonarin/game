@@ -30,14 +30,8 @@ export const verifyTelegramAuth = (
         .sort()
         .map(key => `${key}=${fields[key]}`)
         .join('\n');
-    const secretKey = crypto
-        .createHash('sha256')
-        .update(botToken)
-        .digest();
-    const expected = crypto
-        .createHmac('sha256', secretKey)
-        .update(dataCheckString)
-        .digest('hex');
+    const secretKey = crypto.createHash('sha256').update(botToken).digest();
+    const expected = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
 
     const a = Buffer.from(expected);
     const b = Buffer.from(hash.toLowerCase());

@@ -45,13 +45,10 @@ class BonusRepository extends BaseRepository {
         });
 
         if (lastBonus) {
-            const minutesFromLastBonus = DateTime.local()
-                .diff(DateTime.fromJSDate(lastBonus.createdAt))
-                .as('minutes');
+            const minutesFromLastBonus = DateTime.local().diff(DateTime.fromJSDate(lastBonus.createdAt)).as('minutes');
 
-            const minutesBetweenBonuses = await this.repositories.settings.getSettingAsNumber(
-                'bonus::minsBetweenBonuses',
-            );
+            const minutesBetweenBonuses =
+                await this.repositories.settings.getSettingAsNumber('bonus::minsBetweenBonuses');
 
             if (minutesFromLastBonus < minutesBetweenBonuses) {
                 // console.log('has no bonus due to minutes', minutesFromLastBonus);
@@ -83,9 +80,7 @@ class BonusRepository extends BaseRepository {
                     where: {
                         userId,
                         createdAt: {
-                            [Op.gt]: DateTime.local()
-                                .minus(duration)
-                                .toJSDate(),
+                            [Op.gt]: DateTime.local().minus(duration).toJSDate(),
                         },
                     },
                 });
@@ -185,9 +180,7 @@ class BonusRepository extends BaseRepository {
                     where: {
                         userId,
                         createdAt: {
-                            [Op.gt]: DateTime.local()
-                                .minus(duration)
-                                .toJSDate(),
+                            [Op.gt]: DateTime.local().minus(duration).toJSDate(),
                         },
                     },
                 });

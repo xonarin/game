@@ -38,7 +38,7 @@ export const initUserPayment = (sequelize: Sequelize): UserPaymentStatic => {
             autoIncrement: true,
 
             get(this: UserPayment) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                return (this.getDataValue('id') as unknown as number).toString();
             },
         },
 
@@ -47,7 +47,7 @@ export const initUserPayment = (sequelize: Sequelize): UserPaymentStatic => {
             allowNull: false,
 
             get(this: UserPayment) {
-                return ((this.getDataValue('userId') as unknown) as number).toString();
+                return (this.getDataValue('userId') as unknown as number).toString();
             },
         },
 
@@ -56,7 +56,7 @@ export const initUserPayment = (sequelize: Sequelize): UserPaymentStatic => {
             allowNull: false,
 
             get(this: UserPayment) {
-                return ((this.getDataValue('methodId') as unknown) as number).toString();
+                return (this.getDataValue('methodId') as unknown as number).toString();
             },
         },
 

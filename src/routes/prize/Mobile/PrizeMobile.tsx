@@ -20,42 +20,42 @@ const PrizeMobile: React.FC = () => {
     return (
         <Layout33Content
             centerContent={
-            <div className={cnPrizeMobile()}>
-                <div className={cnPrizeMobile('Nav')}>
-                    <PrizeTabMobile
-                        tabName="freeCoins"
-                        img={GiftBox}
-                        title="Бесплатные монеты"
-                        selectedTab={selectedTab}
-                        setSelectedTab={setSelectedTab}
-                    >
-                        Вступай в нашу группу и получай до 3 рублей каждый день
-                    </PrizeTabMobile>
+                <div className={cnPrizeMobile()}>
+                    <div className={cnPrizeMobile('Nav')}>
+                        <PrizeTabMobile
+                            tabName="freeCoins"
+                            img={GiftBox}
+                            title="Бесплатные монеты"
+                            selectedTab={selectedTab}
+                            setSelectedTab={setSelectedTab}
+                        >
+                            Вступай в нашу группу и получай до 3 рублей каждый день
+                        </PrizeTabMobile>
 
-                    <PrizeTabMobile
-                        tabName="activePromoCode"
-                        img={PomoCode}
-                        title="Активировать промокод"
-                        selectedTab={selectedTab}
-                        setSelectedTab={setSelectedTab}
-                    >
-                        Получайте промокоды от нас или друзей и получайте награду
-                    </PrizeTabMobile>
+                        <PrizeTabMobile
+                            tabName="activePromoCode"
+                            img={PomoCode}
+                            title="Активировать промокод"
+                            selectedTab={selectedTab}
+                            setSelectedTab={setSelectedTab}
+                        >
+                            Получайте промокоды от нас или друзей и получайте награду
+                        </PrizeTabMobile>
 
-                    <PrizeTabMobile
-                        tabName="createPromoCode"
-                        img={NewPromoCode}
-                        title="Создать промокод"
-                        selectedTab={selectedTab}
-                        setSelectedTab={setSelectedTab}
-                    >
-                        Создайте промокод и поделитесь им с друзьями
-                    </PrizeTabMobile>
+                        <PrizeTabMobile
+                            tabName="createPromoCode"
+                            img={NewPromoCode}
+                            title="Создать промокод"
+                            selectedTab={selectedTab}
+                            setSelectedTab={setSelectedTab}
+                        >
+                            Создайте промокод и поделитесь им с друзьями
+                        </PrizeTabMobile>
+                    </div>
+
+                    <PrizeInfo selectedTab={selectedTab} />
                 </div>
-
-                <PrizeInfo selectedTab={selectedTab} />
-            </div>
-        }
+            }
         />
     );
 };

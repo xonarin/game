@@ -92,7 +92,7 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
                 primaryKey: true,
                 autoIncrement: true,
                 get(this: User) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
 
@@ -137,7 +137,7 @@ export const initUser = (sequelize: Sequelize): UserStatic => {
             refId: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 get(this: User) {
-                    const refId = (this.getDataValue('refId') as unknown) as number | null;
+                    const refId = this.getDataValue('refId') as unknown as number | null;
                     return typeof refId === 'number' ? refId.toString() : null;
                 },
             },

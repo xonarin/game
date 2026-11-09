@@ -12,8 +12,8 @@ import Scrollable from '../Scrollable/Scrollable';
 const cnTable = cn(s, 'Table');
 
 const TableSpring = <
-    T extends K extends keyof T ? { [KE in K]: React.Key } : object,
-    K extends keyof T | GetRowKey<T> = GetRowKey<T>
+    T extends (K extends keyof T ? { [KE in K]: React.Key } : object),
+    K extends keyof T | GetRowKey<T> = GetRowKey<T>,
 >({
     rowKey,
     rowClassName,

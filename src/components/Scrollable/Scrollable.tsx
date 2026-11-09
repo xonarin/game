@@ -128,15 +128,9 @@ const Scrollable = React.forwardRef<ScrollableRef, ScrollableProps>(
         }, [children]);
 
         useImperativeHandle(ref, () => ({
-            getScrollHeight: () => {
-                return viewportRef.current ? viewportRef.current.scrollHeight : 0;
-            },
-            getScrollTop: () => {
-                return viewportRef.current ? viewportRef.current.scrollTop : 0;
-            },
-            getClientHeight: () => {
-                return viewportRef.current ? viewportRef.current.clientHeight : 0;
-            },
+            getScrollHeight: () => (viewportRef.current ? viewportRef.current.scrollHeight : 0),
+            getScrollTop: () => (viewportRef.current ? viewportRef.current.scrollTop : 0),
+            getClientHeight: () => (viewportRef.current ? viewportRef.current.clientHeight : 0),
             scrollTo: (y, duration = 0, easingFunction) => {
                 if (!viewportRef.current) return;
 

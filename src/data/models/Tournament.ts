@@ -38,7 +38,7 @@ export const initTournament = (sequelize: Sequelize): TournamentStatic => {
                 primaryKey: true,
                 autoIncrement: true,
                 get(this: Tournament) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
             type: {
@@ -57,7 +57,7 @@ export const initTournament = (sequelize: Sequelize): TournamentStatic => {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: true,
                 get(this: Tournament) {
-                    const winnerId = (this.getDataValue('winnerId') as unknown) as number | null;
+                    const winnerId = this.getDataValue('winnerId') as unknown as number | null;
                     return winnerId ? winnerId.toString() : null;
                 },
             },

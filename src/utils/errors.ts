@@ -11,9 +11,7 @@ export class UserError extends GraphQLError {
     }
 }
 
-const isError = (err: unknown): err is Error => {
-    return err instanceof Error;
-};
+const isError = (err: unknown): err is Error => err instanceof Error;
 
 /**
  * graphql-shield fallback: user errors pass through, anything else is logged with an id

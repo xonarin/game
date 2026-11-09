@@ -112,8 +112,8 @@ const useChatQuery = (chatId: string, onSentMessage?: (message: MessageFragment)
     }, [subscribeToMore, chatId, onSentMessage]);
 
     const augmentedFetchMore = useCallback(
-        (messagesOffset: number) => {
-            return fetchMore({
+        (messagesOffset: number) =>
+            fetchMore({
                 variables: { messagesOffset },
                 updateQuery: (prev, { fetchMoreResult }) => {
                     if (!fetchMoreResult || prev.chat.id !== fetchMoreResult.chat.id) return prev;
@@ -131,8 +131,7 @@ const useChatQuery = (chatId: string, onSentMessage?: (message: MessageFragment)
                         },
                     };
                 },
-            });
-        },
+            }),
         [fetchMore],
     );
 

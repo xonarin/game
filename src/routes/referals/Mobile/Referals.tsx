@@ -10,7 +10,7 @@ import Icon from '../../../components/Icon/Icon';
 import ReferalsTable from './ReferalsTable/ReferalsTable';
 import Diagram from '../../../components/Diagram/Diagram';
 import LayoutReferalMobile from '../../../components/Layout/Mobile/containers/LayoutReferalMobile';
-import useReferralsStatsQuery from "../../../hooks/graphql/referrals/useReferralsStatsQuery";
+import useReferralsStatsQuery from '../../../hooks/graphql/referrals/useReferralsStatsQuery';
 import { RefStatsPeriod, RefStatsType } from '../../../__generated__/graphql';
 import useReferralLinkQuery from '../../../hooks/graphql/referrals/useReferralLinkQuery';
 import useGetReferralMoneyMutation from '../../../hooks/graphql/referrals/useGetReferralMoneyMutation';
@@ -24,8 +24,15 @@ const ReferalsMobile: React.FC = () => {
     const [referalsTypeToggle, setReferalsTypeToggle] = useState(false);
     const [amountToggle, setAmountToggle] = useState(false);
 
-    const { fullAmount: amountFullAmount, mainValue: amountValue, entries: amountStats } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
-    const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(RefStatsType.Count, referalsPeriodType);
+    const {
+        fullAmount: amountFullAmount,
+        mainValue: amountValue,
+        entries: amountStats,
+    } = useReferralsStatsQuery(RefStatsType.Income, amountPeriodType);
+    const { mainValue: countValue, entries: countStats } = useReferralsStatsQuery(
+        RefStatsType.Count,
+        referalsPeriodType,
+    );
 
     const { domain } = useContext(AppContext);
     const { referralLink } = useReferralLinkQuery(domain);
@@ -67,10 +74,14 @@ const ReferalsMobile: React.FC = () => {
                             </div>
                             <Icon type="link" />
                         </div>
-                        <Text color="white" size='xs'>
-                           Получайте до 15% с каждого пополнения реферала. <br />Чем больше рефералов, тем выше %<br /><br />
+                        <Text color="white" size="xs">
+                            Получайте до 15% с каждого пополнения реферала. <br />
+                            Чем больше рефералов, тем выше %<br />
+                            <br />
                         </Text>
-                        <Button size="s" onClick={getReferralMoney}>Забрать деньги</Button>
+                        <Button size="s" onClick={getReferralMoney}>
+                            Забрать деньги
+                        </Button>
                     </div>
                 </div>
             }
@@ -166,7 +177,7 @@ const ReferalsMobile: React.FC = () => {
                         </div>
                     </div>
                     <div className={cnReferal('Diagram-Container-Content')}>
-                        <Diagram color="#82ca9d" items={amountStats} mobile={true}/>
+                        <Diagram color="#82ca9d" items={amountStats} mobile />
                     </div>
                 </div>
             }
@@ -254,7 +265,7 @@ const ReferalsMobile: React.FC = () => {
                         </div>
                     </div>
                     <div className={cnReferal('Diagram-Container-Content')}>
-                        <Diagram color="#347dfe" items={countStats} mobile={true}/>
+                        <Diagram color="#347dfe" items={countStats} mobile />
                     </div>
                 </div>
             }

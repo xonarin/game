@@ -98,12 +98,22 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ openPopUp, openChat, clos
 
                 {shareToggle ? (
                     <div className={cnSidebar('Message')}>
-                        <a className={cnSidebar('LogOut')} href="https://vk.com/willygame" target="_blank">
+                        <a
+                            className={cnSidebar('LogOut')}
+                            href="https://vk.com/willygame"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             <Icon className={cnSidebar('LogOutIcon')} type="vk" size="xs" />
                             <span className={cnSidebar('LogOutText')}>Вконтакте</span>
                         </a>
 
-                        <a className={cnSidebar('LogOut')} href="https://t.me/willygames" target="_blank">
+                        <a
+                            className={cnSidebar('LogOut')}
+                            href="https://t.me/willygames"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             <Icon className={cnSidebar('LogOutIcon')} type="telegram" size="xs" />
                             <span className={cnSidebar('LogOutText')}>Telegram</span>
                         </a>

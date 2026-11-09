@@ -31,9 +31,9 @@ function FaqTheme(props: Props) {
                 {`${id}.  ${theme.title}`}
             </button>
             {toggle
-                ? theme.questions.map((item, index) => {
-                      return <FaqQuestion question={item} key={item.id} id={`${id}.${index + 1}`} />;
-                  })
+                ? theme.questions.map((item, index) => (
+                      <FaqQuestion question={item} key={item.id} id={`${id}.${index + 1}`} />
+                  ))
                 : null}
         </>
     );

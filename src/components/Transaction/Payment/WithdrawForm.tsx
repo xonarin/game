@@ -127,11 +127,18 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ mobile, openWithdraw
                                 <TextIcon text={method?.maxAmount} color="white" icon="diamond" iconSize="xs" noGap />
                             </div>
                             <div className={cnPayment('Footer')}>
-                                <Text>Делись скрином выплат в нашей группе&nbsp;
-                                <a className={cnPayment('VK')} href="https://vk.com/willygame" target="_blank">
-                                    <span className={cnPayment('VK')}>&nbsp;Вконтакте</span>
-                                </a>    
-                                &nbsp;и получи возможность вернуть 5% назад на баланс.</Text>
+                                <Text>
+                                    Делись скрином выплат в нашей группе&nbsp;
+                                    <a
+                                        className={cnPayment('VK')}
+                                        href="https://vk.com/willygame"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <span className={cnPayment('VK')}>&nbsp;Вконтакте</span>
+                                    </a>
+                                    &nbsp;и получи возможность вернуть 5% назад на баланс.
+                                </Text>
                             </div>
                         </Scrollable>
                     </div>

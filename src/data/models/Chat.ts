@@ -55,7 +55,7 @@ export const initChat = (sequelize: Sequelize): ChatStatic => {
             primaryKey: true,
             autoIncrement: true,
             get(this: Chat) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                return (this.getDataValue('id') as unknown as number).toString();
             },
         },
 

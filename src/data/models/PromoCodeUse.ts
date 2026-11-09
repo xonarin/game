@@ -37,7 +37,7 @@ export const initPromoCodeUse = (sequelize: Sequelize): PromoCodeUseStatic => {
             primaryKey: true,
 
             get(this: PromoCodeUse) {
-                return ((this.getDataValue('userId') as unknown) as number).toString();
+                return (this.getDataValue('userId') as unknown as number).toString();
             },
         },
     }) as PromoCodeUseStatic;

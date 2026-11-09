@@ -27,7 +27,7 @@ export const initReferralIncome = (sequelize: Sequelize): ReferralIncomeStatic =
             primaryKey: true,
             autoIncrement: true,
             get(this: ReferralIncome) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                return (this.getDataValue('id') as unknown as number).toString();
             },
         },
 
@@ -35,7 +35,7 @@ export const initReferralIncome = (sequelize: Sequelize): ReferralIncomeStatic =
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             get(this: ReferralIncome) {
-                return ((this.getDataValue('referrerId') as unknown) as number).toString();
+                return (this.getDataValue('referrerId') as unknown as number).toString();
             },
         },
 
@@ -43,7 +43,7 @@ export const initReferralIncome = (sequelize: Sequelize): ReferralIncomeStatic =
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             get(this: ReferralIncome) {
-                return ((this.getDataValue('referralId') as unknown) as number).toString();
+                return (this.getDataValue('referralId') as unknown as number).toString();
             },
         },
 

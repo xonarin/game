@@ -42,7 +42,7 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
             autoIncrement: true,
 
             get(this: UserWithdraw) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                return (this.getDataValue('id') as unknown as number).toString();
             },
         },
 
@@ -51,7 +51,7 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
             allowNull: false,
 
             get(this: UserWithdraw) {
-                return ((this.getDataValue('userId') as unknown) as number).toString();
+                return (this.getDataValue('userId') as unknown as number).toString();
             },
         },
 
@@ -60,7 +60,7 @@ export const initUserWithdraw = (sequelize: Sequelize): UserWithdrawStatic => {
             allowNull: false,
 
             get(this: UserWithdraw) {
-                return ((this.getDataValue('methodId') as unknown) as number).toString();
+                return (this.getDataValue('methodId') as unknown as number).toString();
             },
         },
 

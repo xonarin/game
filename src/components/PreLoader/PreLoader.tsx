@@ -11,7 +11,7 @@ const PreLoader: React.FC = () => {
 
     return (
         <div className={cnPreLoader()}>
-            <div className={cnPreLoader('circle')}></div>
+            <div className={cnPreLoader('circle')} />
         </div>
     );
 };

@@ -30,7 +30,7 @@ class ReferralIncomesRepository extends BaseRepository {
 
     async getTopUserId(start: Date, finish: Date): Promise<{ referrerId: string; value: number } | null> {
         // raw aggregate row, not a model instance
-        return (this.db.ReferralIncome.findOne({
+        return this.db.ReferralIncome.findOne({
             attributes: ['referrerId', [fn('SUM', col('amount')), 'value']],
             where: {
                 createdAt: { [Op.between]: [start, finish] },
@@ -39,13 +39,11 @@ class ReferralIncomesRepository extends BaseRepository {
             order: [[col('value'), 'DESC']],
             limit: 1,
             raw: true,
-        }) as unknown) as Promise<{ referrerId: string; value: number } | null>;
+        }) as unknown as Promise<{ referrerId: string; value: number } | null>;
     }
 
     async getIncomeStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
-        const startDateTime = DateTime.local()
-            .startOf(ReferralIncomesRepository.periodMapping[period])
-            .toSQL();
+        const startDateTime = DateTime.local().startOf(ReferralIncomesRepository.periodMapping[period]).toSQL();
         const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
         // raw aggregate rows, not model instances
@@ -61,7 +59,7 @@ class ReferralIncomesRepository extends BaseRepository {
             group: col('date'),
             raw: true,
         });
-        return (rows as unknown) as GraphDataEntry[];
+        return rows as unknown as GraphDataEntry[];
     }
 }
 

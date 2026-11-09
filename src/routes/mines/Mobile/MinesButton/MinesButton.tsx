@@ -32,7 +32,7 @@ const MinesButton: React.FC<MinesButtonProps> = ({ cell, type, isStepped, onClic
             onClick={handleClick}
         >
             <i className={cnMinesButton('Icon')} />
-            <div className={cnMinesButton('IconAfter')}></div>
+            <div className={cnMinesButton('IconAfter')} />
         </button>
     );
 };

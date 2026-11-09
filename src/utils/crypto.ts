@@ -1,32 +1,15 @@
 import crypto from 'crypto';
 import { range } from 'lodash';
 
-export const md5Hash = (data: string): string => {
-    return crypto
-        .createHash('md5')
-        .update(data)
-        .digest('hex');
-};
+export const md5Hash = (data: string): string => crypto.createHash('md5').update(data).digest('hex');
 
-export const sha256Hash = (data: string): string => {
-    return crypto
-        .createHash('sha256')
-        .update(data)
-        .digest('hex');
-};
+export const sha256Hash = (data: string): string => crypto.createHash('sha256').update(data).digest('hex');
 
-export const hmacSha256Hash = (key: string, data: string): string => {
-    return crypto
-        .createHmac('sha256', key)
-        .update(data)
-        .digest('hex');
-};
+export const hmacSha256Hash = (key: string, data: string): string =>
+    crypto.createHmac('sha256', key).update(data).digest('hex');
 
 export const hmacSha512Bytes = (key: string, data: string): Uint8Array => {
-    const buffer = crypto
-        .createHmac('sha512', key)
-        .update(data)
-        .digest();
+    const buffer = crypto.createHmac('sha512', key).update(data).digest();
 
     return new Uint8Array(buffer);
 };
@@ -57,13 +40,10 @@ export const generateRandomNumbers = (
     });
 };
 
-const generateRandomHexString = (size: number) => {
-    return new Array(size)
+const generateRandomHexString = (size: number) =>
+    new Array(size)
         .fill(0)
         .map(() => Math.floor(Math.random() * 16).toString(16))
         .join('');
-};
 
-export const generateSeed = (): string => {
-    return generateRandomHexString(64);
-};
+export const generateSeed = (): string => generateRandomHexString(64);

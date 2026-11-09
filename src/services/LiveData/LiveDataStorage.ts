@@ -31,9 +31,7 @@ const decreaseOnline = async (userId: string) => {
     await redis.srem(LiveDataStorageKeys.ONLINE, userId);
 };
 
-const getOnline = () => {
-    return redis.scard(LiveDataStorageKeys.ONLINE);
-};
+const getOnline = () => redis.scard(LiveDataStorageKeys.ONLINE);
 
 const resetGames = async () => {
     await redis.del(LiveDataStorageKeys.GAMES);
@@ -90,11 +88,7 @@ const getGameFromQueue = async () => {
     const item = await redis.lpop(LiveDataStorageKeys.QUEUE_GAMES);
 
     if (item !== null) {
-        await redis
-            .multi()
-            .lpush(LiveDataStorageKeys.GAMES, item)
-            .rpop(LiveDataStorageKeys.GAMES)
-            .exec();
+        await redis.multi().lpush(LiveDataStorageKeys.GAMES, item).rpop(LiveDataStorageKeys.GAMES).exec();
 
         return JSON.parse(item);
     }

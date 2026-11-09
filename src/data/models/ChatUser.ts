@@ -13,8 +13,8 @@ export interface ChatUser extends Model {
 
 export type ChatUserStatic = ModelStatic<ChatUser>;
 
-export const initChatUser = (sequelize: Sequelize): ChatUserStatic => {
-    return sequelize.define(
+export const initChatUser = (sequelize: Sequelize): ChatUserStatic =>
+    sequelize.define(
         'ChatUser',
         {
             chatId: {
@@ -43,4 +43,3 @@ export const initChatUser = (sequelize: Sequelize): ChatUserStatic => {
         },
         { timestamps: false },
     ) as ChatUserStatic;
-};

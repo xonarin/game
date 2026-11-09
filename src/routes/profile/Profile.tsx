@@ -6,8 +6,8 @@ export interface ProfileWebProps {
     chatId: string;
 }
 
-const Profile: React.FC<ProfileWebProps> = ({ chatId }) => {
-    //TODO сделать позже страницу для мобайла
+const Profile: React.FC<ProfileWebProps> = ({ chatId }) => (
+    // TODO сделать позже страницу для мобайла
     // const [mobile, setMobile] = useState(false);
     // useIsomorphicLayoutEffect(() => {
     //     if (
@@ -24,7 +24,7 @@ const Profile: React.FC<ProfileWebProps> = ({ chatId }) => {
     //     return <ReferalsMobile />;
     // }
 
-    return <ProfileWeb chatId={chatId} />;
-};
+    <ProfileWeb chatId={chatId} />
+);
 
 export default Profile;

@@ -15,8 +15,8 @@ export interface PaymentMethod extends Model {
 
 export type PaymentMethodStatic = ModelStatic<PaymentMethod>;
 
-export const initPaymentMethod = (sequelize: Sequelize): PaymentMethodStatic => {
-    return sequelize.define(
+export const initPaymentMethod = (sequelize: Sequelize): PaymentMethodStatic =>
+    sequelize.define(
         'PaymentMethod',
         {
             id: {
@@ -24,7 +24,7 @@ export const initPaymentMethod = (sequelize: Sequelize): PaymentMethodStatic => 
                 primaryKey: true,
 
                 get(this: PaymentMethod) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
 
@@ -67,4 +67,3 @@ export const initPaymentMethod = (sequelize: Sequelize): PaymentMethodStatic => 
         },
         { timestamps: false },
     ) as PaymentMethodStatic;
-};

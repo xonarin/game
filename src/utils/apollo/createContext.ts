@@ -13,14 +13,11 @@ export interface Payload {
     id: string;
 }
 
-export const isValidPayload = (payload: unknown): payload is Payload => {
-    return (
-        typeof payload === 'object' &&
-        payload !== null &&
-        'id' in payload &&
-        typeof (payload as { id: unknown }).id === 'string'
-    );
-};
+export const isValidPayload = (payload: unknown): payload is Payload =>
+    typeof payload === 'object' &&
+    payload !== null &&
+    'id' in payload &&
+    typeof (payload as { id: unknown }).id === 'string';
 
 const createCommonContext = (): ApolloContext => {
     const sequelizeContext: SequelizeContext = {

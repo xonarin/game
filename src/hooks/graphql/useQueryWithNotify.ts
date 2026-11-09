@@ -13,12 +13,12 @@ const useQueryWithNotify = <TData = unknown, TVariables extends OperationVariabl
     return useQuery<TData, TVariables>(query, {
         onError: async error => {
             await Promise.all(
-                error.graphQLErrors.map(err => {
-                    return client.mutate<Notification, AddNotificationMutationVariables>({
+                error.graphQLErrors.map(err =>
+                    client.mutate<Notification, AddNotificationMutationVariables>({
                         mutation: AddNotificationDocument,
                         variables: { input: makeNotificationFromError(err.message) },
-                    });
-                }),
+                    }),
+                ),
             );
         },
         ...options,

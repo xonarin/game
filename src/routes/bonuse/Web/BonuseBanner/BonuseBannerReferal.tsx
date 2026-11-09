@@ -33,9 +33,7 @@ const BonuseBannerReferal: React.FC<BonuseBannerReferalProps> = ({ title, descri
                 </Text>
                 <Text className={cnBonuseBanner('Header-Description')}>{description} </Text>
                 <div className={cnBonuseBanner('Header-CountAndTime')}>
-                    <div className={cnBonuseBanner('Header-CountAndTime-Count')}>
-                        
-                    </div>
+                    <div className={cnBonuseBanner('Header-CountAndTime-Count')} />
                     <div className={cnBonuseBanner('Header-Expires')}>
                         <Text size="xs" color="gold">
                             Истекает через:

@@ -34,20 +34,22 @@ redis.defineCommand('gqlslIncr', {
     lua: incrTtlLuaScript,
 });
 
-export const makeLimiter = (
-    secDuration: number,
-    keyPrefix: string = 'gqlsl',
-    points: number = 1,
-    error: (key: string, ttl: number) => Error = () => new UserError('FREQUENT_REQUESTS'),
-) => async (key: string): Promise<Error | null> => {
-    const [currentPoints, ttl] = await redis.gqlslIncr(`${keyPrefix}:${key}`, 1, secDuration);
+export const makeLimiter =
+    (
+        secDuration: number,
+        keyPrefix: string = 'gqlsl',
+        points: number = 1,
+        error: (key: string, ttl: number) => Error = () => new UserError('FREQUENT_REQUESTS'),
+    ) =>
+    async (key: string): Promise<Error | null> => {
+        const [currentPoints, ttl] = await redis.gqlslIncr(`${keyPrefix}:${key}`, 1, secDuration);
 
-    if (currentPoints > points) {
-        return error(key, ttl);
-    }
+        if (currentPoints > points) {
+            return error(key, ttl);
+        }
 
-    return null;
-};
+        return null;
+    };
 
 export const limit = (
     secDuration: number,
@@ -57,9 +59,9 @@ export const limit = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keyGetter: (ctx: any) => string = (ctx: { req?: Request; user?: User }) =>
         ctx.user ? ctx.user.id : (ctx.req && ctx.req.ip) || 'unknown',
-) => {
+) =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return rule({ cache: 'no_cache' })(async (_0, _1, ctx: any) => {
+    rule({ cache: 'no_cache' })(async (_0, _1, ctx: any) => {
         const key = keyGetter(ctx);
         const [currentPoints, ttl] = await redis.gqlslIncr(`${keyPrefix}:${key}`, 1, secDuration);
 
@@ -69,4 +71,3 @@ export const limit = (
 
         return true;
     });
-};

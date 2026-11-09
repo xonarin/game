@@ -33,12 +33,9 @@ export const addMessageIfNotExist = (
                 }
                 return [...existingMessageRefs, toReference(message)];
             },
-            messagesCount: (currentMessagesCount: number = 0) => {
-                return currentMessagesCount + 1;
-            },
-            unreadMessagesCount: (currentUnreadMessagesCount: number = 0) => {
-                return haveReadChat ? 0 : currentUnreadMessagesCount + 1;
-            },
+            messagesCount: (currentMessagesCount: number = 0) => currentMessagesCount + 1,
+            unreadMessagesCount: (currentUnreadMessagesCount: number = 0) =>
+                haveReadChat ? 0 : currentUnreadMessagesCount + 1,
         },
     });
 };

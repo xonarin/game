@@ -20,13 +20,10 @@ const LayoutBonuse: React.FC<LayoutBonuseProps> = ({ chatId, title, TopContent }
 
     return (
         <Layout>
-
             <div className={cnLayoutBonuse('Top')}>
                 <div className={cnLayoutBonuse('RightContent')}>
-                    <BlockWithTitle title={title}></BlockWithTitle>
-                    <div className={cnLayoutBonuse('dayBonus')}>
-                        {TopContent}
-                    </div>
+                    <BlockWithTitle title={title} />
+                    <div className={cnLayoutBonuse('dayBonus')}>{TopContent}</div>
                 </div>
                 <Chat className={cnLayoutBonuse('Chat')} chatId={chatId} />
             </div>

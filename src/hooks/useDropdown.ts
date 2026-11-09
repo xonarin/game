@@ -4,7 +4,10 @@ export type UseDropdownResult<T extends Element> = [RefObject<T | null>, boolean
 
 const ESC_KEY = 27;
 
-const onEscapeKeyPress = (fn: () => void) => ({ keyCode }: KeyboardEvent) => (keyCode === ESC_KEY ? fn() : null);
+const onEscapeKeyPress =
+    (fn: () => void) =>
+    ({ keyCode }: KeyboardEvent) =>
+        keyCode === ESC_KEY ? fn() : null;
 
 const useDropdown = <T extends Element>(): UseDropdownResult<T> => {
     const [isOpen, setIsOpen] = useState(false);

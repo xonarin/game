@@ -26,16 +26,16 @@ const LayoutReferal: React.FC<LayoutReferalProps> = ({
     useStyles(s);
 
     return (
-            <div className={cnLayoutReferal('Container')}>
-                <div className={cnLayoutReferal('Top')}>{TopContent}</div>
-                <div className={cnLayoutReferal('Icon')}>{DiagramsIcon}</div>
-                <div className={cnLayoutReferal('Diagrams')}>
-                    <div className={cnLayoutReferal('Diagrams-Left')}>{LeftContent}</div>
-                    <div className={cnLayoutReferal('Diagrams-Right')}>{RightContent}</div>
-                </div>
-                <div className={cnLayoutReferal('Icon')}>{TableIcons}</div>
-                <div className={cnLayoutReferal('Bottom')}>{BottomContent}</div>
+        <div className={cnLayoutReferal('Container')}>
+            <div className={cnLayoutReferal('Top')}>{TopContent}</div>
+            <div className={cnLayoutReferal('Icon')}>{DiagramsIcon}</div>
+            <div className={cnLayoutReferal('Diagrams')}>
+                <div className={cnLayoutReferal('Diagrams-Left')}>{LeftContent}</div>
+                <div className={cnLayoutReferal('Diagrams-Right')}>{RightContent}</div>
             </div>
+            <div className={cnLayoutReferal('Icon')}>{TableIcons}</div>
+            <div className={cnLayoutReferal('Bottom')}>{BottomContent}</div>
+        </div>
     );
 };
 

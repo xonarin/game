@@ -55,16 +55,12 @@ export const rules: IRules = {
 
 export const resolvers: MinesGameResolvers = {
     Query: {
-        minesGameConfiguration: () => {
-            return {
-                fieldSize: FIELD_SIZE,
-                minBombsCount: MIN_BOMBS_COUNT,
-                coefs: getMinesCoefs(),
-            };
-        },
-        activeMinesGame: (_0, _1, { user, repositories }) => {
-            return repositories.minesGames.getCurrentGame(user!.id);
-        },
+        minesGameConfiguration: () => ({
+            fieldSize: FIELD_SIZE,
+            minBombsCount: MIN_BOMBS_COUNT,
+            coefs: getMinesCoefs(),
+        }),
+        activeMinesGame: (_0, _1, { user, repositories }) => repositories.minesGames.getCurrentGame(user!.id),
     },
     Mutation: {
         startMinesGame: async (_0, { input: { betAmount, bombsCount } }, { user, repositories }) => {
@@ -83,17 +79,12 @@ export const resolvers: MinesGameResolvers = {
             await repositories.users.withdrawMoney(user!.id, betAmount);
             return repositories.minesGames.createGame(user!.id, betAmount, bombsCount);
         },
-        endMinesGame: async (_0, _1, { user, repositories }) => {
-            return repositories.minesGames.endGame(user!.id);
-        },
-        makeMinesGameStep: async (_0, { cell }, { user, repositories }) => {
-            return repositories.minesGames.makeStep(user!.id, cell);
-        },
+        endMinesGame: async (_0, _1, { user, repositories }) => repositories.minesGames.endGame(user!.id),
+        makeMinesGameStep: async (_0, { cell }, { user, repositories }) =>
+            repositories.minesGames.makeStep(user!.id, cell),
     },
     MinesGame: {
-        fieldConf: game => {
-            return game.status === MinesGameStatus.Ended ? game.fieldConf : 0;
-        },
+        fieldConf: game => (game.status === MinesGameStatus.Ended ? game.fieldConf : 0),
     },
 };
 

@@ -14,7 +14,7 @@ export const withFilterByTarget = <
     TEvent extends PubSubEvent,
     TContext extends WithFilterByTargetContext,
     TParent,
-    TArgs
+    TArgs,
 >(
     trigger: TEvent,
 ) =>

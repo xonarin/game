@@ -29,7 +29,6 @@ const BonuseBannerReferalMobile: React.FC<BonuseBannerReferalMobileProps> = ({ d
         <div className={cnBonuseBannerMobile()}>
             <div className={cnBonuseBannerMobile('Header')}>
                 <div className={cnBonuseBannerMobile('Header-Info')}>
-
                     <Text className={cnBonuseBannerMobile('Header-Description')} line="xl" color="white">
                         {description}{' '}
                     </Text>

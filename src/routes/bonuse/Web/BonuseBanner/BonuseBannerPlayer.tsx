@@ -1,7 +1,8 @@
 import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
-import { moneyRound } from "../../../../utils/money";
+
+import { moneyRound } from '../../../../utils/money';
 import s from './BonuseBanner.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import Text from '../../../../components/Text/Text';
@@ -35,13 +36,11 @@ const BonuseBannerPlayer: React.FC<BonuseBannerPlayerProps> = ({ title, descript
                 <Text className={cnBonuseBanner('Header-Description')}>{description} </Text>
                 <div className={cnBonuseBanner('Header-CountAndTime')}>
                     <div className={cnBonuseBanner('Header-CountAndTime-Count')}>
-                        {[...count].map((number, index) => {
-                            return (
-                                <TextInBox size="xxl" color="white" key={index}>
-                                    {number}
-                                </TextInBox>
-                            );
-                        })}
+                        {[...count].map((number, index) => (
+                            <TextInBox size="xxl" color="white" key={index}>
+                                {number}
+                            </TextInBox>
+                        ))}
                         <TextInBox size="xxl" color="white">
                             <Icon type="diamond" size="m" />
                         </TextInBox>

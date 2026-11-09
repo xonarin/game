@@ -20,22 +20,11 @@ const STATE_COOKIE = 'vkid_state';
 const VERIFIER_COOKIE = 'vkid_verifier';
 const FLOW_TTL_MS = 10 * 60 * 1000;
 
-const base64url = (buf: Buffer) =>
-    buf
-        .toString('base64')
-        .replace(/=+$/, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_');
+const base64url = (buf: Buffer) => buf.toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
 
 const randomString = (bytes = 48) => base64url(crypto.randomBytes(bytes)); // 64 chars, [A-Za-z0-9_-]
 
-const codeChallenge = (verifier: string) =>
-    base64url(
-        crypto
-            .createHash('sha256')
-            .update(verifier)
-            .digest(),
-    );
+const codeChallenge = (verifier: string) => base64url(crypto.createHash('sha256').update(verifier).digest());
 
 const getRedirectUri = (req: Request) => `${getBaseUrl(req)}/auth/vk/return`;
 

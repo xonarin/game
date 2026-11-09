@@ -95,9 +95,9 @@ const Diagram: React.FC<DiagramProps> = ({ color, items = [], mobile }) => {
                         dot
                         fill={color === '#347dfe' ? 'url(#colorPv)' : 'url(#colorUv)'}
                         activeDot={{
-                                // recharts calls the handler with the hovered point (it has `index`)
-                                onClick: (point: unknown) => handleSelect((point as { index: number }).index),
-                            }}
+                            // recharts calls the handler with the hovered point (it has `index`)
+                            onClick: (point: unknown) => handleSelect((point as { index: number }).index),
+                        }}
                     />
                 </AreaChart>
             </ResponsiveContainer>

@@ -40,8 +40,8 @@ const Bonuse: React.FC<BonuseProps> = ({ chatId }) => {
                     selectedScreen === 'bonuse'
                         ? 'Big Tour'
                         : selectedScreen === 'player'
-                        ? 'АКТИВНЫЙ ИГРОК'
-                        : 'БОНУС-ПАРТНЁР'
+                          ? 'АКТИВНЫЙ ИГРОК'
+                          : 'БОНУС-ПАРТНЁР'
                 }
                 TopContent={
                     selectedScreen === 'bonuse' ? (
@@ -91,15 +91,15 @@ const Bonuse: React.FC<BonuseProps> = ({ chatId }) => {
     }
     return (
         <LayoutBonuse
-            chatId={chatId} 
+            chatId={chatId}
             title="Турниры"
 
             TopContent={
                 <BonuseBannerPlayer
                     title="Активный игрок"
                     description={
-                    <>
-                        {' '}
+                        <>
+                            {' '}
                             Каждую <Text color="white"> неделю </Text> мы разыгрываем призы среди{' '}
                             <Text color="white"> 3 </Text> самых активных игроков, которые сделали больше всех ставок по
                             сумме.
@@ -108,7 +108,6 @@ const Bonuse: React.FC<BonuseProps> = ({ chatId }) => {
                     count="3000"
                 />
             }
-
         />
     );
 };

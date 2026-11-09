@@ -88,8 +88,7 @@ const translations: Record<TranslationCode, Translation> = {
         ru: 'Мин.ставка не может быть меньше 1 рубля',
     },
     NOT_ENOUGH_BETS: {
-        ru:
-            'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
+        ru: 'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
     },
     MINES_GAME_BET_TOO_HIGH: {
         ru: 'Максимальная ставка не более 100 рублей.',
@@ -132,10 +131,8 @@ const translations: Record<TranslationCode, Translation> = {
     },
 };
 
-export const getTranslation = (code: TranslationCode, language: keyof Translation = 'ru') => {
-    return translations[code][language];
-};
+export const getTranslation = (code: TranslationCode, language: keyof Translation = 'ru') =>
+    translations[code][language];
 
-export const getTranslationNotStrict = (code: string, language: keyof Translation = 'ru') => {
-    return code in translations ? translations[code as TranslationCode][language] : code;
-};
+export const getTranslationNotStrict = (code: string, language: keyof Translation = 'ru') =>
+    code in translations ? translations[code as TranslationCode][language] : code;

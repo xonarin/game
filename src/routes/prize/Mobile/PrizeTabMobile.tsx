@@ -18,7 +18,14 @@ export interface PrizeTabProps {
 
 const cnPrizeMobile = cn(s, 'PrizeMobile');
 
-export const PrizeTabMobile: React.FC<PrizeTabProps> = ({ tabName, img, title, selectedTab, setSelectedTab, children }) => {
+export const PrizeTabMobile: React.FC<PrizeTabProps> = ({
+    tabName,
+    img,
+    title,
+    selectedTab,
+    setSelectedTab,
+    children,
+}) => {
     useStyles(s);
 
     return (

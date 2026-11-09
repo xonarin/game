@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { DateTime } from 'luxon';
+
 import { moneyRound } from '../../../../utils/money';
 import Icon from '../../../../components/Icon/Icon';
 import TextInBox from '../../../../components/TextInBox/TextInBox';
@@ -78,26 +79,26 @@ const MonthlyBonuse = () => {
                     <Icon type="left" />
                 </button>
                 <div className={cnMonthlyBonuse('Track')} ref={sliderRef}>
-                        {(users || []).map((user, index) => (
-                            <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
-                                <div
-                                    className={cnMonthlyBonuse('WinnerAvatar')}
-                                    style={{ backgroundImage: `url(${user.avatar})` }}
+                    {(users || []).map((user, index) => (
+                        <div className={cnMonthlyBonuse('SingleSlide')} key={index}>
+                            <div
+                                className={cnMonthlyBonuse('WinnerAvatar')}
+                                style={{ backgroundImage: `url(${user.avatar})` }}
+                            />
+                            <div className={cnMonthlyBonuse('WinnerInfo')}>
+                                <Text className={cnMonthlyBonuse('WinnerName')} color="blue" upper>
+                                    {user.username}
+                                </Text>
+                                <TextIcon
+                                    className={cnMonthlyBonuse('Value')}
+                                    text={moneyRound(user.amount)}
+                                    icon="diamond"
+                                    color="white"
+                                    upper
                                 />
-                                <div className={cnMonthlyBonuse('WinnerInfo')}>
-                                    <Text className={cnMonthlyBonuse('WinnerName')} color="blue" upper>
-                                        {user.username}
-                                    </Text>
-                                    <TextIcon
-                                        className={cnMonthlyBonuse('Value')}
-                                        text={moneyRound(user.amount)}
-                                        icon="diamond"
-                                        color="white"
-                                        upper
-                                    />
-                                </div>
                             </div>
-                        ))}
+                        </div>
+                    ))}
                 </div>
                 <button
                     type="button"

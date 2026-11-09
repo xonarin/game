@@ -16,20 +16,22 @@ interface UseAnnouncementsQueryResult {
 const useAnnouncementsQuery = (): UseAnnouncementsQueryResult => {
     const { data, loading, subscribeToMore } = useQuery<AnnouncementsQuery>(AnnouncementsDocument);
 
-    useEffect(() => {
-        return subscribeToMore<UpdatedAnnouncementSubscription>({
-            document: UpdatedAnnouncementDocument,
-            updateQuery: (prev, { subscriptionData }) => {
-                const { updatedAnnouncement } = subscriptionData.data;
-                if (!updatedAnnouncement) return prev;
+    useEffect(
+        () =>
+            subscribeToMore<UpdatedAnnouncementSubscription>({
+                document: UpdatedAnnouncementDocument,
+                updateQuery: (prev, { subscriptionData }) => {
+                    const { updatedAnnouncement } = subscriptionData.data;
+                    if (!updatedAnnouncement) return prev;
 
-                return {
-                    ...prev,
-                    announcements: [updatedAnnouncement, ...prev.announcements],
-                };
-            },
-        });
-    }, [subscribeToMore]);
+                    return {
+                        ...prev,
+                        announcements: [updatedAnnouncement, ...prev.announcements],
+                    };
+                },
+            }),
+        [subscribeToMore],
+    );
 
     return {
         announcements: data?.announcements,

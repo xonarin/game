@@ -35,7 +35,7 @@ export const initMessage = (sequelize: Sequelize): MessageStatic => {
                 primaryKey: true,
                 autoIncrement: true,
                 get(this: Message) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
 
@@ -43,7 +43,7 @@ export const initMessage = (sequelize: Sequelize): MessageStatic => {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
                 get(this: Message) {
-                    return ((this.getDataValue('chatId') as unknown) as number).toString();
+                    return (this.getDataValue('chatId') as unknown as number).toString();
                 },
             },
 
@@ -51,7 +51,7 @@ export const initMessage = (sequelize: Sequelize): MessageStatic => {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
                 get(this: Message) {
-                    return ((this.getDataValue('senderId') as unknown) as number).toString();
+                    return (this.getDataValue('senderId') as unknown as number).toString();
                 },
             },
 

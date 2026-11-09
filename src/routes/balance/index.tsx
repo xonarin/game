@@ -5,13 +5,12 @@ import { RouteResult } from '../../router';
 import Layout from '../../components/Layout/Layout';
 import { Transaction } from '../../components/Transaction/Transaction';
 
-const action = ({ user }: AppContextTypes): RouteResult => {
-
+const action = ({ user }: AppContextTypes): RouteResult =>
     // if (!chatId) {
     //     throw new Error('Chat for classic is not defined');
     // }
 
-    return {
+    ({
         title: 'Balance',
         chunks: ['balance'],
         pageContent: (
@@ -20,7 +19,6 @@ const action = ({ user }: AppContextTypes): RouteResult => {
             </Layout>
         ),
         redirect: user ? undefined : '/login',
-    };
-};
+    });
 
 export default action;

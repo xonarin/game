@@ -7,17 +7,16 @@ import { RefTournamentType } from '../../__generated__/graphql';
 import { User } from '../models/User';
 
 class TournamentsRepository extends BaseRepository {
-    createTournament = (type: TournamentType, start: Date, finish: Date): Promise<Tournament> => {
-        return this.db.Tournament.create({
+    createTournament = (type: TournamentType, start: Date, finish: Date): Promise<Tournament> =>
+        this.db.Tournament.create({
             type,
             start,
             finish,
             isFinished: false,
         });
-    };
 
-    getActiveTournament = async (type: RefTournamentType): Promise<Tournament | null> => {
-        return this.db.Tournament.findOne({
+    getActiveTournament = async (type: RefTournamentType): Promise<Tournament | null> =>
+        this.db.Tournament.findOne({
             where: {
                 type,
                 isFinished: false,
@@ -25,17 +24,15 @@ class TournamentsRepository extends BaseRepository {
             limit: 1,
             order: [['id', 'DESC']],
         });
-    };
 
-    getLastTournament = async (type: RefTournamentType): Promise<Tournament | null> => {
-        return this.db.Tournament.findOne({
+    getLastTournament = async (type: RefTournamentType): Promise<Tournament | null> =>
+        this.db.Tournament.findOne({
             where: {
                 type,
             },
             order: [['id', 'DESC']],
             limit: 1,
         });
-    };
 
     getLeaders = async (
         tournament: Tournament,

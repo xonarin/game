@@ -149,12 +149,10 @@ class UsersRepository extends BaseRepository {
     }
 
     async setReferrer(userId: string, refId: string): Promise<User> {
-        const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
-            'referrals::plusUserMoney',
-        ); // Сколько начислится за реферала
-        const INITIAL_REFERRAL_INCOMEREF = await this.repositories.settings.getSettingAsNumber(
-            'referrals::plusRefMoney',
-        ); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEUSER =
+            await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
+        const INITIAL_REFERRAL_INCOMEREF =
+            await this.repositories.settings.getSettingAsNumber('referrals::plusRefMoney'); // Сколько начислится за реферала
         return this.db.sequelize.transaction(async transaction => {
             const user = await this.getUserByIdStrict(userId, transaction);
             const referrer = await this.getUserById(refId, transaction);
@@ -212,9 +210,8 @@ class UsersRepository extends BaseRepository {
                     return user;
                 }
 
-                const INITIAL_REFERRAL_INCOMEUSER = await this.repositories.settings.getSettingAsNumber(
-                    'referrals::plusUserMoney',
-                ); // Сколько начислится за реферала
+                const INITIAL_REFERRAL_INCOMEUSER =
+                    await this.repositories.settings.getSettingAsNumber('referrals::plusUserMoney'); // Сколько начислится за реферала
 
                 await Promise.all(
                     newReferrals.map(async referral => {
@@ -274,7 +271,7 @@ class UsersRepository extends BaseRepository {
 
     async getTopReferralUserId(start: Date, finish: Date): Promise<{ refId: string; value: number } | null> {
         // raw aggregate row, not a model instance
-        return (this.db.User.findOne({
+        return this.db.User.findOne({
             attributes: ['refId', [fn('SUM', col('amount')), 'value']],
             where: {
                 createdAt: { [Op.between]: [start, finish] },
@@ -283,7 +280,7 @@ class UsersRepository extends BaseRepository {
             order: [[col('value'), 'DESC']],
             limit: 1,
             raw: true,
-        }) as unknown) as Promise<{ refId: string; value: number } | null>;
+        }) as unknown as Promise<{ refId: string; value: number } | null>;
     }
 
     async getReferrals(referrerId: string, offset: number): Promise<Referral[]> {
@@ -309,13 +306,11 @@ class UsersRepository extends BaseRepository {
             subQuery: false,
             raw: true,
         });
-        return (rows as unknown) as Referral[];
+        return rows as unknown as Referral[];
     }
 
     async getReferralsStats(referrerId: string, period: RefStatsPeriod): Promise<GraphDataEntry[]> {
-        const startDateTime = DateTime.local()
-            .startOf(UsersRepository.periodMapping[period])
-            .toSQL();
+        const startDateTime = DateTime.local().startOf(UsersRepository.periodMapping[period]).toSQL();
         const format = period === RefStatsPeriod.Year ? '15.%m.%Y' : '%d.%m.%Y';
 
         // raw aggregate rows, not model instances
@@ -331,7 +326,7 @@ class UsersRepository extends BaseRepository {
             group: col('date'),
             raw: true,
         });
-        return (rows as unknown) as GraphDataEntry[];
+        return rows as unknown as GraphDataEntry[];
     }
 
     getReferralMoney(userId: string) {

@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { FieldInputProps } from 'react-final-form';
 
-import s from '../Mobile/MessageInput.scss';
+import s from './MessageInput.scss';
 import emojiStyles from '../../../../assets/emojis/emoji.scss';
 import { cn } from '../../../../utils/bem-css-module';
 import EmojiContentEditable, { EmojiContentEditableProps } from './EmojiContentEditable';

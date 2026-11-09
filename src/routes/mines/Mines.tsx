@@ -98,9 +98,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                                     className={cnMines('GuardButtton')}
                                     onClick={() => setPopup(true)}
                                 >
-                                <>
                                     {/* <Icon type="guard" /> */}
-                                </>
                                 </button>
                             }
                         >
@@ -144,7 +142,7 @@ const Mines: React.FC<MinesProps> = ({ chatId }) => {
                     }
                     rightHead={
                         <button type="button" className={cnMines('GuardButtton')} onClick={() => setPopup(true)}>
-                           {/* <Icon type="guard" /> */}
+                            {/* <Icon type="guard" /> */}
                         </button>
                     }
                 >

@@ -25,7 +25,7 @@ export type ResolverOptionsObjectGuard<
     TParent,
     TArgs,
     TResult,
-    K extends KeyType
+    K extends KeyType,
 > = K extends keyof TParent
     ? TParent[K] extends TResult
         ? ResolverOptionsObject<TContext, TRoot, TParent, TArgs, TResult>
@@ -70,18 +70,13 @@ export type Resolvers<TResolvers extends object, TContext> = OptionalObjectToOpt
     OmitByValue<
         {
             [P in keyof TResolvers]: TResolvers[P] extends TypeResolvers<infer TType, infer TMapping, infer TParent>
-                ? UndefinableToOptional<
-                      {
-                          [K in keyof Required<TType>]: K extends keyof TMapping
-                              ? TMapping[K] extends Resolver<infer TResult, infer TArgs>
-                                  ? FieldResolver<TContext, TParent, TArgs, TResult>
-                                  : TMapping[K] extends ResolverOptions<
-                                        infer TResult,
-                                        infer TOptionsParent,
-                                        infer TArgs
-                                    >
-                                  ? ResolverOptionsObjectGuard<TContext, TParent, TOptionsParent, TArgs, TResult, K>
-                                  : TMapping[K] extends ResolverSubscriber<
+                ? UndefinableToOptional<{
+                      [K in keyof Required<TType>]: K extends keyof TMapping
+                          ? TMapping[K] extends Resolver<infer TResult, infer TArgs>
+                              ? FieldResolver<TContext, TParent, TArgs, TResult>
+                              : TMapping[K] extends ResolverOptions<infer TResult, infer TOptionsParent, infer TArgs>
+                                ? ResolverOptionsObjectGuard<TContext, TParent, TOptionsParent, TArgs, TResult, K>
+                                : TMapping[K] extends ResolverSubscriber<
                                         infer TResult,
                                         infer TSubscriberParent,
                                         infer TArgs
@@ -95,18 +90,17 @@ export type Resolvers<TResolvers extends object, TContext> = OptionalObjectToOpt
                                         K
                                     >
                                   : FieldResolver<TContext, TParent, {}, TMapping[K]>
-                              : K extends keyof TParent
-                              ? TransformScalar<TParent[K]> extends TType[K]
-                                  ? FieldResolver<TContext, TParent, {}, TType[K]> | undefined
-                                  : FieldResolver<TContext, TParent, {}, TType[K]>
-                              : FieldResolver<TContext, TParent, {}, TType[K]>;
-                      }
-                  >
+                          : K extends keyof TParent
+                            ? TransformScalar<TParent[K]> extends TType[K]
+                                ? FieldResolver<TContext, TParent, {}, TType[K]> | undefined
+                                : FieldResolver<TContext, TParent, {}, TType[K]>
+                            : FieldResolver<TContext, TParent, {}, TType[K]>;
+                  }>
                 : TResolvers[P] extends EnumResolver<infer TType, infer TValue>
-                ? Record<TType, TValue>
-                : TResolvers[P] extends GraphQLScalarType
-                ? GraphQLScalarType
-                : never;
+                  ? Record<TType, TValue>
+                  : TResolvers[P] extends GraphQLScalarType
+                    ? GraphQLScalarType
+                    : never;
         },
         never
     >

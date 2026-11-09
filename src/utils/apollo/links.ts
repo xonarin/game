@@ -9,8 +9,8 @@ import { getCookie } from '../cookies';
 
 const loggableErrorCodes = new Set(['INTERNAL_SERVER_ERROR', 'DOWNSTREAM_SERVICE_ERROR']);
 
-export const errorLink = () => {
-    return onError(errorResponse => {
+export const errorLink = () =>
+    onError(errorResponse => {
         const { graphQLErrors, networkError } = errorResponse;
 
         if (graphQLErrors) {
@@ -25,19 +25,15 @@ export const errorLink = () => {
             console.warn(`[Network error]: ${networkError}`);
         }
     });
-};
 
-export const schemaLink = (options: SchemaLink.Options) => {
-    return new SchemaLink({ ...options });
-};
+export const schemaLink = (options: SchemaLink.Options) => new SchemaLink({ ...options });
 
-export const httpLink = (options: HttpOptions = {}) => {
-    return new HttpLink({
+export const httpLink = (options: HttpOptions = {}) =>
+    new HttpLink({
         uri: '/graphql',
         credentials: 'include',
         ...options,
     });
-};
 
 export const wsLink = () => {
     const { protocol: originalProtocol, hostname, host: originalHost } = window.location;
@@ -58,8 +54,8 @@ export const wsLink = () => {
 };
 
 // eslint-disable-next-line no-shadow
-export const requestLink = ({ wsLink, httpLink }: { wsLink: GraphQLWsLink; httpLink: HttpLink }) => {
-    return split(
+export const requestLink = ({ wsLink, httpLink }: { wsLink: GraphQLWsLink; httpLink: HttpLink }) =>
+    split(
         ({ query }) => {
             const definition = getMainDefinition(query);
             return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -67,4 +63,3 @@ export const requestLink = ({ wsLink, httpLink }: { wsLink: GraphQLWsLink; httpL
         wsLink,
         httpLink,
     );
-};

@@ -1,5 +1,4 @@
-import { Model } from 'sequelize';
-import { BelongsTo, BelongsToGetAssociationMixin, DataTypes, Sequelize } from 'sequelize';
+import { Model, BelongsTo, BelongsToGetAssociationMixin, DataTypes, Sequelize } from 'sequelize';
 
 import { User } from './User';
 import { AssociableModelStatic } from './index';
@@ -33,7 +32,7 @@ export const initBonus = (sequelize: Sequelize): BonusStatic => {
                 autoIncrement: true,
 
                 get(this: Bonus) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
 
@@ -42,7 +41,7 @@ export const initBonus = (sequelize: Sequelize): BonusStatic => {
                 allowNull: false,
 
                 get(this: Bonus) {
-                    return ((this.getDataValue('userId') as unknown) as number).toString();
+                    return (this.getDataValue('userId') as unknown as number).toString();
                 },
             },
 

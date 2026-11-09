@@ -141,12 +141,12 @@ export const resolvers: PaymentsResolvers = {
     Payment: {
         method: parent => repositories.payments.getPaymentMethodById(parent.methodId),
         amount: parent => parent.sum - (parent.sum * parent.commission) / 100,
-        status: parent => (parent.status as string) as PaymentStatus,
+        status: parent => parent.status as string as PaymentStatus,
     },
     Withdraw: {
         method: parent => repositories.payments.getWithdrawMethodByIdStrict(parent.methodId),
         amount: parent => parent.sum,
-        status: parent => (parent.status as string) as WithdrawStatus,
+        status: parent => parent.status as string as WithdrawStatus,
     },
     DateTime: GraphQLDateTime,
     URL: GraphQLURL,

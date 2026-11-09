@@ -42,7 +42,7 @@ export const initMinesGame = (sequelize: Sequelize): MinesGameStatic => {
             primaryKey: true,
             autoIncrement: true,
             get(this: MinesGame) {
-                return ((this.getDataValue('id') as unknown) as number).toString();
+                return (this.getDataValue('id') as unknown as number).toString();
             },
         },
 
@@ -50,7 +50,7 @@ export const initMinesGame = (sequelize: Sequelize): MinesGameStatic => {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             get(this: MinesGame) {
-                return ((this.getDataValue('userId') as unknown) as number).toString();
+                return (this.getDataValue('userId') as unknown as number).toString();
             },
         },
 

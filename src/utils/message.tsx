@@ -11,27 +11,23 @@ export const emojiAltRegexp = new RegExp(emojiAlts.map(emojiAlt => `:${emojiAlt}
 export const emojiImgRegexp = new RegExp(`<img.+?alt="(${emojiAltRegexp.source})".*?/?>`, 'g');
 export const tagRegexp = /<\\?.+?>/g;
 
-export const isEmojiAlt = (text: string): boolean => {
-    return new RegExp(`^(${emojiAltRegexp.source})$`).test(text);
-};
+export const isEmojiAlt = (text: string): boolean => new RegExp(`^(${emojiAltRegexp.source})$`).test(text);
 
-export const emojiAltToImg = (alt: EmojiAlt, size: EmojiSize): string => {
-    return `<img class="${emojiStyles.Emoji} ${emojiStyles[`Emoji_alt_${alt}`]} ${
+export const emojiAltToImg = (alt: EmojiAlt, size: EmojiSize): string =>
+    `<img class="${emojiStyles.Emoji} ${emojiStyles[`Emoji_alt_${alt}`]} ${
         emojiStyles[`Emoji_size_${size}`]
     }" src="${blankImg}" alt=":${alt}:">`;
-};
 
-export const textToHtml = (text: string, emojiSize: EmojiSize): string => {
-    return text
+export const textToHtml = (text: string, emojiSize: EmojiSize): string =>
+    text
         .replace(new RegExp(emojiAltRegexp), emojiAlt => emojiAltToImg(emojiAlt.slice(1, -1) as EmojiAlt, emojiSize))
         .replace(/&/g, '&amp;')
         .replace(/>/g, '&gt;')
         .replace(/</g, '&lt;')
         .replace(/\n/g, '<br>');
-};
 
-export const htmlToText = (html: string): string => {
-    return html
+export const htmlToText = (html: string): string =>
+    html
         .replace(/<br>/g, '\n')
         .replace(new RegExp(emojiImgRegexp), (_0, emojiAlt) => emojiAlt)
         .replace(new RegExp(tagRegexp), '')
@@ -41,7 +37,6 @@ export const htmlToText = (html: string): string => {
         .replace(/&lt;/g, '<')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
-};
 
 export const matchEmojiAlt = (text: string): [string, number, number] | null => {
     const match = new RegExp(emojiAltRegexp).exec(text);
@@ -131,6 +126,5 @@ export const transformNewLines = (elements: StringOrElement[]): StringOrElement[
     ]);
 };
 
-export const transformMessage = (message: string): React.ReactNode => {
-    return React.createElement(React.Fragment, null, ...transformNewLines(emojify([message])).filter(Boolean));
-};
+export const transformMessage = (message: string): React.ReactNode =>
+    React.createElement(React.Fragment, null, ...transformNewLines(emojify([message])).filter(Boolean));

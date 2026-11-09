@@ -4,9 +4,8 @@ import useForceUpdate from './useForceUpdate';
 
 type UseRefStateResult<T> = [T, Dispatch<SetStateAction<T>>, MutableRefObject<T>];
 
-const isSetStateFunc = <T>(value: SetStateAction<T>): value is (prevState: T) => T => {
-    return typeof value === 'function' && value.length === 1;
-};
+const isSetStateFunc = <T>(value: SetStateAction<T>): value is (prevState: T) => T =>
+    typeof value === 'function' && value.length === 1;
 
 const useRefState = <T>(initialValue: T): UseRefStateResult<T> => {
     const ref = useRef(initialValue);

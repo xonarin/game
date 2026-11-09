@@ -186,9 +186,8 @@ export const resolvers: ChatResolvers = {
     },
     Subscription: {
         sentMessage: {
-            resolve: (data, _0, { repositories }) => {
-                return data ? repositories.messages.getMessageByIdStrict(data.sentMessage.id) : null;
-            },
+            resolve: (data, _0, { repositories }) =>
+                data ? repositories.messages.getMessageByIdStrict(data.sentMessage.id) : null,
             subscribe: withFilterByTarget('sentMessage'),
         },
         deletedMessage: {
@@ -222,9 +221,7 @@ export const resolvers: ChatResolvers = {
 
             return chat.image;
         },
-        members: chat => {
-            return chat.getMembers();
-        },
+        members: chat => chat.getMembers(),
         messages: async (chat, { offset }, { repositories }) => {
             const messages = await repositories.messages.getMessagesByChatId(
                 chat.id,
@@ -233,21 +230,16 @@ export const resolvers: ChatResolvers = {
             );
             return messages.reverse();
         },
-        messagesCount: (chat, _0, { repositories }) => {
-            return repositories.messages.countMessages(chat.id);
-        },
-        unreadMessagesCount: (chat, _0, { user, repositories }) => {
-            return user ? repositories.chats.getUnreadMessagesCount(chat.id, user.id) : 0;
-        },
+        messagesCount: (chat, _0, { repositories }) => repositories.messages.countMessages(chat.id),
+        unreadMessagesCount: (chat, _0, { user, repositories }) =>
+            user ? repositories.chats.getUnreadMessagesCount(chat.id, user.id) : 0,
     },
     Message: {
         chatType: async (message, _0, { repositories }) => {
             const chat = await repositories.chats.getChatByIdStrict(message.chatId);
             return chat.type;
         },
-        sender: (message, _0, { repositories }) => {
-            return repositories.users.getUserByIdStrict(message.senderId);
-        },
+        sender: (message, _0, { repositories }) => repositories.users.getUserByIdStrict(message.senderId),
     },
     URL: GraphQLURL,
     DateTime: GraphQLDateTime,

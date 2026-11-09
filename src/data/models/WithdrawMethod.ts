@@ -15,8 +15,8 @@ export interface WithdrawMethod extends Model {
 
 export type WithdrawMethodStatic = ModelStatic<WithdrawMethod>;
 
-export const initWithdrawMethod = (sequelize: Sequelize): WithdrawMethodStatic => {
-    return sequelize.define(
+export const initWithdrawMethod = (sequelize: Sequelize): WithdrawMethodStatic =>
+    sequelize.define(
         'WithdrawMethod',
         {
             id: {
@@ -24,7 +24,7 @@ export const initWithdrawMethod = (sequelize: Sequelize): WithdrawMethodStatic =
                 primaryKey: true,
 
                 get(this: WithdrawMethod) {
-                    return ((this.getDataValue('id') as unknown) as number).toString();
+                    return (this.getDataValue('id') as unknown as number).toString();
                 },
             },
 
@@ -66,4 +66,3 @@ export const initWithdrawMethod = (sequelize: Sequelize): WithdrawMethodStatic =
         },
         { timestamps: false },
     ) as WithdrawMethodStatic;
-};

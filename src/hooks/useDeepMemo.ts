@@ -23,8 +23,7 @@ const useDeepMemo = <T>(factory: () => T, deps: DependencyList): T => {
     return useMemo<T>(factory, useDeepRef<DependencyList>(deps).current);
 };
 
-export const useDeepMemoNoCheck = <T>(factory: () => T, deps: DependencyList): T => {
-    return useMemo<T>(factory, useDeepRef<DependencyList>(deps).current);
-};
+export const useDeepMemoNoCheck = <T>(factory: () => T, deps: DependencyList): T =>
+    useMemo<T>(factory, useDeepRef<DependencyList>(deps).current);
 
 export default useDeepMemo;

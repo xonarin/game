@@ -8,20 +8,18 @@ export interface ExtendedBetFieldProps {
     className?: string;
 }
 
-const ExtendedBetField: React.FC<ExtendedBetFieldProps> = ({ name, className }) => {
-    return (
-        <Field name={name}>
-            {({ input }) => (
-                <ExtendedBetInput
-                    value={input.value}
-                    onChange={input.onChange}
-                    onFocus={input.onFocus}
-                    onBlur={input.onBlur}
-                    className={className}
-                />
-            )}
-        </Field>
-    );
-};
+const ExtendedBetField: React.FC<ExtendedBetFieldProps> = ({ name, className }) => (
+    <Field name={name}>
+        {({ input }) => (
+            <ExtendedBetInput
+                value={input.value}
+                onChange={input.onChange}
+                onFocus={input.onFocus}
+                onBlur={input.onBlur}
+                className={className}
+            />
+        )}
+    </Field>
+);
 
 export default ExtendedBetField;
