@@ -1,7 +1,7 @@
 import path from 'path';
 import chokidar from 'chokidar';
 
-import { writeFile, copyFile, makeDir, copyDir, cleanDir } from './lib/fs';
+import { writeFile, copyFile, makeDir, copyDir, removePath } from './lib/fs';
 import pkg from '../package.json';
 import { format } from './run';
 
@@ -20,7 +20,7 @@ async function copy() {
                     engines: pkg.engines,
                     dependencies: pkg.dependencies,
                     scripts: {
-                        start: 'NODE_ICU_DATA="$(pwd)/node_modules/full-icu" node server.js',
+                        start: 'node server.js',
                     },
                 },
                 null,
@@ -46,7 +46,7 @@ async function copy() {
                     break;
                 case 'unlink':
                 case 'unlinkDir':
-                    await cleanDir(dist, { nosort: true, dot: true });
+                    await removePath(dist);
                     break;
                 default:
                     return;

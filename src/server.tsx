@@ -1,11 +1,12 @@
 import 'reflect-metadata';
+import './utils/nodeCompat';
 
 import path from 'path';
 import { createServer } from 'http';
 import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
+import { expressjwt, UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { QueryParams } from 'universal-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
@@ -44,17 +45,6 @@ process.on('unhandledRejection', (reason, p) => {
 
 configureLuxon();
 
-//
-// Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
-// user agent is not known.
-// -----------------------------------------------------------------------------
-// @ts-ignore
-// noinspection JSConstantReassignment
-global.navigator = global.navigator || {};
-// @ts-ignore
-// noinspection JSConstantReassignment
-global.navigator.userAgent = global.navigator.userAgent || 'all';
-
 const app = express();
 
 //
@@ -80,20 +70,25 @@ app.use(rateLimiterMiddleware());
 // Authentication
 // -----------------------------------------------------------------------------
 app.use(
-    expressJwt({
+    expressjwt({
         secret: config.auth.jwt.secret,
+        algorithms: ['HS256'],
         credentialsRequired: false,
+        // keep the decoded token on req.user (the rest of the app reads it from there)
+        requestProperty: 'user',
         getToken: req => req.cookies[config.auth.tokenKey],
     }),
 );
 
-// Error handler for express-jwt
+// Invalid/expired session cookie: drop it and continue as a guest
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    // eslint-disable-line no-unused-vars
     if (err instanceof Jwt401Error) {
-        console.error('[express-jwt-error]', req.cookies[config.auth.tokenKey]);
-        // `clearCookie`, otherwise user can't use web-app until cookie expires
+        console.warn('[express-jwt] rejected session cookie:', err.code);
         res.clearCookie(config.auth.tokenKey);
+        // eslint-disable-next-line no-param-reassign
+        req.user = undefined;
+        next();
+        return;
     }
     next(err);
 });

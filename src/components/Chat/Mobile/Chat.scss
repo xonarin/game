@@ -49,15 +49,16 @@
     to {
         box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
     }
+}
 
-    &-Login {
-        display: block;
-        padding: 14px 16px;
-        color: $color-gray;
-        font-size: $font-size-m;
-        text-align: center;
-        text-decoration: none;
+// Shown instead of the message input for guests
+.Chat-Login {
+    display: block;
+    padding: 14px 16px;
+    color: $color-gray;
+    font-size: $font-size-m;
+    text-align: center;
+    text-decoration: none;
 
-        &:hover { color: $color-white; }
-    }
+    &:hover { color: $color-white; }
 }

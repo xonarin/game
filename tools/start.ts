@@ -5,7 +5,6 @@ import browserSync from 'browser-sync';
 import webpack, { Compiler, Configuration } from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
 
 import webpackConfig from './webpack.config';
 import run, { format } from './run';
@@ -60,24 +59,20 @@ async function start() {
         res.setHeader('Cache-Control', 'no-store');
         next();
     });
-    server.use(errorOverlayMiddleware());
     server.use(express.static(path.resolve(__dirname, '../public')));
 
     // Configure client-side hot module replacement
     const clientConfig = webpackConfig.find(config => config.name === 'client') as any;
-    clientConfig.entry.client = ['./tools/lib/webpackHotDevClient']
-        .concat(clientConfig.entry.client)
-        .sort((a: string, b: string) => Number(b.includes('polyfill')) - Number(a.includes('polyfill')));
-    clientConfig.output.filename = clientConfig.output.filename.replace('chunkhash', 'hash');
-    clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace('chunkhash', 'hash');
-    clientConfig.module.rules = clientConfig.module.rules.filter((x: any) => x.loader !== 'null-loader');
+    // webpack-hot-middleware client: applies updates, falls back to a full reload
+    clientConfig.entry.client = ['webpack-hot-middleware/client?name=client&reload=true'].concat(
+        clientConfig.entry.client,
+    );
     clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
     // Configure server-side hot module replacement
     const serverConfig = webpackConfig.find(config => config.name === 'server') as any;
-    serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
-    serverConfig.output.hotUpdateChunkFilename = 'updates/[id].[hash].hot-update.js';
-    serverConfig.module.rules = serverConfig.module.rules.filter((x: any) => x.loader !== 'null-loader');
+    serverConfig.output.hotUpdateMainFilename = 'updates/[runtime].[fullhash].hot-update.json';
+    serverConfig.output.hotUpdateChunkFilename = 'updates/[id].[fullhash].hot-update.js';
     serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
     // Configure compilation
@@ -92,8 +87,7 @@ async function start() {
     server.use(
         webpackDevMiddleware(clientCompiler, {
             publicPath: clientConfig.output.publicPath,
-            logLevel: 'silent',
-            watchOptions,
+            stats: 'none',
         }),
     );
 

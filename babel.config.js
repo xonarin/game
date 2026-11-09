@@ -1,3 +1,4 @@
+// Used by babel-node (tools/*) and Jest. Webpack bundles use the options in tools/webpack.config.ts.
 module.exports = {
     presets: [
         [
@@ -8,14 +9,8 @@ module.exports = {
                 },
             },
         ],
-        '@babel/preset-react',
+        ['@babel/preset-react', { runtime: 'classic' }],
         '@babel/preset-typescript',
-    ],
-    plugins: [
-        ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-syntax-dynamic-import',
-        '@babel/plugin-proposal-optional-chaining',
     ],
     ignore: ['node_modules', 'build'],
 };

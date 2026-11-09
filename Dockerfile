@@ -1,4 +1,4 @@
-FROM node:12.18.0
+FROM node:24-bookworm-slim
 
 # Set a working directory
 WORKDIR /usr/src/app
@@ -7,7 +7,7 @@ COPY ./build/package.json .
 COPY ./build/yarn.lock .
 
 # Install Node.js dependencies
-RUN yarn install --production --no-progress
+RUN yarn install --production --frozen-lockfile --no-progress && yarn cache clean
 
 # Copy application files
 COPY ./build .
@@ -16,6 +16,6 @@ COPY ./build .
 USER node
 
 # Set NODE_ENV env variable to "production" for faster expressjs
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 CMD [ "node", "server.js" ]

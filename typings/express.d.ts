@@ -17,12 +17,13 @@ declare module 'express-serve-static-core' {
 
 declare global {
     namespace Express {
-        // For use of passport
+        // Payload of the session JWT, set on req.user by express-jwt (see src/server.tsx)
         interface User {
             id: string;
         }
-        interface AuthInfo {
-            isRegistered: boolean;
+
+        interface Request {
+            user?: User;
         }
     }
 }

@@ -3,9 +3,9 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
 
-    extends: ['airbnb', 'plugin:react-hooks/recommended', 'plugin:css-modules/recommended', 'prettier', 'prettier/react'],
+    extends: ['airbnb', 'plugin:react-hooks/recommended', 'prettier'],
 
-    plugins: ['@typescript-eslint/eslint-plugin', 'react-hooks', 'css-modules', 'prettier', 'jest'],
+    plugins: ['@typescript-eslint/eslint-plugin', 'react-hooks', 'prettier', 'jest'],
 
     parserOptions: {
         sourceType: 'module',
@@ -43,6 +43,9 @@ module.exports = {
         ],
 
         'no-plusplus': 'off',
+
+        // False positives on `module.hot` (HMR) and `require.main === module` checks
+        'import/no-import-module-exports': 'off',
 
         // Recommend not to leave any console.log in your code
         // Use console.error, console.warn and console.info instead
@@ -114,6 +117,10 @@ module.exports = {
         // TypeScript checks prop-types
         'react/prop-types': 'off',
 
+        // Optional props are described by TypeScript types; components are arrow functions
+        'react/require-default-props': 'off',
+        'react/function-component-definition': 'off',
+
         // Cannot config .ts, .tsx resolution
         'import/no-unresolved': 'off',
 
@@ -132,8 +139,6 @@ module.exports = {
 
         '@typescript-eslint/no-explicit-any': 'error',
 
-        // https://openbase.io/js/eslint-plugin-css-modules
-        'css-modules/no-unused-class': 'off',
 
         // Type variables by Codegen can not be camelcase.
         camelcase: 'off',

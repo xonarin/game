@@ -1,101 +1,48 @@
-import fs from 'fs';
+import { promises as fsp } from 'fs';
 import path from 'path';
-import glob, { IOptions } from 'glob';
-import mkdirp from 'mkdirp';
-import rimraf from 'rimraf';
 
-export const readFile = (file: string): Promise<string> =>
-    new Promise((resolve, reject) => {
-        fs.readFile(file, 'utf8', (err, data) => (err ? reject(err) : resolve(data)));
-    });
+export const readFile = (file: string): Promise<string> => fsp.readFile(file, 'utf8');
 
-export const writeFile = (file: string, contents: string) =>
-    new Promise((resolve, reject) => {
-        fs.writeFile(file, contents, 'utf8', err => (err ? reject(err) : resolve()));
-    });
+export const writeFile = (file: string, contents: string): Promise<void> => fsp.writeFile(file, contents, 'utf8');
 
-export const renameFile = (source: string, target: string) =>
-    new Promise((resolve, reject) => {
-        fs.rename(source, target, err => (err ? reject(err) : resolve()));
-    });
+export const renameFile = (source: string, target: string): Promise<void> => fsp.rename(source, target);
 
-export const copyFile = (source: string, target: string) =>
-    new Promise((resolve, reject) => {
-        let cbCalled = false;
+export const copyFile = (source: string, target: string): Promise<void> => fsp.copyFile(source, target);
 
-        function done(err?: Error) {
-            if (!cbCalled) {
-                cbCalled = true;
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            }
-        }
-
-        const rd = fs.createReadStream(source);
-        rd.on('error', err => done(err));
-        const wr = fs.createWriteStream(target);
-        wr.on('error', err => done(err));
-        wr.on('close', () => done());
-        rd.pipe(wr);
-    });
-
-export const readDir = (pattern: string, options: IOptions = {}): Promise<string[]> => {
-    return new Promise((resolve, reject) =>
-        glob(pattern, options, (err, result) => (err ? reject(err) : resolve(result))),
-    );
+export const makeDir = async (name: string): Promise<void> => {
+    await fsp.mkdir(name, { recursive: true });
 };
 
-export const makeDir = (name: string) =>
-    new Promise((resolve, reject) => {
-        mkdirp(name, err => (err ? reject(err) : resolve()));
-    });
+export const copyDir = (source: string, target: string): Promise<void> =>
+    fsp.cp(source, target, { recursive: true, force: true });
 
-export const moveDir = async (source: string, target: string) => {
-    const dirs = await readDir('**/*.*', {
-        cwd: source,
-        nosort: true,
-        dot: true,
-    });
-    await Promise.all(
-        dirs.map(async (dir: string) => {
-            const from = path.resolve(source, dir);
-            const to = path.resolve(target, dir);
-            await makeDir(path.dirname(to));
-            await renameFile(from, to);
-        }),
-    );
+export const moveDir = async (source: string, target: string): Promise<void> => {
+    await copyDir(source, target);
+    await fsp.rm(source, { recursive: true, force: true });
 };
 
-export const copyDir = async (source: string, target: string) => {
-    const dirs = await readDir('**/*.*', {
-        cwd: source,
-        nosort: true,
-        dot: true,
-    });
-    await Promise.all(
-        dirs.map(async (dir: string) => {
-            const from = path.resolve(source, dir);
-            const to = path.resolve(target, dir);
-            await makeDir(path.dirname(to));
-            await copyFile(from, to);
-        }),
-    );
-};
+/** Removes a file or directory (recursively). Missing paths are ignored. */
+export const removePath = (target: string): Promise<void> => fsp.rm(target, { recursive: true, force: true });
 
-export const cleanDir = (pattern: string, options?: IOptions) =>
-    new Promise((resolve, reject) => rimraf(pattern, { glob: options }, err => (err ? reject(err) : resolve())));
+/** Empties a directory, keeping the entries listed in `keep` (names relative to the directory). */
+export const cleanDir = async (dir: string, keep: string[] = []): Promise<void> => {
+    let entries: string[];
+    try {
+        entries = await fsp.readdir(dir);
+    } catch {
+        return;
+    }
+    await Promise.all(entries.filter(name => !keep.includes(name)).map(name => removePath(path.join(dir, name))));
+};
 
 export default {
     readFile,
     writeFile,
     renameFile,
     copyFile,
-    readDir,
     makeDir,
     copyDir,
     moveDir,
+    removePath,
     cleanDir,
 };

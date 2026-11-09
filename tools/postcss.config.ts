@@ -1,43 +1,21 @@
 /* eslint-disable global-require */
 
 const isDebug = !process.argv.includes('--release');
-const pkg = require('../package.json');
 
+// PostCSS plugins for project and third-party styles (used as postcss-loader `postcssOptions`)
 const config = {
-    // The list of plugins for PostCSS
-    // https://github.com/postcss/postcss
     plugins: [
-        // Transfer @import rule by inlining content, e.g. @import 'normalize.css'
-        // https://github.com/postcss/postcss-import
+        // Inline @import rules, e.g. @import 'normalize.css'
         require('postcss-import')(),
-        // W3C calc() function, e.g. div { height: calc(100px - 2em); }
-        // https://github.com/postcss/postcss-calc
-        require('postcss-calc')(),
-        // Convert CSS shorthand filters to SVG equivalent, e.g. .blur { filter: blur(4px); }
-        // https://github.com/iamvdo/pleeease-filters
-        require('pleeease-filters')(),
-        // Generate pixel fallback for "rem" units, e.g. div { margin: 2.5rem 2px 3em 100%; }
-        // https://github.com/robwierzbowski/node-pixrem
-        require('pixrem')(),
-        // Postcss flexbox bug fixer
-        // https://github.com/luisrudge/postcss-flexbugs-fixes
+        // Flexbox bug fixes
         require('postcss-flexbugs-fixes')(),
-        // PostCSS Preset Env, which allows you easily to use all the features in cssdb.
-        // See what features in which stage in https://preset-env.cssdb.org/features
-        // https://github.com/csstools/postcss-preset-env
+        // Modern CSS features + vendor prefixes for the "browserslist" targets in package.json
         require('postcss-preset-env')({
             stage: 3,
-            browsers: pkg.browserslist,
             autoprefixer: { flexbox: 'no-2009' },
         }),
-        // CSS Nano options http://cssnano.co/
-        require('cssnano')(
-            isDebug
-                ? false
-                : {
-                      discardComments: { removeAll: true },
-                  },
-        ),
+        // Minify in production builds
+        ...(isDebug ? [] : [require('cssnano')({ preset: ['default', { discardComments: { removeAll: true } }] })]),
     ],
 };
 

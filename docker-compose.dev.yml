@@ -1,4 +1,4 @@
-# Local dev environment: Node 12 app + MySQL + Redis.
+# Local dev environment: Node 24 app + MySQL + Redis.
 # Run:  docker compose -f docker-compose.dev.yml up
 # App:  http://localhost:3100  (Browsersync; app server/websockets on 3002)
 services:
@@ -23,13 +23,13 @@ services:
       - "6379:6379"
 
   app:
-    image: node:12.22-buster
+    image: node:24-bookworm-slim
     working_dir: /app
     environment:
       DATABASE_URL: mysql://root:dev@mysql:3306/playtime
       REDIS_URL: redis://redis:6379
-      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "1"
-      CHOKIDAR_USEPOLLING: "1"
+      # Bind mounts from Windows don't deliver file events: poll for changes (webpack watchpack)
+      WATCHPACK_POLLING: "true"
       # Test login on /login -> /auth/dev (development builds only, see src/auth)
       DEV_LOGIN: "1"
       # Real sign-in providers: put values into a local .env file next to this one
@@ -58,7 +58,7 @@ services:
       - "3002:3002"
     volumes:
       - .:/app
-      - node-modules:/app/node_modules
+      - node-modules-24:/app/node_modules
     depends_on:
       mysql:
         condition: service_healthy
@@ -79,4 +79,4 @@ services:
 
 volumes:
   mysql-data:
-  node-modules:
+  node-modules-24:

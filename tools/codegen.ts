@@ -2,20 +2,19 @@ import { join as pathJoin } from 'path';
 import { generate } from '@graphql-codegen/cli';
 import { print } from 'graphql';
 
-import { cleanDir } from './lib/fs';
 import runWebpack from './lib/runWebpack';
 import webpackConfig from './webpack.config';
 
 const [, serverConfig] = webpackConfig;
 
 /**
- * Generate Flow declarations from GraphQL. Since it requires
- * a running GraphQL server, it launches a server for the use.
+ * Generates TypeScript types and Apollo hooks (src/__generated__/graphql.tsx) from the
+ * GraphQL schema (compiled from src/data/schema) and the documents in src/**.
+ * The output file is overwritten in place, not deleted first: a running dev server
+ * watches it and would fail on a missing module.
  */
 export default async function codegen() {
-    const promiseRemoveOldTypes = cleanDir('{./,src/**/}__generated__');
-
-    const promiseCompileSchemaJs = await runWebpack(
+    await runWebpack(
         [
             {
                 ...serverConfig,
@@ -23,14 +22,12 @@ export default async function codegen() {
                 output: {
                     path: serverConfig.output!.path,
                     filename: 'schema.js',
-                    libraryTarget: 'commonjs2',
+                    library: { type: 'commonjs2' },
                 },
             },
         ],
         serverConfig.stats!,
     );
-
-    await Promise.all([promiseRemoveOldTypes, promiseCompileSchemaJs]);
 
     // eslint-disable-next-line global-require, import/no-dynamic-require, import/no-unresolved
     const builtSchema = require('../build/schema').default;
@@ -40,7 +37,7 @@ export default async function codegen() {
     await generate(
         {
             schema: print(builtSchema),
-            documents: './src/**/*.{graphql,ts,tsx}',
+            documents: ['./src/**/*.{graphql,ts,tsx}', '!./src/__generated__/**'],
             config: {
                 scalars: {
                     URL: 'string',
