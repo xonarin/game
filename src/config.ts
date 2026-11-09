@@ -55,18 +55,15 @@ const config = {
             botToken: env('TELEGRAM_BOT_TOKEN'),
             // without "@" (the widget expects plain bot username)
             botUsername: env('TELEGRAM_BOT_USERNAME').replace(/^@/, ''),
+            // Channel the bonus requires a subscription to (id like -1001234567890 or @channel);
+            // the bot must be an administrator of it so getChatMember works.
+            bonusChannel: env('TELEGRAM_BONUS_CHANNEL'),
+            // Secret for the bot webhook that records who started the bot (/api/telegram/webhook).
+            webhookSecret: env('TELEGRAM_WEBHOOK_SECRET'),
         },
 
         // Local test login (/auth/dev), only works in development builds
         devLogin: process.env.DEV_LOGIN === '1',
-
-        // VK API for bonuses and promo codes (group membership, reposts, friends count)
-        vk: {
-            appAccessToken: env('VK_APP_TOKEN'),
-            userAccessToken: env('VK_USER_TOKEN'),
-            groupId: env('VK_GROUP_ID'),
-            groupAccessToken: env('VK_GROUP_TOKEN'),
-        },
 
         // FreeKassa deposits (merchant) and FKWallet withdrawals
         fk: {

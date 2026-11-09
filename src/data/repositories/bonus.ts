@@ -7,7 +7,7 @@ import { UserError } from '../../utils/errors';
 import KeyLocker from '../../utils/keyLocker';
 import { PromoCode } from '../models/PromoCode';
 import { PromoCodeUse } from '../models/PromoCodeUse';
-import { vkCheckRepost, vkGetFriendsCount, vkIsPageClosed } from '../../utils/vk';
+import { isTelegramBonusEnabled, telegramHasStartedBot, telegramIsChannelSubscribed } from '../../utils/telegram';
 
 const promoCodeRegExp = /^\w{4,255}$/;
 
@@ -91,12 +91,26 @@ class BonusRepository extends BaseRepository {
             }
         }
 
-        await this.repositories.users.assertUserInVkGroup(userId);
+        await this.assertTelegramSubscribed(userId);
+    }
 
-        const userVkId = await this.repositories.users.getVkIdStrict(userId);
-        const postId = await this.repositories.settings.getSettingAsString('bonus::vkPostId');
-        if (!(await vkCheckRepost(postId, userVkId))) {
-            throw new UserError('VK_NOT_REPOSTED');
+    /**
+     * Bonus/promo eligibility: the user must have signed in with Telegram, subscribed to the
+     * bonus channel and started the bot. Replaces the old VK group/repost/friends requirements.
+     */
+    private async assertTelegramSubscribed(userId: string): Promise<void> {
+        if (!isTelegramBonusEnabled()) {
+            throw new UserError('BONUS_NOT_CONFIGURED');
+        }
+
+        const telegramId = await this.repositories.users.getTelegramIdStrict(userId);
+
+        if (!(await telegramIsChannelSubscribed(telegramId))) {
+            throw new UserError('TELEGRAM_NOT_SUBSCRIBED');
+        }
+
+        if (!(await telegramHasStartedBot(telegramId))) {
+            throw new UserError('TELEGRAM_BOT_NOT_STARTED');
         }
     }
 
@@ -191,21 +205,7 @@ class BonusRepository extends BaseRepository {
             }
         }
 
-        const vkUserId = await this.repositories.users.assertUserInVkGroup(userId);
-        const isVkPageClosed = await vkIsPageClosed(vkUserId);
-
-        if (isVkPageClosed) {
-            throw new UserError('VK_PAGE_CLOSED');
-        }
-
-        const minFriendsCount = await this.repositories.settings.getSettingAsNumber(
-            'bonus::minVkFriendsToUsePromoCode',
-        );
-
-        const vkFriendsCount = await vkGetFriendsCount(vkUserId);
-        if (vkFriendsCount === undefined || vkFriendsCount < minFriendsCount) {
-            throw new UserError('NOT_ENOUGH_VK_FRIENDS');
-        }
+        await this.assertTelegramSubscribed(userId);
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {
@@ -250,7 +250,7 @@ class BonusRepository extends BaseRepository {
             throw new UserError('PROMO_CODE_NOT_ENOUGH_DEPOSITS');
         }
 
-        await this.repositories.users.assertUserInVkGroup(userId);
+        await this.assertTelegramSubscribed(userId);
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {

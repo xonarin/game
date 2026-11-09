@@ -21,8 +21,10 @@ type TranslationCode =
     | 'BAD_PROMO_CODE'
     | 'NO_PROMO_CODE'
     | 'LAST_PROMO_CODE_DIDNT_BET'
-    | 'VK_PAGE_CLOSED'
-    | 'NOT_ENOUGH_VK_FRIENDS'
+    | 'NOT_TELEGRAM_USER'
+    | 'TELEGRAM_NOT_SUBSCRIBED'
+    | 'TELEGRAM_BOT_NOT_STARTED'
+    | 'BONUS_NOT_CONFIGURED'
     | 'MAX_BALANCE_REACHED'
     | 'SEND_MESSAGE_NOT_ENOUGH_DEPS'
     | 'PROMO_CODE_FREQ_LIMIT_REACHED'
@@ -105,11 +107,17 @@ const translations: Record<TranslationCode, Translation> = {
     LAST_PROMO_CODE_DIDNT_BET: {
         ru: 'Последний раз вы брали промокод и не сделали на его сумму ставок. Сделайте ставки.',
     },
-    VK_PAGE_CLOSED: {
-        ru: 'Откройте профиль в ВК, чтобы взять промокод.',
+    NOT_TELEGRAM_USER: {
+        ru: 'Войдите через Telegram, чтобы получить бонус.',
     },
-    NOT_ENOUGH_VK_FRIENDS: {
-        ru: 'У вас должно быть больше 20 друзей в ВК.',
+    TELEGRAM_NOT_SUBSCRIBED: {
+        ru: 'Подпишитесь на наш Telegram-канал, чтобы получить бонус.',
+    },
+    TELEGRAM_BOT_NOT_STARTED: {
+        ru: 'Запустите нашего Telegram-бота (нажмите «Старт»), чтобы получить бонус.',
+    },
+    BONUS_NOT_CONFIGURED: {
+        ru: 'Бонусы временно недоступны.',
     },
     NOT_ENOUGH_REF_MONEY: {
         ru: 'Для вывода с реферальского баланса нужно не менее 15 рублей',

@@ -29,10 +29,8 @@ export type MinesSettings = 'mines::maxBetAmount' | 'mines::maxProfitAmount';
 
 export type BonusSettings =
     | 'bonus::minsBetweenBonuses'
-    | 'bonus::vkPostId'
     | 'bonus::getBonusFrequencyLimitDeposit'
     | 'bonus::getBonusFrequencyLimitWithoutDeps'
-    | 'bonus::minVkFriendsToUsePromoCode'
     | 'bonus::minDepositsToCreatePromoCode'
     | 'bonus::usePromoCodeFrequencyLimitDeposit'
     | 'bonus::usePromoCodeFrequencyLimitWithoutDeps';

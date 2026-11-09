@@ -42,6 +42,7 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import config from './config';
 import { decreaseOnline, increaseOnline, resetOnline, resetGames } from './services/LiveData/LiveDataStorage';
 import initPayments from './routes/payment';
+import initTelegramWebhook from './routes/telegram';
 import initCron from './cron';
 
 process.on('unhandledRejection', (reason, p) => {
@@ -113,6 +114,7 @@ app.get('/logout', (_0, res) => {
 
 // FK interaction
 initPayments(app);
+initTelegramWebhook(app);
 
 // LiveData
 resetOnline();
