@@ -1,6 +1,6 @@
 import { Express } from 'express';
 
-import config from '../config';
+import config, { isFreeKassaEnabled } from '../config';
 import { md5Hash } from '../utils/crypto';
 import { repositories } from '../data/database';
 
@@ -22,6 +22,11 @@ const initPayments = (app: Express) => {
             CUR_ID: curId,
             SIGN: sign,
         } = req.body;
+
+        // Not configured: never accept notifications (an empty secret would make signatures forgeable)
+        if (!isFreeKassaEnabled()) {
+            return next();
+        }
 
         const realSign = md5Hash(`${merchantId}:${amount}:${config.auth.fk.secret2}:${merchantOrderId}`);
         if (

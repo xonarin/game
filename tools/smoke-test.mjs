@@ -66,6 +66,15 @@ const pages = async () => {
         const r = await get(removed);
         ok(`${removed} is gone (404)`, r.status === 404, `status ${r.status}`);
     }
+    // Forged FreeKassa notification signed with empty secrets must not be accepted
+    const { createHash } = await import('node:crypto');
+    const forgedSign = createHash('md5').update(':100::1').digest('hex');
+    const kassa = await fetch(`${BASE}/api/v1/kassa/notify`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ MERCHANT_ID: '', AMOUNT: '100', MERCHANT_ORDER_ID: '1', SIGN: forgedSign }),
+    });
+    ok('forged payment notification is rejected', (await kassa.text()).trim() !== 'YES', `status ${kassa.status}`);
     const tg = await get('/auth/telegram/return?id=1&auth_date=1&hash=deadbeef');
     ok('telegram login rejects a bad signature', tg.status === 302 && !(tg.headers.get('set-cookie') || '').includes('idToken'));
 };

@@ -21,6 +21,10 @@ let vkLoadRepostsLastUsePostId = '';
 let vkLoadRepostsLastUseResult: string[] = [];
 
 const vkApi = async (method: string, params: Record<string, string>) => {
+    if (!vkAccessToken) {
+        throw new Error('VK API is not configured (VK_APP_TOKEN)');
+    }
+
     await vkApiLocker.lock();
 
     try {
@@ -35,22 +39,22 @@ const vkApi = async (method: string, params: Record<string, string>) => {
                 Accept: 'application/json',
             },
         }).catch(reason => {
-            console.warn('vkApi fetch catch', method, query, reason);
+            console.warn('vkApi fetch catch', method, reason);
             throw new Error('VK API error');
         });
 
         if (!response.ok) {
-            console.warn('vkApi !response.ok', method, query, response);
+            console.warn('vkApi !response.ok', method, response.status);
             throw new Error('VK API error');
         }
 
         const responseJson = await response.json().catch(reason => {
-            console.warn('vkApi response.json() catch', method, query, reason);
+            console.warn('vkApi response.json() catch', method, reason);
             throw new Error('VK API error');
         });
 
         if (responseJson.response === undefined) {
-            console.warn('vkApi responseJson.response === undefined', method, query, responseJson);
+            console.warn('vkApi responseJson.response === undefined', method, responseJson);
             throw new Error('VK API error');
         }
 

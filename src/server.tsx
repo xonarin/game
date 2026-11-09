@@ -1,4 +1,6 @@
 import './utils/nodeCompat';
+// must run before modules that connect to the database/Redis on import
+import './utils/checkConfig';
 
 import path from 'path';
 import { createServer } from 'http';

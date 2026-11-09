@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 
-import config from '../config';
+import config, { isFkWalletEnabled } from '../config';
 import { repositories } from '../data/database';
 import { UserWithdraw, WithdrawStatus } from '../data/models/UserWithdraw';
 import { md5Hash } from '../utils/crypto';
@@ -156,6 +156,12 @@ const withdrawTask = async () => {
 };
 
 export default () => {
+    // Withdrawals go through FKWallet: nothing to do until it is configured
+    if (!isFkWalletEnabled()) {
+        console.info('[cron] FKWallet is not configured (FK_WALLET_ID, FK_API_KEY): withdrawals are not processed');
+        return;
+    }
+
     cron.schedule('0 * * * *', withdrawTask);
     withdrawTask();
 };

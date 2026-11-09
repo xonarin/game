@@ -24,7 +24,7 @@ import { WithdrawMethod as WithdrawMethodBackend } from '../../models/WithdrawMe
 import { isAuth } from '../rules';
 import { UserError } from '../../../utils/errors';
 import { md5Hash } from '../../../utils/crypto';
-import config from '../../../config';
+import config, { isFreeKassaEnabled } from '../../../config';
 import { PaymentStatus as UserPaymentStatus, UserPayment } from '../../models/UserPayment';
 import { UserWithdraw, WithdrawStatus as WithdrawStatusBackend } from '../../models/UserWithdraw';
 
@@ -105,7 +105,7 @@ export const resolvers: PaymentsResolvers = {
         doDeposit: async (_0, { amount, method }, { user }) => {
             const paymentMethod = await repositories.payments.getPaymentMethodByIdStrict(method);
 
-            if (!paymentMethod.enabled) {
+            if (!paymentMethod.enabled || !isFreeKassaEnabled()) {
                 throw new UserError('NO_PAYMENT_METHOD');
             }
 

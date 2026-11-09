@@ -2,7 +2,15 @@ if (process.env.BROWSER) {
     throw new Error('Do not import `config.js` from inside the client-side code.');
 }
 
-export default {
+/*
+ * All secrets come from environment variables only (see .env.example).
+ * Nothing secret may have a default value in the code: anything committed to git is public.
+ * Optional integrations (VK ID, Telegram, FreeKassa, VK group API) are switched off when not configured.
+ */
+
+const env = (name: string): string => (process.env[name] || '').trim();
+
+const config = {
     // Node.js app
     port: process.env.PORT || 3000,
 
@@ -20,70 +28,53 @@ export default {
         serverUrl: process.env.API_SERVER_URL || `http://localhost:${process.env.PORT || 3000}`,
     },
 
-    // Database
-    databaseUrl:
-        process.env.DATABASE_URL ||
-        process.env.CLEARDB_DATABASE_URL ||
-        //'mysql://root:2644824@localhost:3306/playtime',
-        'mysql://root:OMHQ7rNPh0LozBnm5Jud@localhost:3306/playtime',
+    // Database, e.g. mysql://user:password@host:3306/playtime (required)
+    databaseUrl: env('DATABASE_URL') || env('CLEARDB_DATABASE_URL'),
 
-    // Redis
-    redisUrl: process.env.REDIS_URL || 'localhost',
-    // 'redis://redistogo:5825e9b0e37cdad535f42a1a9c387d39@soapfish.redistogo.com:10821/',
+    // Redis, e.g. redis://:password@host:6379
+    redisUrl: env('REDIS_URL') || 'redis://localhost:6379',
 
     // Authentication
     auth: {
         tokenKey: process.env.TOKEN_KEY || 'idToken',
 
-        jwt: { secret: process.env.JWT_SECRET || 'idontknow' },
+        // Signs session tokens: random, at least 32 characters (required in production)
+        jwt: { secret: env('JWT_SECRET') || (__DEV__ ? 'dev-only-insecure-jwt-secret-change-me' : '') },
 
-        // Public site URL used to build OAuth redirect URIs, e.g. https://willy.bet
+        // Public site URL used to build OAuth redirect URIs, e.g. https://plant.cash
         // (if empty, it is derived from the request host)
-        publicUrl: process.env.PUBLIC_URL || '',
+        publicUrl: env('PUBLIC_URL'),
 
         // VK ID (OAuth 2.1 + PKCE), app from https://id.vk.com/about/business/go
         vkid: {
-            appId: process.env.VKID_APP_ID || '',
+            appId: env('VKID_APP_ID'),
         },
 
         // Telegram Login Widget: bot from @BotFather, domain linked via /setdomain
         telegram: {
-            botToken: process.env.TELEGRAM_BOT_TOKEN || '',
+            botToken: env('TELEGRAM_BOT_TOKEN'),
             // without "@" (the widget expects plain bot username)
-            botUsername: (process.env.TELEGRAM_BOT_USERNAME || '').trim().replace(/^@/, ''),
+            botUsername: env('TELEGRAM_BOT_USERNAME').replace(/^@/, ''),
         },
 
         // Local test login (/auth/dev), only works in development builds
         devLogin: process.env.DEV_LOGIN === '1',
 
+        // VK API for bonuses and promo codes (group membership, reposts, friends count)
         vk: {
-            // localhost
-            appId: process.env.VK_APP_ID || '7008761',
-            appSecret: process.env.VK_APP_SECRET || 'vi494aFY2zgy7pPSyHDf',
-            // Production
-            // appId: process.env.VK_APP_ID || '7723218',
-            // appSecret: process.env.VK_APP_SECRET || 'UZgw4N4CTvkY9BuTcRUY',
-            // appAccessToken: process.env.VK_APP_TOKEN || '4968df8c4968df8c4968df8ca0491d075e449684968df8c1691663a40f9a0cf90a7daea',
-            appAccessToken:
-                process.env.VK_APP_TOKEN ||
-                'b4ebbe8e34429fbc06ab9de4bb1d0e4a5f5e85b11df5c2bbf93b0a3fe6d1bb745165bee41200b3d7bbd0c',
-
-            userAccessToken:
-                process.env.VK_USER_TOKEN ||
-                'e4d78546388887dc841ae89d15ff9de8ebef85977f40f365bfd24a004760c11f495a17b76c3ce5e213b37',
-
-            groupId: process.env.VK_GROUP_ID || '202468109',
-            groupAccessToken:
-                process.env.VK_GROUP_TOKEN ||
-                'fd7ceb7ebe18e06d44b23d8e2bd980242b4574689f28d9caa39938460ea27ac31962190bf8b543bdad5b4',
+            appAccessToken: env('VK_APP_TOKEN'),
+            userAccessToken: env('VK_USER_TOKEN'),
+            groupId: env('VK_GROUP_ID'),
+            groupAccessToken: env('VK_GROUP_TOKEN'),
         },
 
+        // FreeKassa deposits (merchant) and FKWallet withdrawals
         fk: {
-            merchantId: process.env.FK_MERCHANT_ID || '252728',
-            secret: process.env.FK_SECRET || '5vbryudo',
-            secret2: process.env.FK_SECRET2 || 'ul5a01ql',
-            walletId: process.env.FK_WALLET_ID || 'F100481963',
-            apiKey: process.env.FK_API_KEY || 'F89FA8AE6F56780C48FD8A5E5EB34BEF',
+            merchantId: env('FK_MERCHANT_ID'),
+            secret: env('FK_SECRET'),
+            secret2: env('FK_SECRET2'),
+            walletId: env('FK_WALLET_ID'),
+            apiKey: env('FK_API_KEY'),
         },
     },
 
@@ -94,3 +85,24 @@ export default {
         additionalOnlineK: 0.1,
     },
 };
+
+/** FreeKassa deposits need the merchant id and both secret words. */
+export const isFreeKassaEnabled = () =>
+    Boolean(config.auth.fk.merchantId && config.auth.fk.secret && config.auth.fk.secret2);
+
+/** FKWallet withdrawals need the wallet id and API key. */
+export const isFkWalletEnabled = () => Boolean(config.auth.fk.walletId && config.auth.fk.apiKey);
+
+/** Problems that make the server unsafe or unable to start; checked on startup in src/server.tsx. */
+export const getConfigErrors = (): string[] => {
+    const errors: string[] = [];
+    if (!config.databaseUrl) {
+        errors.push('DATABASE_URL is not set');
+    }
+    if (!__DEV__ && config.auth.jwt.secret.length < 32) {
+        errors.push('JWT_SECRET must be set to a random string of at least 32 characters');
+    }
+    return errors;
+};
+
+export default config;
