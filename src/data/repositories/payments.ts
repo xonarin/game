@@ -197,7 +197,9 @@ class PaymentsRepository extends BaseRepository {
 
     async cancelWithdraw(withdrawId: string, userId: string): Promise<UserWithdraw> {
         return this.db.sequelize.transaction(async transaction => {
-            const withdraw = await this.getWithdrawByIdStrict(withdrawId);
+            // Lock the withdraw row (FOR UPDATE) so concurrent cancels serialize instead of all
+            // reading status=WAIT_APPROVE and each refunding the money (double refund).
+            const withdraw = await this.getWithdrawByIdStrict(withdrawId, transaction);
 
             if (withdraw.userId !== userId) {
                 throw new UserError('NO_WITHDRAW');

@@ -14,7 +14,7 @@ import {
     UpdateServerSeedPayload,
     User,
 } from '../../../__generated__/graphql';
-import { User as UserBackend } from '../../models/User';
+import { User as UserBackend, UserRole } from '../../models/User';
 import { isAuth } from '../rules';
 import { checkUpdateClientSeedArgs } from './rules';
 import { sha256Hash } from '../../../utils/crypto';
@@ -27,7 +27,7 @@ export type OriginUserParent = UserBackend;
 type QueryType = Pick<Query, 'me' | 'user' | 'fairPlay' | 'usersTotal'>;
 type MutationType = Pick<Mutation, 'updateClientSeed' | 'updateServerSeed'>;
 type SubscriptionType = Pick<Subscription, 'balance'>;
-type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money'>;
+type UserType = Pick<User, 'id' | 'role' | 'username' | 'avatar' | 'money' | 'turnover' | 'refPercent'>;
 type BalanceSubscriptionType = Pick<BalanceSubscription, 'money' | 'maxReached'>;
 
 interface QueryMapping {
@@ -59,6 +59,8 @@ type UsersResolvers = Resolvers<
 export const rules: IRules = {
     Query: {
         fairPlay: isAuth,
+        // sensitive fields are also restricted per-field below; this blocks anonymous profile lookups
+        user: isAuth,
     },
     Mutation: {
         updateClientSeed: and(isAuth, checkUpdateClientSeedArgs),
@@ -105,7 +107,14 @@ export const resolvers: UsersResolvers = {
         },
     },
     User: {
+        // Sensitive fields are returned only for the requesting user themselves, so
+        // user(userId) cannot leak other players' balance, turnover or referral deal,
+        // and role cannot be used to enumerate admins/moderators.
         money: (parent, _0, { user }) => (user && user.id === parent.id ? parent.money : undefined),
+        turnover: (parent, _0, { user }) => (user && user.id === parent.id ? parent.turnover : undefined),
+        refPercent: (parent, _0, { user }) => (user && user.id === parent.id ? parent.refPercent : undefined),
+        // role is non-null; others always appear as Default
+        role: (parent, _0, { user }) => (user && user.id === parent.id ? parent.role : UserRole.Default),
     },
     URL: GraphQLURL,
 };

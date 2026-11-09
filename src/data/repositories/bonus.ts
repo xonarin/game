@@ -209,6 +209,10 @@ class BonusRepository extends BaseRepository {
 
         const fixedCode = code.toUpperCase();
         return this.db.sequelize.transaction(async transaction => {
+            // Lock the promo code row first (FOR UPDATE) so concurrent uses of the same code
+            // serialize; otherwise the maxUses check below races and the code can be over-used.
+            const promoCode = await this.getPromoCodeByIdStrict(fixedCode, transaction);
+
             const promoCodeUses: PromoCodeUse[] = await this.db.PromoCodeUse.findAll({
                 where: { code: fixedCode },
                 transaction,
@@ -218,7 +222,6 @@ class BonusRepository extends BaseRepository {
                 throw new UserError('PROMO_CODE_USED_ALREADY');
             }
 
-            const promoCode = await this.getPromoCodeByIdStrict(fixedCode, transaction);
             if (promoCodeUses.length >= promoCode.maxUses) {
                 throw new UserError('PROMO_CODE_USES_LIMIT');
             }

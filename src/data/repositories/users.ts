@@ -270,10 +270,13 @@ class UsersRepository extends BaseRepository {
     }
 
     async getTopReferralUserId(start: Date, finish: Date): Promise<{ refId: string; value: number } | null> {
+        // Top referrer = the user who brought the most new referrals in the period.
+        // (The old code summed a non-existent User.amount column and crashed on tournament finish.)
         // raw aggregate row, not a model instance
         return this.db.User.findOne({
-            attributes: ['refId', [fn('SUM', col('amount')), 'value']],
+            attributes: ['refId', [fn('COUNT', col('id')), 'value']],
             where: {
+                refId: { [Op.ne]: null },
                 createdAt: { [Op.between]: [start, finish] },
             },
             group: col('refId'),
