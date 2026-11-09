@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './LayoutHeader.scss';
@@ -9,17 +9,51 @@ import Balance from './Balance/Balance';
 import AlarmButton from '../../../Button/containers/AlarmButton/AlarmButton';
 import MiniProfile from './MiniProfile/MiniProfile';
 import Link from '../../../Link/Link';
+import Button from '../../../Button/Button';
 import AnnouncementsWidget from './AnnouncementsWidget/AnnouncementsWidget';
 import useUnreadCountQuery from '../../../../hooks/graphql/chat/useUnreadCountQuery';
 import PreLoader from '../../../PreLoader/PreLoader';
+import AppContext from '../../../../context';
 
 const cnLayoutHeader = cn(s, 'LayoutHeader');
 
 const LayoutHeader: React.FC = () => {
     useStyles(s);
 
+    const { user } = useContext(AppContext);
     const { me } = useMeQuery();
     const { unreadCount } = useUnreadCountQuery();
+
+    const navigation = (
+        <nav className={cnLayoutHeader('Navigation')}>
+            <HeaderNavigationItem to="/" text="Лобби" icon="gamepad" iconHover="gamepadWhite" />
+            <HeaderNavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
+            <HeaderNavigationItem to="/faq" text="FAQ" icon="faq" iconHover="faqWhite" />
+        </nav>
+    );
+
+    // Guest: the lobby is public, offer to sign in instead of balance/profile
+    if (!user) {
+        return (
+            <header className={cnLayoutHeader()}>
+                <div className={cnLayoutHeader('Container')}>
+                    {navigation}
+                    <div className={cnLayoutHeader('AuthButtons')}>
+                        <Button className={cnLayoutHeader('AuthButton')} color="bordered" weight="normal">
+                            <a className={cnLayoutHeader('AuthLink')} href="/login">
+                                Войти
+                            </a>
+                        </Button>
+                        <Button className={cnLayoutHeader('AuthButton')} weight="normal">
+                            <a className={cnLayoutHeader('AuthLink')} href="/login">
+                                Регистрация
+                            </a>
+                        </Button>
+                    </div>
+                </div>
+            </header>
+        );
+    }
 
     if (!me) {
         return <PreLoader />;
@@ -28,11 +62,7 @@ const LayoutHeader: React.FC = () => {
     return (
         <header className={cnLayoutHeader()}>
             <div className={cnLayoutHeader('Container')}>
-                <nav className={cnLayoutHeader('Navigation')}>
-                    <HeaderNavigationItem to="/casino" text="Лобби" icon="gamepad" iconHover="gamepadWhite" />
-                    <HeaderNavigationItem to="/tournaments" text="Турниры" icon="ingots" iconHover="ingotsWhite" />
-                    <HeaderNavigationItem to="/faq" text="FAQ" icon="faq" iconHover="faqWhite" />
-                </nav>
+                {navigation}
                 <div className={cnLayoutHeader('Right')}>
                     <Balance money={me?.money || 0} />
                     <div className={cnLayoutHeader('Buttons')}>

@@ -40,7 +40,7 @@ const WelcomeBanner: React.FC = () => {
 
                     <div className={cnWelcomeBanner('MainBottom')}>
                         <Button className={cnWelcomeBanner('PlayButton')} shape="alphaRight">
-                            <a href="/auth/vk">Начать играть</a>
+                            <a href="/login">Начать играть</a>
                         </Button>
 
                         <div className={cnWelcomeBanner('MainBottomRight')}>

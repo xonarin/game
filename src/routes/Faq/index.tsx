@@ -15,7 +15,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Помощь',
         chunks: ['classic'],
         pageContent: <Faq chatId={chatId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

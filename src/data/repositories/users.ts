@@ -1,6 +1,5 @@
 import { DateTime, DurationUnit } from 'luxon';
 import { col, fn, Op, Transaction } from 'sequelize';
-import { Profile as VkProfile } from 'passport-vkontakte';
 
 import BaseRepository from './base';
 import { RefStatus, SocialType, User } from '../models/User';
@@ -44,20 +43,19 @@ class UsersRepository extends BaseRepository {
         );
     }
 
-    authVk(profile: VkProfile): Promise<[User, boolean]> {
+    /**
+     * Finds the user by social account or registers a new one.
+     * Returns [user, isNewlyRegistered].
+     */
+    authSocial(socialType: SocialType, socialId: string, username: string, avatar: string): Promise<[User, boolean]> {
         return this.db.sequelize.transaction(async transaction => {
             let user: User | null = await this.db.User.findOne({
-                where: {
-                    socialType: SocialType.VK,
-                    socialId: profile.id,
-                },
+                where: { socialType, socialId },
                 transaction,
             });
 
-            const avatar = profile.photos ? profile.photos[0].value : 'default_avatar'; // TODO: default avatar
-
             if (!user) {
-                user = await this.createUser(SocialType.VK, profile.id, profile.displayName, avatar, transaction);
+                user = await this.createUser(socialType, socialId, username, avatar, transaction);
 
                 // Add to chat for admin announcements
                 const aaChat = await this.repositories.chats.getAdminAnnouncementsChat(transaction);

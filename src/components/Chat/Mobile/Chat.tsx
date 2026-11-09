@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useContext, useCallback, useEffect } from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
@@ -20,6 +20,7 @@ import useOnlineDataQuery from '../../../hooks/graphql/liveData/useOnlineDataQue
 import { ChatMessageFormValues } from '../../forms/Web/ChatMessageForm/ChatMessageForm';
 import MessageField from '../../fields/MessageField/MessageField';
 import useSendMessageMutation from '../../../hooks/graphql/chat/useSendMessageMutation';
+import AppContext from '../../../context';
 
 export interface ChatProps {
     chatId: string;
@@ -32,6 +33,7 @@ const cnChat = cn(s, 'Chat');
 const Chat: React.FC<ChatProps> = ({ chatId, className, closeChat }) => {
     useStyles(s);
 
+    const { user } = useContext(AppContext);
     const { me } = useMeQuery();
 
     const { scrollableRef, scrollTo, isScrolledToBottom } = useScrollableHelper();
@@ -133,7 +135,13 @@ const Chat: React.FC<ChatProps> = ({ chatId, className, closeChat }) => {
                                     ))}
                             </div>
                         </Scrollable>
-                        <MessageField name="message" onSubmit={handleSubmit} />
+                        {user ? (
+                            <MessageField name="message" onSubmit={handleSubmit} />
+                        ) : (
+                            <a className={cnChat('Login')} href="/login">
+                                Войдите, чтобы писать в чат
+                            </a>
+                        )}
                     </>
                 )}
             />

@@ -6,7 +6,6 @@ import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
-import jwt from 'jsonwebtoken';
 import { QueryParams } from 'universal-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
@@ -21,7 +20,7 @@ import App from './components/App';
 import Html, { HtmlProps } from './components/Html';
 import { ErrorPage } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.scss';
-import passport from './passport';
+import { initAuth, getAuthProviders } from './auth';
 import router from './router';
 import { database, repositories } from './data/database';
 import AppModule from './data/modules/app';
@@ -99,51 +98,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     next(err);
 });
 
-app.use(passport.initialize());
-
-// Vk authentication
-let lastVkAuth = Date.now();
-
-app.get(
-    '/auth/vk',
-    (_0, res, next) => {
-        const now = Date.now();
-
-        if (now - lastVkAuth < 1000) {
-            res.redirect('/');
-        } else {
-            lastVkAuth = Date.now();
-            next();
-        }
-    },
-    passport.authenticate('vkontakte', {
-        failureRedirect: '/',
-        session: false,
-    }),
-);
-
-app.get(
-    '/auth/vk/return',
-    passport.authenticate('vkontakte', {
-        failureRedirect: '/',
-        session: false,
-    }),
-    async (req, res) => {
-        if (req.user && req.authInfo) {
-            const expiresIn = 60 * 60 * 24 * 180; // 180 days
-            const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
-            res.cookie(config.auth.tokenKey, token, { maxAge: 1000 * expiresIn });
-
-            // Set referrer if it is define in cookies
-            const { refId } = req.cookies;
-            if (refId && req.authInfo.isRegistered) {
-                await repositories.users.setReferrer(req.user.id, refId);
-                res.clearCookie('refId');
-            }
-        }
-        res.redirect('/');
-    },
-);
+//
+// Authentication: VK ID, Telegram, dev login (see src/auth)
+// -----------------------------------------------------------------------------
+initAuth(app);
 
 // Logout endpoint
 app.get('/logout', (_0, res) => {
@@ -232,6 +190,7 @@ app.get('*', async (req, res, next) => {
 
             user: req.user,
             chats,
+            authProviders: getAuthProviders(),
         };
 
         const route = await router.resolve(context);

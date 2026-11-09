@@ -54,6 +54,12 @@ let server: Application;
 async function start() {
     if (server) return server;
     server = express();
+    // Dev bundles have fixed names (client.js, ...), so a CDN/proxy in front of the
+    // dev server (Cloudflare Tunnel for dev.plant.cash) would serve stale code. Never cache in dev.
+    server.use((_req: Request, res: Response, next: () => void) => {
+        res.setHeader('Cache-Control', 'no-store');
+        next();
+    });
     server.use(errorOverlayMiddleware());
     server.use(express.static(path.resolve(__dirname, '../public')));
 
@@ -189,6 +195,9 @@ async function start() {
                 // https://www.browsersync.io/docs/options
                 server: { baseDir: '../public' },
                 middleware: [server],
+                // Don't mirror clicks/scroll/forms between all open tabs and devices
+                // (it made separate users' tabs on dev.plant.cash drive each other)
+                ghostMode: false,
                 open: process.argv.includes('--silent') ? false : 'local',
                 ...(isDebug ? {} : { notify: false, ui: {} }),
                 ...(port ? { port } : null),

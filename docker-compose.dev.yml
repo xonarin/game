@@ -1,0 +1,88 @@
+# Local dev environment: Node 12 app + MySQL + Redis.
+# Run:  docker compose -f docker-compose.dev.yml up
+# App:  http://localhost:3100  (Browsersync; app server/websockets on 3002)
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: dev
+      MYSQL_DATABASE: playtime
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pdev"]
+      interval: 5s
+      retries: 30
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  app:
+    image: node:12.22-buster
+    working_dir: /app
+    environment:
+      DATABASE_URL: mysql://root:dev@mysql:3306/playtime
+      REDIS_URL: redis://redis:6379
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "1"
+      CHOKIDAR_USEPOLLING: "1"
+      # Test login on /login -> /auth/dev (development builds only, see src/auth)
+      DEV_LOGIN: "1"
+      # Real sign-in providers: put values into a local .env file next to this one
+      # (not committed). The /login page shows only the configured ones.
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      VKID_APP_ID: ${VKID_APP_ID:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+      # src/config.ts falls back to real production keys; override them so local
+      # dev never touches live FreeKassa / Qiwi / VK group accounts.
+      FK_MERCHANT_ID: local-disabled
+      FK_SECRET: local-disabled
+      FK_SECRET2: local-disabled
+      FK_WALLET_ID: local-disabled
+      FK_API_KEY: local-disabled
+      QIWI_PROXY_HOST: proxy.invalid
+      QIWI_PROXY_USER: local-disabled
+      QIWI_PROXY_PASSWORD: local-disabled
+      QIWI_PERSON_ID: local-disabled
+      QIWI_PERSON_TOKEN: local-disabled
+      QIWI_P2P_SECRET: local-disabled
+      VK_APP_TOKEN: local-disabled
+      VK_USER_TOKEN: local-disabled
+      VK_GROUP_TOKEN: local-disabled
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    command: sh -c "yarn install --network-timeout 600000 --network-concurrency 4 && yarn codegen && yarn start --silent"
+    ports:
+      - "3100:3000"   # host 3000 is used by another project
+      - "3101:3001"
+      - "3002:3002"
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  # Public HTTPS address for the local app (needed for the Telegram login widget).
+  # Start with: docker compose -f docker-compose.dev.yml --profile tunnel up -d
+  # Needs CLOUDFLARE_TUNNEL_TOKEN in .env; public hostname -> http://app:3000 in Cloudflare.
+  tunnel:
+    image: cloudflare/cloudflared:2025.10.0
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    depends_on:
+      - app
+
+volumes:
+  mysql-data:
+  node-modules:

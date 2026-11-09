@@ -13,8 +13,13 @@ const routes: Route<AppContextTypes, RouteResult> = {
     // Keep in mind, routes are evaluated in order
     children: [
         {
+            // Lobby is the home page (the old /casino)
             path: '',
-            load: () => import(/* webpackChunkName: 'welcome' */ './welcome'),
+            load: () => import(/* webpackChunkName: 'casino' */ './AllGames'),
+        },
+        {
+            path: '/login',
+            load: () => import(/* webpackChunkName: 'login' */ './login'),
         },
         {
             path: '/auth-wait',
@@ -25,8 +30,9 @@ const routes: Route<AppContextTypes, RouteResult> = {
             load: () => import(/* webpackChunkName: 'balance' */ './balance'),
         },
         {
+            // Old lobby URL, kept for bookmarks and external links
             path: '/casino',
-            load: () => import(/* webpackChunkName: 'casino' */ './AllGames'),
+            action: () => ({ redirect: '/', status: 301 }),
         },
         {
             path: '/bonuse',

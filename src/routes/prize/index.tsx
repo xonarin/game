@@ -15,7 +15,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Бонусы',
         chunks: ['prize'],
         pageContent: <Prize chatId={chatId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

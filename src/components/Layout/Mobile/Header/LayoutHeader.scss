@@ -40,4 +40,29 @@
     &-LogoImg {
         width: 45px;
     }
+
+    &-AuthButtons {
+        flex: 1;
+        text-align: right;
+
+        .Button + .Button { margin-left: 15px; }
+    }
+
+    &-AuthButton {
+        & span {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &-AuthLink {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        text-decoration: none;
+    }
 }

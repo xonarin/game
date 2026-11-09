@@ -4,7 +4,7 @@ import { AppContextTypes } from '../../context';
 import { RouteResult } from '../../router';
 import AllGames from './AllGames';
 
-const action = ({ user, chats }: AppContextTypes): RouteResult => {
+const action = ({ chats }: AppContextTypes): RouteResult => {
     const chatId = chats.game;
 
     // if (!chatId) {
@@ -15,7 +15,6 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Все игры',
         chunks: ['casino'],
         pageContent: <AllGames chatId={chatId} />,
-        redirect: user ? undefined : '/',
     };
 };
 

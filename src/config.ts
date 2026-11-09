@@ -45,6 +45,25 @@ export default {
 
         jwt: { secret: process.env.JWT_SECRET || 'idontknow' },
 
+        // Public site URL used to build OAuth redirect URIs, e.g. https://willy.bet
+        // (if empty, it is derived from the request host)
+        publicUrl: process.env.PUBLIC_URL || '',
+
+        // VK ID (OAuth 2.1 + PKCE), app from https://id.vk.com/about/business/go
+        vkid: {
+            appId: process.env.VKID_APP_ID || '',
+        },
+
+        // Telegram Login Widget: bot from @BotFather, domain linked via /setdomain
+        telegram: {
+            botToken: process.env.TELEGRAM_BOT_TOKEN || '',
+            // without "@" (the widget expects plain bot username)
+            botUsername: (process.env.TELEGRAM_BOT_USERNAME || '').trim().replace(/^@/, ''),
+        },
+
+        // Local test login (/auth/dev), only works in development builds
+        devLogin: process.env.DEV_LOGIN === '1',
+
         vk: {
             // localhost
             appId: process.env.VK_APP_ID || '7008761',

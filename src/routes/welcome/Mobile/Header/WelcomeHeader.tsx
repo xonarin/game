@@ -20,7 +20,7 @@ const WelcomeHeader = () => {
                 </Link>
                 <div className={cnWelcomeHeader('Buttons')}>
                     <Button className={cnWelcomeHeader('ButtonsAuth')} weight="normal">
-                        <a className={cnWelcomeHeader('ButtonsLinkAuth')} href="/auth/vk">
+                        <a className={cnWelcomeHeader('ButtonsLinkAuth')} href="/login">
                             Войти
                         </a>
                     </Button>

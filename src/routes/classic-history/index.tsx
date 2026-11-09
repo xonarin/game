@@ -15,7 +15,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Classic history',
         chunks: ['classic-history'],
         pageContent: <ClassicHistory chatId={chatId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

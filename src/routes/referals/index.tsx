@@ -11,7 +11,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Партнёрская программа',
         chunks: ['partners'],
         pageContent: <Referals chatId={chatId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

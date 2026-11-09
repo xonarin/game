@@ -11,7 +11,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
         title: 'Профиль',
         chunks: ['profile'],
         pageContent: <Profile chatId={chatId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

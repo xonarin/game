@@ -13,7 +13,7 @@ const action = ({ user }: AppContextTypes): RouteResult => {
         title: 'Авторизация',
         chunks: ['auth-wait'],
         pageContent: <AuthWait />,
-        redirect: user && '/all-games',
+        redirect: user && '/',
     };
 };
 

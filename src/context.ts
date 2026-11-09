@@ -10,6 +10,12 @@ export interface AppContextTypes {
     params?: object;
     user?: Express.User;
     chats: Record<GlobalChatType, string>;
+    // Sign-in methods available on /login (filled on the server, see src/auth)
+    authProviders?: {
+        vk: boolean;
+        telegramBot: string | null;
+        dev: boolean;
+    };
 }
 
 const AppContext = createContext<AppContextTypes>({

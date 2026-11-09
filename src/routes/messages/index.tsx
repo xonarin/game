@@ -12,7 +12,7 @@ const action = ({ user, query }: AppContextTypes, params: QueryParams): RouteRes
         title: 'Личные сообщения',
         chunks: ['messages'],
         pageContent: <Messages chatId={chatId} userId={userId} />,
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

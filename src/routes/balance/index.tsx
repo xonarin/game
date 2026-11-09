@@ -20,7 +20,7 @@ const action = ({ user, chats }: AppContextTypes): RouteResult => {
                 <Transaction mobile />
             </Layout>
         ),
-        redirect: user ? undefined : '/',
+        redirect: user ? undefined : '/login',
     };
 };
 

@@ -13,7 +13,7 @@ const AuthWait = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            time === 0 ? window.location.replace('/auth/vk/') : setTime(prev => prev - 1)
+            time === 0 ? window.location.replace('/login') : setTime(prev => prev - 1)
         }, 1000)
 
     }, [time])

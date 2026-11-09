@@ -27,6 +27,7 @@ import { QiwiWithdraw } from './QiwiWithdraw';
 export enum SocialType {
     Steam = 'Steam',
     VK = 'VK',
+    Telegram = 'Telegram',
 }
 
 export enum UserRole {
