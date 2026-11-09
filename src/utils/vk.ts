@@ -120,7 +120,7 @@ const vkDoLoadReposts = async (postId: string, offset: number = 0): Promise<stri
         }
 
         return repostedUsers;
-    } catch (e) {
+    } catch {
         return [];
     }
 };

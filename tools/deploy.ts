@@ -53,7 +53,7 @@ async function deploy() {
     try {
         await spawn('git', ['config', '--get', `remote.${remote.name}.url`], options);
         isRemoteExists = true;
-    } catch (error) {
+    } catch {
         /* skip */
     }
     await spawn('git', ['remote', isRemoteExists ? 'set-url' : 'add', remote.name, remote.url], options);
@@ -63,7 +63,7 @@ async function deploy() {
     try {
         await spawn('git', ['ls-remote', '--quiet', '--exit-code', remote.url, remote.branch], options);
         isRefExists = true;
-    } catch (error) {
+    } catch {
         await spawn('git', ['update-ref', '-d', 'HEAD'], options);
     }
     if (isRefExists) {
@@ -81,7 +81,7 @@ async function deploy() {
     await spawn('git', ['add', '.', '--all'], options);
     try {
         await spawn('git', ['diff', '--cached', '--exit-code', '--quiet'], options);
-    } catch (error) {
+    } catch {
         await spawn('git', ['commit', '--message', `Update ${new Date().toISOString()}`], options);
     }
     await spawn('git', ['push', remote.name, `master:${remote.branch}`, '--set-upstream'], options);

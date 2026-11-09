@@ -44,6 +44,9 @@ module.exports = {
 
         'no-plusplus': 'off',
 
+        // TypeScript checks undefined names itself; the rule misfires on global types (Express.User)
+        'no-undef': 'off',
+
         // False positives on `module.hot` (HMR) and `require.main === module` checks
         'import/no-import-module-exports': 'off',
 

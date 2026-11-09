@@ -35,7 +35,7 @@ const useGetReferralMoneyMutation = () => {
                                 data: { referralsStats: { ...referralsStats, fullAmount } },
                             });
                         }
-                    } catch (e) {
+                    } catch {
                         // suppress
                     }
                 });

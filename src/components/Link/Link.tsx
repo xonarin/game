@@ -58,6 +58,7 @@ const Link: React.FC<LinkProps> = ({
             className={cnLink(null, [className])}
             href={to}
             target={newTab ? '_blank' : undefined}
+            rel={newTab ? 'noopener noreferrer' : undefined}
             onClick={external || newTab ? undefined : onLinkClick}
             {...restProps}
         >

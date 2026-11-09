@@ -126,6 +126,7 @@ resetGames();
 app.server = createServer(module.hot ? undefined : app);
 
 const wsServer = new WebSocketServer({ server: app.server, path: '/graphql' });
+// eslint-disable-next-line react-hooks/rules-of-hooks -- graphql-ws server API, not a React hook
 const wsCleanup = useServer<Record<string, unknown> | undefined, { user?: User }>(
     {
         schema: AppModule,
