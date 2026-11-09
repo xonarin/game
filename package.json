@@ -34,8 +34,8 @@
         "@apollo/server": "^5",
         "@as-integrations/express5": "^1",
         "@babel/runtime": "^7.9.6",
-        "@graphql-tools/merge": "^9",
-        "@graphql-tools/schema": "^10",
+        "@graphql-tools/merge": "^10",
+        "@graphql-tools/schema": "^11",
         "@react-spring/web": "^10",
         "apollo-link-logger": "^2",
         "cookie-parser": "^1.4.7",
@@ -48,7 +48,7 @@
         "graphql-depth-limit": "^1.1.0",
         "graphql-middleware": "^6",
         "graphql-redis-subscriptions": "^2.7",
-        "graphql-scalars": "^1.24",
+        "graphql-scalars": "^2.0.1",
         "graphql-shield": "^7.6.5",
         "graphql-subscriptions": "^2",
         "graphql-tag": "^2.12.6",
@@ -57,13 +57,13 @@
         "ioredis": "^5",
         "isomorphic-style-loader": "^5.4",
         "jsonwebtoken": "^9",
-        "lodash": "^4.17.21",
+        "lodash": "^4.18.1",
         "luxon": "^3",
         "mysql2": "^3",
         "node-cron": "^4",
         "normalize.css": "^8.0.1",
         "pretty-error": "^4",
-        "query-string": "^6.8.3",
+        "query-string": "^10",
         "rate-limiter-flexible": "^7",
         "react": "^19",
         "react-dom": "^19",
@@ -71,7 +71,7 @@
         "react-scroll": "^1.9.3",
         "recharts": "^2.15",
         "sequelize": "^6",
-        "serialize-javascript": "^6",
+        "serialize-javascript": "^7.1.4",
         "source-map-support": "^0.5.16",
         "universal-router": "^9",
         "ws": "^8"
@@ -148,5 +148,12 @@
         "webpack-dev-middleware": "^7.4.2",
         "webpack-hot-middleware": "^2.26.1",
         "webpack-node-externals": "^3.0.0"
+    },
+    "resolutions": {
+        "lodash": "^4.18.1",
+        "@graphql-tools/utils": "^12.0.2",
+        "uuid": "^11.1.1",
+        "minimatch": "^11.0.5",
+        "decode-uri-component": "^0.5.1"
     }
 }
