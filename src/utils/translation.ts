@@ -16,6 +16,7 @@ type TranslationCode =
     | 'INVALID_AMOUNT_MORE_THAN'
     | 'INVALID_BET_AMOUNT_MORE_THAN'
     | 'NOT_ENOUGH_BETS'
+    | 'MAINTENANCE'
     | 'CLASSIC_GAME_MIN_BET_PRICE_ERROR'
     | 'CLASSIC_GAME_IN_PROGRESS_ERROR'
     | 'CLASSIC_GAME_ENDED_ERROR'
@@ -95,6 +96,9 @@ const translations: Record<TranslationCode, Translation> = {
     },
     NOT_ENOUGH_BETS: {
         ru: 'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
+    },
+    MAINTENANCE: {
+        ru: 'Идут технические работы, сайт временно закрыт. Попробуйте позже.',
     },
     // Classic game errors
     CLASSIC_GAME_MIN_BET_PRICE_ERROR: {

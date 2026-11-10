@@ -49,6 +49,7 @@ const typeDefs = /* GraphQL */ `
         adminSettings: [AdminSetting!]!
         adminDashboard: DashboardStats!
         adminAuthClients: [AuthClient!]!
+        adminMaintenance: Boolean!
     }
 
     type Mutation {
@@ -57,6 +58,7 @@ const typeDefs = /* GraphQL */ `
         adminAddAuthClient(origin: String!, label: String): AuthClient!
         adminSetAuthClientEnabled(id: ID!, enabled: Boolean!): AuthClient!
         adminRemoveAuthClient(id: ID!): Boolean!
+        adminSetMaintenance(on: Boolean!): Boolean!
     }
 `;
 

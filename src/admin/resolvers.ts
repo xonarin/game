@@ -8,6 +8,7 @@ import { PaymentStatus } from '../data/models/UserPayment';
 import { WithdrawStatus } from '../data/models/UserWithdraw';
 import { UserError } from '../utils/errors';
 import { getOnline } from '../services/LiveData/LiveDataStorage';
+import { isMaintenance, setMaintenance } from '../utils/maintenance';
 
 const isAdmin = rule({ cache: 'contextual' })((_0: unknown, _1: unknown, ctx: ApolloContext) => {
     if (!ctx.user || ctx.user.role !== UserRole.Admin) {
@@ -58,6 +59,8 @@ export const resolvers = {
 
         adminAuthClients: (_0: unknown, _1: unknown, { repositories }: ApolloContext) =>
             repositories.authClients.listClients(),
+
+        adminMaintenance: () => isMaintenance(),
 
         adminDashboard: async () => {
             const [
@@ -178,6 +181,18 @@ export const resolvers = {
                 details: {},
             });
             return true;
+        },
+
+        adminSetMaintenance: async (_0: unknown, { on }: { on: boolean }, { user }: ApolloContext) => {
+            await setMaintenance(on);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'setMaintenance',
+                targetUserId: null,
+                targetKey: null,
+                details: { on },
+            });
+            return on;
         },
     },
 };

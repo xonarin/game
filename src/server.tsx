@@ -29,6 +29,7 @@ import errorPageStyle from './routes/error/ErrorPage.scss';
 import { initAuth, getAuthProviders } from './auth';
 import { initAuthCallback } from './auth/callback';
 import { gameSession } from './auth/session';
+import { isMaintenance } from './utils/maintenance';
 import router from './router';
 import { database, repositories } from './data/database';
 import AppModule from './data/modules/app';
@@ -117,6 +118,14 @@ app.get('/logout', (_0, res) => {
     res.redirect('/');
 });
 
+// Health/version endpoints for the deploy panel (never gated by maintenance).
+app.get('/version', (_0, res) => {
+    res.json({ sha: process.env.GIT_SHA || null, service: 'game' });
+});
+app.get('/health', async (_0, res) => {
+    res.json({ ok: true, maintenance: await isMaintenance() });
+});
+
 // FK interaction
 initPayments(app);
 initTelegramWebhook(app);
@@ -198,6 +207,21 @@ let chats: Record<GlobalChatType, string> = { game: '' };
 // Register server-side rendering middleware
 app.get('/{*path}', async (req, res, next) => {
     try {
+        // Maintenance mode (deploys): show a closed-for-maintenance page instead of the app.
+        if (await isMaintenance()) {
+            res.status(503)
+                .type('html')
+                .send(
+                    `<!doctype html><html lang="ru"><head><meta charset="utf-8" />` +
+                        `<meta name="viewport" content="width=device-width, initial-scale=1" />` +
+                        `<title>Технические работы</title></head>` +
+                        `<body style="background:#17181a;color:#e8e8e8;font-family:system-ui,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0">` +
+                        `<div style="text-align:center"><h1>Идут технические работы</h1>` +
+                        `<p style="color:#9aa">Сайт скоро снова откроется. Незавершённые игры сохранены.</p></div></body></html>`,
+                );
+            return;
+        }
+
         const css = new Set();
 
         // Enables critical path CSS rendering

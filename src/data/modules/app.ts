@@ -24,6 +24,7 @@ import paymentsTypeDefs from './payments/schema.graphql';
 import { rules as bonusRules, resolvers as bonusResolvers } from './bonus/resolvers';
 import bonusTypeDefs from './bonus/schema.graphql';
 import shieldConfig from '../../utils/graphql-shield/config';
+import { notMaintenance } from './rules';
 
 const typeDefs = mergeTypeDefs([
     usersTypeDefs,
@@ -61,6 +62,8 @@ const schema = applyMiddleware(
     shield(classicGameRules, shieldConfig),
     shield(paymentRules, shieldConfig),
     shield(bonusRules, shieldConfig),
+    // Site-wide: block all player mutations while in maintenance mode (deploys).
+    shield({ Mutation: { '*': notMaintenance } }, shieldConfig),
 );
 
 export default schema;
