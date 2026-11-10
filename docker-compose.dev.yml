@@ -87,13 +87,15 @@ services:
     command: >
       sh -c "until [ -x node_modules/.bin/babel-node ] && [ -f src/__generated__/graphql.tsx ]; do
       echo 'admin: waiting for app install/codegen...'; sleep 3; done;
-      (cd src/admin/client && /app/node_modules/.bin/vite build);
+      (cd src/admin/client && yarn install --network-timeout 600000 && yarn build);
       BABEL_DISABLE_CACHE=1 node_modules/.bin/babel-node --extensions '.ts,.tsx' src/admin/server.ts"
     ports:
       - "3200:3200"
     volumes:
       - .:/app
       - node-modules-24:/app/node_modules
+      # The admin SPA installs its own deps here (in-container, not the Windows bind mount)
+      - admin-client-node-modules:/app/src/admin/client/node_modules
     depends_on:
       mysql:
         condition: service_healthy
@@ -118,3 +120,4 @@ volumes:
   # mysql-data (MySQL 5.7) is no longer used; remove with: docker volume rm game_mysql-data
   mysql-data-84:
   node-modules-24:
+  admin-client-node-modules:
