@@ -54,6 +54,14 @@ const routes: Route<RouteResult, AppContextTypes> = {
             path: '/mines',
             load: () => import(/* webpackChunkName: 'mines' */ './mines'),
         },
+        {
+            path: '/classic',
+            load: () => import(/* webpackChunkName: 'classic' */ './classic'),
+        },
+        {
+            path: '/classic-history',
+            load: () => import(/* webpackChunkName: 'classic-history' */ './classic-history'),
+        },
 
         // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
         {

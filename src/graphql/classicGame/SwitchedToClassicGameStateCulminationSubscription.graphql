@@ -1,0 +1,6 @@
+subscription SwitchedToClassicGameStateCulmination {
+    switchedToClassicGameStateCulmination {
+        culminationDegree
+        remainingCulminationDuration
+    }
+}

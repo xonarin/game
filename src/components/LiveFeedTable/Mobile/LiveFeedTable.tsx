@@ -27,6 +27,7 @@ interface LiveFeedItem {
 const cnLiveFeedTable = cn(s, 'LiveFeedTable');
 
 const getIcon = (game: LiveFeedItemGame): IconProps['type'] => {
+    if (game === 'classic') return 'sword';
     if (game === 'mines') return 'bomb';
     if (game === 'knb') return 'scissors';
 

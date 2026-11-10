@@ -1,0 +1,38 @@
+
+.HistoryTable {
+
+    & .Table-Head { padding: 0 10px; display: flex; }
+
+    & .Table-Row {
+        border-radius: 10px;
+        padding: 0 10px;
+    }
+
+    & .Table-RowCell {  }
+
+    &-WinnerAvatar {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        vertical-align: middle;
+    }
+
+    &-WinnerInfo {
+        display: inline-block;
+        width: calc(100% - 38px);
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    & &-WinnerName {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    & &-BetsAmount { display: block; }
+
+    & &-FairButton { margin-left: 15px; }
+}

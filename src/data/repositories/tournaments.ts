@@ -59,6 +59,24 @@ class TournamentsRepository extends BaseRepository {
                     }
                     results[key] += game.sum;
                 });
+
+                const classicGames = await this.db.ClassicGameBet.findAll({
+                    attributes: ['userId', [fn('SUM', col('amount')), 'sum']],
+                    where: {
+                        createdAt: { [Op.between]: [tournament.start, tournament.finish] },
+                    },
+                    group: [col('userId')],
+                    raw: true,
+                });
+
+                (classicGames as unknown as { userId: number; sum: number }[]).forEach(game => {
+                    const key = game.userId.toString();
+
+                    if (!results[key]) {
+                        results[key] = 0;
+                    }
+                    results[key] += game.sum;
+                });
                 break;
             }
             case TournamentType.Referrals: {

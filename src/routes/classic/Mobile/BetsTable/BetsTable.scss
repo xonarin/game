@@ -1,0 +1,34 @@
+@import '../../../../assets/styles/vars';
+
+.BetsTable {
+    &.Table {
+        height: 100%;
+        padding: 13px;
+    }
+
+    & .Table-Head { padding: 0 10px; }
+
+    & .Table-Row {
+        border-radius: 10px;
+        padding: 0 10px;
+    }
+
+    & .Table-RowCell { white-space: nowrap; }
+
+    &-UserAvatar {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        border-radius: 5px;
+        vertical-align: middle;
+    }
+
+    & &-UserName {
+        display: inline-block;
+        width: calc(100% - 37px);
+        margin-left: 12px;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

@@ -6,6 +6,8 @@ import ReferralIncomesRepository from './referralIncomes';
 import ChatsRepository from './chats';
 import MessagesRepository from './messages';
 import MinesGamesRepository from './minesGames';
+import ClassicGamesRepository from './classicGames';
+import ClassicGameBetsRepository from './classicGameBets';
 import TournamentsRepository from './tournaments';
 import PaymentsRepository from './payments';
 import BonusRepository from './bonus';
@@ -17,6 +19,8 @@ export interface Repositories {
     chats: ChatsRepository;
     messages: MessagesRepository;
     minesGames: MinesGamesRepository;
+    classicGames: ClassicGamesRepository;
+    classicGameBets: ClassicGameBetsRepository;
     tournaments: TournamentsRepository;
     payments: PaymentsRepository;
     bonus: BonusRepository;
@@ -31,6 +35,8 @@ const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Re
     repositories.chats = new ChatsRepository(db, repositories, sequelizeContext);
     repositories.messages = new MessagesRepository(db, repositories, sequelizeContext);
     repositories.minesGames = new MinesGamesRepository(db, repositories, sequelizeContext);
+    repositories.classicGames = new ClassicGamesRepository(db, repositories, sequelizeContext);
+    repositories.classicGameBets = new ClassicGameBetsRepository(db, repositories, sequelizeContext);
     repositories.tournaments = new TournamentsRepository(db, repositories, sequelizeContext);
     repositories.payments = new PaymentsRepository(db, repositories, sequelizeContext);
     repositories.bonus = new BonusRepository(db, repositories, sequelizeContext);

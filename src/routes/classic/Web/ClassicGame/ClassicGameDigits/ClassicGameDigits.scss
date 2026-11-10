@@ -1,0 +1,23 @@
+@import '../../../../../assets/styles/vars';
+
+.ClassicGameDigits {
+    display: flex;
+
+    &-Digit {
+        width: 32px;
+        height: 50px;
+        border-radius: 5px;
+        background-color: #22263f;
+        color: $color-white;
+        font-family: Rubik, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 36px;
+        line-height: 50px;
+        text-align: center;
+        text-transform: uppercase;
+        overflow: hidden;
+
+        & + & { margin-left: 5px; }
+    }
+}

@@ -8,6 +8,8 @@ import { initChatUser, ChatUserStatic } from './ChatUser';
 import { initMessage, MessageStatic } from './Message';
 import { initReferralIncome, ReferralIncomeStatic } from './ReferralIncome';
 import { initMinesGame, MinesGameStatic } from './MinesGame';
+import { initClassicGame, ClassicGameStatic } from './ClassicGame';
+import { initClassicGameBet, ClassicGameBetStatic } from './ClassicGameBet';
 import { initTournament, TournamentStatic } from './Tournament';
 import { initPaymentMethod, PaymentMethodStatic } from './PaymentMethod';
 import { initWithdrawMethod, WithdrawMethodStatic } from './WithdrawMethod';
@@ -39,6 +41,8 @@ export interface Database {
     ChatUser: ChatUserStatic;
     Message: MessageStatic;
     MinesGame: MinesGameStatic;
+    ClassicGame: ClassicGameStatic;
+    ClassicGameBet: ClassicGameBetStatic;
     Tournament: TournamentStatic;
     PaymentMethod: PaymentMethodStatic;
     WithdrawMethod: WithdrawMethodStatic;
@@ -59,6 +63,8 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         ChatUser: initChatUser(sequelize),
         Message: initMessage(sequelize),
         MinesGame: initMinesGame(sequelize),
+        ClassicGame: initClassicGame(sequelize),
+        ClassicGameBet: initClassicGameBet(sequelize),
         Tournament: initTournament(sequelize),
         PaymentMethod: initPaymentMethod(sequelize),
         WithdrawMethod: initWithdrawMethod(sequelize),

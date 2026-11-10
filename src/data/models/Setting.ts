@@ -2,6 +2,16 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 
 import { ModelStatic } from './index';
 
+export type ClassicGameSettingName =
+    | 'classic::countdownTimer'
+    | 'classic::culminationTimer'
+    | 'classic::endedTimer'
+    | 'classic::minBetAmount'
+    | 'classic::minPlayersToStartCountdown'
+    | 'classic::commissionPercent'
+    | 'classic::turnsCount'
+    | 'classic::maxSummaryBet';
+
 export type ChatSettingName =
     'chat::adminAnnouncementsTitle' | 'chat::adminAnnouncementsImage' | 'chat::minDepsToSendGlobalMessage';
 
@@ -36,6 +46,7 @@ export type BonusSettings =
     | 'bonus::usePromoCodeFrequencyLimitWithoutDeps';
 
 export type SettingName =
+    | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName
     | AppSettingsName

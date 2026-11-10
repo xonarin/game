@@ -1,0 +1,105 @@
+scalar URL
+scalar DateTime
+scalar HexColorCode
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+type Query {
+    currentClassicGame: ClassicGame!
+    classicGamesHistory: [ClassicGamesHistoryItem!]!
+}
+
+type Mutation {
+    placeClassicGameBet(input: PlaceClassicGameBetInput!): ClassicGameBet!
+}
+
+type Subscription {
+    placedClassicGameBet: PlacedClassicGameBetPayload
+    startedClassicGame: ClassicGame
+    updatedClassicGameTimer: UpdatedClassicGameTimerPayload
+    switchedToClassicGameStateCulmination: SwitchedToClassicGameStateCulminationPayload
+    switchedToClassicGameStateEnded: ClassicGamesHistoryItem
+}
+
+enum ClassicGameState {
+    Waiting
+    Countdown
+    Culmination
+    Ended
+}
+
+type ClassicGamePlayer {
+    id: ID!
+    username: String!
+    avatar: URL!
+    chance: Float!
+    startDegree: Float!
+    endDegree: Float!
+    color: HexColorCode!
+}
+
+type ClassicGameBet {
+    id: ID!
+    userId: ID!
+    amount: Float!
+}
+
+type ClassicGame {
+    minBetAmount: Float!
+    id: ID!
+    commission: Float!
+    state: ClassicGameState!
+    randomNumber: String
+    hash: String!
+    fund: Float!
+    winnerId: ID
+    winnerUsername: String
+    winnerAvatar: String
+    winnerTicket: Int
+    winnerChance: Float
+    timer: Int!
+    maxTimer: Int!
+    bets: [ClassicGameBet!]!
+    players: [ClassicGamePlayer!]!
+    culminationDegree: Float
+    remainingCulminationDuration: Int
+}
+
+type ClassicGamesHistoryItem {
+    id: ID!
+    commission: Float!
+    randomNumber: String!
+    fund: Float!
+    winnerId: ID!
+    winnerUsername: String!
+    winnerAvatar: URL!
+    winnerTicket: Int!
+    winnerBetsPrice: Float!
+    winnerChance: Float!
+    finishedAt: DateTime!
+}
+
+input PlaceClassicGameBetInput {
+    amount: Float!
+}
+
+type PlacedClassicGameBetPayload {
+    fund: Float!
+    bet: ClassicGameBet!
+    players: [ClassicGamePlayer!]!
+}
+
+type UpdatedClassicGameTimerPayload {
+    state: ClassicGameState!
+    timer: Int!
+    maxTimer: Int!
+}
+
+type SwitchedToClassicGameStateCulminationPayload {
+    culminationDegree: Float!
+    remainingCulminationDuration: Int!
+}

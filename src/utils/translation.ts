@@ -16,6 +16,9 @@ type TranslationCode =
     | 'INVALID_AMOUNT_MORE_THAN'
     | 'INVALID_BET_AMOUNT_MORE_THAN'
     | 'NOT_ENOUGH_BETS'
+    | 'CLASSIC_GAME_MIN_BET_PRICE_ERROR'
+    | 'CLASSIC_GAME_IN_PROGRESS_ERROR'
+    | 'CLASSIC_GAME_ENDED_ERROR'
     | 'MINES_GAME_BET_TOO_HIGH'
     | 'PROMO_CODE_BUSIED'
     | 'BAD_PROMO_CODE'
@@ -92,6 +95,16 @@ const translations: Record<TranslationCode, Translation> = {
     },
     NOT_ENOUGH_BETS: {
         ru: 'После первого депозита сделайте отыгрыш 50 рублей в режиме МИНЫ с коэффом не менее 1.6х для вывода средств. Это защита от абузеров.',
+    },
+    // Classic game errors
+    CLASSIC_GAME_MIN_BET_PRICE_ERROR: {
+        ru: 'Слишком маленькая ставка',
+    },
+    CLASSIC_GAME_IN_PROGRESS_ERROR: {
+        ru: 'Игры уже началась',
+    },
+    CLASSIC_GAME_ENDED_ERROR: {
+        ru: 'Игры уже закончилась',
     },
     MINES_GAME_BET_TOO_HIGH: {
         ru: 'Максимальная ставка не более 100 рублей.',

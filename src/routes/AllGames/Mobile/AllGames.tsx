@@ -16,6 +16,13 @@ const AllGamesMobile: React.FC = () => {
             centerContent={
                 <div className={cnAllGames('Row')}>
                     <div className={cnAllGames('Game')}>
+                        <Link to="/classic">
+                            <img src="/classicback.png" alt="" />
+                            <h2 className={cnAllGames('Title')}>Classic</h2>
+                        </Link>
+                    </div>
+
+                    <div className={cnAllGames('Game')}>
                         <Link to="/mines">
                             <img src="/minesback.png" alt="" />
                             <h2 className={cnAllGames('Title')}>Mines</h2>
