@@ -11,7 +11,8 @@ import { Express, Request, Response } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
-import { getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
+import { UserError } from '../utils/errors';
+import { AuthOptions, getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
 
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
@@ -27,7 +28,7 @@ const randomString = (bytes = 48) => base64url(crypto.randomBytes(bytes));
 
 const codeChallenge = (verifier: string) => base64url(crypto.createHash('sha256').update(verifier).digest());
 
-const getRedirectUri = (req: Request) => `${getBaseUrl(req)}/auth/google/return`;
+const getRedirectUri = (req: Request, publicUrl?: string) => `${getBaseUrl(req, publicUrl)}/auth/google/return`;
 
 const safeEqual = (a: string, b: string) => {
     const ab = Buffer.from(a);
@@ -52,19 +53,21 @@ interface GoogleUserInfo {
     error?: string;
 }
 
-const fail = (res: Response, reason: string, details?: unknown) => {
+const fail = (res: Response, reason: string, loginPath: string, details?: unknown) => {
     console.error('[google]', reason, details === undefined ? '' : details);
     res.clearCookie(STATE_COOKIE);
     res.clearCookie(VERIFIER_COOKIE);
-    res.redirect('/login?error=google');
+    res.redirect(`${loginPath}?error=google`);
 };
 
 export const isGoogleEnabled = () => Boolean(config.auth.google.clientId && config.auth.google.clientSecret);
 
-export const initGoogle = (app: Express) => {
+export const initGoogle = (app: Express, options: AuthOptions = {}) => {
+    const loginPath = options.loginPath || '/login';
+
     app.get(['/auth/google', '/auth/google/'], (req, res) => {
         if (!isGoogleEnabled()) {
-            res.redirect('/login?error=google_disabled');
+            res.redirect(`${loginPath}?error=google_disabled`);
             return;
         }
 
@@ -74,7 +77,7 @@ export const initGoogle = (app: Express) => {
             maxAge: FLOW_TTL_MS,
             httpOnly: true,
             sameSite: 'lax' as const,
-            secure: isSecureRequest(req),
+            secure: isSecureRequest(req, options.publicUrl),
         };
         res.cookie(STATE_COOKIE, state, cookieOptions);
         res.cookie(VERIFIER_COOKIE, verifier, cookieOptions);
@@ -82,7 +85,7 @@ export const initGoogle = (app: Express) => {
         const query = new URLSearchParams({
             response_type: 'code',
             client_id: config.auth.google.clientId,
-            redirect_uri: getRedirectUri(req),
+            redirect_uri: getRedirectUri(req, options.publicUrl),
             state,
             scope: SCOPE,
             code_challenge: codeChallenge(verifier),
@@ -101,15 +104,15 @@ export const initGoogle = (app: Express) => {
             const verifier: string | undefined = req.cookies[VERIFIER_COOKIE];
 
             if (req.query.error) {
-                fail(res, 'authorize error', req.query.error);
+                fail(res, 'authorize error', loginPath, req.query.error);
                 return;
             }
             if (!code || !state || !expectedState || !verifier) {
-                fail(res, 'missing callback params or flow cookies');
+                fail(res, 'missing callback params or flow cookies', loginPath);
                 return;
             }
             if (!safeEqual(state, expectedState)) {
-                fail(res, 'state mismatch');
+                fail(res, 'state mismatch', loginPath);
                 return;
             }
 
@@ -119,7 +122,7 @@ export const initGoogle = (app: Express) => {
                 body: new URLSearchParams({
                     grant_type: 'authorization_code',
                     code,
-                    redirect_uri: getRedirectUri(req),
+                    redirect_uri: getRedirectUri(req, options.publicUrl),
                     client_id: config.auth.google.clientId,
                     client_secret: config.auth.google.clientSecret,
                     code_verifier: verifier,
@@ -127,7 +130,7 @@ export const initGoogle = (app: Express) => {
             });
             const token = (await tokenResp.json()) as GoogleTokenResponse;
             if (!token.access_token || token.error) {
-                fail(res, 'code exchange failed', token.error ? token : 'no access_token');
+                fail(res, 'code exchange failed', loginPath, token.error ? token : 'no access_token');
                 return;
             }
 
@@ -137,24 +140,37 @@ export const initGoogle = (app: Express) => {
             const info = (await infoResp.json()) as GoogleUserInfo;
             const googleId = String(info.sub || '');
             if (!googleId || info.error) {
-                fail(res, 'userinfo failed', info.error || info);
+                fail(res, 'userinfo failed', loginPath, info.error || info);
                 return;
             }
 
             res.clearCookie(STATE_COOKIE);
             res.clearCookie(VERIFIER_COOKIE);
 
-            await signIn(req, res, {
-                socialType: SocialType.Google,
-                socialId: googleId,
-                username:
-                    info.name ||
-                    [info.given_name, info.family_name].filter(Boolean).join(' ') ||
-                    (info.email ? info.email.split('@')[0] : ''),
-                avatar: info.picture || getDefaultAvatar(req),
-            });
+            try {
+                await signIn(
+                    req,
+                    res,
+                    {
+                        socialType: SocialType.Google,
+                        socialId: googleId,
+                        username:
+                            info.name ||
+                            [info.given_name, info.family_name].filter(Boolean).join(' ') ||
+                            (info.email ? info.email.split('@')[0] : ''),
+                        avatar: info.picture || getDefaultAvatar(req, options.publicUrl),
+                    },
+                    { session: options.session, requireRole: options.requireRole },
+                );
+            } catch (e) {
+                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
+                    res.redirect(`${loginPath}?error=not_admin`);
+                    return;
+                }
+                throw e;
+            }
 
-            res.redirect('/');
+            res.redirect(options.successRedirect || '/');
         } catch (e) {
             next(e);
         }

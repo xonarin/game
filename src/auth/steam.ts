@@ -11,7 +11,8 @@ import { Express, Request, Response } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
-import { getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
+import { UserError } from '../utils/errors';
+import { AuthOptions, getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
 
 const STEAM_OPENID_URL = 'https://steamcommunity.com/openid/login';
 const STEAM_SUMMARIES_URL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/';
@@ -29,7 +30,8 @@ const safeEqual = (a: string, b: string) => {
     return ab.length === bb.length && crypto.timingSafeEqual(ab, bb);
 };
 
-const getReturnTo = (req: Request, state: string) => `${getBaseUrl(req)}/auth/steam/return?state=${state}`;
+const getReturnTo = (req: Request, state: string, publicUrl?: string) =>
+    `${getBaseUrl(req, publicUrl)}/auth/steam/return?state=${state}`;
 
 interface SteamPlayer {
     steamid?: string;
@@ -48,18 +50,20 @@ const fetchSteamProfile = async (steamId: string): Promise<SteamPlayer | null> =
     }
 };
 
-const fail = (res: Response, reason: string, details?: unknown) => {
+const fail = (res: Response, reason: string, loginPath: string, details?: unknown) => {
     console.error('[steam]', reason, details === undefined ? '' : details);
     res.clearCookie(STATE_COOKIE);
-    res.redirect('/login?error=steam');
+    res.redirect(`${loginPath}?error=steam`);
 };
 
 export const isSteamEnabled = () => Boolean(config.auth.steam.apiKey);
 
-export const initSteam = (app: Express) => {
+export const initSteam = (app: Express, options: AuthOptions = {}) => {
+    const loginPath = options.loginPath || '/login';
+
     app.get(['/auth/steam', '/auth/steam/'], (req, res) => {
         if (!isSteamEnabled()) {
-            res.redirect('/login?error=steam_disabled');
+            res.redirect(`${loginPath}?error=steam_disabled`);
             return;
         }
 
@@ -68,14 +72,14 @@ export const initSteam = (app: Express) => {
             maxAge: FLOW_TTL_MS,
             httpOnly: true,
             sameSite: 'lax',
-            secure: isSecureRequest(req),
+            secure: isSecureRequest(req, options.publicUrl),
         });
 
         const params = new URLSearchParams({
             'openid.ns': 'http://specs.openid.net/auth/2.0',
             'openid.mode': 'checkid_setup',
-            'openid.return_to': getReturnTo(req, state),
-            'openid.realm': getBaseUrl(req),
+            'openid.return_to': getReturnTo(req, state, options.publicUrl),
+            'openid.realm': getBaseUrl(req, options.publicUrl),
             'openid.identity': 'http://specs.openid.net/auth/2.0/identifier_select',
             'openid.claimed_id': 'http://specs.openid.net/auth/2.0/identifier_select',
         });
@@ -94,12 +98,12 @@ export const initSteam = (app: Express) => {
                 typeof query.state !== 'string' ||
                 !safeEqual(query.state, expectedState)
             ) {
-                fail(res, 'missing params or state mismatch');
+                fail(res, 'missing params or state mismatch', loginPath);
                 return;
             }
             // The return_to Steam signed must be the one we issued (prevents cross-endpoint replay).
-            if (query['openid.return_to'] !== getReturnTo(req, expectedState)) {
-                fail(res, 'return_to mismatch');
+            if (query['openid.return_to'] !== getReturnTo(req, expectedState, options.publicUrl)) {
+                fail(res, 'return_to mismatch', loginPath);
                 return;
             }
 
@@ -117,13 +121,13 @@ export const initSteam = (app: Express) => {
             });
             const text = await resp.text();
             if (!/is_valid\s*:\s*true/i.test(text)) {
-                fail(res, 'openid verification failed');
+                fail(res, 'openid verification failed', loginPath);
                 return;
             }
 
             const match = CLAIMED_ID_RE.exec(claimedId);
             if (!match) {
-                fail(res, 'bad claimed_id', claimedId);
+                fail(res, 'bad claimed_id', loginPath, claimedId);
                 return;
             }
             const steamId = match[1];
@@ -131,14 +135,27 @@ export const initSteam = (app: Express) => {
             res.clearCookie(STATE_COOKIE);
 
             const profile = await fetchSteamProfile(steamId);
-            await signIn(req, res, {
-                socialType: SocialType.Steam,
-                socialId: steamId,
-                username: profile?.personaname || `Player ${steamId.slice(-4)}`,
-                avatar: profile?.avatarfull || getDefaultAvatar(req),
-            });
+            try {
+                await signIn(
+                    req,
+                    res,
+                    {
+                        socialType: SocialType.Steam,
+                        socialId: steamId,
+                        username: profile?.personaname || `Player ${steamId.slice(-4)}`,
+                        avatar: profile?.avatarfull || getDefaultAvatar(req, options.publicUrl),
+                    },
+                    { session: options.session, requireRole: options.requireRole },
+                );
+            } catch (e) {
+                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
+                    res.redirect(`${loginPath}?error=not_admin`);
+                    return;
+                }
+                throw e;
+            }
 
-            res.redirect('/');
+            res.redirect(options.successRedirect || '/');
         } catch (e) {
             next(e);
         }

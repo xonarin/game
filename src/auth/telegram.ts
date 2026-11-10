@@ -12,7 +12,7 @@ import config from '../config';
 import { SocialType } from '../data/models/User';
 import { repositories } from '../data/database';
 import { UserError } from '../utils/errors';
-import { getDefaultAvatar, signIn } from './session';
+import { AuthOptions, getDefaultAvatar, signIn } from './session';
 
 const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24; // reject logins older than 1 day
 
@@ -51,35 +51,58 @@ const readAuthData = (req: Request): TelegramAuthData => {
     return data;
 };
 
-export const initTelegram = (app: Express) => {
+export const initTelegram = (app: Express, options: AuthOptions = {}) => {
+    const loginPath = options.loginPath || '/login';
+
     app.get('/auth/telegram/return', async (req, res, next) => {
         try {
             if (!isTelegramEnabled()) {
-                res.redirect('/login?error=telegram_disabled');
+                res.redirect(`${loginPath}?error=telegram_disabled`);
                 return;
             }
 
             const data = readAuthData(req);
             if (!verifyTelegramAuth(data, config.auth.telegram.botToken)) {
                 console.error('[telegram] invalid or expired auth data for id', data.id);
-                res.redirect('/login?error=telegram');
+                res.redirect(`${loginPath}?error=telegram`);
                 return;
             }
 
             const name = [data.first_name, data.last_name].filter(Boolean).join(' ');
-            await signIn(req, res, {
-                socialType: SocialType.Telegram,
-                socialId: data.id,
-                username: name || data.username || `tg${data.id}`,
-                avatar:
-                    data.photo_url && data.photo_url.startsWith('https://') ? data.photo_url : getDefaultAvatar(req),
-            });
+            try {
+                await signIn(
+                    req,
+                    res,
+                    {
+                        socialType: SocialType.Telegram,
+                        socialId: data.id,
+                        username: name || data.username || `tg${data.id}`,
+                        avatar:
+                            data.photo_url && data.photo_url.startsWith('https://')
+                                ? data.photo_url
+                                : getDefaultAvatar(req, options.publicUrl),
+                    },
+                    { session: options.session, requireRole: options.requireRole },
+                );
+            } catch (e) {
+                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
+                    res.redirect(`${loginPath}?error=not_admin`);
+                    return;
+                }
+                throw e;
+            }
 
-            res.redirect('/');
+            res.redirect(options.successRedirect || '/');
         } catch (e) {
             next(e);
         }
     });
+
+    // Connecting a Telegram account to a logged-in user is a player-site feature (the bonus),
+    // not needed in the admin panel.
+    if (options.requireRole) {
+        return;
+    }
 
     // Connect a Telegram account to the already-logged-in user (for the bonus), regardless of
     // how they signed in. The Telegram login widget on the bonus page posts here.

@@ -18,11 +18,13 @@ import { initUserWithdraw, UserWithdrawStatic } from './UserWithdraw';
 import { initBonus, BonusStatic } from './Bonus';
 import { initPromoCode, PromoCodeStatic } from './PromoCode';
 import { initPromoCodeUse, PromoCodeUseStatic } from './PromoCodeUse';
+import { initAdminAction, AdminActionStatic } from './AdminAction';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
 export type AssociableModelStatic<M extends Model, A extends { [key: string]: Association } = {}> = ModelStatic<M> &
     A & {
+        // eslint-disable-next-line no-use-before-define -- Database is declared below (type-only forward ref)
         associate: (database: Database) => void;
     };
 
@@ -51,6 +53,7 @@ export interface Database {
     Bonus: BonusStatic;
     PromoCode: PromoCodeStatic;
     PromoCodeUse: PromoCodeUseStatic;
+    AdminAction: AdminActionStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -73,6 +76,7 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         Bonus: initBonus(sequelize),
         PromoCode: initPromoCode(sequelize),
         PromoCodeUse: initPromoCodeUse(sequelize),
+        AdminAction: initAdminAction(sequelize),
     };
 
     forEach(database, model => {

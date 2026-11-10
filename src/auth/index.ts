@@ -2,12 +2,15 @@ import { Express } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
+import { repositories } from '../data/database';
 import { initVkId, isVkIdEnabled } from './vkid';
 import { initTelegram, isTelegramEnabled } from './telegram';
 import { initGoogle, isGoogleEnabled } from './google';
 import { initSteam, isSteamEnabled } from './steam';
 import { isTelegramBonusEnabled } from '../utils/telegram';
-import { getDefaultAvatar, signIn } from './session';
+import { getDefaultAvatar, signIn, AuthOptions } from './session';
+
+export type { AuthOptions };
 
 export interface AuthProviders {
     vk: boolean;
@@ -37,7 +40,7 @@ export const getAuthProviders = (): AuthProviders => ({
     dev: isDevLoginEnabled(),
 });
 
-const initDevLogin = (app: Express) => {
+const initDevLogin = (app: Express, options: AuthOptions) => {
     if (!isDevLoginEnabled()) return;
 
     // /auth/dev?user=alice -> local test user "alice" (created on first login)
@@ -48,13 +51,24 @@ const initDevLogin = (app: Express) => {
                     .replace(/[^a-zA-Z0-9_-]/g, '')
                     .slice(0, 32) || 'dev1';
 
-            await signIn(req, res, {
-                socialType: SocialType.VK,
-                socialId: `dev-${name}`,
-                username: name,
-                avatar: getDefaultAvatar(req),
-            });
-            res.redirect('/');
+            const user = await signIn(
+                req,
+                res,
+                {
+                    socialType: SocialType.VK,
+                    socialId: `dev-${name}`,
+                    username: name,
+                    avatar: getDefaultAvatar(req, options.publicUrl),
+                },
+                { session: options.session },
+            );
+
+            // Dev convenience: the admin dev login promotes the test user to admin.
+            if (options.devPromoteRole && user.role !== options.devPromoteRole) {
+                await repositories.users.setRole(user.id, options.devPromoteRole);
+            }
+
+            res.redirect(options.successRedirect || '/');
         } catch (e) {
             next(e);
         }
@@ -63,10 +77,10 @@ const initDevLogin = (app: Express) => {
     console.info('[auth] dev login enabled at /auth/dev');
 };
 
-export const initAuth = (app: Express) => {
-    initVkId(app);
-    initGoogle(app);
-    initSteam(app);
-    initTelegram(app);
-    initDevLogin(app);
+export const initAuth = (app: Express, options: AuthOptions = {}) => {
+    initVkId(app, options);
+    initGoogle(app, options);
+    initSteam(app, options);
+    initTelegram(app, options);
+    initDevLogin(app, options);
 };

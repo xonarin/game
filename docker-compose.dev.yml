@@ -60,6 +60,47 @@ services:
       redis:
         condition: service_started
 
+  # Admin panel backend (separate app/process, shares the same DB/Redis — see src/admin).
+  # In production this runs on its own server/domain; here it is a separate service on :3200.
+  admin:
+    image: node:24-bookworm-slim
+    working_dir: /app
+    environment:
+      DATABASE_URL: mysql://root:dev@mysql:3306/playtime
+      REDIS_URL: redis://redis:6379
+      DEV_LOGIN: "1"
+      # Admin domain public URL (for OAuth redirect URIs in production)
+      ADMIN_PUBLIC_URL: ${ADMIN_PUBLIC_URL:-}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
+      # Same social providers as the game, used on the admin domain for admin-only login
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      VKID_APP_ID: ${VKID_APP_ID:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      STEAM_API_KEY: ${STEAM_API_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    # Reuses the app's installed node_modules and generated types; waits for them on first boot.
+    command: >
+      sh -c "until [ -x node_modules/.bin/babel-node ] && [ -f src/__generated__/graphql.tsx ]; do
+      echo 'admin: waiting for app install/codegen...'; sleep 3; done;
+      BABEL_DISABLE_CACHE=1 node_modules/.bin/babel-node --extensions '.ts,.tsx' src/admin/server.ts"
+    ports:
+      - "3200:3200"
+    volumes:
+      - .:/app
+      - node-modules-24:/app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      app:
+        condition: service_started
+
   # Public HTTPS address for the local app (needed for the Telegram login widget).
   # Start with: docker compose -f docker-compose.dev.yml --profile tunnel up -d
   # Needs CLOUDFLARE_TUNNEL_TOKEN in .env; public hostname -> http://app:3000 in Cloudflare.

@@ -94,6 +94,18 @@ const config = {
         onlineDelay: 10000,
         additionalOnlineK: 0.1,
     },
+
+    // Admin panel (separate app/server/domain, shares this database — see src/admin)
+    admin: {
+        // Port the admin backend listens on
+        port: process.env.ADMIN_PORT || 3200,
+        // Public URL of the admin domain, used to build OAuth redirect URIs (e.g. https://admin.example.com)
+        publicUrl: env('ADMIN_PUBLIC_URL'),
+        // Admin session cookie, separate from the player cookie (different domain)
+        tokenKey: process.env.ADMIN_TOKEN_KEY || 'adminToken',
+        // Signs admin session tokens (own secret, isolated from the player session)
+        jwt: { secret: env('ADMIN_JWT_SECRET') || (__DEV__ ? 'dev-only-insecure-admin-secret-change-me' : '') },
+    },
 };
 
 /** FreeKassa deposits need the merchant id and both secret words. */
@@ -111,6 +123,9 @@ export const getConfigErrors = (): string[] => {
     }
     if (!__DEV__ && config.auth.jwt.secret.length < 32) {
         errors.push('JWT_SECRET must be set to a random string of at least 32 characters');
+    }
+    if (!__DEV__ && config.admin.jwt.secret.length < 32) {
+        errors.push('ADMIN_JWT_SECRET must be set to a random string of at least 32 characters');
     }
     return errors;
 };
