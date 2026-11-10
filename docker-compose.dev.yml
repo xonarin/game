@@ -87,6 +87,7 @@ services:
     command: >
       sh -c "until [ -x node_modules/.bin/babel-node ] && [ -f src/__generated__/graphql.tsx ]; do
       echo 'admin: waiting for app install/codegen...'; sleep 3; done;
+      (cd src/admin/client && /app/node_modules/.bin/vite build);
       BABEL_DISABLE_CACHE=1 node_modules/.bin/babel-node --extensions '.ts,.tsx' src/admin/server.ts"
     ports:
       - "3200:3200"

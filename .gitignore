@@ -33,3 +33,6 @@ yarn-error.log*
 
 # Local secrets (docker compose)
 .env
+
+# Admin SPA build output
+src/admin/client/dist
