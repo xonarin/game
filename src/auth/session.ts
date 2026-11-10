@@ -46,6 +46,19 @@ export interface SocialProfile {
     avatar: string;
 }
 
+/** Signs a session JWT for `userId` and sets it as the session cookie of `session`. */
+export const issueSessionCookie = (req: Request, res: Response, userId: string, session: SessionTarget) => {
+    const token = jwt.sign({ id: userId }, session.secret, { expiresIn: SESSION_TTL_SECONDS });
+    res.cookie(session.tokenKey, token, {
+        maxAge: 1000 * SESSION_TTL_SECONDS,
+        // Not readable from JavaScript: an XSS cannot steal the session. The WebSocket
+        // server reads the same cookie from the upgrade request (see getWebSocketUser).
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: isSecureRequest(req, session.publicUrl),
+    });
+};
+
 export interface SignInOptions {
     // Cookie/secret to issue the session into (defaults to the player site).
     session?: SessionTarget;
@@ -70,7 +83,39 @@ export interface AuthOptions {
     loginPath?: string;
     // Dev login only: promote the created dev user to this role (so the admin dev login yields an admin).
     devPromoteRole?: UserRole;
+    // Broker mode: fully handles the terminal step (instead of setting a cookie + redirecting).
+    // The central auth service uses this to mint a one-time code and redirect back to the origin site.
+    complete?: (req: Request, res: Response, profile: SocialProfile) => Promise<void>;
 }
+
+/**
+ * Terminal step shared by all providers: either the broker's custom handler (options.complete),
+ * or the default — set the site session cookie and redirect (with an admin-role gate when requested).
+ */
+export const finishLogin = async (
+    req: Request,
+    res: Response,
+    profile: SocialProfile,
+    options: AuthOptions,
+): Promise<void> => {
+    if (options.complete) {
+        await options.complete(req, res, profile);
+        return;
+    }
+
+    const loginPath = options.loginPath || '/login';
+    try {
+        // eslint-disable-next-line no-use-before-define -- signIn is defined below in the same module
+        await signIn(req, res, profile, { session: options.session, requireRole: options.requireRole });
+    } catch (e) {
+        if (e instanceof UserError && e.message === 'NOT_ADMIN') {
+            res.redirect(`${loginPath}?error=not_admin`);
+            return;
+        }
+        throw e;
+    }
+    res.redirect(options.successRedirect || '/');
+};
 
 /**
  * Finds or registers the user by social account, sets the session cookie
@@ -97,15 +142,7 @@ export const signIn = async (req: Request, res: Response, profile: SocialProfile
         await repositories.users.linkTelegram(user.id, profile.socialId);
     }
 
-    const token = jwt.sign({ id: user.id }, session.secret, { expiresIn: SESSION_TTL_SECONDS });
-    res.cookie(session.tokenKey, token, {
-        maxAge: 1000 * SESSION_TTL_SECONDS,
-        // Not readable from JavaScript: an XSS cannot steal the session. The WebSocket
-        // server reads the same cookie from the upgrade request (see getWebSocketUser).
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: isSecureRequest(req, session.publicUrl),
-    });
+    issueSessionCookie(req, res, user.id, session);
 
     // Referral linking applies to player registrations only, not admin logins.
     if (!options.requireRole) {

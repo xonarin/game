@@ -95,6 +95,21 @@ const config = {
         additionalOnlineK: 0.1,
     },
 
+    // Central auth broker (auth.<domain>, separate app/server — see src/authservice).
+    // Sites delegate social login to it and exchange a one-time code for the user via /verify.
+    authService: {
+        // Port the broker listens on
+        port: process.env.AUTH_SERVICE_PORT || 3300,
+        // Public URL of the broker itself (used to build its own OAuth redirect URIs)
+        publicUrl: env('AUTH_PUBLIC_URL'),
+        // Public URL sites point their login buttons to (usually the same as publicUrl)
+        url: env('AUTH_SERVICE_URL'),
+        // URL sites use for the server-to-server /verify call (inside the private network)
+        internalUrl: env('AUTH_SERVICE_INTERNAL_URL') || env('AUTH_SERVICE_URL'),
+        // Shared secret protecting /verify (site <-> broker). Required in production.
+        sharedSecret: env('AUTH_SHARED_SECRET') || (__DEV__ ? 'dev-only-insecure-auth-shared-secret' : ''),
+    },
+
     // Admin panel (separate app/server/domain, shares this database — see src/admin)
     admin: {
         // Port the admin backend listens on

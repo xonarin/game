@@ -19,6 +19,7 @@ import { initBonus, BonusStatic } from './Bonus';
 import { initPromoCode, PromoCodeStatic } from './PromoCode';
 import { initPromoCodeUse, PromoCodeUseStatic } from './PromoCodeUse';
 import { initAdminAction, AdminActionStatic } from './AdminAction';
+import { initAuthClient, AuthClientStatic } from './AuthClient';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -54,6 +55,7 @@ export interface Database {
     PromoCode: PromoCodeStatic;
     PromoCodeUse: PromoCodeUseStatic;
     AdminAction: AdminActionStatic;
+    AuthClient: AuthClientStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -77,6 +79,7 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         PromoCode: initPromoCode(sequelize),
         PromoCodeUse: initPromoCodeUse(sequelize),
         AdminAction: initAdminAction(sequelize),
+        AuthClient: initAuthClient(sequelize),
     };
 
     forEach(database, model => {

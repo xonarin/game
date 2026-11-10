@@ -12,7 +12,7 @@ import config from '../config';
 import { SocialType } from '../data/models/User';
 import { repositories } from '../data/database';
 import { UserError } from '../utils/errors';
-import { AuthOptions, getDefaultAvatar, signIn } from './session';
+import { AuthOptions, finishLogin, getDefaultAvatar } from './session';
 
 const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24; // reject logins older than 1 day
 
@@ -69,30 +69,20 @@ export const initTelegram = (app: Express, options: AuthOptions = {}) => {
             }
 
             const name = [data.first_name, data.last_name].filter(Boolean).join(' ');
-            try {
-                await signIn(
-                    req,
-                    res,
-                    {
-                        socialType: SocialType.Telegram,
-                        socialId: data.id,
-                        username: name || data.username || `tg${data.id}`,
-                        avatar:
-                            data.photo_url && data.photo_url.startsWith('https://')
-                                ? data.photo_url
-                                : getDefaultAvatar(req, options.publicUrl),
-                    },
-                    { session: options.session, requireRole: options.requireRole },
-                );
-            } catch (e) {
-                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
-                    res.redirect(`${loginPath}?error=not_admin`);
-                    return;
-                }
-                throw e;
-            }
-
-            res.redirect(options.successRedirect || '/');
+            await finishLogin(
+                req,
+                res,
+                {
+                    socialType: SocialType.Telegram,
+                    socialId: data.id,
+                    username: name || data.username || `tg${data.id}`,
+                    avatar:
+                        data.photo_url && data.photo_url.startsWith('https://')
+                            ? data.photo_url
+                            : getDefaultAvatar(req, options.publicUrl),
+                },
+                options,
+            );
         } catch (e) {
             next(e);
         }

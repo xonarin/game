@@ -43,6 +43,10 @@ services:
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
       TELEGRAM_BONUS_CHANNEL: ${TELEGRAM_BONUS_CHANNEL:-}
       TELEGRAM_WEBHOOK_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-}
+      # Central auth broker (src/authservice)
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:3300}
+      AUTH_SERVICE_INTERNAL_URL: ${AUTH_SERVICE_INTERNAL_URL:-http://authservice:3300}
+      AUTH_SHARED_SECRET: ${AUTH_SHARED_SECRET:-}
     dns:
       - 8.8.8.8
       - 1.1.1.1
@@ -80,6 +84,9 @@ services:
       STEAM_API_KEY: ${STEAM_API_KEY:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:3300}
+      AUTH_SERVICE_INTERNAL_URL: ${AUTH_SERVICE_INTERNAL_URL:-http://authservice:3300}
+      AUTH_SHARED_SECRET: ${AUTH_SHARED_SECRET:-}
     dns:
       - 8.8.8.8
       - 1.1.1.1
@@ -96,6 +103,44 @@ services:
       - node-modules-24:/app/node_modules
       # The admin SPA installs its own deps here (in-container, not the Windows bind mount)
       - admin-client-node-modules:/app/src/admin/client/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      app:
+        condition: service_started
+
+  # Central auth broker (src/authservice): owns all social-login flows; sites delegate to it.
+  # In production runs on its own domain (auth.<domain>); here a separate service on :3300.
+  authservice:
+    image: node:24-bookworm-slim
+    working_dir: /app
+    environment:
+      DATABASE_URL: mysql://root:dev@mysql:3306/playtime
+      REDIS_URL: redis://redis:6379
+      DEV_LOGIN: "1"
+      AUTH_PUBLIC_URL: ${AUTH_PUBLIC_URL:-http://localhost:3300}
+      AUTH_SHARED_SECRET: ${AUTH_SHARED_SECRET:-}
+      # All social providers live here (one domain registered with each provider)
+      VKID_APP_ID: ${VKID_APP_ID:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      STEAM_API_KEY: ${STEAM_API_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    command: >
+      sh -c "until [ -x node_modules/.bin/babel-node ] && [ -f src/__generated__/graphql.tsx ]; do
+      echo 'authservice: waiting for app install/codegen...'; sleep 3; done;
+      BABEL_DISABLE_CACHE=1 node_modules/.bin/babel-node --extensions '.ts,.tsx' src/authservice/server.ts"
+    ports:
+      - "3300:3300"
+    volumes:
+      - .:/app
+      - node-modules-24:/app/node_modules
     depends_on:
       mysql:
         condition: service_healthy

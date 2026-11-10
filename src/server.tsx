@@ -27,6 +27,8 @@ import Html, { HtmlProps } from './components/Html';
 import { ErrorPage } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.scss';
 import { initAuth, getAuthProviders } from './auth';
+import { initAuthCallback } from './auth/callback';
+import { gameSession } from './auth/session';
 import router from './router';
 import { database, repositories } from './data/database';
 import AppModule from './data/modules/app';
@@ -105,6 +107,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Authentication: VK ID, Telegram, dev login (see src/auth)
 // -----------------------------------------------------------------------------
 initAuth(app);
+
+// Central auth broker: exchange ?code= for the user and set the game session cookie.
+initAuthCallback(app, { session: gameSession(), successRedirect: '/', loginPath: '/login' });
 
 // Logout endpoint
 app.get('/logout', (_0, res) => {

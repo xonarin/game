@@ -24,6 +24,14 @@ const typeDefs = /* GraphQL */ `
         description: String
     }
 
+    type AuthClient {
+        id: ID!
+        origin: String!
+        label: String
+        enabled: Boolean!
+        createdAt: DateTime!
+    }
+
     type DashboardStats {
         usersTotal: Int!
         onlineNow: Int!
@@ -40,11 +48,15 @@ const typeDefs = /* GraphQL */ `
         adminUser(id: ID!): AdminUser
         adminSettings: [AdminSetting!]!
         adminDashboard: DashboardStats!
+        adminAuthClients: [AuthClient!]!
     }
 
     type Mutation {
         adminAdjustBalance(userId: ID!, amount: Float!, reason: String): AdminUser!
         adminUpdateSetting(name: String!, value: String!): AdminSetting!
+        adminAddAuthClient(origin: String!, label: String): AuthClient!
+        adminSetAuthClientEnabled(id: ID!, enabled: Boolean!): AuthClient!
+        adminRemoveAuthClient(id: ID!): Boolean!
     }
 `;
 

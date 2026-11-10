@@ -20,6 +20,7 @@ const action = ({ user, query, authProviders }: AppContextTypes): RouteResult =>
                         telegramBot: null,
                         telegramChannel: null,
                         dev: false,
+                        authServiceUrl: null,
                     }
                 }
                 error={error}

@@ -8,7 +8,7 @@ import { initTelegram, isTelegramEnabled } from './telegram';
 import { initGoogle, isGoogleEnabled } from './google';
 import { initSteam, isSteamEnabled } from './steam';
 import { isTelegramBonusEnabled } from '../utils/telegram';
-import { getDefaultAvatar, signIn, AuthOptions } from './session';
+import { getDefaultAvatar, signIn, finishLogin, AuthOptions } from './session';
 
 export type { AuthOptions };
 
@@ -20,6 +20,9 @@ export interface AuthProviders {
     // Public bonus channel username (without "@"), or null for a private/id-only channel.
     telegramChannel: string | null;
     dev: boolean;
+    // Central auth broker URL; login buttons link to `${authServiceUrl}/go?from=<site>&type=...`.
+    // Null when no broker is configured (sites then use their own local /auth/* routes).
+    authServiceUrl: string | null;
 }
 
 export const isDevLoginEnabled = () => __DEV__ && config.auth.devLogin;
@@ -38,6 +41,7 @@ export const getAuthProviders = (): AuthProviders => ({
     telegramBot: isTelegramEnabled() ? config.auth.telegram.botUsername : null,
     telegramChannel: getPublicBonusChannel(),
     dev: isDevLoginEnabled(),
+    authServiceUrl: config.authService.url || null,
 });
 
 const initDevLogin = (app: Express, options: AuthOptions) => {
@@ -51,17 +55,20 @@ const initDevLogin = (app: Express, options: AuthOptions) => {
                     .replace(/[^a-zA-Z0-9_-]/g, '')
                     .slice(0, 32) || 'dev1';
 
-            const user = await signIn(
-                req,
-                res,
-                {
-                    socialType: SocialType.VK,
-                    socialId: `dev-${name}`,
-                    username: name,
-                    avatar: getDefaultAvatar(req, options.publicUrl),
-                },
-                { session: options.session },
-            );
+            const profile = {
+                socialType: SocialType.VK,
+                socialId: `dev-${name}`,
+                username: name,
+                avatar: getDefaultAvatar(req, options.publicUrl),
+            };
+
+            // Broker mode: hand off to options.complete (one-time code + redirect to the origin site).
+            if (options.complete) {
+                await finishLogin(req, res, profile, options);
+                return;
+            }
+
+            const user = await signIn(req, res, profile, { session: options.session });
 
             // Dev convenience: the admin dev login promotes the test user to admin.
             if (options.devPromoteRole && user.role !== options.devPromoteRole) {

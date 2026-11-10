@@ -14,6 +14,7 @@ import depthLimit from 'graphql-depth-limit';
 import config, { getConfigErrors } from '../config';
 import { UserRole } from '../data/models/User';
 import { initAuth } from '../auth';
+import { initAuthCallback } from '../auth/callback';
 import { createContext } from '../utils/apollo/createContext';
 import { ApolloContext } from '../interfaces/apollo';
 import { configureLuxon } from '../utils/luxon';
@@ -64,19 +65,29 @@ const start = async () => {
         next(err);
     });
 
+    const adminSession = {
+        tokenKey: config.admin.tokenKey,
+        secret: config.admin.jwt.secret,
+        publicUrl: config.admin.publicUrl,
+    };
+
     // Social login on the admin domain: same providers, own cookie, admins only.
     initAuth(app, {
-        session: {
-            tokenKey: config.admin.tokenKey,
-            secret: config.admin.jwt.secret,
-            publicUrl: config.admin.publicUrl,
-        },
+        session: adminSession,
         requireRole: UserRole.Admin,
         publicUrl: config.admin.publicUrl,
         successRedirect: '/',
         loginPath: '/login',
         // Dev login (/auth/dev?user=x) yields an admin so the panel can be tested locally.
         devPromoteRole: UserRole.Admin,
+    });
+
+    // Central auth broker: exchange ?code= for the user; only admins get an admin session.
+    initAuthCallback(app, {
+        session: adminSession,
+        requireRole: UserRole.Admin,
+        successRedirect: '/',
+        loginPath: '/login',
     });
 
     app.get('/logout', (_0, res) => {
@@ -87,6 +98,11 @@ const start = async () => {
     // Build/version marker (used later by the deploy panel).
     app.get('/version', (_0, res) => {
         res.json({ sha: process.env.GIT_SHA || null, service: 'admin' });
+    });
+
+    // Public config for the SPA login screen (no auth): where the central auth broker lives.
+    app.get('/api/public-config', (_0, res) => {
+        res.json({ authServiceUrl: config.authService.url || null });
     });
 
     const apolloServer = new ApolloServer<ApolloContext>({

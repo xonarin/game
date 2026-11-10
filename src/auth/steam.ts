@@ -11,8 +11,7 @@ import { Express, Request, Response } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
-import { UserError } from '../utils/errors';
-import { AuthOptions, getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
+import { AuthOptions, finishLogin, getBaseUrl, getDefaultAvatar, isSecureRequest } from './session';
 
 const STEAM_OPENID_URL = 'https://steamcommunity.com/openid/login';
 const STEAM_SUMMARIES_URL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/';
@@ -135,27 +134,17 @@ export const initSteam = (app: Express, options: AuthOptions = {}) => {
             res.clearCookie(STATE_COOKIE);
 
             const profile = await fetchSteamProfile(steamId);
-            try {
-                await signIn(
-                    req,
-                    res,
-                    {
-                        socialType: SocialType.Steam,
-                        socialId: steamId,
-                        username: profile?.personaname || `Player ${steamId.slice(-4)}`,
-                        avatar: profile?.avatarfull || getDefaultAvatar(req, options.publicUrl),
-                    },
-                    { session: options.session, requireRole: options.requireRole },
-                );
-            } catch (e) {
-                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
-                    res.redirect(`${loginPath}?error=not_admin`);
-                    return;
-                }
-                throw e;
-            }
-
-            res.redirect(options.successRedirect || '/');
+            await finishLogin(
+                req,
+                res,
+                {
+                    socialType: SocialType.Steam,
+                    socialId: steamId,
+                    username: profile?.personaname || `Player ${steamId.slice(-4)}`,
+                    avatar: profile?.avatarfull || getDefaultAvatar(req, options.publicUrl),
+                },
+                options,
+            );
         } catch (e) {
             next(e);
         }

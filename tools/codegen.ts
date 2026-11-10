@@ -37,7 +37,13 @@ export default async function codegen() {
     await generate(
         {
             schema: print(builtSchema),
-            documents: ['./src/**/*.{graphql,ts,tsx}', '!./src/__generated__/**'],
+            documents: [
+                './src/**/*.{graphql,ts,tsx}',
+                '!./src/__generated__/**',
+                // The admin panel and the auth broker use their own GraphQL schemas, not the game's.
+                '!./src/admin/**',
+                '!./src/authservice/**',
+            ],
             config: {
                 scalars: {
                     URL: 'string',

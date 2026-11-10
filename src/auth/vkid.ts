@@ -12,8 +12,7 @@ import { Express, Request, Response } from 'express';
 
 import config from '../config';
 import { SocialType } from '../data/models/User';
-import { UserError } from '../utils/errors';
-import { AuthOptions, getBaseUrl, getDefaultAvatar, isSecureRequest, signIn } from './session';
+import { AuthOptions, finishLogin, getBaseUrl, getDefaultAvatar, isSecureRequest } from './session';
 
 const VKID_URL = 'https://id.vk.ru';
 const SCOPE = 'vkid.personal_info';
@@ -173,27 +172,17 @@ export const initVkId = (app: Express, options: AuthOptions = {}) => {
             res.clearCookie(STATE_COOKIE);
             res.clearCookie(VERIFIER_COOKIE);
 
-            try {
-                await signIn(
-                    req,
-                    res,
-                    {
-                        socialType: SocialType.VK,
-                        socialId: vkUserId,
-                        username: [vkUser?.first_name, vkUser?.last_name].filter(Boolean).join(' '),
-                        avatar: vkUser?.avatar || getDefaultAvatar(req, options.publicUrl),
-                    },
-                    { session: options.session, requireRole: options.requireRole },
-                );
-            } catch (e) {
-                if (e instanceof UserError && e.message === 'NOT_ADMIN') {
-                    res.redirect(`${loginPath}?error=not_admin`);
-                    return;
-                }
-                throw e;
-            }
-
-            res.redirect(options.successRedirect || '/');
+            await finishLogin(
+                req,
+                res,
+                {
+                    socialType: SocialType.VK,
+                    socialId: vkUserId,
+                    username: [vkUser?.first_name, vkUser?.last_name].filter(Boolean).join(' '),
+                    avatar: vkUser?.avatar || getDefaultAvatar(req, options.publicUrl),
+                },
+                options,
+            );
         } catch (e) {
             next(e);
         }

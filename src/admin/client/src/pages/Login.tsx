@@ -1,20 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card, Flex, Text, TextInput } from '@gravity-ui/uikit';
 
 const ERRORS: Record<string, string> = {
     not_admin: 'Этот аккаунт не является администратором.',
+    auth: 'Не удалось войти. Попробуйте ещё раз.',
     vk: 'Не удалось войти через VK ID.',
-    vk_disabled: 'Вход через VK ID не настроен.',
     google: 'Не удалось войти через Google.',
-    google_disabled: 'Вход через Google не настроен.',
     steam: 'Не удалось войти через Steam.',
-    steam_disabled: 'Вход через Steam не настроен.',
     telegram: 'Не удалось войти через Telegram.',
 };
 
 export default function Login() {
     const error = new URLSearchParams(window.location.search).get('error') || '';
     const [devUser, setDevUser] = useState('admin');
+    const [authServiceUrl, setAuthServiceUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch('/api/public-config')
+            .then(r => r.json())
+            .then(c => setAuthServiceUrl(c.authServiceUrl || null))
+            .catch(() => setAuthServiceUrl(null));
+    }, []);
+
+    const origin = window.location.origin;
+    const go = (type: string) =>
+        authServiceUrl
+            ? `${authServiceUrl}/go?from=${encodeURIComponent(origin)}&type=${type}`
+            : `/auth/${type === 'tg' ? 'vk' : type}`;
 
     return (
         <Flex justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
@@ -24,15 +36,20 @@ export default function Login() {
                     {error && <Text color="danger">{ERRORS[error] || 'Ошибка входа.'}</Text>}
 
                     <Flex direction="column" gap={2}>
-                        <Button size="l" view="action" href="/auth/vk">
+                        <Button size="l" view="action" href={go('vk')}>
                             Войти через VK ID
                         </Button>
-                        <Button size="l" href="/auth/google">
+                        <Button size="l" href={go('google')}>
                             Войти через Google
                         </Button>
-                        <Button size="l" href="/auth/steam">
+                        <Button size="l" href={go('steam')}>
                             Войти через Steam
                         </Button>
+                        {authServiceUrl && (
+                            <Button size="l" href={go('tg')}>
+                                Войти через Telegram
+                            </Button>
+                        )}
                     </Flex>
 
                     <form method="get" action="/auth/dev">

@@ -24,6 +24,7 @@ export const permissions = shield(
         AdminUsersPage: allow,
         AdminSetting: allow,
         DashboardStats: allow,
+        AuthClient: allow,
         Query: { '*': isAdmin },
         Mutation: { '*': isAdmin },
     },
@@ -54,6 +55,9 @@ export const resolvers = {
 
         adminSettings: (_0: unknown, _1: unknown, { repositories }: ApolloContext) =>
             repositories.settings.getAllSettings(),
+
+        adminAuthClients: (_0: unknown, _1: unknown, { repositories }: ApolloContext) =>
+            repositories.authClients.listClients(),
 
         adminDashboard: async () => {
             const [
@@ -129,6 +133,51 @@ export const resolvers = {
             });
 
             return result;
+        },
+
+        adminAddAuthClient: async (
+            _0: unknown,
+            { origin, label }: { origin: string; label?: string },
+            { user, repositories }: ApolloContext,
+        ) => {
+            const client = await repositories.authClients.addClient(origin, label);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'addAuthClient',
+                targetUserId: null,
+                targetKey: client.origin,
+                details: { label: label || null },
+            });
+            return client;
+        },
+
+        adminSetAuthClientEnabled: async (
+            _0: unknown,
+            { id, enabled }: { id: string; enabled: boolean },
+            { user, repositories }: ApolloContext,
+        ) => {
+            await repositories.authClients.setEnabled(id, enabled);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'setAuthClientEnabled',
+                targetUserId: null,
+                targetKey: id,
+                details: { enabled },
+            });
+            const list = await repositories.authClients.listClients();
+            return list.find(c => c.id === id);
+        },
+
+        adminRemoveAuthClient: async (_0: unknown, { id }: { id: string }, { user, repositories }: ApolloContext) => {
+            await repositories.authClients.removeClient(id);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'removeAuthClient',
+                targetUserId: null,
+                targetKey: id,
+                details: {},
+            });
+            return true;
         },
     },
 };
