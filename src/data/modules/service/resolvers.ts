@@ -13,24 +13,37 @@ const toSocialType = (value: string): SocialType => {
 };
 
 export const rules: IRules = {
+    Query: {
+        serviceIsAllowedOrigin: isService,
+    },
     Mutation: {
         serviceResolveSocialUser: isService,
     },
 };
 
 export const resolvers = {
+    Query: {
+        serviceIsAllowedOrigin: (_0: unknown, { origin }: { origin: string }, { repositories }: ApolloContext) =>
+            repositories.authClients.isAllowed(origin),
+    },
     Mutation: {
         serviceResolveSocialUser: async (
             _0: unknown,
             { type, socialId, username, avatar }: { type: string; socialId: string; username: string; avatar: string },
             { repositories }: ApolloContext,
         ) => {
+            const socialType = toSocialType(type);
             const [user, isNew] = await repositories.users.authSocial(
-                toSocialType(type),
+                socialType,
                 socialId,
-                username,
+                username.slice(0, 64) || 'Player',
                 avatar,
             );
+
+            // A Telegram login also counts as a linked Telegram account for the bonus.
+            if (socialType === SocialType.Telegram && !user.telegramId) {
+                await repositories.users.linkTelegram(user.id, socialId);
+            }
 
             return { id: user.id, username: user.username, avatar: user.avatar, isNew };
         },

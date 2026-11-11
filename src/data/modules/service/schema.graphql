@@ -9,7 +9,13 @@ type ResolveSocialUserPayload {
     isNew: Boolean!
 }
 
+type Query {
+    # Is this origin on the broker allowlist ("Домены", managed in the admin panel)?
+    serviceIsAllowedOrigin(origin: String!): Boolean!
+}
+
 type Mutation {
-    # Finds the user for this social identity or registers a new one.
+    # Finds the user for this social identity or registers a new one. For a Telegram identity it
+    # also links the Telegram id to the account (for the bonus), mirroring the old direct login.
     serviceResolveSocialUser(type: String!, socialId: String!, username: String!, avatar: String!): ResolveSocialUserPayload!
 }
