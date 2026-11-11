@@ -12,6 +12,7 @@ import TournamentsRepository from './tournaments';
 import PaymentsRepository from './payments';
 import BonusRepository from './bonus';
 import AuthClientsRepository from './authClients';
+import DeployTargetsRepository from './deployTargets';
 
 export interface Repositories {
     settings: SettingsRepository;
@@ -26,6 +27,7 @@ export interface Repositories {
     payments: PaymentsRepository;
     bonus: BonusRepository;
     authClients: AuthClientsRepository;
+    deployTargets: DeployTargetsRepository;
 }
 
 const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Repositories => {
@@ -43,6 +45,7 @@ const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Re
     repositories.payments = new PaymentsRepository(db, repositories, sequelizeContext);
     repositories.bonus = new BonusRepository(db, repositories, sequelizeContext);
     repositories.authClients = new AuthClientsRepository(db, repositories, sequelizeContext);
+    repositories.deployTargets = new DeployTargetsRepository(db, repositories, sequelizeContext);
 
     return repositories;
 };

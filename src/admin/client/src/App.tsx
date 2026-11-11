@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Domains from './pages/Domains';
+import Deploy from './pages/Deploy';
 
 export const ADMIN_ME = gql`
     query AdminMe {
@@ -41,6 +42,7 @@ export default function App() {
                 <Route path="/users" element={<Users />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/domains" element={<Domains />} />
+                <Route path="/deploy" element={<Deploy />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Layout>

@@ -9,6 +9,7 @@ import { WithdrawStatus } from '../data/models/UserWithdraw';
 import { UserError } from '../utils/errors';
 import { getOnline } from '../services/LiveData/LiveDataStorage';
 import { isMaintenance, setMaintenance } from '../utils/maintenance';
+import { getDeployInfo } from './deployStatus';
 
 const isAdmin = rule({ cache: 'contextual' })((_0: unknown, _1: unknown, ctx: ApolloContext) => {
     if (!ctx.user || ctx.user.role !== UserRole.Admin) {
@@ -26,6 +27,9 @@ export const permissions = shield(
         AdminSetting: allow,
         DashboardStats: allow,
         AuthClient: allow,
+        DeployTarget: allow,
+        DeployTargetStatus: allow,
+        DeployInfo: allow,
         Query: { '*': isAdmin },
         Mutation: { '*': isAdmin },
     },
@@ -61,6 +65,11 @@ export const resolvers = {
             repositories.authClients.listClients(),
 
         adminMaintenance: () => isMaintenance(),
+
+        adminDeploy: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) => {
+            const targets = await repositories.deployTargets.listTargets();
+            return getDeployInfo(targets);
+        },
 
         adminDashboard: async () => {
             const [
@@ -193,6 +202,56 @@ export const resolvers = {
                 details: { on },
             });
             return on;
+        },
+
+        adminAddDeployTarget: async (
+            _0: unknown,
+            {
+                name,
+                role,
+                versionUrl,
+                deployUrl,
+            }: { name: string; role: string; versionUrl: string; deployUrl?: string },
+            { user, repositories }: ApolloContext,
+        ) => {
+            const target = await repositories.deployTargets.addTarget(name, role, versionUrl, deployUrl);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'addDeployTarget',
+                targetUserId: null,
+                targetKey: name,
+                details: { role, versionUrl },
+            });
+            return target;
+        },
+
+        adminSetDeployTargetEnabled: async (
+            _0: unknown,
+            { id, enabled }: { id: string; enabled: boolean },
+            { user, repositories }: ApolloContext,
+        ) => {
+            await repositories.deployTargets.setEnabled(id, enabled);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'setDeployTargetEnabled',
+                targetUserId: null,
+                targetKey: id,
+                details: { enabled },
+            });
+            const list = await repositories.deployTargets.listTargets();
+            return list.find(t => t.id === id);
+        },
+
+        adminRemoveDeployTarget: async (_0: unknown, { id }: { id: string }, { user, repositories }: ApolloContext) => {
+            await repositories.deployTargets.removeTarget(id);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'removeDeployTarget',
+                targetUserId: null,
+                targetKey: id,
+                details: {},
+            });
+            return true;
         },
     },
 };

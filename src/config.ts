@@ -121,6 +121,17 @@ const config = {
         // Signs admin session tokens (own secret, isolated from the player session)
         jwt: { secret: env('ADMIN_JWT_SECRET') || (__DEV__ ? 'dev-only-insecure-admin-secret-change-me' : '') },
     },
+
+    // Deploy panel (admin): compares each app's running /version against the branch on GitHub.
+    deploy: {
+        // Repo "owner/name" (e.g. xonarin/game) and branch the apps are deployed from
+        githubRepo: env('GITHUB_REPO'),
+        githubBranch: env('GITHUB_BRANCH') || 'plant',
+        // Token to read commits of a private repo (GitHub REST API)
+        githubToken: env('GITHUB_TOKEN'),
+        // Secret the admin uses to call each VPS deploy agent (phase 2)
+        agentSecret: env('DEPLOY_AGENT_SECRET') || (__DEV__ ? 'dev-only-deploy-agent-secret' : ''),
+    },
 };
 
 /** FreeKassa deposits need the merchant id and both secret words. */

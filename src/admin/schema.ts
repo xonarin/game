@@ -32,6 +32,34 @@ const typeDefs = /* GraphQL */ `
         createdAt: DateTime!
     }
 
+    type DeployTarget {
+        id: ID!
+        name: String!
+        role: String!
+        versionUrl: String!
+        deployUrl: String
+        enabled: Boolean!
+    }
+
+    type DeployTargetStatus {
+        id: ID!
+        name: String!
+        role: String!
+        enabled: Boolean!
+        reachable: Boolean!
+        deployedSha: String
+        behind: Int
+        migrationPending: Boolean!
+        sharedChanged: Boolean!
+    }
+
+    type DeployInfo {
+        branch: String!
+        latestSha: String
+        githubConfigured: Boolean!
+        targets: [DeployTargetStatus!]!
+    }
+
     type DashboardStats {
         usersTotal: Int!
         onlineNow: Int!
@@ -50,6 +78,7 @@ const typeDefs = /* GraphQL */ `
         adminDashboard: DashboardStats!
         adminAuthClients: [AuthClient!]!
         adminMaintenance: Boolean!
+        adminDeploy: DeployInfo!
     }
 
     type Mutation {
@@ -59,6 +88,9 @@ const typeDefs = /* GraphQL */ `
         adminSetAuthClientEnabled(id: ID!, enabled: Boolean!): AuthClient!
         adminRemoveAuthClient(id: ID!): Boolean!
         adminSetMaintenance(on: Boolean!): Boolean!
+        adminAddDeployTarget(name: String!, role: String!, versionUrl: String!, deployUrl: String): DeployTarget!
+        adminSetDeployTargetEnabled(id: ID!, enabled: Boolean!): DeployTarget!
+        adminRemoveDeployTarget(id: ID!): Boolean!
     }
 `;
 

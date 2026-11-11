@@ -7,6 +7,7 @@ const NAV = [
     { to: '/users', label: 'Пользователи' },
     { to: '/settings', label: 'Настройки' },
     { to: '/domains', label: 'Домены' },
+    { to: '/deploy', label: 'Деплой' },
 ];
 
 interface LayoutProps {
