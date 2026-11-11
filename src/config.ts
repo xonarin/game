@@ -82,6 +82,20 @@ const config = {
             webhookSecret: env('TELEGRAM_WEBHOOK_SECRET'),
         },
 
+        // Central auth service (plant-auth): when `url` is set, /login routes through the broker
+        // (/auth/go -> auth service -> /auth/callback) instead of the site's own providers.
+        authService: {
+            // Public URL the browser is redirected to for login.
+            url: env('AUTH_SERVICE_URL') || (__DEV__ ? 'http://localhost:3300' : ''),
+            // Server-to-server URL for the /verify code exchange.
+            internalUrl:
+                env('AUTH_SERVICE_INTERNAL_URL') ||
+                env('AUTH_SERVICE_URL') ||
+                (__DEV__ ? 'http://localhost:3300' : ''),
+            // Shared secret for /verify; must match the auth service's AUTH_SHARED_SECRET.
+            sharedSecret: env('AUTH_SHARED_SECRET') || (__DEV__ ? 'dev-only-insecure-auth-shared-secret' : ''),
+        },
+
         // Local test login (/auth/dev), only works in development builds
         devLogin: process.env.DEV_LOGIN === '1',
 

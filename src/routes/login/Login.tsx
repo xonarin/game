@@ -57,6 +57,11 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
 
     const hasProviders = providers.vk || providers.google || providers.steam || Boolean(providers.telegramBot);
 
+    // When the central auth service is configured, every method goes through the broker
+    // (/auth/go -> auth service). Otherwise the site's own provider routes are used.
+    const broker = Boolean(providers.authServiceUrl);
+    const href = (type: string) => (broker ? `/auth/go?type=${type}` : `/auth/${type}`);
+
     return (
         <div className={cnLogin()}>
             <div className={cnLogin('Card')}>
@@ -66,19 +71,19 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
                 {error && <div className={cnLogin('Error')}>{ERROR_TEXT[error] || 'Не удалось войти.'}</div>}
 
                 {providers.vk && (
-                    <a className={cnLogin('Vk')} href="/auth/vk">
+                    <a className={cnLogin('Vk')} href={href('vk')}>
                         Войти через VK ID
                     </a>
                 )}
 
                 {providers.google && (
-                    <a className={cnLogin('Google')} href="/auth/google">
+                    <a className={cnLogin('Google')} href={href('google')}>
                         Войти через Google
                     </a>
                 )}
 
                 {providers.steam && (
-                    <a className={cnLogin('Steam')} href="/auth/steam">
+                    <a className={cnLogin('Steam')} href={href('steam')}>
                         Войти через Steam
                     </a>
                 )}
@@ -87,12 +92,20 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
                     <div className={cnLogin('Divider')}>или</div>
                 )}
 
-                {providers.telegramBot && <TelegramWidget bot={providers.telegramBot} />}
+                {providers.telegramBot &&
+                    (broker ? (
+                        <a className={cnLogin('Telegram')} href="/auth/go?type=tg">
+                            Войти через Telegram
+                        </a>
+                    ) : (
+                        <TelegramWidget bot={providers.telegramBot} />
+                    ))}
 
                 {!hasProviders && <div className={cnLogin('Empty')}>Способы входа пока не настроены.</div>}
 
                 {providers.dev && (
-                    <form className={cnLogin('Dev')} method="get" action="/auth/dev">
+                    <form className={cnLogin('Dev')} method="get" action={broker ? '/auth/go' : '/auth/dev'}>
+                        {broker && <input type="hidden" name="type" value="dev" />}
                         <input
                             className={cnLogin('DevInput')}
                             name="user"

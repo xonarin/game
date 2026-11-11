@@ -20,6 +20,7 @@ export interface AppContextTypes {
         telegramBot: string | null;
         telegramChannel: string | null;
         dev: boolean;
+        authServiceUrl: string | null;
     };
 }
 

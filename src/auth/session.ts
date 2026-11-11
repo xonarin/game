@@ -28,6 +28,19 @@ export interface SocialProfile {
     avatar: string;
 }
 
+/** Signs a session JWT for `userId` and sets it as the site session cookie. */
+export const issueSessionCookie = (req: Request, res: Response, userId: string) => {
+    const token = jwt.sign({ id: userId }, config.auth.jwt.secret, { expiresIn: SESSION_TTL_SECONDS });
+    res.cookie(config.auth.tokenKey, token, {
+        maxAge: 1000 * SESSION_TTL_SECONDS,
+        // Not readable from JavaScript: an XSS cannot steal the session. The WebSocket
+        // server reads the same cookie from the upgrade request (see getWebSocketUser).
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: isSecureRequest(req),
+    });
+};
+
 /**
  * Finds or registers the user by social account, sets the session cookie
  * and applies the referral link (refId cookie) for newly registered users.
@@ -45,15 +58,7 @@ export const signIn = async (req: Request, res: Response, profile: SocialProfile
         await repositories.users.linkTelegram(user.id, profile.socialId);
     }
 
-    const token = jwt.sign({ id: user.id }, config.auth.jwt.secret, { expiresIn: SESSION_TTL_SECONDS });
-    res.cookie(config.auth.tokenKey, token, {
-        maxAge: 1000 * SESSION_TTL_SECONDS,
-        // Not readable from JavaScript: an XSS cannot steal the session. The WebSocket
-        // server reads the same cookie from the upgrade request (see getWebSocketUser).
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: isSecureRequest(req),
-    });
+    issueSessionCookie(req, res, user.id);
 
     const { refId } = req.cookies;
     if (refId && isRegistered) {

@@ -33,3 +33,4 @@ yarn-error.log*
 
 # Local secrets (docker compose)
 .env
+graphify-out/
