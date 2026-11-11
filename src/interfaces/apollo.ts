@@ -12,6 +12,8 @@ export interface ApolloContext extends ApolloUserContext {
     req?: Request;
     res?: Response;
     repositories: Repositories;
+    // Present for server-to-server callers (plant-auth) that send `X-Service-Token`.
+    serviceToken?: string;
 }
 
 export interface ClientStateContext {

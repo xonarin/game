@@ -34,6 +34,13 @@ const config = {
     // Redis, e.g. redis://:password@host:6379
     redisUrl: env('REDIS_URL') || 'redis://localhost:6379',
 
+    // Internal service API: the central auth service (plant-auth) resolves/creates users here,
+    // over GraphQL, authenticated with this shared token (header `X-Service-Token`). It has no
+    // direct DB access. Empty token = the service operations are disabled (rejected).
+    service: {
+        token: env('SERVICE_API_TOKEN') || (__DEV__ ? 'dev-only-insecure-service-api-token' : ''),
+    },
+
     // Authentication
     auth: {
         tokenKey: process.env.TOKEN_KEY || 'idToken',

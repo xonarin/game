@@ -1,0 +1,15 @@
+# Internal service API, consumed server-to-server by the central auth service (plant-auth)
+# over the shared /graphql endpoint, authenticated with `X-Service-Token` (see isService rule).
+# plant-auth runs the social providers and has no DB access; it resolves users through here.
+
+type ResolveSocialUserPayload {
+    id: ID!
+    username: String!
+    avatar: String!
+    isNew: Boolean!
+}
+
+type Mutation {
+    # Finds the user for this social identity or registers a new one.
+    serviceResolveSocialUser(type: String!, socialId: String!, username: String!, avatar: String!): ResolveSocialUserPayload!
+}
