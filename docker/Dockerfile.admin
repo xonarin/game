@@ -1,0 +1,16 @@
+# Admin (GraphQL backend + Gravity UI SPA) production image.
+# docker build -f docker/Dockerfile.admin --build-arg GIT_SHA=$(git rev-parse HEAD) -t playtime-admin .
+FROM node:24-bookworm-slim
+WORKDIR /app
+ARG GIT_SHA=""
+ENV GIT_SHA=$GIT_SHA
+ENV NODE_ENV=production
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 600000
+COPY . .
+# Generated GraphQL types (the shared data layer imports them)
+RUN yarn codegen
+# Build the admin SPA (its own package.json)
+RUN cd src/admin/client && yarn install --frozen-lockfile --network-timeout 600000 && yarn build
+EXPOSE 3200
+CMD ["node_modules/.bin/babel-node", "--extensions", ".ts,.tsx", "src/admin/server.ts"]

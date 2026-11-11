@@ -11,6 +11,7 @@ export interface TargetStatus {
     behind: number | null;
     migrationPending: boolean;
     sharedChanged: boolean;
+    hasAgent: boolean;
 }
 
 export interface DeployInfo {
@@ -104,6 +105,7 @@ export const getDeployInfo = async (targets: DeployTarget[]): Promise<DeployInfo
                 behind,
                 migrationPending,
                 sharedChanged,
+                hasAgent: Boolean(target.deployUrl),
             };
         }),
     );

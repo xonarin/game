@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { Button, Flex, Label, Spin, Switch, Table, Text, TextInput } from '@gravity-ui/uikit';
+import { Button, Dialog, Flex, Label, Spin, Switch, Table, Text, TextInput } from '@gravity-ui/uikit';
 
 const MAINTENANCE = gql`
     query AdminMaintenance {
@@ -24,7 +24,18 @@ const DEPLOY = gql`
                 behind
                 migrationPending
                 sharedChanged
+                hasAgent
             }
+        }
+    }
+`;
+
+const TRIGGER_DEPLOY = gql`
+    mutation TriggerDeploy($id: ID!) {
+        adminTriggerDeploy(id: $id) {
+            ok
+            output
+            error
         }
     }
 `;
@@ -68,6 +79,7 @@ interface TargetStatus {
     behind: number | null;
     migrationPending: boolean;
     sharedChanged: boolean;
+    hasAgent: boolean;
 }
 
 const short = (sha: string | null) => (sha ? sha.slice(0, 7) : '—');
@@ -79,6 +91,12 @@ export default function Deploy() {
     const [addTarget, { loading: adding }] = useMutation(ADD_TARGET);
     const [setEnabled] = useMutation(SET_TARGET_ENABLED);
     const [remove] = useMutation(REMOVE_TARGET);
+    const [trigger, { loading: deploying }] = useMutation(TRIGGER_DEPLOY);
+
+    const [confirmTarget, setConfirmTarget] = useState<TargetStatus | null>(null);
+    const [result, setResult] = useState<{ name: string; ok: boolean; output: string | null; error: string | null } | null>(
+        null,
+    );
 
     const [name, setName] = useState('');
     const [role, setRole] = useState('game');
@@ -115,6 +133,16 @@ export default function Deploy() {
 
     const onRemove = async (t: TargetStatus) => {
         await remove({ variables: { id: t.id } });
+        await deployQ.refetch();
+    };
+
+    const runDeploy = async () => {
+        if (!confirmTarget) return;
+        const t = confirmTarget;
+        setConfirmTarget(null);
+        const res = await trigger({ variables: { id: t.id } });
+        const r = res.data?.adminTriggerDeploy;
+        setResult({ name: t.name, ok: Boolean(r?.ok), output: r?.output ?? null, error: r?.error ?? null });
         await deployQ.refetch();
     };
 
@@ -156,9 +184,16 @@ export default function Deploy() {
             id: 'actions',
             name: '',
             template: (t: TargetStatus) => (
-                <Button size="s" view="flat-danger" onClick={() => onRemove(t)}>
-                    Удалить
-                </Button>
+                <Flex gap={2}>
+                    {t.hasAgent && (
+                        <Button size="s" view="action" onClick={() => setConfirmTarget(t)} loading={deploying}>
+                            Обновить
+                        </Button>
+                    )}
+                    <Button size="s" view="flat-danger" onClick={() => onRemove(t)}>
+                        Удалить
+                    </Button>
+                </Flex>
             ),
         },
     ];
@@ -223,6 +258,58 @@ export default function Deploy() {
                     </Button>
                 </Flex>
             </Flex>
+
+            {/* Confirm deploy */}
+            <Dialog open={Boolean(confirmTarget)} onClose={() => setConfirmTarget(null)}>
+                <Dialog.Header caption="Запустить деплой?" />
+                <Dialog.Body>
+                    <Flex direction="column" gap={2}>
+                        <Text>
+                            Обновить <b>{confirmTarget?.name}</b> ({confirmTarget?.role})?
+                        </Text>
+                        {confirmTarget?.role === 'game' && (
+                            <Text color="warning">
+                                На время деплоя игры сайт закрывается (режим техработ); после — откроется, незавершённые
+                                игры сохранятся.
+                            </Text>
+                        )}
+                        {confirmTarget?.migrationPending && (
+                            <Text color="danger">Внимание: есть миграция — применяется отдельно, с бэкапом.</Text>
+                        )}
+                    </Flex>
+                </Dialog.Body>
+                <Dialog.Footer
+                    onClickButtonCancel={() => setConfirmTarget(null)}
+                    onClickButtonApply={runDeploy}
+                    textButtonApply="Запустить"
+                    textButtonCancel="Отмена"
+                    propsButtonApply={{ loading: deploying }}
+                />
+            </Dialog>
+
+            {/* Deploy result */}
+            <Dialog open={Boolean(result)} onClose={() => setResult(null)}>
+                <Dialog.Header caption={result ? `Деплой ${result.name}: ${result.ok ? 'успех' : 'ошибка'}` : ''} />
+                <Dialog.Body>
+                    {result?.error && <Text color="danger">{result.error}</Text>}
+                    {result?.output && (
+                        <pre
+                            style={{
+                                maxHeight: 320,
+                                overflow: 'auto',
+                                whiteSpace: 'pre-wrap',
+                                background: 'var(--g-color-base-generic)',
+                                padding: 12,
+                                borderRadius: 8,
+                                fontSize: 12,
+                            }}
+                        >
+                            {result.output}
+                        </pre>
+                    )}
+                </Dialog.Body>
+                <Dialog.Footer onClickButtonApply={() => setResult(null)} textButtonApply="Закрыть" />
+            </Dialog>
         </Flex>
     );
 }

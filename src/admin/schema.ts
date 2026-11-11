@@ -51,6 +51,7 @@ const typeDefs = /* GraphQL */ `
         behind: Int
         migrationPending: Boolean!
         sharedChanged: Boolean!
+        hasAgent: Boolean!
     }
 
     type DeployInfo {
@@ -58,6 +59,12 @@ const typeDefs = /* GraphQL */ `
         latestSha: String
         githubConfigured: Boolean!
         targets: [DeployTargetStatus!]!
+    }
+
+    type DeployResult {
+        ok: Boolean!
+        output: String
+        error: String
     }
 
     type DashboardStats {
@@ -91,6 +98,7 @@ const typeDefs = /* GraphQL */ `
         adminAddDeployTarget(name: String!, role: String!, versionUrl: String!, deployUrl: String): DeployTarget!
         adminSetDeployTargetEnabled(id: ID!, enabled: Boolean!): DeployTarget!
         adminRemoveDeployTarget(id: ID!): Boolean!
+        adminTriggerDeploy(id: ID!): DeployResult!
     }
 `;
 

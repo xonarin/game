@@ -1,0 +1,13 @@
+# Auth broker production image.
+# docker build -f docker/Dockerfile.auth --build-arg GIT_SHA=$(git rev-parse HEAD) -t playtime-auth .
+FROM node:24-bookworm-slim
+WORKDIR /app
+ARG GIT_SHA=""
+ENV GIT_SHA=$GIT_SHA
+ENV NODE_ENV=production
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 600000
+COPY . .
+RUN yarn codegen
+EXPOSE 3300
+CMD ["node_modules/.bin/babel-node", "--extensions", ".ts,.tsx", "src/authservice/server.ts"]

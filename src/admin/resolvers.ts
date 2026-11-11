@@ -2,6 +2,7 @@ import { GraphQLDateTime } from 'graphql-scalars';
 import { allow, rule, shield } from 'graphql-shield';
 
 import { ApolloContext } from '../interfaces/apollo';
+import config from '../config';
 import { database } from '../data/database';
 import { User, UserRole } from '../data/models/User';
 import { PaymentStatus } from '../data/models/UserPayment';
@@ -30,6 +31,7 @@ export const permissions = shield(
         DeployTarget: allow,
         DeployTargetStatus: allow,
         DeployInfo: allow,
+        DeployResult: allow,
         Query: { '*': isAdmin },
         Mutation: { '*': isAdmin },
     },
@@ -252,6 +254,40 @@ export const resolvers = {
                 details: {},
             });
             return true;
+        },
+
+        adminTriggerDeploy: async (_0: unknown, { id }: { id: string }, { user, repositories }: ApolloContext) => {
+            const targets = await repositories.deployTargets.listTargets();
+            const target = targets.find(t => t.id === id);
+            if (!target) {
+                return { ok: false, output: null, error: 'Таргет не найден' };
+            }
+            if (!target.deployUrl) {
+                return { ok: false, output: null, error: 'У таргета не задан deployUrl (адрес агента)' };
+            }
+
+            let result: { ok: boolean; output: string | null; error: string | null };
+            try {
+                const resp = await fetch(`${target.deployUrl}/deploy`, {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json', 'x-deploy-secret': config.deploy.agentSecret },
+                    body: '{}',
+                });
+                const body = (await resp.json()) as { ok?: boolean; output?: string; error?: string };
+                result = { ok: Boolean(body.ok), output: body.output ?? null, error: body.error ?? null };
+            } catch (e) {
+                result = { ok: false, output: null, error: String((e as Error).message || e) };
+            }
+
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'triggerDeploy',
+                targetUserId: null,
+                targetKey: target.name,
+                details: { ok: result.ok, error: result.error },
+            });
+
+            return result;
         },
     },
 };

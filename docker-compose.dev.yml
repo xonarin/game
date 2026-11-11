@@ -149,6 +149,28 @@ services:
       app:
         condition: service_started
 
+  # Deploy agent (src/deployagent): in production one runs on each VPS behind the private network
+  # and executes the real deploy script. Here it runs a harmless command to test the button->agent loop.
+  deployagent:
+    image: node:24-bookworm-slim
+    working_dir: /app
+    environment:
+      DEPLOY_AGENT_PORT: "9000"
+      DEPLOY_AGENT_SECRET: ${DEPLOY_AGENT_SECRET:-dev-only-deploy-agent-secret}
+      DEPLOY_APP: game
+      DEPLOY_COMMAND: "${DEPLOY_COMMAND:-echo dev-agent deploy simulated OK}"
+    command: >
+      sh -c "until [ -x node_modules/.bin/babel-node ]; do sleep 3; done;
+      BABEL_DISABLE_CACHE=1 node_modules/.bin/babel-node --extensions '.ts,.tsx' src/deployagent/server.ts"
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+      - node-modules-24:/app/node_modules
+    depends_on:
+      app:
+        condition: service_started
+
   # Public HTTPS address for the local app (needed for the Telegram login widget).
   # Start with: docker compose -f docker-compose.dev.yml --profile tunnel up -d
   # Needs CLOUDFLARE_TUNNEL_TOKEN in .env; public hostname -> http://app:3000 in Cloudflare.

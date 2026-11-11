@@ -1,0 +1,12 @@
+# Game (SSR) production image. Build: docker build -f docker/Dockerfile.game --build-arg GIT_SHA=$(git rev-parse HEAD) -t playtime-game .
+FROM node:24-bookworm-slim
+WORKDIR /app
+ARG GIT_SHA=""
+ENV GIT_SHA=$GIT_SHA
+ENV NODE_ENV=production
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 600000
+COPY . .
+RUN yarn codegen && yarn build
+EXPOSE 3000
+CMD ["yarn", "serve"]
