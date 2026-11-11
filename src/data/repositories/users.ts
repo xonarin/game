@@ -2,7 +2,7 @@ import { DateTime, DateTimeUnit } from 'luxon';
 import { col, fn, Op, Transaction } from 'sequelize';
 
 import BaseRepository from './base';
-import { RefStatus, SocialType, User } from '../models/User';
+import { RefStatus, SocialType, User, UserRole } from '../models/User';
 import { UserError } from '../../utils/errors';
 import { GraphDataEntry, Referral, RefStatsPeriod } from '../../__generated__/graphql';
 import { generateRandomNumbers, generateSeed } from '../../utils/crypto';
@@ -440,6 +440,55 @@ class UsersRepository extends BaseRepository {
             const user = await this.getUserByIdStrict(userId, transaction);
             await user.update({ telegramId }, { transaction });
         });
+    }
+
+    /** Admin panel: set a user's role. */
+    async setRole(userId: string, role: UserRole): Promise<void> {
+        // Raw UPDATE avoids the model's `id` getter (which assumes a non-null value) that
+        // Sequelize triggers when serializing attributes during a model .update().
+        await this.db.sequelize.query('UPDATE `User` SET `role` = :role WHERE `id` = :id', {
+            replacements: { role, id: userId },
+        });
+    }
+
+    /** Admin panel: add/subtract from a user's balance (floored at 0), publishing the new balance. */
+    async adminAdjustMoney(userId: string, delta: number): Promise<User> {
+        return this.db.sequelize.transaction(async tr => {
+            const user = await this.getUserByIdStrict(userId, tr);
+            const newMoney = Math.max(0, user.money + delta);
+            await user.update({ money: newMoney }, { transaction: tr });
+            const newUser: User = await user.reload({ transaction: tr });
+
+            pubsub.publish('balance', { userId, money: newUser.money, maxReached: false }).then();
+
+            return newUser;
+        });
+    }
+
+    /** Admin panel: paginated user list with optional search over username / socialId / numeric id. */
+    async adminListUsers(
+        search: string | undefined,
+        limit: number,
+        offset: number,
+    ): Promise<{ rows: User[]; count: number }> {
+        const where: Record<symbol, unknown> = {};
+        const term = (search || '').trim();
+        if (term) {
+            where[Op.or] = [
+                { username: { [Op.like]: `%${term}%` } },
+                { socialId: { [Op.like]: `%${term}%` } },
+                ...(/^\d+$/.test(term) ? [{ id: Number(term) }] : []),
+            ];
+        }
+
+        const { rows, count } = await this.db.User.findAndCountAll({
+            where,
+            limit,
+            offset,
+            order: [['id', 'DESC']],
+        });
+
+        return { rows, count };
     }
 }
 

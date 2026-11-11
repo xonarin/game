@@ -84,7 +84,15 @@ app.use(
         credentialsRequired: false,
         // keep the decoded token on req.user (the rest of the app reads it from there)
         requestProperty: 'user',
-        getToken: req => req.cookies[config.auth.tokenKey],
+        // Session cookie for browsers; `Authorization: Bearer <jwt>` for server-to-server
+        // clients such as the plant-admin BFF, which forwards the admin's game session token.
+        getToken: req => {
+            const header = req.headers.authorization;
+            if (header && header.startsWith('Bearer ')) {
+                return header.slice('Bearer '.length).trim();
+            }
+            return req.cookies[config.auth.tokenKey];
+        },
     }),
 );
 

@@ -85,6 +85,53 @@ class SettingsRepository extends BaseRepository {
     async getSettingAsString(name: SettingName) {
         return (await this.getSetting(name)).asString();
     }
+
+    /** All known settings (admin panel): stored value merged with the built-in defaults/descriptions. */
+    async getAllSettings(): Promise<{ name: string; value: string | null; description: string | null }[]> {
+        const rows: Setting[] = await this.db.Setting.findAll();
+        const byName = new Map(rows.map(row => [row.name, row]));
+
+        return (Object.keys(defaultSettings) as SettingName[]).map(name => {
+            const row = byName.get(name);
+            const [defValue, defDescription] = defaultSettings[name];
+
+            let value = defValue;
+            if (row) {
+                value = row.value.isNull() ? null : row.value.asString();
+            }
+
+            return {
+                name,
+                value,
+                description: row ? row.description : defDescription,
+            };
+        });
+    }
+
+    /** Admin panel: update a known setting's value (creates the row with its default description if missing). */
+    async setSetting(
+        name: string,
+        value: string,
+    ): Promise<{ name: string; value: string | null; description: string | null }> {
+        if (!(name in defaultSettings)) {
+            throw new Error(`Unknown setting '${name}'`);
+        }
+        const settingName = name as SettingName;
+        const [, defDescription] = defaultSettings[settingName];
+
+        const existing: Setting | null = await this.db.Setting.findByPk(settingName, {
+            ...this.sequelizeContext,
+            rejectOnEmpty: false,
+        });
+
+        if (existing) {
+            await existing.update({ value });
+            return { name, value, description: existing.description };
+        }
+
+        await this.db.Setting.create({ name: settingName, value, description: defDescription });
+        return { name, value, description: defDescription };
+    }
 }
 
 export default SettingsRepository;
