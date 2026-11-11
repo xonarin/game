@@ -21,6 +21,7 @@ export interface AppContextTypes {
         telegramChannel: string | null;
         dev: boolean;
         authServiceUrl: string | null;
+        origin: string | null;
     };
 }
 

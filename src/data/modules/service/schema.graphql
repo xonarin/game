@@ -12,6 +12,9 @@ type ResolveSocialUserPayload {
 type Query {
     # Is this origin on the broker allowlist ("Домены", managed in the admin panel)?
     serviceIsAllowedOrigin(origin: String!): Boolean!
+    # Does `secret` match the per-domain secret of this (enabled) client? Timing-safe; the stored
+    # secret never leaves the game. Used by plant-auth /verify to bind a code to its client.
+    serviceVerifyClientSecret(origin: String!, secret: String!): Boolean!
 }
 
 type Mutation {

@@ -15,6 +15,7 @@ const toSocialType = (value: string): SocialType => {
 export const rules: IRules = {
     Query: {
         serviceIsAllowedOrigin: isService,
+        serviceVerifyClientSecret: isService,
     },
     Mutation: {
         serviceResolveSocialUser: isService,
@@ -25,6 +26,12 @@ export const resolvers = {
     Query: {
         serviceIsAllowedOrigin: (_0: unknown, { origin }: { origin: string }, { repositories }: ApolloContext) =>
             repositories.authClients.isAllowed(origin),
+
+        serviceVerifyClientSecret: (
+            _0: unknown,
+            { origin, secret }: { origin: string; secret: string },
+            { repositories }: ApolloContext,
+        ) => repositories.authClients.verifySecret(origin, secret),
     },
     Mutation: {
         serviceResolveSocialUser: async (

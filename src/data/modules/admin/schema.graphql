@@ -56,7 +56,8 @@ type Query {
 type Mutation {
     adminAdjustBalance(userId: ID!, amount: Float!, reason: String): AdminUser!
     adminUpdateSetting(name: String!, value: String!): AdminSetting!
-    adminAddAuthClient(origin: String!, label: String): AuthClient!
+    adminAddAuthClient(origin: String!, label: String, secret: String): AuthClient!
     adminSetAuthClientEnabled(id: ID!, enabled: Boolean!): AuthClient!
+    adminSetAuthClientSecret(id: ID!, secret: String): AuthClient!
     adminRemoveAuthClient(id: ID!): Boolean!
 }

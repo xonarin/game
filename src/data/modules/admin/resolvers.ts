@@ -7,6 +7,7 @@ import { PaymentStatus } from '../../models/UserPayment';
 import { WithdrawStatus } from '../../models/UserWithdraw';
 import { UserError } from '../../../utils/errors';
 import { getOnline } from '../../../services/LiveData/LiveDataStorage';
+import { isValidOrigin } from '../../repositories/authClients';
 import { isAdmin } from '../rules';
 
 const num = (value: number | null | undefined): number => value || 0;
@@ -30,6 +31,7 @@ export const rules: IRules = {
         adminUpdateSetting: isAdmin,
         adminAddAuthClient: isAdmin,
         adminSetAuthClientEnabled: isAdmin,
+        adminSetAuthClientSecret: isAdmin,
         adminRemoveAuthClient: isAdmin,
     },
 };
@@ -138,18 +140,41 @@ export const resolvers = {
 
         adminAddAuthClient: async (
             _0: unknown,
-            { origin, label }: { origin: string; label?: string },
+            { origin, label, secret }: { origin: string; label?: string; secret?: string },
             { user, repositories }: ApolloContext,
         ) => {
-            const client = await repositories.authClients.addClient(origin, label);
+            // Reject anything that is not a plain http(s) origin (no path/query) — the allowlist
+            // must not become an open-redirect target.
+            if (!isValidOrigin(origin)) {
+                throw new UserError('INVALID_ORIGIN');
+            }
+            const client = await repositories.authClients.addClient(origin, label, secret);
             await database.AdminAction.create({
                 adminId: user!.id,
                 action: 'addAuthClient',
                 targetUserId: null,
                 targetKey: client.origin,
-                details: { label: label || null },
+                details: { label: label || null, hasSecret: Boolean(secret) },
             });
             return client;
+        },
+
+        adminSetAuthClientSecret: async (
+            _0: unknown,
+            { id, secret }: { id: string; secret?: string },
+            { user, repositories }: ApolloContext,
+        ) => {
+            await repositories.authClients.setSecret(id, secret || null);
+            await database.AdminAction.create({
+                adminId: user!.id,
+                action: 'setAuthClientSecret',
+                targetUserId: null,
+                targetKey: id,
+                // Never store the secret itself in the audit — only whether one was set.
+                details: { hasSecret: Boolean(secret) },
+            });
+            const list = await repositories.authClients.listClients();
+            return list.find(c => c.id === id);
         },
 
         adminSetAuthClientEnabled: async (

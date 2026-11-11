@@ -1,6 +1,6 @@
 /**
- * Telegram Login Widget (https://core.telegram.org/widgets/login).
- * The widget (rendered on /login) redirects to /auth/telegram/return with
+ * Telegram account linking for the bonus (NOT social login — that lives in plant-auth).
+ * The Telegram Login Widget on the bonus page redirects to /auth/telegram/link with
  * id, first_name, last_name, username, photo_url, auth_date, hash.
  * Verification: hash = hex(HMAC_SHA256(data_check_string, SHA256(bot_token))),
  * where data_check_string = all other fields as "key=value", sorted, joined by "\n".
@@ -9,12 +9,11 @@ import crypto from 'crypto';
 import { Express, Request } from 'express';
 
 import config from '../config';
-import { SocialType } from '../data/models/User';
 import { repositories } from '../data/database';
 import { UserError } from '../utils/errors';
-import { getDefaultAvatar, signIn } from './session';
 
-const MAX_AUTH_AGE_SECONDS = 60 * 60 * 24; // reject logins older than 1 day
+const MAX_AUTH_AGE_SECONDS = 5 * 60; // reject data older than 5 minutes
+const MAX_CLOCK_SKEW_SECONDS = 60; // tolerance for auth_date slightly in the future
 
 export const isTelegramEnabled = () => Boolean(config.auth.telegram.botToken && config.auth.telegram.botUsername);
 
@@ -40,7 +39,10 @@ export const verifyTelegramAuth = (
     if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
 
     const authDate = Number(fields.auth_date);
-    return Number.isFinite(authDate) && nowSeconds - authDate <= MAX_AUTH_AGE_SECONDS;
+    if (!Number.isFinite(authDate)) return false;
+    const age = nowSeconds - authDate;
+    // Reject data that is too old (replay) or dated in the future beyond a small skew.
+    return age <= MAX_AUTH_AGE_SECONDS && age >= -MAX_CLOCK_SKEW_SECONDS;
 };
 
 const readAuthData = (req: Request): TelegramAuthData => {
@@ -51,36 +53,7 @@ const readAuthData = (req: Request): TelegramAuthData => {
     return data;
 };
 
-export const initTelegram = (app: Express) => {
-    app.get('/auth/telegram/return', async (req, res, next) => {
-        try {
-            if (!isTelegramEnabled()) {
-                res.redirect('/login?error=telegram_disabled');
-                return;
-            }
-
-            const data = readAuthData(req);
-            if (!verifyTelegramAuth(data, config.auth.telegram.botToken)) {
-                console.error('[telegram] invalid or expired auth data for id', data.id);
-                res.redirect('/login?error=telegram');
-                return;
-            }
-
-            const name = [data.first_name, data.last_name].filter(Boolean).join(' ');
-            await signIn(req, res, {
-                socialType: SocialType.Telegram,
-                socialId: data.id,
-                username: name || data.username || `tg${data.id}`,
-                avatar:
-                    data.photo_url && data.photo_url.startsWith('https://') ? data.photo_url : getDefaultAvatar(req),
-            });
-
-            res.redirect('/');
-        } catch (e) {
-            next(e);
-        }
-    });
-
+export const initTelegramLink = (app: Express) => {
     // Connect a Telegram account to the already-logged-in user (for the bonus), regardless of
     // how they signed in. The Telegram login widget on the bonus page posts here.
     app.get('/auth/telegram/link', async (req, res, next) => {

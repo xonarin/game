@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import useStyles from 'isomorphic-style-loader/useStyles';
 
 import s from './Login.scss';
@@ -8,43 +8,8 @@ import { AppContextTypes } from '../../context';
 const cnLogin = cn(s, 'Login');
 
 const ERROR_TEXT: Record<string, string> = {
-    vk: 'Не удалось войти через VK ID. Попробуйте ещё раз.',
-    vk_disabled: 'Вход через VK ID пока не настроен.',
-    google: 'Не удалось войти через Google. Попробуйте ещё раз.',
-    google_disabled: 'Вход через Google пока не настроен.',
-    steam: 'Не удалось войти через Steam. Попробуйте ещё раз.',
-    steam_disabled: 'Вход через Steam пока не настроен.',
-    telegram: 'Не удалось подтвердить вход через Telegram. Попробуйте ещё раз.',
-    telegram_disabled: 'Вход через Telegram пока не настроен.',
-};
-
-interface TelegramWidgetProps {
-    bot: string;
-}
-
-/** Official Telegram Login Widget; it redirects to /auth/telegram/return on success. */
-const TelegramWidget: React.FC<TelegramWidgetProps> = ({ bot }) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const container = ref.current;
-        if (!container) return undefined;
-
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://telegram.org/js/telegram-widget.js?22';
-        script.setAttribute('data-telegram-login', bot);
-        script.setAttribute('data-size', 'large');
-        script.setAttribute('data-radius', '8');
-        script.setAttribute('data-auth-url', `${window.location.origin}/auth/telegram/return`);
-        container.appendChild(script);
-
-        return () => {
-            container.innerHTML = '';
-        };
-    }, [bot]);
-
-    return <div ref={ref} className={cnLogin('Telegram')} />;
+    auth: 'Не удалось войти. Попробуйте ещё раз.',
+    not_admin: 'Этот аккаунт не является администратором.',
 };
 
 export interface LoginProps {
@@ -55,12 +20,22 @@ export interface LoginProps {
 const Login: React.FC<LoginProps> = ({ providers, error }) => {
     useStyles(s);
 
-    const hasProviders = providers.vk || providers.google || providers.steam || Boolean(providers.telegramBot);
+    // Social login goes entirely through the central auth service (plant-auth): each button
+    // links straight to the broker, which runs the providers and redirects back to /auth/callback.
+    const authServiceUrl = providers.authServiceUrl;
+    const origin = providers.origin || (typeof window !== 'undefined' ? window.location.origin : '');
+    const go = (type: string) => `${authServiceUrl}/go?from=${encodeURIComponent(origin)}&type=${type}`;
 
-    // When the central auth service is configured, every method goes through the broker
-    // (/auth/go -> auth service). Otherwise the site's own provider routes are used.
-    const broker = Boolean(providers.authServiceUrl);
-    const href = (type: string) => (broker ? `/auth/go?type=${type}` : `/auth/${type}`);
+    if (!authServiceUrl) {
+        return (
+            <div className={cnLogin()}>
+                <div className={cnLogin('Card')}>
+                    <h1 className={cnLogin('Title')}>Вход</h1>
+                    <div className={cnLogin('Empty')}>Способы входа пока не настроены.</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={cnLogin()}>
@@ -70,42 +45,23 @@ const Login: React.FC<LoginProps> = ({ providers, error }) => {
 
                 {error && <div className={cnLogin('Error')}>{ERROR_TEXT[error] || 'Не удалось войти.'}</div>}
 
-                {providers.vk && (
-                    <a className={cnLogin('Vk')} href={href('vk')}>
-                        Войти через VK ID
-                    </a>
-                )}
-
-                {providers.google && (
-                    <a className={cnLogin('Google')} href={href('google')}>
-                        Войти через Google
-                    </a>
-                )}
-
-                {providers.steam && (
-                    <a className={cnLogin('Steam')} href={href('steam')}>
-                        Войти через Steam
-                    </a>
-                )}
-
-                {(providers.vk || providers.google || providers.steam) && providers.telegramBot && (
-                    <div className={cnLogin('Divider')}>или</div>
-                )}
-
-                {providers.telegramBot &&
-                    (broker ? (
-                        <a className={cnLogin('Telegram')} href="/auth/go?type=tg">
-                            Войти через Telegram
-                        </a>
-                    ) : (
-                        <TelegramWidget bot={providers.telegramBot} />
-                    ))}
-
-                {!hasProviders && <div className={cnLogin('Empty')}>Способы входа пока не настроены.</div>}
+                <a className={cnLogin('Vk')} href={go('vk')}>
+                    Войти через VK ID
+                </a>
+                <a className={cnLogin('Google')} href={go('google')}>
+                    Войти через Google
+                </a>
+                <a className={cnLogin('Steam')} href={go('steam')}>
+                    Войти через Steam
+                </a>
+                <a className={cnLogin('Telegram')} href={go('tg')}>
+                    Войти через Telegram
+                </a>
 
                 {providers.dev && (
-                    <form className={cnLogin('Dev')} method="get" action={broker ? '/auth/go' : '/auth/dev'}>
-                        {broker && <input type="hidden" name="type" value="dev" />}
+                    <form className={cnLogin('Dev')} method="get" action={`${authServiceUrl}/go`}>
+                        <input type="hidden" name="type" value="dev" />
+                        <input type="hidden" name="from" value={origin} />
                         <input
                             className={cnLogin('DevInput')}
                             name="user"

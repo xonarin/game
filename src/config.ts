@@ -52,25 +52,10 @@ const config = {
         // (if empty, it is derived from the request host)
         publicUrl: env('PUBLIC_URL'),
 
-        // VK ID (OAuth 2.1 + PKCE), app from https://id.vk.com/about/business/go
-        vkid: {
-            appId: env('VKID_APP_ID'),
-        },
+        // Social login (VK ID, Google, Steam, Telegram) lives entirely in the central auth
+        // service (plant-auth). The game only keeps Telegram below for bonus account-linking.
 
-        // Google sign-in (OAuth 2.0 + PKCE), OAuth client from https://console.cloud.google.com/apis/credentials
-        // Authorized redirect URI: <PUBLIC_URL>/auth/google/return
-        google: {
-            clientId: env('GOOGLE_CLIENT_ID'),
-            clientSecret: env('GOOGLE_CLIENT_SECRET'),
-        },
-
-        // Steam sign-in (OpenID 2.0). The Web API key (https://steamcommunity.com/dev/apikey)
-        // is used to read the player name/avatar and gates whether the button is shown.
-        steam: {
-            apiKey: env('STEAM_API_KEY'),
-        },
-
-        // Telegram Login Widget: bot from @BotFather, domain linked via /setdomain
+        // Telegram: bot from @BotFather. Used for the bonus (channel check + account linking),
         telegram: {
             botToken: env('TELEGRAM_BOT_TOKEN'),
             // without "@" (the widget expects plain bot username)
@@ -92,8 +77,10 @@ const config = {
                 env('AUTH_SERVICE_INTERNAL_URL') ||
                 env('AUTH_SERVICE_URL') ||
                 (__DEV__ ? 'http://localhost:3300' : ''),
-            // Shared secret for /verify; must match the auth service's AUTH_SHARED_SECRET.
-            sharedSecret: env('AUTH_SHARED_SECRET') || (__DEV__ ? 'dev-only-insecure-auth-shared-secret' : ''),
+            // This site's per-domain /verify secret. Must equal the secret stored for this
+            // origin in the admin "Домены" (AuthClient.secret). In dev, falls back to the shared
+            // dev secret so local testing works without configuring a per-domain secret.
+            verifySecret: env('GAME_VERIFY_SECRET') || (__DEV__ ? 'dev-only-insecure-auth-shared-secret' : ''),
         },
 
         // Local test login (/auth/dev), only works in development builds

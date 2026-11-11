@@ -1,26 +1,24 @@
 import { Express } from 'express';
 
 import config from '../config';
-import { SocialType } from '../data/models/User';
 import { repositories } from '../data/database';
-import { initVkId, isVkIdEnabled } from './vkid';
-import { initTelegram, isTelegramEnabled } from './telegram';
-import { initGoogle, isGoogleEnabled } from './google';
-import { initSteam, isSteamEnabled } from './steam';
+import { initTelegramLink, isTelegramEnabled } from './telegram';
 import { isTelegramBonusEnabled } from '../utils/telegram';
-import { getDefaultAvatar, signIn, issueSessionCookie } from './session';
+import { issueSessionCookie } from './session';
 
 export interface AuthProviders {
     vk: boolean;
     google: boolean;
     steam: boolean;
+    // Bot username for the bonus-page Telegram widget (account linking), or null.
     telegramBot: string | null;
     // Public bonus channel username (without "@"), or null for a private/id-only channel.
     telegramChannel: string | null;
     dev: boolean;
-    // Central auth service URL; when set, the /login buttons go through the broker
-    // (/auth/go -> auth service -> /auth/callback) instead of the site's own routes.
+    // Central auth service URL; the /login buttons go to `${authServiceUrl}/go?from=<origin>&type=...`.
     authServiceUrl: string | null;
+    // This site's origin (for the broker `from` parameter), filled per request on the server.
+    origin: string | null;
 }
 
 export const isDevLoginEnabled = () => __DEV__ && config.auth.devLogin;
@@ -31,76 +29,32 @@ const getPublicBonusChannel = (): string | null => {
     return isTelegramBonusEnabled() && channel.startsWith('@') ? channel.slice(1) : null;
 };
 
-/** Which sign-in methods the /login page should offer. */
-export const getAuthProviders = (): AuthProviders => ({
-    vk: isVkIdEnabled(),
-    google: isGoogleEnabled(),
-    steam: isSteamEnabled(),
-    telegramBot: isTelegramEnabled() ? config.auth.telegram.botUsername : null,
-    telegramChannel: getPublicBonusChannel(),
-    dev: isDevLoginEnabled(),
-    authServiceUrl: config.auth.authService.url || null,
-});
-
-const initDevLogin = (app: Express) => {
-    if (!isDevLoginEnabled()) return;
-
-    // /auth/dev?user=alice -> local test user "alice" (created on first login)
-    app.get('/auth/dev', async (req, res, next) => {
-        try {
-            const name =
-                String(req.query.user || 'dev1')
-                    .replace(/[^a-zA-Z0-9_-]/g, '')
-                    .slice(0, 32) || 'dev1';
-
-            await signIn(req, res, {
-                socialType: SocialType.VK,
-                socialId: `dev-${name}`,
-                username: name,
-                avatar: getDefaultAvatar(req),
-            });
-            res.redirect('/');
-        } catch (e) {
-            next(e);
-        }
-    });
-
-    console.info('[auth] dev login enabled at /auth/dev');
+/**
+ * Which sign-in methods /login offers. Social login is handled entirely by the central auth
+ * service (plant-auth): the buttons link to the broker, which runs the providers. When a broker
+ * is configured the social buttons are shown and the broker rejects anything it does not offer.
+ */
+export const getAuthProviders = (origin?: string): AuthProviders => {
+    const brokerOn = Boolean(config.auth.authService.url);
+    return {
+        vk: brokerOn,
+        google: brokerOn,
+        steam: brokerOn,
+        telegramBot: isTelegramEnabled() ? config.auth.telegram.botUsername : null,
+        telegramChannel: getPublicBonusChannel(),
+        dev: isDevLoginEnabled(),
+        authServiceUrl: config.auth.authService.url || null,
+        origin: origin || null,
+    };
 };
 
 /**
- * Central auth service (plant-auth) integration. `/auth/go` sends the browser to the broker
- * (or to a local provider route when no broker is configured); `/auth/callback` exchanges the
- * one-time code the broker returns for the user and sets the site session.
+ * Central auth service (plant-auth) callback. The broker redirects here with a one-time ?code=,
+ * which we exchange server-to-server for the user and turn into our own site session. Social
+ * providers live only in plant-auth; the site never implements OAuth itself.
  */
 const initBroker = (app: Express) => {
     const svc = config.auth.authService;
-
-    app.get('/auth/go', (req, res) => {
-        const type = typeof req.query.type === 'string' ? req.query.type : '';
-        const user = typeof req.query.user === 'string' ? req.query.user : '';
-        if (!type) {
-            res.redirect('/login');
-            return;
-        }
-
-        // No broker configured: fall back to the site's own provider routes.
-        if (!svc.url) {
-            if (type === 'dev') {
-                res.redirect(`/auth/dev${user ? `?user=${encodeURIComponent(user)}` : ''}`);
-                return;
-            }
-            res.redirect(`/auth/${type === 'tg' ? 'telegram' : type}`);
-            return;
-        }
-
-        const origin = `${req.protocol}://${req.get('host')}`;
-        const params = new URLSearchParams({ from: origin, type });
-        if (type === 'dev' && user) {
-            params.set('user', user);
-        }
-        res.redirect(`${svc.url}/go?${params}`);
-    });
 
     app.get('/auth/callback', async (req, res, next) => {
         try {
@@ -113,7 +67,7 @@ const initBroker = (app: Express) => {
             const resp = await fetch(`${svc.internalUrl}/verify`, {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
-                body: JSON.stringify({ code, secret: svc.sharedSecret }),
+                body: JSON.stringify({ code, secret: svc.verifySecret }),
             });
             const data = (await resp.json()) as { userId?: string; isNew?: boolean; error?: string };
             if (!resp.ok || !data.userId) {
@@ -141,10 +95,8 @@ const initBroker = (app: Express) => {
 };
 
 export const initAuth = (app: Express) => {
-    initVkId(app);
-    initGoogle(app);
-    initSteam(app);
-    initTelegram(app);
-    initDevLogin(app);
+    // Telegram account linking for the bonus (not login).
+    initTelegramLink(app);
+    // Central auth service callback.
     initBroker(app);
 };

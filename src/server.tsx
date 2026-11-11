@@ -225,7 +225,7 @@ app.get('/{*path}', async (req, res, next) => {
 
             user: req.user,
             chats,
-            authProviders: getAuthProviders(),
+            authProviders: getAuthProviders(`${req.protocol}://${req.get('host')}`),
         };
 
         const route = await router.resolve(context);
