@@ -74,7 +74,10 @@ class AuthClientsRepository extends BaseRepository {
      */
     async verifySecret(origin: string, secret: string): Promise<boolean> {
         if (!secret) return false;
-        const client = await this.getEnabledClient(origin);
+        // Read fresh (bypass the 30s allowlist cache) so a rotated secret takes effect immediately.
+        const client: AuthClient | null = await this.db.AuthClient.findOne({
+            where: { origin: normalizeOrigin(origin), enabled: true },
+        });
         if (!client) return false;
         const expected = client.secret || (__DEV__ ? DEV_FALLBACK_SECRET : null);
         if (!expected) return false;

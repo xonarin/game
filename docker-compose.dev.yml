@@ -30,19 +30,24 @@ services:
       REDIS_URL: redis://redis:6379
       # Bind mounts from Windows don't deliver file events: poll for changes (webpack watchpack)
       WATCHPACK_POLLING: "true"
-      # Test login on /login -> /auth/dev (development builds only, see src/auth)
+      # Test login (dev builds only): /login -> broker /go?type=dev (see src/auth)
       DEV_LOGIN: "1"
-      # Real sign-in providers: put values into a local .env file next to this one
-      # (not committed). The /login page shows only the configured ones.
+      # Центральный вход (plant-auth). Браузер редиректится на localhost:3300; сервер-к-серверу
+      # (/verify) из контейнера ходит на host.docker.internal (plant-auth запущен на хосте).
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:3300}
+      AUTH_SERVICE_INTERNAL_URL: ${AUTH_SERVICE_INTERNAL_URL:-http://host.docker.internal:3300}
+      # GAME_VERIFY_SECRET / SERVICE_API_TOKEN в dev берут безопасные дефолты, если не заданы.
+      GAME_VERIFY_SECRET: ${GAME_VERIFY_SECRET:-}
+      SERVICE_API_TOKEN: ${SERVICE_API_TOKEN:-}
+      # Telegram — для бонуса и привязки аккаунта (не вход). Значения из локального .env.
       PUBLIC_URL: ${PUBLIC_URL:-}
-      VKID_APP_ID: ${VKID_APP_ID:-}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      STEAM_API_KEY: ${STEAM_API_KEY:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
       TELEGRAM_BONUS_CHANNEL: ${TELEGRAM_BONUS_CHANNEL:-}
       TELEGRAM_WEBHOOK_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-}
+    # Чтобы контейнер мог достучаться до сервисов на хосте (plant-auth :3300).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     dns:
       - 8.8.8.8
       - 1.1.1.1
