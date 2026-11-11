@@ -1,0 +1,84 @@
+# Production stack on a single VPS, reachable by bare IP (no domains, no HTTPS).
+#   cp .env.example .env     # fill real values + strong secrets, PUBLIC_URL=http://<IP> etc.
+#   GIT_SHA=$(git rev-parse HEAD) docker compose -f docker-compose.prod.yml up -d --build
+#
+# Ports on the host:  game -> 80,  admin -> 3200,  auth -> 3300.
+# MySQL/Redis stay internal (never published).
+#
+# NOTE: real social providers (Google/VK ID/Steam/Telegram) require HTTPS + a domain for their
+# redirect URIs, so over http://<IP> use the dev login; wire the providers once you add a domain.
+
+services:
+    mysql:
+        image: mysql:8.4
+        restart: unless-stopped
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-playtime}
+        volumes:
+            - mysql-data:/var/lib/mysql
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-p${MYSQL_ROOT_PASSWORD}']
+            interval: 10s
+            timeout: 5s
+            retries: 10
+
+    redis:
+        image: redis:7-alpine
+        restart: unless-stopped
+        command: redis-server --save 60 1 --appendonly yes
+        volumes:
+            - redis-data:/data
+
+    game:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.game
+            args:
+                GIT_SHA: ${GIT_SHA:-}
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            NODE_ENV: production
+        ports:
+            - '80:3000'
+        depends_on:
+            mysql: { condition: service_healthy }
+            redis: { condition: service_started }
+
+    auth:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.auth
+            args:
+                GIT_SHA: ${GIT_SHA:-}
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            NODE_ENV: production
+        ports:
+            - '3300:3300'
+        depends_on:
+            mysql: { condition: service_healthy }
+            redis: { condition: service_started }
+
+    admin:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.admin
+            args:
+                GIT_SHA: ${GIT_SHA:-}
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            NODE_ENV: production
+        ports:
+            - '3200:3200'
+        depends_on:
+            mysql: { condition: service_healthy }
+            redis: { condition: service_started }
+
+volumes:
+    mysql-data:
+    redis-data:
