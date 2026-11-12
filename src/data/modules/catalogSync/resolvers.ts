@@ -6,6 +6,7 @@ import { ApolloContext } from '../../../interfaces/apollo';
 import { database } from '../../database';
 import { SyncRunKind } from '../../models/SyncRun';
 import { UserError } from '../../../utils/errors';
+import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
 import { isAdmin, isAdminService } from '../rules';
 
 // ── RULES ─────────────────────────────────────────────────────────────────────
@@ -19,6 +20,7 @@ export const rules: IRules = {
         cronJob: isAdminOrAdminService,
         syncRuns: isAdminOrAdminService,
         catalogStats: isAdminOrAdminService,
+        catalogSourceUrl: isAdminOrAdminService,
     },
     Mutation: {
         updateCronJob: isAdmin,
@@ -81,6 +83,16 @@ export const resolvers = {
                 repositories.syncRuns.lastSuccessfulAt(SyncRunKind.Catalog),
             ]);
             return { total, byCategory, lastSuccessfulImportAt };
+        },
+
+        // Проверяется и при чтении: значение могли поменять в БД в обход админки или сузить CATALOG_SOURCE_HOSTS
+        catalogSourceUrl: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) => {
+            const url = (await repositories.settings.getSettingAsString(CATALOG_SOURCE_SETTING)).trim();
+            const problem = checkCatalogSourceUrl(url);
+            if (problem) {
+                throw new UserError(`Настройка ${CATALOG_SOURCE_SETTING}: ${problem}`);
+            }
+            return url;
         },
     },
 

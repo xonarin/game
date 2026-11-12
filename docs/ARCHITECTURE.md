@@ -90,6 +90,9 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
   предметы не удаляются — finish возвращает их число (`notSeenCount`).
 - Одновременно — один прогон каталога; `running` старше часа при следующем start становится `failed`.
 - Расписание хранится в `cron_job` (game), выполняет его plant-admin; правит админ через `updateCronJob`.
+- Источник импорта — настройка `catalog::sourceUrl` (таблица `Setting`, страница «Настройки» админки).
+  Воркер читает её запросом `catalogSourceUrl` в начале каждого прогона. Ссылка проверяется при
+  сохранении и при чтении: только `https`, без логина/порта, хост из `CATALOG_SOURCE_HOSTS` (защита от SSRF).
 
 ## Что где прописывать (переменные окружения)
 
@@ -102,6 +105,7 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
 | `SERVICE_API_TOKEN` | сервисный API; **= `SERVICE_API_TOKEN` в plant-auth** |
 | `SYNC_HMAC_SECRET` | подпись `/internal/sync/*`; **= `SYNC_HMAC_SECRET` в plant-admin** |
 | `ADMIN_SERVICE_TOKEN` | GraphQL каталога без сессии (крон админки); **= `ADMIN_SERVICE_TOKEN` в plant-admin** |
+| `CATALOG_SOURCE_HOSTS` | хосты для настройки `catalog::sourceUrl` через запятую (пусто = `raw.githubusercontent.com`) |
 | `VKID_APP_ID`, `GOOGLE_*`, `STEAM_API_KEY`, `TELEGRAM_*` | провайдеры **входа игроков** |
 
 **plant-auth** (`.env`, см. его `.env.example`):

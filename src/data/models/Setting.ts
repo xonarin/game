@@ -45,7 +45,10 @@ export type BonusSettings =
     | 'bonus::usePromoCodeFrequencyLimitDeposit'
     | 'bonus::usePromoCodeFrequencyLimitWithoutDeps';
 
+export type CatalogSettings = 'catalog::sourceUrl';
+
 export type SettingName =
+    | CatalogSettings
     | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName

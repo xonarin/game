@@ -51,6 +51,9 @@ type Query {
     # Последние прогоны, новые сверху; limit 1…100, по умолчанию 20
     syncRuns(kind: String = "catalog", limit: Int = 20): [SyncRun!]!
     catalogStats: CatalogStats!
+    # Источник импорта (настройка catalog::sourceUrl); правится через adminUpdateSetting.
+    # Недопустимое значение (не https / хост вне CATALOG_SOURCE_HOSTS) — UserError
+    catalogSourceUrl: String!
 }
 
 type Mutation {

@@ -56,6 +56,10 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
         '3/P7D',
         'Частотные ограничения на активацию промокодов (<кол-во активаций>/<период в формате ISO 8601 duration>)',
     ],
+    'catalog::sourceUrl': [
+        'https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/skins_not_grouped.json',
+        'Источник импорта каталога скинов (формат ByMykel skins_not_grouped.json). Только https и хосты из CATALOG_SOURCE_HOSTS',
+    ],
 };
 
 class SettingsRepository extends BaseRepository {

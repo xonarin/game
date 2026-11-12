@@ -53,6 +53,15 @@ const config = {
         hmacSecret: env('SYNC_HMAC_SECRET') || (__DEV__ ? 'dev-only-insecure-sync-hmac-secret' : ''),
     },
 
+    // Каталог скинов: хосты, разрешённые в настройке catalog::sourceUrl (через запятую).
+    // Защита от SSRF — админ не может направить сервер админки на внутренний адрес.
+    catalog: {
+        sourceHosts: (env('CATALOG_SOURCE_HOSTS') || 'raw.githubusercontent.com')
+            .split(',')
+            .map(host => host.trim().toLowerCase())
+            .filter(Boolean),
+    },
+
     // Authentication
     auth: {
         tokenKey: process.env.TOKEN_KEY || 'idToken',

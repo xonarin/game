@@ -8,6 +8,7 @@ import { WithdrawStatus } from '../../models/UserWithdraw';
 import { UserError } from '../../../utils/errors';
 import { getOnline } from '../../../services/LiveData/LiveDataStorage';
 import { isValidOrigin } from '../../repositories/authClients';
+import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
 import { isAdmin } from '../rules';
 
 const num = (value: number | null | undefined): number => value || 0;
@@ -122,17 +123,27 @@ export const resolvers = {
             { name, value }: { name: string; value: string },
             { user, repositories }: ApolloContext,
         ) => {
+            // Источник каталога скачивает сервер админки — только разрешённые хосты (SSRF)
+            let newValue = value;
+            if (name === CATALOG_SOURCE_SETTING) {
+                const problem = checkCatalogSourceUrl(value);
+                if (problem) {
+                    throw new UserError(problem, { field: 'value' });
+                }
+                newValue = value.trim();
+            }
+
             const current = await repositories.settings.getAllSettings();
             const prev = current.find(setting => setting.name === name);
 
-            const result = await repositories.settings.setSetting(name, value);
+            const result = await repositories.settings.setSetting(name, newValue);
 
             await database.AdminAction.create({
                 adminId: user!.id,
                 action: 'updateSetting',
                 targetUserId: null,
                 targetKey: name,
-                details: { before: prev ? prev.value : null, after: value },
+                details: { before: prev ? prev.value : null, after: newValue },
             });
 
             return result;
