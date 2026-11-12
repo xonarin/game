@@ -5,7 +5,7 @@ import { ModelStatic } from './index';
 /**
  * Настройки расписания фоновой задачи. Сами задачи выполняет plant-admin,
  * здесь только хранится расписание (редактируется в админке).
- * Таблица `cron_job` создаётся миграцией, НЕ sequelize.sync().
+ * Таблицу `cron_job` создаёт sequelize.sync(); строки по умолчанию — CRON_JOB_DEFAULTS при старте.
  */
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
@@ -27,6 +27,17 @@ export interface CronJob extends Model {
 
 export type CronJobStatic = ModelStatic<CronJob>;
 
+// ── DEFAULTS ──────────────────────────────────────────────────────────────────
+
+/**
+ * Расписания, которые должны существовать всегда. Создаются при старте, если строки нет;
+ * существующие (в т.ч. изменённые в админке) не перезаписываются.
+ */
+export const CRON_JOB_DEFAULTS: { key: CronJobKey; cronExpression: string; timezone: string; enabled: boolean }[] = [
+    // Импорт каталога: понедельник 04:00 по Ташкенту
+    { key: 'catalog_import', cronExpression: '0 4 * * 1', timezone: 'Asia/Tashkent', enabled: true },
+];
+
 // ── MODEL ─────────────────────────────────────────────────────────────────────
 
 export const initCronJob = (sequelize: Sequelize): CronJobStatic =>
@@ -45,7 +56,7 @@ export const initCronJob = (sequelize: Sequelize): CronJobStatic =>
                 },
             },
 
-            key: { type: DataTypes.STRING(64), allowNull: false, unique: true },
+            key: { type: DataTypes.STRING(64), allowNull: false },
             cronExpression: { type: DataTypes.STRING(128), allowNull: false },
             timezone: { type: DataTypes.STRING(64), allowNull: false },
             enabled: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
@@ -57,5 +68,8 @@ export const initCronJob = (sequelize: Sequelize): CronJobStatic =>
             underscored: true,
             timestamps: true,
             createdAt: false, // в таблице только updated_at
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
+            indexes: [{ name: 'uq_cron_job_key', unique: true, fields: ['key'] }],
         },
     ) as CronJobStatic;

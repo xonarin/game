@@ -36,16 +36,6 @@ function isAssociable(model: Sequelize | ModelStatic<Model>): model is Associabl
     return 'associate' in model;
 }
 
-// ── MIGRATION-MANAGED MODELS ──────────────────────────────────────────────────
-
-/**
- * Таблицы этих моделей создаются только SQL-миграциями (src/data/migrate.ts).
- * sequelize.sync() вызывает model.sync() для каждой модели — здесь он заменён на no-op,
- * чтобы sync() не создал таблицу сам (с неправильной collation и без индексов).
- */
-const migrationManaged = <M extends ModelStatic<Model>>(model: M): M =>
-    Object.assign(model, { sync: async () => model });
-
 export interface Database {
     sequelize: Sequelize;
 
@@ -70,7 +60,7 @@ export interface Database {
     AuthClient: AuthClientStatic;
     AdminAction: AdminActionStatic;
 
-    // Каталог (таблицы из migrations/, вне sync())
+    // Каталог скинов
     Item: ItemStatic;
     SyncRun: SyncRunStatic;
     SyncRunBatch: SyncRunBatchStatic;
@@ -100,10 +90,10 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         AuthClient: initAuthClient(sequelize),
         AdminAction: initAdminAction(sequelize),
 
-        Item: migrationManaged(initItem(sequelize)),
-        SyncRun: migrationManaged(initSyncRun(sequelize)),
-        SyncRunBatch: migrationManaged(initSyncRunBatch(sequelize)),
-        CronJob: migrationManaged(initCronJob(sequelize)),
+        Item: initItem(sequelize),
+        SyncRun: initSyncRun(sequelize),
+        SyncRunBatch: initSyncRunBatch(sequelize),
+        CronJob: initCronJob(sequelize),
     };
 
     forEach(database, model => {

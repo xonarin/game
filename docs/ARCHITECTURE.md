@@ -90,6 +90,8 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
   предметы не удаляются — finish возвращает их число (`notSeenCount`).
 - Одновременно — один прогон каталога; `running` старше часа при следующем start становится `failed`.
 - Расписание хранится в `cron_job` (game), выполняет его plant-admin; правит админ через `updateCronJob`.
+- Таблицы каталога (`Item`, `sync_run`, `sync_run_batch`, `cron_job`) создаёт `sequelize.sync()` по моделям,
+  изменения — идемпотентными миграциями (docs/DEPLOY.md «Как менять схему»).
 - Источник импорта — настройка `catalog::sourceUrl` (таблица `Setting`, страница «Настройки» админки).
   Воркер читает её запросом `catalogSourceUrl` в начале каждого прогона. Ссылка проверяется при
   сохранении и при чтении: только `https`, без логина/порта, хост из `CATALOG_SOURCE_HOSTS` (защита от SSRF).
@@ -132,44 +134,7 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
 > `JWT_SECRET` game = `GAME_JWT_SECRET` admin. В dev-сборках у всех этих значений одинаковые
 > небезопасные дефолты, так что локально всё поднимается без `.env`.
 
-## Запуск в dev
+## Запуск и первичная настройка
 
-1. **Игра** (+ MySQL/Redis, порты проброшены на хост):
-   ```
-   docker compose -f docker-compose.dev.yml up -d
-   ```
-2. **plant-auth** (нужен `DEV_LOGIN=1` для dev-входа):
-   ```
-   cd ../plant-auth && npm install
-   DEV_LOGIN=1 GAME_GRAPHQL_URL=http://localhost:3100/graphql npm run dev   # :3300
-   ```
-3. **plant-admin** (BFF + Vite, два процесса):
-   ```
-   cd ../plant-admin && npm install && (cd client && npm install)
-   AUTH_SERVICE_URL=http://localhost:3300 GAME_GRAPHQL_URL=http://localhost:3100/graphql npm run dev  # BFF :3200
-   cd client && npm run dev                                                                            # SPA :3201
-   ```
-   Открыть http://localhost:3201.
-
-## Первичная настройка (bootstrap)
-
-Allowlist и роль Admin — курица и яйцо: чтобы войти в админку, её origin должен быть в
-allowlist, а управлять allowlist может только админ. Поэтому при первом запуске один раз
-задаём их напрямую в БД игры:
-
-```sql
--- разрешить origin'ы, которым plant-auth выдаёт вход (как минимум админка)
-INSERT INTO AuthClient (origin,enabled,createdAt,updatedAt)
-VALUES ('http://localhost:3200',1,NOW(),NOW());
-
--- сделать dev-пользователя админом (socialId = dev-<имя> из dev-входа)
-UPDATE User SET role='Admin' WHERE socialId='dev-admin';
-```
-
-Дальше всё управляется из самой админки (раздел «Домены», роли — по мере необходимости).
-
-## Что пока НЕ перенесено (осознанно)
-
-- Деплой-панель, режим обслуживания, прод docker-compose и runbook'и — были удалены при
-  возврате игры к `76644ac`; переделываются под новую структуру позже (когда появятся
-  домены). Старый код доступен в ветке `backup/admin-auth-deploy`.
+Пошаговая инструкция — локально и на продакшене, включая разрешённые домены и первого
+админа — в [DEPLOY.md](DEPLOY.md).

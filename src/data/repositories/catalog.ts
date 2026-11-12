@@ -36,7 +36,7 @@ const quote = (column: string) => `\`${column}\``;
 
 // Один multi-row INSERT … ON DUPLICATE KEY UPDATE на пачку (алиас строки `new`, MySQL 8.0.19+).
 const buildUpsertSql = (rowCount: number) =>
-    `INSERT INTO \`item\` (${INSERT_COLUMNS.map(quote).join(', ')}) VALUES ` +
+    `INSERT INTO \`Item\` (${INSERT_COLUMNS.map(quote).join(', ')}) VALUES ` +
     `${Array(rowCount).fill(ROW_PLACEHOLDER).join(', ')} AS new ` +
     `ON DUPLICATE KEY UPDATE ${UPDATE_COLUMNS.map(c => `${quote(c)} = new.${quote(c)}`).join(', ')}`;
 
@@ -66,7 +66,7 @@ class CatalogRepository extends BaseRepository {
 
         const names = rows.map(row => row.marketHashName);
         const [{ cnt }] = await this.db.sequelize.query<{ cnt: number }>(
-            'SELECT COUNT(*) AS cnt FROM `item` WHERE `market_hash_name` IN (?)',
+            'SELECT COUNT(*) AS cnt FROM `Item` WHERE `market_hash_name` IN (?)',
             { replacements: [names], type: QueryTypes.SELECT, transaction },
         );
         const existing = Number(cnt);

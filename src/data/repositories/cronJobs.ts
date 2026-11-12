@@ -1,7 +1,7 @@
 import { Transaction } from 'sequelize';
 
 import BaseRepository from './base';
-import { CronJob, CronJobKey } from '../models/CronJob';
+import { CRON_JOB_DEFAULTS, CronJob, CronJobKey } from '../models/CronJob';
 
 /** Настройки расписаний фоновых задач (выполняет plant-admin, хранит game). */
 class CronJobsRepository extends BaseRepository {
@@ -16,6 +16,11 @@ class CronJobsRepository extends BaseRepository {
     }
 
     // ── WRITE ─────────────────────────────────────────────────────────────────
+
+    /** При старте: создать недостающие расписания (INSERT IGNORE — правки из админки не трогаются). */
+    public async ensureDefaults(): Promise<void> {
+        await this.db.CronJob.bulkCreate(CRON_JOB_DEFAULTS, { ignoreDuplicates: true });
+    }
 
     /** Обновляет расписание существующей задачи; null — такой задачи нет. Значения уже проверены. */
     public async update(

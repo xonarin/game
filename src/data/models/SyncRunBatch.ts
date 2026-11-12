@@ -5,7 +5,7 @@ import { ModelStatic } from './index';
 /**
  * Принятая пачка прогона. Нужна для идемпотентности: повтор той же пачки
  * (sync_run_id, batch_index) не увеличивает batches_received и счётчики строк.
- * Таблица `sync_run_batch` создаётся миграцией, НЕ sequelize.sync().
+ * Таблицу `sync_run_batch` создаёт sequelize.sync() (после sync_run — из-за внешнего ключа).
  */
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
@@ -27,7 +27,14 @@ export const initSyncRunBatch = (sequelize: Sequelize): SyncRunBatchStatic =>
     sequelize.define(
         'SyncRunBatch',
         {
-            syncRunId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, primaryKey: true },
+            // Удаление прогона удаляет и его пачки
+            syncRunId: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                allowNull: false,
+                primaryKey: true,
+                references: { model: 'sync_run', key: 'id' },
+                onDelete: 'CASCADE',
+            },
             batchIndex: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, primaryKey: true },
             rowsReceived: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
             rowsInserted: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
@@ -38,5 +45,7 @@ export const initSyncRunBatch = (sequelize: Sequelize): SyncRunBatchStatic =>
             tableName: 'sync_run_batch',
             underscored: true,
             timestamps: false,
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
         },
     ) as SyncRunBatchStatic;

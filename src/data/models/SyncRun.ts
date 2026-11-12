@@ -4,7 +4,7 @@ import { ModelStatic } from './index';
 
 /**
  * Журнал прогонов синхронизации (импорт каталога, позже — цены).
- * Таблица `sync_run` создаётся миграцией migrations/2026-11-12-catalog.sql, НЕ sequelize.sync().
+ * Таблицу `sync_run` создаёт sequelize.sync() по этой модели; последующие изменения — миграциями.
  */
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ export const initSyncRun = (sequelize: Sequelize): SyncRunStatic =>
                 },
             },
 
-            runId: { type: DataTypes.STRING(64), allowNull: false, unique: true },
+            runId: { type: DataTypes.STRING(64), allowNull: false },
             kind: { type: DataTypes.STRING(16), allowNull: false },
             trigger: { type: DataTypes.STRING(16), allowNull: false },
             status: { type: DataTypes.STRING(16), allowNull: false },
@@ -90,5 +90,12 @@ export const initSyncRun = (sequelize: Sequelize): SyncRunStatic =>
             tableName: 'sync_run',
             underscored: true,
             timestamps: false, // есть свои started_at / finished_at
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
+            indexes: [
+                { name: 'uq_sync_run_run_id', unique: true, fields: ['run_id'] },
+                // Журнал: последние прогоны своего вида
+                { name: 'idx_sync_run_kind_started', fields: ['kind', 'started_at'] },
+            ],
         },
     ) as SyncRunStatic;

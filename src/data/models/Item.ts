@@ -4,8 +4,8 @@ import { ModelStatic } from './index';
 
 /**
  * Предмет каталога CS2 (импорт из ByMykel через plant-admin).
- * Таблица `item` создаётся миграцией migrations/2026-11-12-catalog.sql, НЕ sequelize.sync().
- * market_hash_name хранится как есть: без trim и нормализации, сравнение бинарное.
+ * Таблицу `Item` создаёт sequelize.sync() по этой модели; последующие изменения — миграциями.
+ * market_hash_name хранится как есть: без trim и нормализации, сравнение бинарное (utf8mb4_bin).
  */
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
@@ -62,7 +62,8 @@ export const initItem = (sequelize: Sequelize): ItemStatic =>
                 },
             },
 
-            marketHashName: { type: DataTypes.STRING(255), allowNull: false, unique: true },
+            // BINARY -> utf8mb4_bin: регистр, ™ и ★ различаются; уникальность — в indexes
+            marketHashName: { type: DataTypes.STRING(255).BINARY, allowNull: false },
             skinKey: { type: DataTypes.STRING(64), allowNull: false },
             weapon: { type: DataTypes.STRING(64), allowNull: false },
             weaponId: { type: DataTypes.INTEGER, allowNull: false },
@@ -82,8 +83,17 @@ export const initItem = (sequelize: Sequelize): ItemStatic =>
             catalogSeenAt: { type: DataTypes.DATE, allowNull: false },
         },
         {
-            tableName: 'item',
+            tableName: 'Item',
             underscored: true, // marketHashName <-> market_hash_name, createdAt <-> created_at
             timestamps: true,
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
+            indexes: [
+                { name: 'uq_item_market_hash_name', unique: true, fields: ['market_hash_name'] },
+                // Витрина: доступные предметы по цене (следующие этапы)
+                { name: 'idx_item_available_price', fields: ['is_available', 'price'] },
+                { name: 'idx_item_skin_key', fields: ['skin_key'] },
+                { name: 'idx_item_category', fields: ['category'] },
+            ],
         },
     ) as ItemStatic;
