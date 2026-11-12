@@ -48,7 +48,17 @@ export interface CatalogStatsRow {
 }
 
 // Сортировки списка предметов в админке
-export const CATALOG_SORTS = ['name_asc', 'price_asc', 'price_desc', 'exterior_asc', 'exterior_desc'] as const;
+export const CATALOG_SORTS = [
+    'name_asc',
+    'price_asc',
+    'price_desc',
+    'exterior_asc',
+    'exterior_desc',
+    'available_first',
+    'unavailable_first',
+    'updated_desc',
+    'updated_asc',
+] as const;
 export type CatalogSort = (typeof CATALOG_SORTS)[number];
 
 export interface CatalogItemsFilter {
@@ -58,6 +68,8 @@ export interface CatalogItemsFilter {
     // DECIMAL строкой ("10.00"); предметы без цены при заданном диапазоне не попадают
     minPrice: string | null;
     maxPrice: string | null;
+    // true — только в наличии, false — только нет в наличии, null — все
+    available: boolean | null;
     sort: CatalogSort;
     limit: number;
     offset: number;
@@ -90,6 +102,26 @@ const ORDER_BY: Record<CatalogSort, Order> = {
     exterior_desc: [
         [NULLS_LAST('exterior'), 'ASC'],
         [EXTERIOR_ORDER, 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+    // Внутри группы — по названию
+    available_first: [
+        ['isAvailable', 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+    unavailable_first: [
+        ['isAvailable', 'ASC'],
+        ['marketHashName', 'ASC'],
+    ],
+    // Цена ни разу не выставлялась — в конце
+    updated_desc: [
+        [NULLS_LAST('price_updated_at'), 'ASC'],
+        ['priceUpdatedAt', 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+    updated_asc: [
+        [NULLS_LAST('price_updated_at'), 'ASC'],
+        ['priceUpdatedAt', 'ASC'],
         ['marketHashName', 'ASC'],
     ],
 };
@@ -176,6 +208,9 @@ class CatalogRepository extends BaseRepository {
         }
         if (filter.maxPrice !== null) {
             conditions.push({ price: { [Op.lte]: filter.maxPrice } });
+        }
+        if (filter.available !== null) {
+            conditions.push({ isAvailable: filter.available });
         }
 
         const { count, rows } = await this.db.Item.findAndCountAll({

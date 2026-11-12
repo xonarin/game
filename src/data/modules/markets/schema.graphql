@@ -55,8 +55,10 @@ type Query {
     market(code: String!): Market
     # Дорогие сверху; limit 1…500
     unmatchedNames(marketCode: String!, limit: Int = 50, offset: Int = 0, includeIgnored: Boolean = false): UnmatchedNamePage!
-    # Предложения включённых магазинов: по priceUsd, затем priority
+    # Предложения включённых магазинов: по priceUsd, затем priority (первое и даёт цену предмета)
     itemOffers(itemId: ID!): [ItemOffer!]!
+    # Текущая наценка (настройка prices::markup), доля строкой: "0.0500" = 5 %
+    priceMarkup: String!
 }
 
 type Mutation {

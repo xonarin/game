@@ -84,6 +84,7 @@ const parseCatalogFilter = (args: {
     exteriors?: string[] | null;
     minPrice?: string | null;
     maxPrice?: string | null;
+    available?: boolean | null;
     sort?: string | null;
     limit?: number | null;
     offset?: number | null;
@@ -113,6 +114,7 @@ const parseCatalogFilter = (args: {
         exteriors: exteriors as Exterior[],
         minPrice,
         maxPrice,
+        available: args.available ?? null,
         sort,
         limit: Math.min(Math.max(args.limit ?? 50, 1), 100),
         offset: Math.max(args.offset ?? 0, 0),

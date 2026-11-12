@@ -98,13 +98,16 @@ type Query {
     catalogStats: CatalogStats!
     # Таблица предметов: search — слова через пробел (подстрока, без учёта регистра);
     # exteriors — FN / MW / FT / WW / BS; minPrice / maxPrice — USD строкой ("10" или "10.50");
-    # sort — name_asc / price_asc / price_desc / exterior_asc / exterior_desc; limit 1…100.
+    # available — true: в наличии, false: нет в наличии, null: все;
+    # sort — name_asc / price_asc / price_desc / exterior_asc / exterior_desc /
+    # available_first / unavailable_first / updated_desc / updated_asc; limit 1…100.
     # Ошибка ввода — UserError с extensions.field
     catalogItems(
         search: String
         exteriors: [String!]
         minPrice: String
         maxPrice: String
+        available: Boolean
         sort: String = "name_asc"
         limit: Int = 50
         offset: Int = 0

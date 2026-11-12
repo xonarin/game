@@ -6,6 +6,7 @@ import { Market } from '../../models/Market';
 import { UnmatchedName } from '../../models/UnmatchedName';
 import { UserError } from '../../../utils/errors';
 import { disableMarket } from '../../../services/marketPrices/service';
+import { readPriceMultiplier } from '../../../services/marketPrices/markup';
 import { isAdmin, isAdminService } from '../rules';
 
 // ── RULES ─────────────────────────────────────────────────────────────────────
@@ -19,6 +20,7 @@ export const rules: IRules = {
         market: isAdminOrAdminService,
         unmatchedNames: isAdminOrAdminService,
         itemOffers: isAdminOrAdminService,
+        priceMarkup: isAdminOrAdminService,
     },
     Mutation: {
         updateMarket: isAdmin,
@@ -127,6 +129,10 @@ export const resolvers = {
 
         itemOffers: (_0: unknown, { itemId }: { itemId: string }, { repositories }: ApolloContext) =>
             repositories.marketPrices.offers(itemId),
+
+        // Множитель (1 + наценка) -> наценка; неверная настройка — ошибка с текстом
+        priceMarkup: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) =>
+            (Number(await readPriceMultiplier(repositories)) - 1).toFixed(4),
     },
 
     Mutation: {
