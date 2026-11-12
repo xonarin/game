@@ -153,6 +153,8 @@ export type SyncErrorCode =
     | 'RUN_IN_PROGRESS' // 409: идёт другой прогон моложе часа
     | 'RUN_EXISTS' // 409: runId уже использован другим прогоном
     | 'RUN_CLOSED' // 409: пачка для уже закрытого прогона
+    | 'MARKET_UNAVAILABLE' // 409: магазина нет или он выключен
+    | 'RUN_LOCKED' // 409: по этому магазину уже применяется другой снимок
     | 'INTERNAL'; // 500
 
 // Тело любого ответа с ошибкой
@@ -200,6 +202,31 @@ export interface PriceSnapshot {
     sourceTotal: number;
     // Уникальные marketHashName
     rows: PriceRow[];
+}
+
+/**
+ * Итог приёма снимка (HTTP 200):
+ * - ok:        снимок применён
+ * - duplicate: runId уже обработан — ничего не делалось, счётчики того прогона
+ * - skipped:   строк меньше minRowsRatio × прошлого успешного — данные не применены, причина в reason
+ */
+export type PriceSnapshotStatus = 'ok' | 'duplicate' | 'skipped';
+
+export interface PriceSnapshotResponse {
+    runId: string;
+    market: string;
+    status: PriceSnapshotStatus;
+    reason: string | null;
+    rowsReceived: number;
+    // Совпало с каталогом / ушло в unmatched_name
+    rowsMatched: number;
+    rowsUnmatched: number;
+    // market_price: новые строки / изменились min_price или qty / удалены (нет в снимке)
+    rowsInserted: number;
+    rowsChanged: number;
+    rowsRemoved: number;
+    // Предметы каталога, у которых изменились price или is_available
+    itemsRepriced: number;
 }
 
 // ── MARKET ────────────────────────────────────────────────────────────────────

@@ -60,6 +60,10 @@ const defaultSettings: Record<SettingName, [string | null, string | null]> = {
         'https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/all.json',
         'Источник импорта каталога предметов (формат ByMykel all.json). Только https и хосты из CATALOG_SOURCE_HOSTS',
     ],
+    'prices::markup': [
+        '0.05',
+        'Наценка к минимальной цене магазинов: доля 0…1 (0.05 = 5 %). Цена предмета = MIN(цена в USD у включённых магазинов) × (1 + наценка), округление до центов. После сохранения цены всех предметов пересчитываются',
+    ],
 };
 
 class SettingsRepository extends BaseRepository {

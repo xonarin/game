@@ -9,6 +9,8 @@ import { UserError } from '../../../utils/errors';
 import { getOnline } from '../../../services/LiveData/LiveDataStorage';
 import { isValidOrigin } from '../../repositories/authClients';
 import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
+import { checkMarkup, PRICE_MARKUP_SETTING } from '../../../services/marketPrices/markup';
+import { repriceAll } from '../../../services/marketPrices/service';
 import { isAdmin } from '../rules';
 
 const num = (value: number | null | undefined): number => value || 0;
@@ -133,6 +135,15 @@ export const resolvers = {
                 newValue = value.trim();
             }
 
+            // Наценка: доля 0…1, хранится нормализованной ("0.0500")
+            if (name === PRICE_MARKUP_SETTING) {
+                const checked = checkMarkup(value);
+                if ('problem' in checked) {
+                    throw new UserError(checked.problem, { field: 'value' });
+                }
+                newValue = checked.value;
+            }
+
             const current = await repositories.settings.getAllSettings();
             const prev = current.find(setting => setting.name === name);
 
@@ -145,6 +156,14 @@ export const resolvers = {
                 targetKey: name,
                 details: { before: prev ? prev.value : null, after: newValue },
             });
+
+            // Новая наценка — сразу пересчитать цены всех предметов (иначе обновились бы только при смене цен магазина)
+            if (
+                name === PRICE_MARKUP_SETTING &&
+                (!prev || prev.value === null || Number(prev.value) !== Number(newValue))
+            ) {
+                await repriceAll();
+            }
 
             return result;
         },
@@ -205,11 +224,7 @@ export const resolvers = {
             return list.find(c => c.id === id);
         },
 
-        adminRemoveAuthClient: async (
-            _0: unknown,
-            { id }: { id: string },
-            { user, repositories }: ApolloContext,
-        ) => {
+        adminRemoveAuthClient: async (_0: unknown, { id }: { id: string }, { user, repositories }: ApolloContext) => {
             await repositories.authClients.removeClient(id);
             await database.AdminAction.create({
                 adminId: user!.id,

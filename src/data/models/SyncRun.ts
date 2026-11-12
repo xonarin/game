@@ -42,6 +42,7 @@ export interface SyncRun extends Model {
     readonly batchesExpected: number;
     readonly batchesReceived: number;
     readonly rowsReceived: number;
+    // Каталог: добавлено / обновлено строк Item. Цены: новые строки market_price / предметов с новой ценой
     readonly rowsInserted: number;
     readonly rowsUpdated: number;
 

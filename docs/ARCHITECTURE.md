@@ -96,6 +96,25 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
   Воркер читает её запросом `catalogSourceUrl` в начале каждого прогона. Ссылка проверяется при
   сохранении и при чтении: только `https`, без логина/порта, хост из `CATALOG_SOURCE_HOSTS` (защита от SSRF).
 
+## Цены магазинов: приём снимков от plant-admin
+
+Адаптер магазина в plant-admin скачивает выгрузку (API-ключи — только в его env), агрегирует
+по имени и шлёт ПОЛНЫЙ снимок (не дифф): `POST /internal/sync/prices/:market {runId, …, rows: [[name, priceUsd, minPrice, qty]]}`
+с той же HMAC-подписью. Код: `src/services/marketPrices/`, SQL — `src/data/repositories/marketPrices.ts`.
+
+- Магазин выключен / нет — 409; повтор `runId` — 200 `duplicate`; по магазину уже идёт прогон
+  (`GET_LOCK('prices_<code>')` на отдельном соединении) — 409 `RUN_LOCKED`.
+- Строк меньше `market.min_rows_ratio` × строк прошлого успешного — `sync_run` `skipped`, данные не трогаются.
+- Снимок пачками ложится в `market_price_staging`, затем одна короткая транзакция: upsert `market_price`
+  (JOIN `Item` по `market_hash_name`, только бинарное совпадение), несовпавшие — в `unmatched_name`,
+  удаление строк магазина, которых нет в снимке, и пересчёт только затронутых предметов:
+  `Item.price = round(MIN(price_usd включённых магазинов) × (1 + наценка), 2)`, `is_available`.
+  Наценка — настройка `prices::markup` (таблица `Setting`, страница «Настройки», по умолчанию 0.05);
+  при её изменении через `adminUpdateSetting` пересчитываются цены всех предметов.
+- Выключение магазина (`updateMarket(enabled: false)`) в одной транзакции удаляет его цены и пересчитывает предметы.
+- GraphQL (админ / сервис админки): `markets`, `market`, `updateMarket`, `unmatchedNames`, `setUnmatchedIgnored`,
+  `itemOffers`, `syncRuns(kind: "prices", marketCode)`.
+
 ## Что где прописывать (переменные окружения)
 
 **game** (`.env`, см. `.env.example`):

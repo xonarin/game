@@ -47,8 +47,11 @@ export type BonusSettings =
 
 export type CatalogSettings = 'catalog::sourceUrl';
 
+export type PricesSettings = 'prices::markup';
+
 export type SettingName =
     | CatalogSettings
+    | PricesSettings
     | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName

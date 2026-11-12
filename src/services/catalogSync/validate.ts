@@ -4,6 +4,7 @@ import {
     CatalogRunFinish,
     CatalogRunStart,
     Exterior,
+    PriceSnapshot,
     SyncRunResult,
     SyncTrigger,
 } from '../../interfaces/catalogSync';
@@ -189,6 +190,79 @@ export const parseBatch = (body: unknown): CatalogBatch => {
         }
     }
     return c.done<CatalogBatch>(body);
+};
+
+// ── PRICES ────────────────────────────────────────────────────────────────────
+
+const MARKET_CODE_RE = /^[a-z0-9_]{1,32}$/;
+const CURRENCY_RE = /^[A-Z]{3}$/;
+// DECIMAL(12,2): до 10 цифр до точки, ровно 2 после
+const MONEY_RE = /^\d{1,10}\.\d{2}$/;
+const RATE_RE = /^\d{1,6}(\.\d{1,8})?$/;
+const MAX_PRICE_ROWS = 200_000;
+
+const checkPriceRow = (c: Checker, row: unknown, where: string) => {
+    if (!Array.isArray(row) || row.length !== 4) {
+        c.fail(`${where}: ожидается [marketHashName, priceUsd, minPrice, qty]`);
+        return;
+    }
+    const [name, priceUsd, minPrice, qty] = row as unknown[];
+    if (typeof name !== 'string' || charLength(name) < 1 || charLength(name) > 255) {
+        c.fail(`${where}[0] marketHashName: строка 1…255 символов`);
+    }
+    if (typeof priceUsd !== 'string' || !MONEY_RE.test(priceUsd)) {
+        c.fail(`${where}[1] priceUsd: ожидается деньги "123.45"`);
+    }
+    if (typeof minPrice !== 'string' || !MONEY_RE.test(minPrice)) {
+        c.fail(`${where}[2] minPrice: ожидается деньги "123.45"`);
+    }
+    if (typeof qty !== 'number' || !Number.isInteger(qty) || qty < 1 || qty > 2_147_483_647) {
+        c.fail(`${where}[3] qty: ожидается целое > 0`);
+    }
+};
+
+/** marketParam — :market из пути; должен совпасть с body.market. */
+export const parsePriceSnapshot = (marketParam: string, body: unknown): PriceSnapshot => {
+    const c = new Checker();
+    if (!MARKET_CODE_RE.test(marketParam)) {
+        c.fail(`:market: ожидается код [a-z0-9_]{1,32}`);
+    }
+    if (c.object(body, 'body')) {
+        c.match(body, 'runId', 'body', RUN_ID_RE, 'строка [A-Za-z0-9:._-]{1,64}');
+        if (body.market !== marketParam) {
+            c.fail('body.market: должен совпадать с :market в пути');
+        }
+        c.match(body, 'currency', 'body', CURRENCY_RE, 'код валюты ISO 4217 (USD)');
+        c.match(body, 'rate', 'body', RATE_RE, 'курс строкой "1" или "0.0123"');
+        if (typeof body.rate === 'string' && Number(body.rate) <= 0) {
+            c.fail('body.rate: должен быть > 0');
+        }
+        if (typeof body.generatedAt !== 'string' || Number.isNaN(Date.parse(body.generatedAt))) {
+            c.fail('body.generatedAt: ожидается дата ISO 8601');
+        }
+        c.oneOf(body, 'trigger', 'body', TRIGGERS);
+        c.int(body, 'sourceTotal', 'body', 0, 100_000_000);
+
+        const { rows } = body;
+        if (!Array.isArray(rows) || rows.length > MAX_PRICE_ROWS) {
+            c.fail(`body.rows: ожидается массив до ${MAX_PRICE_ROWS} строк`);
+        } else {
+            const seen = new Set<string>();
+            rows.forEach((row: unknown, index) => {
+                checkPriceRow(c, row, `rows[${index}]`);
+                const name = Array.isArray(row) ? row[0] : undefined;
+                if (typeof name === 'string') {
+                    // utf8mb4_bin — PAD SPACE: «X» и «X » для ключа staging одно имя
+                    const key = name.replace(/ +$/, '');
+                    if (seen.has(key)) {
+                        c.fail(`rows[${index}]: повтор имени «${name}»`);
+                    }
+                    seen.add(key);
+                }
+            });
+        }
+    }
+    return c.done<PriceSnapshot>(body);
 };
 
 // ── FINISH ────────────────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@ import { IANAZone } from 'luxon';
 
 import { ApolloContext } from '../../../interfaces/apollo';
 import { database } from '../../database';
-import { SyncRunKind } from '../../models/SyncRun';
+import { SyncRun, SyncRunKind } from '../../models/SyncRun';
 import { UserError } from '../../../utils/errors';
 import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
 import { isAdmin, isAdminService } from '../rules';
@@ -64,17 +64,41 @@ const normalizeTimezone = (value: string): string => {
 // ── RESOLVERS ─────────────────────────────────────────────────────────────────
 
 export const resolvers = {
+    SyncRun: {
+        marketCode: async (run: SyncRun, _1: unknown, { repositories }: ApolloContext) => {
+            if (run.marketId === null || run.marketId === undefined) {
+                return null;
+            }
+            const market = await repositories.markets.getById(String(run.marketId));
+            return market ? market.code : null;
+        },
+    },
+
     Query: {
         cronJobs: (_0: unknown, _1: unknown, { repositories }: ApolloContext) => repositories.cronJobs.list(),
 
         cronJob: (_0: unknown, { key }: { key: string }, { repositories }: ApolloContext) =>
             repositories.cronJobs.get(key),
 
-        syncRuns: (
+        syncRuns: async (
             _0: unknown,
-            { kind, limit }: { kind?: string | null; limit?: number | null },
+            { kind, marketCode, limit }: { kind?: string | null; marketCode?: string | null; limit?: number | null },
             { repositories }: ApolloContext,
-        ) => repositories.syncRuns.list(kind || SyncRunKind.Catalog, Math.min(Math.max(limit ?? 20, 1), 100)),
+        ) => {
+            let marketId: string | undefined;
+            if (marketCode) {
+                const market = await repositories.markets.getByCode(marketCode);
+                if (!market) {
+                    return [];
+                }
+                marketId = market.id;
+            }
+            return repositories.syncRuns.list(
+                kind || SyncRunKind.Catalog,
+                Math.min(Math.max(limit ?? 20, 1), 100),
+                marketId,
+            );
+        },
 
         catalogStats: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) => {
             const [total, byType, byCategory, lastSuccessfulImportAt] = await Promise.all([

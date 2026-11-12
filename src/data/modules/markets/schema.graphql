@@ -1,0 +1,68 @@
+# Магазины скинов и их цены — для админки (plant-admin).
+# Чтение: админ (Bearer game-JWT через BFF) ИЛИ сервер админки без сессии (X-Admin-Service-Token).
+# Изменение — только админ. Сам приём снимков цен — REST POST /internal/sync/prices/:market (HMAC).
+# Деньги — строки с 2 знаками ("81.05"); даты — DateTime (UTC), скаляр объявлен в модуле admin.
+
+type Market {
+    # 'lisskins'
+    code: String!
+    name: String!
+    enabled: Boolean!
+    # ISO 4217 — валюта minPrice
+    currency: String!
+    # Порядок при равной цене: меньше — раньше
+    priority: Int!
+    # "0.70": снимок меньше ratio × прошлого успешного не применяется
+    minRowsRatio: String!
+    # Несекретные настройки адаптера, JSON-объект строкой
+    settings: String!
+    lastSyncAt: DateTime
+    # ok / failed / skipped
+    lastSyncStatus: String
+    updatedAt: DateTime!
+}
+
+# Строка market_price включённого магазина
+type ItemOffer {
+    marketCode: String!
+    marketName: String!
+    currency: String!
+    priority: Int!
+    # В валюте магазина
+    minPrice: String!
+    priceUsd: String!
+    qty: Int!
+    priceChangedAt: DateTime!
+}
+
+type UnmatchedName {
+    marketCode: String!
+    marketHashName: String!
+    # USD, из последнего снимка
+    lastPrice: String!
+    firstSeen: DateTime!
+    lastSeen: DateTime!
+    ignored: Boolean!
+}
+
+type UnmatchedNamePage {
+    total: Int!
+    items: [UnmatchedName!]!
+}
+
+type Query {
+    markets: [Market!]!
+    market(code: String!): Market
+    # Дорогие сверху; limit 1…500
+    unmatchedNames(marketCode: String!, limit: Int = 50, offset: Int = 0, includeIgnored: Boolean = false): UnmatchedNamePage!
+    # Предложения включённых магазинов: по priceUsd, затем priority
+    itemOffers(itemId: ID!): [ItemOffer!]!
+}
+
+type Mutation {
+    # Выключение: в одной транзакции удаляются цены магазина и пересчитываются затронутые предметы.
+    # Включение — только флаг (цены придут с первой синхронизацией).
+    # Ошибка валидации — UserError с extensions.field
+    updateMarket(code: String!, enabled: Boolean, priority: Int, minRowsRatio: String, settings: String): Market!
+    setUnmatchedIgnored(marketCode: String!, marketHashName: String!, ignored: Boolean!): UnmatchedName!
+}

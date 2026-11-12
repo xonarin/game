@@ -1,11 +1,12 @@
 import BaseRepository from './base';
 import { SyncRun, SyncRunKind, SyncRunStatus } from '../models/SyncRun';
 
-/** Журнал прогонов синхронизации (чтение для админки). Запись — services/catalogSync. */
+/** Журнал прогонов синхронизации (чтение для админки). Запись — services/catalogSync и services/marketPrices. */
 class SyncRunsRepository extends BaseRepository {
-    public list(kind: string, limit: number): Promise<SyncRun[]> {
+    /** marketId — только прогоны этого магазина. */
+    public list(kind: string, limit: number, marketId?: string): Promise<SyncRun[]> {
         return this.db.SyncRun.findAll({
-            where: { kind },
+            where: marketId ? { kind, marketId } : { kind },
             order: [
                 ['startedAt', 'DESC'],
                 ['id', 'DESC'],

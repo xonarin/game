@@ -29,6 +29,8 @@ import serviceTypeDefs from './service/schema.graphql';
 import { rules as serviceRules, resolvers as serviceResolvers } from './service/resolvers';
 import catalogSyncTypeDefs from './catalogSync/schema.graphql';
 import { rules as catalogSyncRules, resolvers as catalogSyncResolvers } from './catalogSync/resolvers';
+import marketsTypeDefs from './markets/schema.graphql';
+import { rules as marketsRules, resolvers as marketsResolvers } from './markets/resolvers';
 import shieldConfig from '../../utils/graphql-shield/config';
 
 const typeDefs = mergeTypeDefs([
@@ -45,6 +47,7 @@ const typeDefs = mergeTypeDefs([
     adminTypeDefs,
     serviceTypeDefs,
     catalogSyncTypeDefs,
+    marketsTypeDefs,
 ]);
 
 const resolvers = mergeResolvers([
@@ -61,6 +64,7 @@ const resolvers = mergeResolvers([
     adminResolvers,
     serviceResolvers,
     catalogSyncResolvers,
+    marketsResolvers,
 ]);
 
 const schema = applyMiddleware(
@@ -76,6 +80,7 @@ const schema = applyMiddleware(
     shield(adminRules, shieldConfig),
     shield(serviceRules, shieldConfig),
     shield(catalogSyncRules, shieldConfig),
+    shield(marketsRules, shieldConfig),
 );
 
 export default schema;

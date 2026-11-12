@@ -17,20 +17,30 @@ type CronJob {
 
 type SyncRun {
     runId: String!
+    # catalog / prices
     kind: String!
+    # Магазин прогона цен; null у каталога
+    marketCode: String
     # manual / cron
     trigger: String!
-    # running / ok / failed
+    # running / ok / failed / skipped (цены: снимок не применён защитой minRowsRatio)
     status: String!
     startedAt: DateTime!
     finishedAt: DateTime
     batchesExpected: Int!
     batchesReceived: Int!
     rowsReceived: Int!
+    # Каталог: добавлено строк Item. Цены: новых строк market_price
     rowsInserted: Int!
+    # Каталог: обновлено строк Item. Цены: предметов, у которых изменились price / is_available
     rowsUpdated: Int!
     sourceTotal: Int!
     duplicatesCollapsed: Int!
+    # Цены: совпало с каталогом / ушло в несовпавшие / удалено (нет в снимке) / изменились min_price или qty
+    rowsMatched: Int!
+    rowsUnmatched: Int!
+    rowsRemoved: Int!
+    rowsChanged: Int!
     error: String
 }
 
@@ -56,8 +66,9 @@ type CatalogStats {
 type Query {
     cronJobs: [CronJob!]!
     cronJob(key: String!): CronJob
-    # Последние прогоны, новые сверху; limit 1…100, по умолчанию 20
-    syncRuns(kind: String = "catalog", limit: Int = 20): [SyncRun!]!
+    # Последние прогоны, новые сверху; limit 1…100, по умолчанию 20.
+    # marketCode — только прогоны цен этого магазина (неизвестный код — пустой список)
+    syncRuns(kind: String = "catalog", marketCode: String, limit: Int = 20): [SyncRun!]!
     catalogStats: CatalogStats!
     # Источник импорта (настройка catalog::sourceUrl); правится через adminUpdateSetting.
     # Недопустимое значение (не https / хост вне CATALOG_SOURCE_HOSTS) — UserError
