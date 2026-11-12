@@ -14,6 +14,8 @@ export interface ApolloContext extends ApolloUserContext {
     repositories: Repositories;
     // Present for server-to-server callers (plant-auth) that send `X-Service-Token`.
     serviceToken?: string;
+    // plant-admin без сессии админа (крон): заголовок X-Admin-Service-Token
+    adminServiceToken?: string;
 }
 
 export interface ClientStateContext {

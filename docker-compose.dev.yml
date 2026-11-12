@@ -39,6 +39,9 @@ services:
       # GAME_VERIFY_SECRET / SERVICE_API_TOKEN в dev берут безопасные дефолты, если не заданы.
       GAME_VERIFY_SECRET: ${GAME_VERIFY_SECRET:-}
       SERVICE_API_TOKEN: ${SERVICE_API_TOKEN:-}
+      # plant-admin: приём каталога (HMAC) и сервисный GraphQL; в dev — безопасные дефолты, если пусто.
+      SYNC_HMAC_SECRET: ${SYNC_HMAC_SECRET:-}
+      ADMIN_SERVICE_TOKEN: ${ADMIN_SERVICE_TOKEN:-}
       # Telegram — для бонуса и привязки аккаунта (не вход). Значения из локального .env.
       PUBLIC_URL: ${PUBLIC_URL:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}

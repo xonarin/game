@@ -41,6 +41,18 @@ const config = {
         token: env('SERVICE_API_TOKEN') || (__DEV__ ? 'dev-only-insecure-service-api-token' : ''),
     },
 
+    // Сервисный доступ plant-admin к GraphQL (крон читает расписания без входа админа):
+    // заголовок X-Admin-Service-Token. Отдельный от SERVICE_API_TOKEN plant-auth. Пусто = выключено.
+    adminService: {
+        token: env('ADMIN_SERVICE_TOKEN') || (__DEV__ ? 'dev-only-insecure-admin-service-token' : ''),
+    },
+
+    // Приём каталога от plant-admin: POST /internal/sync/*, HMAC-SHA256 подпись тела.
+    // Пусто = маршруты отвечают 503.
+    sync: {
+        hmacSecret: env('SYNC_HMAC_SECRET') || (__DEV__ ? 'dev-only-insecure-sync-hmac-secret' : ''),
+    },
+
     // Authentication
     auth: {
         tokenKey: process.env.TOKEN_KEY || 'idToken',
@@ -74,9 +86,7 @@ const config = {
             url: env('AUTH_SERVICE_URL') || (__DEV__ ? 'http://localhost:3300' : ''),
             // Server-to-server URL for the /verify code exchange.
             internalUrl:
-                env('AUTH_SERVICE_INTERNAL_URL') ||
-                env('AUTH_SERVICE_URL') ||
-                (__DEV__ ? 'http://localhost:3300' : ''),
+                env('AUTH_SERVICE_INTERNAL_URL') || env('AUTH_SERVICE_URL') || (__DEV__ ? 'http://localhost:3300' : ''),
             // This site's per-domain /verify secret. Must equal the secret stored for this
             // origin in the admin "Домены" (AuthClient.secret). In dev, falls back to the shared
             // dev secret so local testing works without configuring a per-domain secret.

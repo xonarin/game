@@ -45,6 +45,7 @@ import initPayments from './routes/payment';
 import initTelegramWebhook from './routes/telegram';
 import initCron from './cron';
 import { resolveMigrationsDir, runMigrations } from './data/migrate';
+import catalogSyncRouter from './services/catalogSync/router';
 
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -66,6 +67,10 @@ app.set('trust proxy', config.trustProxy);
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
+
+// Приём каталога от plant-admin (HMAC). ДО express.json(): подпись проверяется по сырому телу.
+app.use('/internal/sync', catalogSyncRouter());
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

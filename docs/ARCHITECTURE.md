@@ -31,6 +31,8 @@
 | игровой | `me`, `minesGame`, `chat`, … | как раньше | игроки |
 | **admin** | `adminMe`, `adminUsers`, `adminAdjustBalance`, `adminSettings`, `adminDashboard`, `adminAuthClients`, `adminAdd/Set/RemoveAuthClient`, `adminUpdateSetting` | `isAdmin` (роль Admin) | `plant-admin` |
 | **service** | `serviceResolveSocialUser`, `serviceIsAllowedOrigin` | `isService` (токен `X-Service-Token`) | `plant-auth` |
+| **каталог** | `cronJobs`, `cronJob`, `syncRuns`, `catalogStats` | `isAdmin` **или** `isAdminService` (токен `X-Admin-Service-Token`) | `plant-admin` (UI и крон) |
+| **каталог** | `updateCronJob` | `isAdmin` (пишется в `AdminAction`) | `plant-admin` (UI) |
 
 ## Как админка связана с игрой по API
 
@@ -67,6 +69,28 @@ plant-admin BFF -> POST plant-auth /verify { code, secret } -> { userId }
       -> проверяет adminMe (роль Admin) -> ставит cookie adminToken
 ```
 
+## Каталог скинов: приём от plant-admin
+
+Импорт каталога CS2 выполняет воркер plant-admin (у него нет доступа к БД). Данные он отправляет
+в игру отдельными REST-маршрутами рядом с GraphQL — не через `/graphql`:
+
+```
+plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, duplicatesCollapsed, batchCount}
+            --POST /internal/sync/catalog/batch  {runId, batchIndex, rows[≤2000]}   × batchCount (gzip)
+            --POST /internal/sync/catalog/finish {runId, status, error?}
+```
+
+- Контракт (типы, коды ошибок, схема подписи) — `src/interfaces/catalogSync.ts`; копия в plant-admin
+  `src/contracts/catalogSync.ts`, менять синхронно.
+- Защита: HMAC-SHA256 сырого JSON-тела + `X-Sync-Timestamp` (±60 с), секрет `SYNC_HMAC_SECRET`;
+  тело до 5 МБ после распаковки, `Content-Encoding: gzip` поддерживается. Allowlist IP пока нет.
+- Код: `src/services/catalogSync/` (router — подпись и разбор, validate, service — транзакции).
+- Пачка — один `INSERT … ON DUPLICATE KEY UPDATE`; `price` / `is_available` / `price_updated_at`
+  импорт не трогает. Повтор пачки идемпотентен (`sync_run_batch`). Отсутствующие в импорте
+  предметы не удаляются — finish возвращает их число (`notSeenCount`).
+- Одновременно — один прогон каталога; `running` старше часа при следующем start становится `failed`.
+- Расписание хранится в `cron_job` (game), выполняет его plant-admin; правит админ через `updateCronJob`.
+
 ## Что где прописывать (переменные окружения)
 
 **game** (`.env`, см. `.env.example`):
@@ -76,6 +100,8 @@ plant-admin BFF -> POST plant-auth /verify { code, secret } -> { userId }
 | `DATABASE_URL`, `REDIS_URL` | БД и Redis |
 | `JWT_SECRET` | подпись сессий; **= `GAME_JWT_SECRET` в plant-admin** |
 | `SERVICE_API_TOKEN` | сервисный API; **= `SERVICE_API_TOKEN` в plant-auth** |
+| `SYNC_HMAC_SECRET` | подпись `/internal/sync/*`; **= `SYNC_HMAC_SECRET` в plant-admin** |
+| `ADMIN_SERVICE_TOKEN` | GraphQL каталога без сессии (крон админки); **= `ADMIN_SERVICE_TOKEN` в plant-admin** |
 | `VKID_APP_ID`, `GOOGLE_*`, `STEAM_API_KEY`, `TELEGRAM_*` | провайдеры **входа игроков** |
 
 **plant-auth** (`.env`, см. его `.env.example`):

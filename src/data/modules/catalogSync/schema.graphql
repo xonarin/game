@@ -1,0 +1,59 @@
+# Каталог скинов и расписания фоновых задач — для админки (plant-admin).
+# Чтение: админ (Bearer game-JWT через BFF) ИЛИ сервер админки без сессии (X-Admin-Service-Token, крон).
+# Изменение расписания — только админ. Сам приём каталога — REST /internal/sync/* (HMAC), не здесь.
+# Даты — DateTime (ISO 8601, UTC); скаляр объявлен в модуле admin.
+
+type CronJob {
+    key: String!
+    # Стандартный 5-полевой cron
+    cronExpression: String!
+    # IANA, например Asia/Tashkent
+    timezone: String!
+    enabled: Boolean!
+    lastRunAt: DateTime
+    lastRunStatus: String
+    updatedAt: DateTime!
+}
+
+type SyncRun {
+    runId: String!
+    kind: String!
+    # manual / cron
+    trigger: String!
+    # running / ok / failed
+    status: String!
+    startedAt: DateTime!
+    finishedAt: DateTime
+    batchesExpected: Int!
+    batchesReceived: Int!
+    rowsReceived: Int!
+    rowsInserted: Int!
+    rowsUpdated: Int!
+    sourceTotal: Int!
+    duplicatesCollapsed: Int!
+    error: String
+}
+
+type CatalogCategoryCount {
+    category: String!
+    count: Int!
+}
+
+type CatalogStats {
+    total: Int!
+    byCategory: [CatalogCategoryCount!]!
+    lastSuccessfulImportAt: DateTime
+}
+
+type Query {
+    cronJobs: [CronJob!]!
+    cronJob(key: String!): CronJob
+    # Последние прогоны, новые сверху; limit 1…100, по умолчанию 20
+    syncRuns(kind: String = "catalog", limit: Int = 20): [SyncRun!]!
+    catalogStats: CatalogStats!
+}
+
+type Mutation {
+    # Ошибка валидации — UserError с понятным текстом и extensions.field (cronExpression / timezone / key)
+    updateCronJob(key: String!, cronExpression: String!, timezone: String!, enabled: Boolean!): CronJob!
+}

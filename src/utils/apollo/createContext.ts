@@ -35,6 +35,7 @@ export const createContext = async (req?: Request, res?: Response): Promise<Apol
     if (!req) return commonContext;
 
     const serviceTokenHeader = req.headers['x-service-token'];
+    const adminServiceTokenHeader = req.headers['x-admin-service-token'];
 
     return {
         ...commonContext,
@@ -42,6 +43,9 @@ export const createContext = async (req?: Request, res?: Response): Promise<Apol
         res,
         user: (req.user && (await repositories.users.getUserById(req.user.id))) || undefined,
         serviceToken: Array.isArray(serviceTokenHeader) ? serviceTokenHeader[0] : serviceTokenHeader,
+        adminServiceToken: Array.isArray(adminServiceTokenHeader)
+            ? adminServiceTokenHeader[0]
+            : adminServiceTokenHeader,
     };
 };
 

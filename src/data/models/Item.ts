@@ -55,8 +55,10 @@ export const initItem = (sequelize: Sequelize): ItemStatic =>
                 primaryKey: true,
                 autoIncrement: true,
 
+                // null у экземпляра, который Sequelize строит для статического Model.update()
                 get(this: Item) {
-                    return (this.getDataValue('id') as unknown as number).toString();
+                    const id = this.getDataValue('id') as unknown as number | null;
+                    return id === null || id === undefined ? id : id.toString();
                 },
             },
 

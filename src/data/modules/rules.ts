@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { rule } from 'graphql-shield';
 
 import { UserError } from '../../utils/errors';
@@ -30,6 +31,25 @@ export const isService = rule({ cache: 'contextual' })((_0, _1, ctx: ApolloConte
     const expected = config.service.token;
     if (!expected || !ctx.serviceToken || ctx.serviceToken !== expected) {
         return new UserError('NOT_SERVICE');
+    }
+
+    return true;
+});
+
+const timingSafeEqualStr = (a: string, b: string): boolean => {
+    const ab = Buffer.from(a);
+    const bb = Buffer.from(b);
+    return ab.length === bb.length && crypto.timingSafeEqual(ab, bb);
+};
+
+/**
+ * Сервер plant-admin без сессии админа (крон читает расписания): заголовок X-Admin-Service-Token.
+ * Отдельный токен от plant-auth (isService). Пустой токен в конфиге = доступ выключен.
+ */
+export const isAdminService = rule({ cache: 'contextual' })((_0, _1, ctx: ApolloContext) => {
+    const expected = config.adminService.token;
+    if (!expected || !ctx.adminServiceToken || !timingSafeEqualStr(ctx.adminServiceToken, expected)) {
+        return new UserError('NOT_ADMIN_SERVICE');
     }
 
     return true;

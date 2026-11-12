@@ -6,6 +6,13 @@
  *   plant-admin: src/contracts/catalogSync.ts
  *
  * Только типы, без логики. Даты передаются строками ISO 8601 в UTC.
+ *
+ * Транспорт: POST /internal/sync/catalog/{start,batch,finish}, тело JSON
+ * (Content-Type: application/json, можно Content-Encoding: gzip), лимит 5 МБ после распаковки.
+ * Подпись — заголовки:
+ *   X-Sync-Timestamp: unix-время в секундах (окно ±60 с)
+ *   X-Sync-Signature: hex(HMAC-SHA256(SYNC_HMAC_SECRET, `${timestamp}\n${METHOD}\n${path}\n` + JSON-тело))
+ * JSON-тело — байты ДО gzip; path — без query, например /internal/sync/catalog/batch.
  */
 
 // ── COMMON ────────────────────────────────────────────────────────────────────
@@ -72,6 +79,65 @@ export interface CatalogRunFinish {
     status: SyncRunResult;
     // Текст ошибки при status = 'failed'
     error?: string;
+}
+
+// ── CATALOG RUN RESPONSES ─────────────────────────────────────────────────────
+
+export interface CatalogRunStartResponse {
+    runId: string;
+    status: 'running';
+    // ISO 8601 UTC; catalog_seen_at строк этого прогона
+    startedAt: string;
+    batchesExpected: number;
+    // true — повтор start для уже открытого прогона с тем же runId
+    resumed: boolean;
+}
+
+export interface CatalogBatchResponse {
+    runId: string;
+    batchIndex: number;
+    rowsReceived: number;
+    rowsInserted: number;
+    rowsUpdated: number;
+    // true — пачка уже была принята раньше, данные не менялись
+    duplicate: boolean;
+}
+
+export interface CatalogRunFinishResponse {
+    runId: string;
+    // Итог от game: ok только если получены все пачки
+    status: SyncRunResult;
+    error: string | null;
+    batchesExpected: number;
+    batchesReceived: number;
+    rowsReceived: number;
+    rowsInserted: number;
+    rowsUpdated: number;
+    // Предметы в БД, которых не было в этом импорте (не удаляются); null, если прогон не ok
+    notSeenCount: number | null;
+    // true — прогон уже был закрыт раньше (повтор finish)
+    alreadyFinished: boolean;
+}
+
+// ── ERRORS ────────────────────────────────────────────────────────────────────
+
+export type SyncErrorCode =
+    | 'NOT_CONFIGURED' // 503: на game не задан SYNC_HMAC_SECRET
+    | 'BAD_SIGNATURE' // 401: нет/неверная подпись или timestamp вне окна ±60 с
+    | 'UNSUPPORTED_MEDIA_TYPE' // 415: не application/json или неизвестный Content-Encoding
+    | 'PAYLOAD_TOO_LARGE' // 413: тело больше 5 МБ (после распаковки)
+    | 'VALIDATION' // 400: тело не прошло проверку, подробности в details
+    | 'RUN_NOT_FOUND' // 404
+    | 'RUN_IN_PROGRESS' // 409: идёт другой прогон моложе часа
+    | 'RUN_EXISTS' // 409: runId уже использован другим прогоном
+    | 'RUN_CLOSED' // 409: пачка для уже закрытого прогона
+    | 'INTERNAL'; // 500
+
+// Тело любого ответа с ошибкой
+export interface SyncErrorResponse {
+    code: SyncErrorCode;
+    error: string;
+    details?: string[];
 }
 
 // ── CRON JOB ──────────────────────────────────────────────────────────────────
