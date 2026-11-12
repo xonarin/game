@@ -1,14 +1,15 @@
 /**
- * Контракт синхронизации каталога предметов CS2: plant-admin (воркер) -> game (API).
+ * Контракт синхронизации каталога предметов CS2 и цен магазинов: plant-admin (воркер) -> game (API).
  *
  * Копия в /game и /plant-admin — менять синхронно.
  *   game:        src/interfaces/catalogSync.ts
  *   plant-admin: src/contracts/catalogSync.ts
  *
  * Только типы, без логики. Даты передаются строками ISO 8601 в UTC.
+ * Деньги — строки с ровно двумя знаками после точки ("81.05"), без экспоненты и разделителей тысяч.
  *
- * Транспорт: POST /internal/sync/catalog/{start,batch,finish}, тело JSON
- * (Content-Type: application/json, можно Content-Encoding: gzip), лимит 5 МБ после распаковки.
+ * Транспорт: POST /internal/sync/catalog/{start,batch,finish} и /internal/sync/prices/:market,
+ * тело JSON (Content-Type: application/json, можно Content-Encoding: gzip), лимит 5 МБ после распаковки.
  * Подпись — заголовки:
  *   X-Sync-Timestamp: unix-время в секундах (окно ±60 с)
  *   X-Sync-Signature: hex(HMAC-SHA256(SYNC_HMAC_SECRET, `${timestamp}\n${METHOD}\n${path}\n` + JSON-тело))
@@ -159,6 +160,69 @@ export interface SyncErrorResponse {
     code: SyncErrorCode;
     error: string;
     details?: string[];
+}
+
+// ── PRICES (POST /internal/sync/prices/:market) ───────────────────────────────
+
+/**
+ * Одна строка снимка = один market_hash_name магазина (агрегат: минимальная цена и число лотов).
+ * Кортеж, а не объект: ~14 000 строк за прогон, ключи объектов удвоили бы тело.
+ * marketHashName — как у магазина после правил его адаптера (например, склейки фаз Doppler);
+ * в игре сравнивается с каталогом побайтово, без нормализации.
+ */
+export type PriceRow = [
+    marketHashName: string,
+    // minPrice × rate, округлено до центов
+    priceUsd: string,
+    // В валюте магазина (PriceSnapshot.currency)
+    minPrice: string,
+    // Лотов в наличии, целое > 0
+    qty: number,
+];
+
+/**
+ * Полный снимок цен магазина за прогон — не дифф: имени нет в rows -> у магазина его нет в наличии.
+ * :market в пути и поле market совпадают.
+ */
+export interface PriceSnapshot {
+    // prices-<code>-<ISO время>-<random>, генерирует админка; повтор того же runId — 'duplicate'
+    runId: string;
+    // market.code: 'lisskins'
+    market: string;
+    // ISO 4217 — валюта minPrice, совпадает с market.currency
+    currency: string;
+    // Курс: 1 единица currency = rate USD ("1" для USD)
+    rate: string;
+    // ISO 8601 UTC — когда магазин сформировал выгрузку (или когда админка её скачала, если магазин не сообщает)
+    generatedAt: string;
+    trigger: SyncTrigger;
+    // Объектов (лотов / строк) в исходной выгрузке магазина — до агрегации и фильтров
+    sourceTotal: number;
+    // Уникальные marketHashName
+    rows: PriceRow[];
+}
+
+// ── MARKET ────────────────────────────────────────────────────────────────────
+
+// Магазин глазами админки: строка market из игры + configured, который вычисляет plant-admin
+export interface Market {
+    // 'lisskins'
+    code: string;
+    name: string;
+    enabled: boolean;
+    // ISO 4217
+    currency: string;
+    // Порядок при равной цене: меньше — раньше
+    priority: number;
+    // "0.70": строк снимка меньше ratio × прошлого успешного -> прогон skipped
+    minRowsRatio: string;
+    // Несекретные настройки адаптера (ключи API — только в env plant-admin)
+    settings: Record<string, unknown>;
+    // ISO 8601 UTC или null, если синхронизаций ещё не было
+    lastSyncAt: string | null;
+    lastSyncStatus: string | null;
+    // В plant-admin есть адаптер этого магазина и заданы его env-переменные
+    configured: boolean;
 }
 
 // ── CRON JOB ──────────────────────────────────────────────────────────────────
