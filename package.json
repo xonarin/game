@@ -27,7 +27,9 @@
         "serve": "babel-node --extensions \".ts\" tools/run runServer",
         "start": "babel-node --extensions \".ts\" tools/run start",
         "typecheck": "tsc --noEmit",
-        "smoke": "node tools/smoke-test.mjs"
+        "smoke": "node tools/smoke-test.mjs",
+        "migrate:status": "babel-node --extensions \".ts\" src/data/migrateCli.ts status",
+        "migrate:rehash": "babel-node --extensions \".ts\" src/data/migrateCli.ts rehash"
     },
     "dependencies": {
         "@apollo/client": "^3.14",

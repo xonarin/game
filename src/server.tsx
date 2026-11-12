@@ -44,6 +44,7 @@ import { decreaseOnline, increaseOnline, resetOnline, resetGames } from './servi
 import initPayments from './routes/payment';
 import initTelegramWebhook from './routes/telegram';
 import initCron from './cron';
+import { resolveMigrationsDir, runMigrations } from './data/migrate';
 
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -310,8 +311,26 @@ app.use((err: any, _0: Request, res: Response, _next: NextFunction) => {
 // Launch the server
 // -----------------------------------------------------------------------------
 const port = module.hot ? config.devPort : config.port;
+// ── SCHEMA: sync() -> migrations ──────────────────────────────────────────────
+// Порядок именно такой:
+// 1) sequelize.sync() создаёт недостающие СТАРЫЕ таблицы по моделям (на пустой БД — все).
+//    Модели каталога (item, sync_run, …) из sync() исключены — их таблицы создают только миграции,
+//    поэтому sync() никогда не конкурирует с миграциями за одни и те же таблицы.
+// 2) Затем SQL-миграции. Им нужны уже существующие старые таблицы: внешние ключи на User и т.п.,
+//    ALTER старых таблиц. Если запустить миграции раньше, на пустой БД такие файлы упадут.
+//    Следствие: ALTER старой таблицы на пустой БД встретит колонку, которую sync() уже создал
+//    по модели, — такие миграции пишутся идемпотентно (проверка через information_schema).
+// Любая ошибка миграций (папка, блокировка, checksum, SQL) — сервер не стартует.
+const migrationsDir = resolveMigrationsDir();
+
 const serverSync = database.sequelize
     .sync()
+    .then(() =>
+        runMigrations(config.databaseUrl, migrationsDir).catch((err: Error) => {
+            console.error('[migrate] запуск остановлен:', err.message);
+            process.exit(1);
+        }),
+    )
     .then(() => startServices())
     .catch((err: Error) => console.error(err.stack));
 

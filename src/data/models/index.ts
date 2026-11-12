@@ -20,6 +20,10 @@ import { initPromoCode, PromoCodeStatic } from './PromoCode';
 import { initPromoCodeUse, PromoCodeUseStatic } from './PromoCodeUse';
 import { initAuthClient, AuthClientStatic } from './AuthClient';
 import { initAdminAction, AdminActionStatic } from './AdminAction';
+import { initItem, ItemStatic } from './Item';
+import { initSyncRun, SyncRunStatic } from './SyncRun';
+import { initSyncRunBatch, SyncRunBatchStatic } from './SyncRunBatch';
+import { initCronJob, CronJobStatic } from './CronJob';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -31,6 +35,16 @@ export type AssociableModelStatic<M extends Model, A extends { [key: string]: As
 function isAssociable(model: Sequelize | ModelStatic<Model>): model is AssociableModelStatic<Model> {
     return 'associate' in model;
 }
+
+// ── MIGRATION-MANAGED MODELS ──────────────────────────────────────────────────
+
+/**
+ * Таблицы этих моделей создаются только SQL-миграциями (src/data/migrate.ts).
+ * sequelize.sync() вызывает model.sync() для каждой модели — здесь он заменён на no-op,
+ * чтобы sync() не создал таблицу сам (с неправильной collation и без индексов).
+ */
+const migrationManaged = <M extends ModelStatic<Model>>(model: M): M =>
+    Object.assign(model, { sync: async () => model });
 
 export interface Database {
     sequelize: Sequelize;
@@ -55,6 +69,12 @@ export interface Database {
     PromoCodeUse: PromoCodeUseStatic;
     AuthClient: AuthClientStatic;
     AdminAction: AdminActionStatic;
+
+    // Каталог (таблицы из migrations/, вне sync())
+    Item: ItemStatic;
+    SyncRun: SyncRunStatic;
+    SyncRunBatch: SyncRunBatchStatic;
+    CronJob: CronJobStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -79,6 +99,11 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         PromoCodeUse: initPromoCodeUse(sequelize),
         AuthClient: initAuthClient(sequelize),
         AdminAction: initAdminAction(sequelize),
+
+        Item: migrationManaged(initItem(sequelize)),
+        SyncRun: migrationManaged(initSyncRun(sequelize)),
+        SyncRunBatch: migrationManaged(initSyncRunBatch(sequelize)),
+        CronJob: migrationManaged(initCronJob(sequelize)),
     };
 
     forEach(database, model => {

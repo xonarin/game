@@ -290,6 +290,8 @@ const serverConfig: webpack.Configuration = {
 
     entry: {
         server: ['./src/server'],
+        // CLI миграций: build/migrate.js (status / rehash), см. src/data/migrateCli.ts
+        migrate: ['./src/data/migrateCli'],
     },
 
     output: {

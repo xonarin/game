@@ -21,6 +21,8 @@ async function copy() {
                     dependencies: pkg.dependencies,
                     scripts: {
                         start: 'node server.js',
+                        'migrate:status': 'node migrate.js status',
+                        'migrate:rehash': 'node migrate.js rehash',
                     },
                 },
                 null,
@@ -29,10 +31,12 @@ async function copy() {
         ),
         copyFile('yarn.lock', 'build/yarn.lock'),
         copyDir('public', 'build/public'),
+        // SQL-миграции применяются при старте сервера (src/data/migrate.ts)
+        copyDir('migrations', 'build/migrations'),
     ]);
 
     if (process.argv.includes('--watch')) {
-        const watcher = chokidar.watch(['public/**/*'], { ignoreInitial: true });
+        const watcher = chokidar.watch(['public/**/*', 'migrations/**/*'], { ignoreInitial: true });
 
         watcher.on('all', async (event, filePath) => {
             const start = new Date();
