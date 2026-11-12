@@ -77,12 +77,13 @@ export const resolvers = {
         ) => repositories.syncRuns.list(kind || SyncRunKind.Catalog, Math.min(Math.max(limit ?? 20, 1), 100)),
 
         catalogStats: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) => {
-            const [total, byCategory, lastSuccessfulImportAt] = await Promise.all([
+            const [total, byType, byCategory, lastSuccessfulImportAt] = await Promise.all([
                 repositories.catalog.count(),
-                repositories.catalog.countByCategory(),
+                repositories.catalog.countByType(),
+                repositories.catalog.countSkinsByCategory(),
                 repositories.syncRuns.lastSuccessfulAt(SyncRunKind.Catalog),
             ]);
-            return { total, byCategory, lastSuccessfulImportAt };
+            return { total, byType, byCategory, lastSuccessfulImportAt };
         },
 
         // Проверяется и при чтении: значение могли поменять в БД в обход админки или сузить CATALOG_SOURCE_HOSTS

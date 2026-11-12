@@ -6,6 +6,7 @@ import { CatalogRow } from '../../interfaces/catalogSync';
 // Описательные поля, которые импорт обновляет у существующей строки.
 // price / is_available / price_updated_at здесь нет намеренно — их ведут следующие этапы.
 const UPDATE_COLUMNS = [
+    'type',
     'skin_key',
     'weapon',
     'weapon_id',
@@ -45,6 +46,11 @@ export interface CatalogStatsRow {
     count: number;
 }
 
+export interface CatalogTypeStatsRow {
+    type: string;
+    count: number;
+}
+
 /** Каталог предметов CS2. */
 class CatalogRepository extends BaseRepository {
     // ── IMPORT ────────────────────────────────────────────────────────────────
@@ -71,8 +77,10 @@ class CatalogRepository extends BaseRepository {
         );
         const existing = Number(cnt);
 
+        // Порядок — как в INSERT_COLUMNS
         const values = rows.flatMap(row => [
             row.marketHashName,
+            row.type,
             row.skinKey,
             row.weapon,
             row.weaponId,
@@ -105,15 +113,28 @@ class CatalogRepository extends BaseRepository {
         return this.db.Item.count();
     }
 
-    public async countByCategory(): Promise<CatalogStatsRow[]> {
+    public async countByType(): Promise<CatalogTypeStatsRow[]> {
+        const rows = (await this.db.Item.findAll({
+            attributes: ['type', [fn('COUNT', col('id')), 'count']],
+            group: ['type'],
+            order: [[fn('COUNT', col('id')), 'DESC']],
+            raw: true,
+        })) as unknown as Array<{ type: string; count: number | string }>;
+
+        return rows.map(row => ({ type: row.type, count: Number(row.count) }));
+    }
+
+    /** Скины по категориям оружия (Knives, Rifles…). */
+    public async countSkinsByCategory(): Promise<CatalogStatsRow[]> {
         const rows = (await this.db.Item.findAll({
             attributes: ['category', [fn('COUNT', col('id')), 'count']],
+            where: { type: 'skin' },
             group: ['category'],
             order: [[fn('COUNT', col('id')), 'DESC']],
             raw: true,
-        })) as unknown as Array<{ category: string; count: number | string }>;
+        })) as unknown as Array<{ category: string | null; count: number | string }>;
 
-        return rows.map(row => ({ category: row.category, count: Number(row.count) }));
+        return rows.map(row => ({ category: row.category ?? '—', count: Number(row.count) }));
     }
 }
 

@@ -7,6 +7,7 @@ import {
     SyncRunResult,
     SyncTrigger,
 } from '../../interfaces/catalogSync';
+import { ITEM_TYPES } from '../../data/models/Item';
 import { SyncError } from './errors';
 
 /**
@@ -60,6 +61,12 @@ class Checker {
         const len = charLength(value);
         if (len < min || len > max) {
             this.fail(`${where}.${key}: длина ${len}, допустимо ${min}…${max}`);
+        }
+    }
+
+    public nullableString(obj: Obj, key: string, where: string, max: number) {
+        if (obj[key] !== null) {
+            this.string(obj, key, where, max);
         }
     }
 
@@ -120,21 +127,40 @@ export const parseRunStart = (body: unknown): CatalogRunStart => {
 
 // ── BATCH ─────────────────────────────────────────────────────────────────────
 
+// Оружейные поля: у скина обязательны (кроме paintIndex / exterior), у остальных типов — null
+const SKIN_ONLY_FIELDS = ['skinKey', 'weapon', 'weaponId', 'paintIndex', 'exterior'] as const;
+
 const checkRow = (c: Checker, row: unknown, where: string) => {
     if (!c.object(row, where)) {
         return;
     }
+    c.oneOf(row, 'type', where, ITEM_TYPES);
     c.string(row, 'marketHashName', where, 255);
-    c.string(row, 'skinKey', where, 64);
-    c.string(row, 'weapon', where, 64);
-    c.int(row, 'weaponId', where, 0, 2_147_483_647);
-    c.int(row, 'paintIndex', where, 0, 2_147_483_647, true);
-    c.string(row, 'category', where, 64);
-    c.oneOf(row, 'exterior', where, EXTERIORS, true);
+
+    if (row.type === 'skin') {
+        c.string(row, 'skinKey', where, 64);
+        c.string(row, 'weapon', where, 64);
+        c.int(row, 'weaponId', where, 0, 2_147_483_647);
+        c.int(row, 'paintIndex', where, 0, 2_147_483_647, true);
+        c.oneOf(row, 'exterior', where, EXTERIORS, true);
+        c.string(row, 'category', where, 64);
+    } else {
+        SKIN_ONLY_FIELDS.forEach(key => {
+            if (row[key] !== null) {
+                c.fail(`${where}.${key}: у type «${String(row.type)}» ожидается null`);
+            }
+        });
+        c.nullableString(row, 'category', where, 64);
+    }
+
     c.bool(row, 'stattrak', where);
     c.bool(row, 'souvenir', where);
-    c.string(row, 'rarity', where, 64);
-    c.match(row, 'rarityColor', where, COLOR_RE, 'цвет #rrggbb');
+
+    // rarity и rarityColor — оба заданы или оба null (у ключей редкости нет)
+    if (row.rarity !== null || row.rarityColor !== null) {
+        c.string(row, 'rarity', where, 64);
+        c.match(row, 'rarityColor', where, COLOR_RE, 'цвет #rrggbb (или null вместе с rarity)');
+    }
     c.string(row, 'image', where, 2048);
 };
 

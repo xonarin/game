@@ -1,5 +1,5 @@
 /**
- * Контракт синхронизации каталога скинов CS2: plant-admin (воркер) -> game (API).
+ * Контракт синхронизации каталога предметов CS2: plant-admin (воркер) -> game (API).
  *
  * Копия в /game и /plant-admin — менять синхронно.
  *   game:        src/interfaces/catalogSync.ts
@@ -26,27 +26,48 @@ export type SyncTrigger = 'manual' | 'cron';
 // Итог прогона, который сообщает админка
 export type SyncRunResult = 'ok' | 'failed';
 
+// Тип предмета = префикс id в ByMykel all.json ("sticker-6044" -> 'sticker')
+// Другие префиксы (collection, pet, tool …) в каталог не попадают: у них нет market_hash_name
+export type ItemType =
+    | 'skin'
+    | 'sticker'
+    | 'sticker_slab'
+    | 'keychain'
+    | 'crate'
+    | 'key'
+    | 'collectible'
+    | 'agent'
+    | 'patch'
+    | 'graffiti'
+    | 'music_kit';
+
 // ── CATALOG ROW ───────────────────────────────────────────────────────────────
 
 // Одна строка каталога = один уникальный market_hash_name
 export interface CatalogRow {
+    type: ItemType;
     // Как в источнике: без trim и нормализации
     marketHashName: string;
+
+    // Только у type = 'skin', у остальных null
     // skin_id из ByMykel — группирует износы одного скина
-    skinKey: string;
-    weapon: string;
+    skinKey: string | null;
+    weapon: string | null;
     // def_index оружия
-    weaponId: number;
+    weaponId: number | null;
     // null у свёрнутых Doppler / Gamma Doppler (несколько фаз под одним именем)
     paintIndex: number | null;
-    category: string;
     // null — у предмета нет износа (ванильные ножи и т.п.)
     exterior: Exterior | null;
+
+    // skin: category.name ("Knives"); остальные: поле type из ByMykel ("Case", "Autograph", "Pin") или null
+    category: string | null;
     stattrak: boolean;
     souvenir: boolean;
-    rarity: string;
+    // null у ключей; rarity и rarityColor заданы оба или оба null
+    rarity: string | null;
     // "#d32ce6"
-    rarityColor: string;
+    rarityColor: string | null;
     image: string;
 }
 

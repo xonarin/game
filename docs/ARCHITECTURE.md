@@ -69,9 +69,9 @@ plant-admin BFF -> POST plant-auth /verify { code, secret } -> { userId }
       -> проверяет adminMe (роль Admin) -> ставит cookie adminToken
 ```
 
-## Каталог скинов: приём от plant-admin
+## Каталог предметов: приём от plant-admin
 
-Импорт каталога CS2 выполняет воркер plant-admin (у него нет доступа к БД). Данные он отправляет
+Импорт каталога CS2 (ByMykel `all.json`: скины, наклейки, кейсы, агенты …) выполняет воркер plant-admin (у него нет доступа к БД). Данные он отправляет
 в игру отдельными REST-маршрутами рядом с GraphQL — не через `/graphql`:
 
 ```

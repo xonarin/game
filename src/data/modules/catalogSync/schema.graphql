@@ -39,8 +39,16 @@ type CatalogCategoryCount {
     count: Int!
 }
 
+type CatalogTypeCount {
+    # skin / sticker / crate / … (префикс id ByMykel)
+    type: String!
+    count: Int!
+}
+
 type CatalogStats {
     total: Int!
+    byType: [CatalogTypeCount!]!
+    # Только скины (type = skin): Knives, Rifles …
     byCategory: [CatalogCategoryCount!]!
     lastSuccessfulImportAt: DateTime
 }

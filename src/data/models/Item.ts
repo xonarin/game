@@ -1,9 +1,10 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 import { ModelStatic } from './index';
+import { ItemType as ContractItemType } from '../../interfaces/catalogSync';
 
 /**
- * Предмет каталога CS2 (импорт из ByMykel через plant-admin).
+ * Предмет каталога CS2 (импорт из ByMykel all.json через plant-admin): скины, наклейки, кейсы и т.д.
  * Таблицу `Item` создаёт sequelize.sync() по этой модели; последующие изменения — миграциями.
  * market_hash_name хранится как есть: без trim и нормализации, сравнение бинарное (utf8mb4_bin).
  */
@@ -13,22 +14,44 @@ import { ModelStatic } from './index';
 export const EXTERIORS = ['FN', 'MW', 'FT', 'WW', 'BS'] as const;
 export type Exterior = (typeof EXTERIORS)[number];
 
+// Префикс id в ByMykel all.json; список совпадает с ItemType контракта (satisfies это проверяет)
+export const ITEM_TYPES = [
+    'skin',
+    'sticker',
+    'sticker_slab',
+    'keychain',
+    'crate',
+    'key',
+    'collectible',
+    'agent',
+    'patch',
+    'graffiti',
+    'music_kit',
+] as const satisfies readonly ContractItemType[];
+export type ItemType = (typeof ITEM_TYPES)[number];
+
 export interface Item extends Model {
     readonly id: string;
+    readonly type: ItemType;
     readonly marketHashName: string;
+
+    // Только у type = 'skin', у остальных NULL
     // skin_id из ByMykel — группирует износы одного скина
-    readonly skinKey: string;
-    readonly weapon: string;
+    readonly skinKey: string | null;
+    readonly weapon: string | null;
     // def_index оружия
-    readonly weaponId: number;
+    readonly weaponId: number | null;
     // NULL у свёрнутых Doppler / Gamma Doppler
     readonly paintIndex: number | null;
-    readonly category: string;
     readonly exterior: Exterior | null;
+
+    // skin: «Knives», «Rifles»…; остальные: подтип из ByMykel («Case», «Autograph», «Pin») или NULL
+    readonly category: string | null;
     readonly stattrak: boolean;
     readonly souvenir: boolean;
-    readonly rarity: string;
-    readonly rarityColor: string;
+    // NULL у ключей
+    readonly rarity: string | null;
+    readonly rarityColor: string | null;
     readonly image: string;
 
     // Цены — следующие этапы; импорт каталога их не трогает
@@ -62,18 +85,19 @@ export const initItem = (sequelize: Sequelize): ItemStatic =>
                 },
             },
 
+            type: { type: DataTypes.STRING(16), allowNull: false },
             // BINARY -> utf8mb4_bin: регистр, ™ и ★ различаются; уникальность — в indexes
             marketHashName: { type: DataTypes.STRING(255).BINARY, allowNull: false },
-            skinKey: { type: DataTypes.STRING(64), allowNull: false },
-            weapon: { type: DataTypes.STRING(64), allowNull: false },
-            weaponId: { type: DataTypes.INTEGER, allowNull: false },
+            skinKey: { type: DataTypes.STRING(64), allowNull: true },
+            weapon: { type: DataTypes.STRING(64), allowNull: true },
+            weaponId: { type: DataTypes.INTEGER, allowNull: true },
             paintIndex: { type: DataTypes.INTEGER, allowNull: true },
-            category: { type: DataTypes.STRING(64), allowNull: false },
             exterior: { type: DataTypes.STRING(2), allowNull: true },
+            category: { type: DataTypes.STRING(64), allowNull: true },
             stattrak: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
             souvenir: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-            rarity: { type: DataTypes.STRING(64), allowNull: false },
-            rarityColor: { type: DataTypes.STRING(7), allowNull: false },
+            rarity: { type: DataTypes.STRING(64), allowNull: true },
+            rarityColor: { type: DataTypes.STRING(7), allowNull: true },
             image: { type: DataTypes.TEXT, allowNull: false },
 
             price: { type: DataTypes.DECIMAL(12, 2), allowNull: true },
@@ -93,7 +117,9 @@ export const initItem = (sequelize: Sequelize): ItemStatic =>
                 // Витрина: доступные предметы по цене (следующие этапы)
                 { name: 'idx_item_available_price', fields: ['is_available', 'price'] },
                 { name: 'idx_item_skin_key', fields: ['skin_key'] },
-                { name: 'idx_item_category', fields: ['category'] },
+                // idx_item_type_category (type, category) создаёт миграция 2026-11-13-item-all-types.sql:
+                // sync() добавляет недостающие индексы и в СУЩЕСТВУЮЩУЮ таблицу, а колонки type там
+                // ещё нет (её добавит миграция после sync) — индекс здесь уронил бы старт
             ],
         },
     ) as ItemStatic;
