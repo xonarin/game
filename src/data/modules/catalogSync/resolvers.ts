@@ -5,6 +5,8 @@ import { IANAZone } from 'luxon';
 import { ApolloContext } from '../../../interfaces/apollo';
 import { database } from '../../database';
 import { SyncRun, SyncRunKind } from '../../models/SyncRun';
+import { Exterior, EXTERIORS } from '../../models/Item';
+import { CATALOG_SORTS, CatalogItemsFilter, CatalogSort } from '../../repositories/catalog';
 import { UserError } from '../../../utils/errors';
 import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
 import { isAdmin, isAdminService } from '../rules';
@@ -20,6 +22,7 @@ export const rules: IRules = {
         cronJob: isAdminOrAdminService,
         syncRuns: isAdminOrAdminService,
         catalogStats: isAdminOrAdminService,
+        catalogItems: isAdminOrAdminService,
         catalogSourceUrl: isAdminOrAdminService,
     },
     Mutation: {
@@ -59,6 +62,61 @@ const normalizeTimezone = (value: string): string => {
         throw fieldError('timezone', `Неизвестная таймзона «${zone}». Нужно имя IANA, например Asia/Tashkent или UTC`);
     }
     return new Intl.DateTimeFormat('en-US', { timeZone: zone }).resolvedOptions().timeZone;
+};
+
+// Цена фильтра: до 10 цифр и до 2 знаков после точки (запятая тоже принимается)
+const PRICE_FILTER_RE = /^\d{1,10}(\.\d{1,2})?$/;
+const MAX_SEARCH_WORDS = 10;
+
+const parsePriceFilter = (value: string | null | undefined, field: string): string | null => {
+    const raw = (value ?? '').trim().replace(',', '.');
+    if (!raw) {
+        return null;
+    }
+    if (!PRICE_FILTER_RE.test(raw)) {
+        throw fieldError(field, 'Цена — число с точностью до центов, например 10 или 10.50');
+    }
+    return raw;
+};
+
+const parseCatalogFilter = (args: {
+    search?: string | null;
+    exteriors?: string[] | null;
+    minPrice?: string | null;
+    maxPrice?: string | null;
+    sort?: string | null;
+    limit?: number | null;
+    offset?: number | null;
+}): CatalogItemsFilter => {
+    const exteriors = args.exteriors ?? [];
+    const unknown = exteriors.filter(value => !(EXTERIORS as readonly string[]).includes(value));
+    if (unknown.length) {
+        throw fieldError(
+            'exteriors',
+            `Неизвестное качество: ${unknown.join(', ')}. Допустимо ${EXTERIORS.join(' / ')}`,
+        );
+    }
+
+    const sort = (args.sort || 'name_asc') as CatalogSort;
+    if (!CATALOG_SORTS.includes(sort)) {
+        throw fieldError('sort', `Сортировка: ${CATALOG_SORTS.join(' / ')}`);
+    }
+
+    const minPrice = parsePriceFilter(args.minPrice, 'minPrice');
+    const maxPrice = parsePriceFilter(args.maxPrice, 'maxPrice');
+    if (minPrice !== null && maxPrice !== null && Number(minPrice) > Number(maxPrice)) {
+        throw fieldError('maxPrice', 'Максимальная цена меньше минимальной');
+    }
+
+    return {
+        search: (args.search ?? '').trim().split(/\s+/).filter(Boolean).slice(0, MAX_SEARCH_WORDS),
+        exteriors: exteriors as Exterior[],
+        minPrice,
+        maxPrice,
+        sort,
+        limit: Math.min(Math.max(args.limit ?? 50, 1), 100),
+        offset: Math.max(args.offset ?? 0, 0),
+    };
 };
 
 // ── RESOLVERS ─────────────────────────────────────────────────────────────────
@@ -109,6 +167,9 @@ export const resolvers = {
             ]);
             return { total, byType, byCategory, lastSuccessfulImportAt };
         },
+
+        catalogItems: (_0: unknown, args: Parameters<typeof parseCatalogFilter>[0], { repositories }: ApolloContext) =>
+            repositories.catalog.listItems(parseCatalogFilter(args)),
 
         // Проверяется и при чтении: значение могли поменять в БД в обход админки или сузить CATALOG_SOURCE_HOSTS
         catalogSourceUrl: async (_0: unknown, _1: unknown, { repositories }: ApolloContext) => {

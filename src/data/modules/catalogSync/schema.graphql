@@ -55,6 +55,32 @@ type CatalogTypeCount {
     count: Int!
 }
 
+# Предмет каталога для таблицы админки
+type CatalogItem {
+    id: ID!
+    # skin / sticker / crate / …
+    type: String!
+    marketHashName: String!
+    # skin: Knives, Rifles …; остальные — подтип ByMykel
+    category: String
+    # FN / MW / FT / WW / BS или null
+    exterior: String
+    stattrak: Boolean!
+    souvenir: Boolean!
+    rarity: String
+    rarityColor: String
+    image: String!
+    # USD с наценкой, строкой ("85.10"); null — нет ни у одного включённого магазина
+    price: String
+    isAvailable: Boolean!
+    priceUpdatedAt: DateTime
+}
+
+type CatalogItemPage {
+    total: Int!
+    items: [CatalogItem!]!
+}
+
 type CatalogStats {
     total: Int!
     byType: [CatalogTypeCount!]!
@@ -70,6 +96,19 @@ type Query {
     # marketCode — только прогоны цен этого магазина (неизвестный код — пустой список)
     syncRuns(kind: String = "catalog", marketCode: String, limit: Int = 20): [SyncRun!]!
     catalogStats: CatalogStats!
+    # Таблица предметов: search — слова через пробел (подстрока, без учёта регистра);
+    # exteriors — FN / MW / FT / WW / BS; minPrice / maxPrice — USD строкой ("10" или "10.50");
+    # sort — name_asc / price_asc / price_desc / exterior_asc / exterior_desc; limit 1…100.
+    # Ошибка ввода — UserError с extensions.field
+    catalogItems(
+        search: String
+        exteriors: [String!]
+        minPrice: String
+        maxPrice: String
+        sort: String = "name_asc"
+        limit: Int = 50
+        offset: Int = 0
+    ): CatalogItemPage!
     # Источник импорта (настройка catalog::sourceUrl); правится через adminUpdateSetting.
     # Недопустимое значение (не https / хост вне CATALOG_SOURCE_HOSTS) — UserError
     catalogSourceUrl: String!

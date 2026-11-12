@@ -1,7 +1,8 @@
-import { fn, col, Op, QueryTypes, Transaction } from 'sequelize';
+import { fn, col, literal, Op, Order, QueryTypes, Sequelize, Transaction, WhereOptions } from 'sequelize';
 
 import BaseRepository from './base';
 import { CatalogRow } from '../../interfaces/catalogSync';
+import { Exterior, Item } from '../models/Item';
 
 // Описательные поля, которые импорт обновляет у существующей строки.
 // price / is_available / price_updated_at здесь нет намеренно — их ведут следующие этапы.
@@ -45,6 +46,53 @@ export interface CatalogStatsRow {
     category: string;
     count: number;
 }
+
+// Сортировки списка предметов в админке
+export const CATALOG_SORTS = ['name_asc', 'price_asc', 'price_desc', 'exterior_asc', 'exterior_desc'] as const;
+export type CatalogSort = (typeof CATALOG_SORTS)[number];
+
+export interface CatalogItemsFilter {
+    // Слова через пробел; каждое — подстрока имени без учёта регистра
+    search: string[];
+    exteriors: Exterior[];
+    // DECIMAL строкой ("10.00"); предметы без цены при заданном диапазоне не попадают
+    minPrice: string | null;
+    maxPrice: string | null;
+    sort: CatalogSort;
+    limit: number;
+    offset: number;
+}
+
+// LIKE: %, _ и \ в запросе — буквально
+const likeEscape = (word: string) => word.replace(/[\\%_]/g, char => `\\${char}`);
+
+// Предметы без цены / без износа — в конце при любом направлении
+const NULLS_LAST = (column: string) => literal(`\`${column}\` IS NULL`);
+const EXTERIOR_ORDER = literal("FIELD(`exterior`, 'FN', 'MW', 'FT', 'WW', 'BS')");
+
+const ORDER_BY: Record<CatalogSort, Order> = {
+    name_asc: [['marketHashName', 'ASC']],
+    price_asc: [
+        [NULLS_LAST('price'), 'ASC'],
+        ['price', 'ASC'],
+        ['marketHashName', 'ASC'],
+    ],
+    price_desc: [
+        [NULLS_LAST('price'), 'ASC'],
+        ['price', 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+    exterior_asc: [
+        [NULLS_LAST('exterior'), 'ASC'],
+        [EXTERIOR_ORDER, 'ASC'],
+        ['marketHashName', 'ASC'],
+    ],
+    exterior_desc: [
+        [NULLS_LAST('exterior'), 'ASC'],
+        [EXTERIOR_ORDER, 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+};
 
 export interface CatalogTypeStatsRow {
     type: string;
@@ -105,6 +153,38 @@ class CatalogRepository extends BaseRepository {
     /** Сколько предметов не попало в импорт, начавшийся в startedAt. */
     public countNotSeenSince(startedAt: Date, transaction?: Transaction): Promise<number> {
         return this.db.Item.count({ where: { catalogSeenAt: { [Op.lt]: startedAt } }, transaction });
+    }
+
+    // ── LIST ──────────────────────────────────────────────────────────────────
+
+    /**
+     * Страница предметов для админки: поиск по словам (без учёта регистра, не точный), фильтр по износу
+     * и диапазону цены, сортировка. market_hash_name хранится в utf8mb4_bin, поэтому для поиска
+     * сравнивается в utf8mb4_unicode_ci (полный просмотр ~45 000 строк — допустимо для админки).
+     */
+    public async listItems(filter: CatalogItemsFilter): Promise<{ total: number; items: Item[] }> {
+        const conditions: WhereOptions[] = filter.search.map(word =>
+            Sequelize.where(literal('`market_hash_name` COLLATE utf8mb4_unicode_ci'), {
+                [Op.like]: `%${likeEscape(word)}%`,
+            }),
+        );
+        if (filter.exteriors.length) {
+            conditions.push({ exterior: { [Op.in]: filter.exteriors } });
+        }
+        if (filter.minPrice !== null) {
+            conditions.push({ price: { [Op.gte]: filter.minPrice } });
+        }
+        if (filter.maxPrice !== null) {
+            conditions.push({ price: { [Op.lte]: filter.maxPrice } });
+        }
+
+        const { count, rows } = await this.db.Item.findAndCountAll({
+            where: { [Op.and]: conditions },
+            order: ORDER_BY[filter.sort],
+            limit: filter.limit,
+            offset: filter.offset,
+        });
+        return { total: count, items: rows };
     }
 
     // ── STATS ─────────────────────────────────────────────────────────────────
