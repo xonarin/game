@@ -15,17 +15,6 @@ import mysql, { Connection, RowDataPacket } from 'mysql2/promise';
  * миграция должна быть безопасной для повторного запуска (IF NOT EXISTS, INSERT IGNORE …).
  */
 
-// ── LEGACY ────────────────────────────────────────────────────────────────────
-
-// Явный список исторических файлов (применялись вручную). Никогда не выполняются —
-// при первом запуске только помечаются baseline. Граница «по имени» не используется.
-export const LEGACY_FILES: ReadonlySet<string> = new Set([
-    '2026-11-06-telegram-auth.sql',
-    '2026-11-09-remove-modules-cleanup.sql',
-    '2026-11-10-google-auth.sql',
-    '2026-11-10-user-telegram-id.sql',
-]);
-
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
 const TABLE = 'schema_migrations';
@@ -36,9 +25,8 @@ const LOCK_TIMEOUT_SECONDS = 120;
 
 export type MigrationState =
     | 'applied' // применена
-    | 'baseline' // исторический файл, помечен без выполнения
+    | 'baseline' // запись старых баз: файл помечен без выполнения
     | 'pending' // ожидает применения
-    | 'pending-baseline' // исторический файл, будет помечен baseline
     | 'modified' // файл изменён после применения (checksum не совпадает)
     | 'missing'; // запись в schema_migrations есть, файла нет
 
@@ -128,7 +116,7 @@ const computeStatus = (files: MigrationFile[], applied: Map<string, AppliedRow>)
         if (!row) {
             return {
                 name: file.name,
-                state: LEGACY_FILES.has(file.name) ? 'pending-baseline' : 'pending',
+                state: 'pending',
                 fileChecksum: file.checksum,
                 dbChecksum: null,
                 appliedAt: null,
@@ -231,25 +219,16 @@ export const runMigrations = async (databaseUrl: string, dir: string): Promise<v
                 .filter(entry => entry.state === 'missing')
                 .forEach(entry => console.warn(`[migrate] ${entry.name}: записан в ${TABLE}, но файла нет`));
 
-            const toBaseline = entries.filter(entry => entry.state === 'pending-baseline');
             const toApply = entries.filter(entry => entry.state === 'pending');
 
             console.info(
                 `[migrate] папка: ${dir}; файлов: ${files.length}; ` +
-                    `baseline: ${count(entries, 'baseline') + toBaseline.length}; ` +
+                    `baseline: ${count(entries, 'baseline')}; ` +
                     `применено ранее: ${count(entries, 'applied')}; ожидает: ${toApply.length}`,
             );
 
             // Строго по очереди, поэтому обычный цикл с await
             /* eslint-disable no-restricted-syntax, no-await-in-loop */
-            for (const entry of toBaseline) {
-                await conn.query(
-                    `INSERT INTO \`${TABLE}\` (name, checksum, baseline, applied_at) VALUES (?, ?, TRUE, UTC_TIMESTAMP())`,
-                    [entry.name, entry.fileChecksum],
-                );
-                console.info(`[migrate] ${entry.name}: baseline (исторический файл, не выполняется)`);
-            }
-
             for (const entry of toApply) {
                 const file = byName.get(entry.name)!;
                 console.info(`[migrate] ${file.name}: применяю…`);
@@ -265,9 +244,7 @@ export const runMigrations = async (databaseUrl: string, dir: string): Promise<v
             }
             /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
-            console.info(
-                `[migrate] готово: применено сейчас ${toApply.length}, помечено baseline ${toBaseline.length}`,
-            );
+            console.info(`[migrate] готово: применено сейчас ${toApply.length}`);
         } finally {
             await conn.query('SELECT RELEASE_LOCK(?)', [LOCK_NAME]);
         }

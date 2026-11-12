@@ -18,7 +18,6 @@ const LABELS: Record<MigrationState, string> = {
     applied: 'применена',
     baseline: 'baseline',
     pending: 'ожидает',
-    'pending-baseline': 'ожидает (baseline)',
     modified: 'ИЗМЕНЕНА после применения',
     missing: 'нет файла',
 };
@@ -40,7 +39,7 @@ const status = async () => {
     const total = (state: MigrationState) => entries.filter(entry => entry.state === state).length;
     console.info(
         `\nприменено: ${total('applied')}, baseline: ${total('baseline')}, ` +
-            `ожидает: ${total('pending') + total('pending-baseline')}, изменено: ${total('modified')}, ` +
+            `ожидает: ${total('pending')}, изменено: ${total('modified')}, ` +
             `нет файла: ${total('missing')}`,
     );
 };
