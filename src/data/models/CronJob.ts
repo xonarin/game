@@ -10,7 +10,8 @@ import { ModelStatic } from './index';
 
 // ── TYPES ─────────────────────────────────────────────────────────────────────
 
-export type CronJobKey = 'catalog_import';
+// prices_<market.code> создаётся вместе с магазином (MarketsRepository.ensureDefaults)
+export type CronJobKey = 'catalog_import' | `prices_${string}`;
 
 export interface CronJob extends Model {
     readonly id: string;
@@ -37,6 +38,14 @@ export const CRON_JOB_DEFAULTS: { key: CronJobKey; cronExpression: string; timez
     // Импорт каталога: понедельник 04:00 по Ташкенту
     { key: 'catalog_import', cronExpression: '0 4 * * 1', timezone: 'Asia/Tashkent', enabled: true },
 ];
+
+/** Расписание цен нового магазина: каждые 5 минут, выключено до ручного включения. */
+export const pricesCronJobDefaults = (marketCode: string) => ({
+    key: `prices_${marketCode}` as CronJobKey,
+    cronExpression: '*/5 * * * *',
+    timezone: 'UTC',
+    enabled: false,
+});
 
 // ── MODEL ─────────────────────────────────────────────────────────────────────
 

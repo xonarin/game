@@ -15,6 +15,7 @@ import AuthClientsRepository from './authClients';
 import CatalogRepository from './catalog';
 import SyncRunsRepository from './syncRuns';
 import CronJobsRepository from './cronJobs';
+import MarketsRepository from './markets';
 
 export interface Repositories {
     settings: SettingsRepository;
@@ -32,6 +33,7 @@ export interface Repositories {
     catalog: CatalogRepository;
     syncRuns: SyncRunsRepository;
     cronJobs: CronJobsRepository;
+    markets: MarketsRepository;
 }
 
 const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Repositories => {
@@ -52,6 +54,7 @@ const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Re
     repositories.catalog = new CatalogRepository(db, repositories, sequelizeContext);
     repositories.syncRuns = new SyncRunsRepository(db, repositories, sequelizeContext);
     repositories.cronJobs = new CronJobsRepository(db, repositories, sequelizeContext);
+    repositories.markets = new MarketsRepository(db, repositories, sequelizeContext);
 
     return repositories;
 };

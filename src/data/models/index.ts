@@ -24,6 +24,10 @@ import { initItem, ItemStatic } from './Item';
 import { initSyncRun, SyncRunStatic } from './SyncRun';
 import { initSyncRunBatch, SyncRunBatchStatic } from './SyncRunBatch';
 import { initCronJob, CronJobStatic } from './CronJob';
+import { initMarket, MarketStatic } from './Market';
+import { initMarketPrice, MarketPriceStatic } from './MarketPrice';
+import { initMarketPriceStaging, MarketPriceStagingStatic } from './MarketPriceStaging';
+import { initUnmatchedName, UnmatchedNameStatic } from './UnmatchedName';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -65,6 +69,12 @@ export interface Database {
     SyncRun: SyncRunStatic;
     SyncRunBatch: SyncRunBatchStatic;
     CronJob: CronJobStatic;
+
+    // Цены магазинов
+    Market: MarketStatic;
+    MarketPrice: MarketPriceStatic;
+    MarketPriceStaging: MarketPriceStagingStatic;
+    UnmatchedName: UnmatchedNameStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -94,6 +104,12 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         SyncRun: initSyncRun(sequelize),
         SyncRunBatch: initSyncRunBatch(sequelize),
         CronJob: initCronJob(sequelize),
+
+        // sync() сам упорядочивает создание по внешним ключам (market раньше sync_run и market_price)
+        Market: initMarket(sequelize),
+        MarketPrice: initMarketPrice(sequelize),
+        MarketPriceStaging: initMarketPriceStaging(sequelize),
+        UnmatchedName: initUnmatchedName(sequelize),
     };
 
     forEach(database, model => {

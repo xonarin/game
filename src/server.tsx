@@ -325,7 +325,7 @@ const port = module.hot ? config.devPort : config.port;
 //    Следствие: на пустой БД sync() уже создал таблицу по актуальной модели, и миграция встретит
 //    колонку/индекс, которые сама же добавляет, — поэтому каждая миграция идемпотентна
 //    (проверка через information_schema, см. docs/DEPLOY.md).
-// 3) Строки по умолчанию (расписание catalog_import) — если их ещё нет.
+// 3) Строки по умолчанию (расписание catalog_import, магазины + их расписания prices_<code>) — если их ещё нет.
 // Любая ошибка миграций (папка, блокировка, checksum, SQL) — сервер не стартует.
 const migrationsDir = resolveMigrationsDir();
 
@@ -338,6 +338,7 @@ const serverSync = database.sequelize
         }),
     )
     .then(() => repositories.cronJobs.ensureDefaults())
+    .then(() => repositories.markets.ensureDefaults())
     .then(() => startServices())
     .catch((err: Error) => console.error(err.stack));
 

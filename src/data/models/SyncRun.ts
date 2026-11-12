@@ -3,7 +3,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ModelStatic } from './index';
 
 /**
- * Журнал прогонов синхронизации (импорт каталога, позже — цены).
+ * Журнал прогонов синхронизации: импорт каталога и снимки цен магазинов.
  * Таблицу `sync_run` создаёт sequelize.sync() по этой модели; последующие изменения — миграциями.
  */
 
@@ -11,6 +11,7 @@ import { ModelStatic } from './index';
 
 export enum SyncRunKind {
     Catalog = 'catalog',
+    Prices = 'prices',
 }
 
 export enum SyncRunTrigger {
@@ -22,6 +23,8 @@ export enum SyncRunStatus {
     Running = 'running',
     Ok = 'ok',
     Failed = 'failed',
+    // Снимок цен не применён (строк меньше min_rows_ratio × прошлого успешного)
+    Skipped = 'skipped',
 }
 
 export interface SyncRun extends Model {
@@ -29,6 +32,8 @@ export interface SyncRun extends Model {
     // Генерирует админка: catalog-<ISO>-<random>
     readonly runId: string;
     readonly kind: SyncRunKind;
+    // Магазин прогона цен; NULL у импорта каталога
+    readonly marketId: string | null;
     readonly trigger: SyncRunTrigger;
     readonly status: SyncRunStatus;
     readonly startedAt: Date;
@@ -43,6 +48,12 @@ export interface SyncRun extends Model {
     // Статистика из админки
     readonly sourceTotal: number;
     readonly duplicatesCollapsed: number;
+
+    // Прогон цен: совпало с каталогом / в unmatched_name / удалено «нет в снимке» / изменилась цена или qty
+    readonly rowsMatched: number;
+    readonly rowsUnmatched: number;
+    readonly rowsRemoved: number;
+    readonly rowsChanged: number;
 
     readonly error: string | null;
 }
@@ -71,6 +82,13 @@ export const initSyncRun = (sequelize: Sequelize): SyncRunStatic =>
 
             runId: { type: DataTypes.STRING(64), allowNull: false },
             kind: { type: DataTypes.STRING(16), allowNull: false },
+            // Удаление магазина журнал не стирает
+            marketId: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                allowNull: true,
+                references: { model: 'market', key: 'id' },
+                onDelete: 'SET NULL',
+            },
             trigger: { type: DataTypes.STRING(16), allowNull: false },
             status: { type: DataTypes.STRING(16), allowNull: false },
             startedAt: { type: DataTypes.DATE, allowNull: false },
@@ -83,6 +101,10 @@ export const initSyncRun = (sequelize: Sequelize): SyncRunStatic =>
             rowsUpdated: counter(),
             sourceTotal: counter(),
             duplicatesCollapsed: counter(),
+            rowsMatched: counter(),
+            rowsUnmatched: counter(),
+            rowsRemoved: counter(),
+            rowsChanged: counter(),
 
             error: { type: DataTypes.TEXT, allowNull: true },
         },
