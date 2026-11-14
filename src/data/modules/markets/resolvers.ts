@@ -5,7 +5,7 @@ import { database } from '../../database';
 import { Market } from '../../models/Market';
 import { UnmatchedName } from '../../models/UnmatchedName';
 import { UserError } from '../../../utils/errors';
-import { disableMarket } from '../../../services/marketPrices/service';
+import { setMarketFlags } from '../../../services/marketPrices/service';
 import { readPriceMultiplier } from '../../../services/marketPrices/markup';
 import { isAdmin, isAdminService } from '../rules';
 
@@ -78,6 +78,7 @@ const requireMarket = async (code: string, { repositories }: ApolloContext, fiel
 
 const snapshot = (market: Market) => ({
     enabled: market.enabled,
+    isPriceSourceEnabled: market.isPriceSourceEnabled,
     priority: market.priority,
     minRowsRatio: market.minRowsRatio,
     settings: market.settings,
@@ -141,6 +142,7 @@ export const resolvers = {
             args: {
                 code: string;
                 enabled?: boolean | null;
+                isPriceSourceEnabled?: boolean | null;
                 priority?: number | null;
                 minRowsRatio?: string | null;
                 settings?: string | null;
@@ -162,12 +164,11 @@ export const resolvers = {
                 await before.update(values);
             }
 
-            // Выключение — флаг + удаление цен + пересчёт одной транзакцией; включение — только флаг
-            if (args.enabled === false && before.enabled) {
-                await disableMarket(before.code);
-            } else if (args.enabled === true && !before.enabled) {
-                await before.update({ enabled: true });
-            }
+            // Флаги независимы; цены маркета не удаляются, затронутые предметы пересчитываются
+            await setMarketFlags(before.code, {
+                enabled: args.enabled ?? undefined,
+                isPriceSourceEnabled: args.isPriceSourceEnabled ?? undefined,
+            });
 
             const after = (await ctx.repositories.markets.getByCode(args.code))!;
             await database.AdminAction.create({

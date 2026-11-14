@@ -108,10 +108,13 @@ plant-admin --POST /internal/sync/catalog/start  {runId, trigger, sourceTotal, d
 - Снимок пачками ложится в `market_price_staging`, затем одна короткая транзакция: upsert `market_price`
   (JOIN `Item` по `market_hash_name`, только бинарное совпадение), несовпавшие — в `unmatched_name`,
   удаление строк магазина, которых нет в снимке, и пересчёт только затронутых предметов:
-  `Item.price = round(MIN(price_usd включённых магазинов) × (1 + наценка), 2)`, `is_available`.
+  `Item.price = round(MIN(price_usd маркетов с enabled и is_price_source_enabled) × (1 + наценка), 2)`, `is_available`.
   Наценка — настройка `prices::markup` (таблица `Setting`, страница «Настройки», по умолчанию 0.05);
   при её изменении через `adminUpdateSetting` пересчитываются цены всех предметов.
-- Выключение магазина (`updateMarket(enabled: false)`) в одной транзакции удаляет его цены и пересчитывает предметы.
+- Получение и использование цен независимы: `market.enabled` — маркет включён и синхронизируется;
+  `market.is_price_source_enabled` — его цены разрешено использовать в расчётах. В `Item.price` идут
+  только цены маркетов с обоими флагами. Смена любого флага (`updateMarket`) цены не удаляет —
+  пересчитывает предметы маркета в той же транзакции; выключенный маркет снимки не принимает (409).
 - GraphQL (админ / сервис админки): `markets`, `market`, `updateMarket`, `unmatchedNames`, `setUnmatchedIgnored`,
   `itemOffers`, `syncRuns(kind: "prices", marketCode)`.
 

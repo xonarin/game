@@ -7,7 +7,12 @@ type Market {
     # 'lisskins'
     code: String!
     name: String!
+    # Маркет включён: синхронизация разрешена. false — не синхронизируется и цены не используются
+    # (собранные цены не удаляются)
     enabled: Boolean!
+    # Цены маркета разрешено использовать в расчётах (Item.price); на синхронизацию не влияет.
+    # Используются только при enabled && isPriceSourceEnabled
+    isPriceSourceEnabled: Boolean!
     # ISO 4217 — валюта minPrice
     currency: String!
     # Порядок при равной цене: меньше — раньше
@@ -22,7 +27,7 @@ type Market {
     updatedAt: DateTime!
 }
 
-# Строка market_price включённого магазина
+# Строка market_price маркета (любого: и используемого, и нет)
 type ItemOffer {
     marketCode: String!
     marketName: String!
@@ -33,6 +38,10 @@ type ItemOffer {
     priceUsd: String!
     qty: Int!
     priceChangedAt: DateTime!
+    marketEnabled: Boolean!
+    isPriceSourceEnabled: Boolean!
+    # Цена участвует в Item.price (marketEnabled && isPriceSourceEnabled)
+    used: Boolean!
 }
 
 type UnmatchedName {
@@ -55,16 +64,24 @@ type Query {
     market(code: String!): Market
     # Дорогие сверху; limit 1…500
     unmatchedNames(marketCode: String!, limit: Int = 50, offset: Int = 0, includeIgnored: Boolean = false): UnmatchedNamePage!
-    # Предложения включённых магазинов: по priceUsd, затем priority (первое и даёт цену предмета)
+    # Цены предмета у всех маркетов: сначала используемые (по priceUsd, затем priority — первая и даёт цену
+    # предмета), затем неиспользуемые (маркет выключен или его цены запрещены)
     itemOffers(itemId: ID!): [ItemOffer!]!
     # Текущая наценка (настройка prices::markup), доля строкой: "0.0500" = 5 %
     priceMarkup: String!
 }
 
 type Mutation {
-    # Выключение: в одной транзакции удаляются цены магазина и пересчитываются затронутые предметы.
-    # Включение — только флаг (цены придут с первой синхронизацией).
+    # enabled и isPriceSourceEnabled меняются независимо; цены маркета при этом не удаляются —
+    # если изменилось «цены используются», затронутые предметы пересчитываются в той же транзакции.
     # Ошибка валидации — UserError с extensions.field
-    updateMarket(code: String!, enabled: Boolean, priority: Int, minRowsRatio: String, settings: String): Market!
+    updateMarket(
+        code: String!
+        enabled: Boolean
+        isPriceSourceEnabled: Boolean
+        priority: Int
+        minRowsRatio: String
+        settings: String
+    ): Market!
     setUnmatchedIgnored(marketCode: String!, marketHashName: String!, ignored: Boolean!): UnmatchedName!
 }

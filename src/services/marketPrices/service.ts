@@ -196,24 +196,50 @@ export const applyPriceSnapshot = async (input: PriceSnapshot): Promise<PriceSna
     }
 };
 
-// ── DISABLE ───────────────────────────────────────────────────────────────────
+// ── MARKET FLAGS ──────────────────────────────────────────────────────────────
+
+export interface MarketFlags {
+    // Маркет включён: синхронизация разрешена
+    enabled?: boolean;
+    // Цены маркета разрешено использовать в расчётах
+    isPriceSourceEnabled?: boolean;
+}
+
+const usable = (flags: { enabled: boolean; isPriceSourceEnabled: boolean }) =>
+    flags.enabled && flags.isPriceSourceEnabled;
 
 /**
- * Выключение магазина: флаг, удаление его цен и пересчёт затронутых предметов — одной транзакцией.
- * Строка магазина берётся FOR UPDATE: применение снимка ждёт и затем увидит enabled = false.
+ * Смена флагов маркета — независимо друг от друга, одной транзакцией. Цены маркета не удаляются:
+ * если изменилось итоговое «цены можно использовать» (enabled && isPriceSourceEnabled), пересчитываются
+ * предметы, у которых есть его цены. Строка маркета берётся FOR UPDATE: идущее применение снимка
+ * дождётся и увидит новые флаги. null — маркета нет.
  */
-export const disableMarket = (code: string) =>
+export const setMarketFlags = (code: string, flags: MarketFlags) =>
     database.sequelize.transaction(async t => {
         const market = await repositories.markets.getByCode(code, t, true);
         if (!market) {
             return null;
         }
-        await market.update({ enabled: false }, { transaction: t });
-        const multiplier = await readPriceMultiplier(repositories);
-        const result = await repositories.marketPrices.removeMarketPrices(market.id, multiplier, nowSeconds(), t);
-        console.info(
-            `[prices] ${code}: выключен — удалено цен ${result.rowsRemoved}, предметов с новой ценой ${result.itemsRepriced}`,
-        );
+
+        const before = { enabled: market.enabled, isPriceSourceEnabled: market.isPriceSourceEnabled };
+        const after = {
+            enabled: flags.enabled ?? before.enabled,
+            isPriceSourceEnabled: flags.isPriceSourceEnabled ?? before.isPriceSourceEnabled,
+        };
+        if (after.enabled === before.enabled && after.isPriceSourceEnabled === before.isPriceSourceEnabled) {
+            return market;
+        }
+
+        await market.update(after, { transaction: t });
+        if (usable(before) !== usable(after)) {
+            const multiplier = await readPriceMultiplier(repositories);
+            const itemsRepriced = await repositories.marketPrices.repriceMarket(market.id, multiplier, nowSeconds(), t);
+            console.info(
+                `[prices] ${code}: цены ${usable(after) ? 'используются' : 'не используются'} ` +
+                    `(enabled ${after.enabled}, isPriceSourceEnabled ${after.isPriceSourceEnabled}) — ` +
+                    `предметов с новой ценой ${itemsRepriced}`,
+            );
+        }
         return market;
     });
 

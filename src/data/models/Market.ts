@@ -15,7 +15,12 @@ export interface Market extends Model {
     // 'lisskins', позже 'csgo_market' и т.д.; часть ключа расписания prices_<code>
     readonly code: string;
     readonly name: string;
+    // Маркет включён: синхронизация разрешена. false — синхронизации нет и цены не используются,
+    // но уже собранные цены не удаляются
     readonly enabled: boolean;
+    // Разрешено использовать цены маркета в расчётах (Item.price). На синхронизацию не влияет.
+    // Цены используются только при enabled && isPriceSourceEnabled
+    readonly isPriceSourceEnabled: boolean;
     // ISO 4217 — валюта цен магазина (min_price)
     readonly currency: string;
     // Порядок при равной цене: меньше — раньше
@@ -71,6 +76,8 @@ export const initMarket = (sequelize: Sequelize): MarketStatic =>
             code: { type: DataTypes.STRING(32), allowNull: false },
             name: { type: DataTypes.STRING(64), allowNull: false },
             enabled: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+            // Существующим базам колонку добавляет migrations/2026-11-14-market-price-source.sql
+            isPriceSourceEnabled: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
             currency: { type: DataTypes.CHAR(3), allowNull: false },
             priority: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 100 },
             minRowsRatio: { type: DataTypes.DECIMAL(4, 2), allowNull: false, defaultValue: '0.70' },

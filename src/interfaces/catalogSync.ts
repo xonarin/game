@@ -236,7 +236,10 @@ export interface Market {
     // 'lisskins'
     code: string;
     name: string;
+    // Маркет включён: синхронизация разрешена (выключен — не синхронизируется, цены не используются)
     enabled: boolean;
+    // Цены разрешено использовать в расчётах; на синхронизацию не влияет
+    isPriceSourceEnabled: boolean;
     // ISO 4217
     currency: string;
     // Порядок при равной цене: меньше — раньше

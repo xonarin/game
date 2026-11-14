@@ -12,6 +12,10 @@ import { PriceRow } from '../../interfaces/catalogSync';
  * в одном запросе — каждый запрос ниже обращается к ней один раз.
  *
  * Имена сравниваются только бинарно: staging.market_hash_name и Item.market_hash_name — utf8mb4_bin.
+ *
+ * Получение и использование цен независимы: снимок сохраняется у любого включённого маркета (enabled),
+ * а в Item.price идут только цены маркетов, у которых enabled И is_price_source_enabled (USABLE_MARKET).
+ * Выключение маркета или запрет его цен цены не удаляет — только пересчитывает затронутые предметы.
  */
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
@@ -20,6 +24,9 @@ const STAGING_CHUNK = 1000; // строк в одном multi-row INSERT
 const TMP = 'tmp_price_affected';
 
 // Совпавшие строки снимка: id предмета каталога для каждой строки staging этого прогона
+// Цены маркета можно использовать в расчётах (псевдоним таблицы market — m)
+export const USABLE_MARKET = 'm.`enabled` = 1 AND m.`is_price_source_enabled` = 1';
+
 const MATCHED_ITEMS_SQL =
     'SELECT i.`id` FROM `market_price_staging` s ' +
     'JOIN `Item` i ON i.`market_hash_name` = s.`market_hash_name` WHERE s.`run_id` = ?';
@@ -44,9 +51,13 @@ export interface OfferRow {
     priceUsd: string;
     qty: number;
     priceChangedAt: Date;
+    marketEnabled: boolean;
+    isPriceSourceEnabled: boolean;
+    // Цена этой строки участвует в Item.price (маркет включён и его цены разрешены)
+    used: boolean;
 }
 
-/** Цены магазинов: применение снимков, удаление при выключении магазина, предложения предмета. */
+/** Цены магазинов: применение снимков, пересчёт при смене флагов маркета, предложения предмета. */
 class MarketPricesRepository extends BaseRepository {
     // ── HELPERS ───────────────────────────────────────────────────────────────
 
@@ -72,14 +83,14 @@ class MarketPricesRepository extends BaseRepository {
 
     /**
      * Пересчёт Item для предметов из tmp_price_affected:
-     * price = round(MIN(price_usd включённых магазинов) × multiplier, 2), is_available = есть такая строка.
+     * price = round(MIN(price_usd маркетов USABLE_MARKET) × multiplier, 2), is_available = есть такая строка.
      * Обновляются только реально изменившиеся строки; price_updated_at = now. Возвращает их число.
      */
     private recalcAffected(multiplier: string, now: Date, t: Transaction): Promise<number> {
         const newPrice = 'ROUND(p.`min_usd` * CAST(? AS DECIMAL(10,4)), 2)';
         return this.exec(
             'UPDATE `Item` i JOIN (' +
-                'SELECT a.`item_id`, MIN(IF(m.`enabled` = 1, mp.`price_usd`, NULL)) AS `min_usd` ' +
+                `SELECT a.\`item_id\`, MIN(IF(${USABLE_MARKET}, mp.\`price_usd\`, NULL)) AS \`min_usd\` ` +
                 `FROM \`${TMP}\` a ` +
                 'LEFT JOIN `market_price` mp ON mp.`item_id` = a.`item_id` ' +
                 'LEFT JOIN `market` m ON m.`id` = mp.`market_id` ' +
@@ -251,25 +262,19 @@ class MarketPricesRepository extends BaseRepository {
     }
 
     /**
-     * Выключение магазина: удалить все его цены и пересчитать затронутые предметы.
-     * Вызывать в транзакции t ПОСЛЕ того, как market.enabled = false (пересчёт смотрит на флаг).
+     * Сменился флаг маркета (enabled / is_price_source_enabled): пересчитать предметы, у которых есть его цены.
+     * Цены маркета НЕ удаляются. Вызывать в транзакции t ПОСЛЕ сохранения флага (пересчёт смотрит на флаги).
      */
-    public async removeMarketPrices(
-        marketId: string,
-        multiplier: string,
-        now: Date,
-        t: Transaction,
-    ): Promise<{ rowsRemoved: number; itemsRepriced: number }> {
+    public async repriceMarket(marketId: string, multiplier: string, now: Date, t: Transaction): Promise<number> {
         await this.createAffectedTable(t);
         await this.exec(
             `INSERT IGNORE INTO \`${TMP}\` (\`item_id\`) SELECT \`item_id\` FROM \`market_price\` WHERE \`market_id\` = ?`,
             [marketId],
             t,
         );
-        const rowsRemoved = await this.exec('DELETE FROM `market_price` WHERE `market_id` = ?', [marketId], t);
         const itemsRepriced = await this.recalcAffected(multiplier, now, t);
         await this.dropAffectedTable(t);
-        return { rowsRemoved, itemsRepriced };
+        return itemsRepriced;
     }
 
     /**
@@ -296,17 +301,34 @@ class MarketPricesRepository extends BaseRepository {
 
     // ── READ ──────────────────────────────────────────────────────────────────
 
-    /** Предложения предмета у включённых магазинов: дешевле — выше, при равной цене — по priority. */
-    public offers(itemId: string): Promise<OfferRow[]> {
-        return this.db.sequelize.query<OfferRow>(
+    /**
+     * Цены предмета у всех маркетов: сначала используемые в Item.price (дешевле — выше, при равной цене —
+     * по priority; первая строка и даёт цену), затем неиспользуемые (маркет выключен или его цены запрещены).
+     */
+    public async offers(itemId: string): Promise<OfferRow[]> {
+        const rows = await this.db.sequelize.query<
+            Omit<OfferRow, 'marketEnabled' | 'isPriceSourceEnabled' | 'used'> & {
+                marketEnabled: number;
+                isPriceSourceEnabled: number;
+                used: number;
+            }
+        >(
             'SELECT m.`code` AS `marketCode`, m.`name` AS `marketName`, m.`currency`, m.`priority`, ' +
                 'mp.`min_price` AS `minPrice`, mp.`price_usd` AS `priceUsd`, mp.`qty`, ' +
-                'mp.`price_changed_at` AS `priceChangedAt` ' +
+                'mp.`price_changed_at` AS `priceChangedAt`, m.`enabled` AS `marketEnabled`, ' +
+                `m.\`is_price_source_enabled\` AS \`isPriceSourceEnabled\`, (${USABLE_MARKET}) AS \`used\` ` +
                 'FROM `market_price` mp JOIN `market` m ON m.`id` = mp.`market_id` ' +
-                'WHERE mp.`item_id` = ? AND m.`enabled` = 1 ' +
-                'ORDER BY mp.`price_usd` ASC, m.`priority` ASC, m.`code` ASC',
+                'WHERE mp.`item_id` = ? ' +
+                'ORDER BY `used` DESC, mp.`price_usd` ASC, m.`priority` ASC, m.`code` ASC',
             { replacements: [itemId], type: QueryTypes.SELECT },
         );
+        // TINYINT -> boolean
+        return rows.map(row => ({
+            ...row,
+            marketEnabled: Boolean(row.marketEnabled),
+            isPriceSourceEnabled: Boolean(row.isPriceSourceEnabled),
+            used: Boolean(row.used),
+        }));
     }
 }
 
