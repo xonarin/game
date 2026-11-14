@@ -3,6 +3,7 @@ import { fn, col, literal, Op, Order, QueryTypes, Sequelize, Transaction, WhereO
 import BaseRepository from './base';
 import { CatalogRow } from '../../interfaces/catalogSync';
 import { Exterior, Item } from '../models/Item';
+import { USABLE_MARKET } from './marketPrices';
 
 // Описательные поля, которые импорт обновляет у существующей строки.
 // price / is_available / price_updated_at здесь нет намеренно — их ведут следующие этапы.
@@ -58,6 +59,8 @@ export const CATALOG_SORTS = [
     'unavailable_first',
     'updated_desc',
     'updated_asc',
+    'qty_desc',
+    'qty_asc',
 ] as const;
 export type CatalogSort = (typeof CATALOG_SORTS)[number];
 
@@ -81,6 +84,12 @@ const likeEscape = (word: string) => word.replace(/[\\%_]/g, char => `\\${char}`
 // Предметы без цены / без износа — в конце при любом направлении
 const NULLS_LAST = (column: string) => literal(`\`${column}\` IS NULL`);
 const EXTERIOR_ORDER = literal("FIELD(`exterior`, 'FN', 'MW', 'FT', 'WW', 'BS')");
+
+// Лотов в наличии у маркетов, чьи цены участвуют в расчёте (то же правило, что у Item.price); 0 — нет
+const QTY = literal(
+    '(SELECT COALESCE(SUM(mp.`qty`), 0) FROM `market_price` mp JOIN `market` m ON m.`id` = mp.`market_id` ' +
+        `WHERE mp.\`item_id\` = \`Item\`.\`id\` AND ${USABLE_MARKET})`,
+);
 
 const ORDER_BY: Record<CatalogSort, Order> = {
     name_asc: [['marketHashName', 'ASC']],
@@ -122,6 +131,17 @@ const ORDER_BY: Record<CatalogSort, Order> = {
     updated_asc: [
         [NULLS_LAST('price_updated_at'), 'ASC'],
         ['priceUpdatedAt', 'ASC'],
+        ['marketHashName', 'ASC'],
+    ],
+    // По количеству лотов (qty); предметы без наличия — в конце при любом направлении
+    qty_desc: [
+        ['isAvailable', 'DESC'],
+        [QTY, 'DESC'],
+        ['marketHashName', 'ASC'],
+    ],
+    qty_asc: [
+        ['isAvailable', 'DESC'],
+        [QTY, 'ASC'],
         ['marketHashName', 'ASC'],
     ],
 };
@@ -214,6 +234,7 @@ class CatalogRepository extends BaseRepository {
         }
 
         const { count, rows } = await this.db.Item.findAndCountAll({
+            attributes: { include: [[QTY, 'qty']] },
             where: { [Op.and]: conditions },
             order: ORDER_BY[filter.sort],
             limit: filter.limit,

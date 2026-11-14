@@ -5,7 +5,7 @@ import { IANAZone } from 'luxon';
 import { ApolloContext } from '../../../interfaces/apollo';
 import { database } from '../../database';
 import { SyncRun, SyncRunKind } from '../../models/SyncRun';
-import { Exterior, EXTERIORS } from '../../models/Item';
+import { Exterior, EXTERIORS, Item } from '../../models/Item';
 import { CATALOG_SORTS, CatalogItemsFilter, CatalogSort } from '../../repositories/catalog';
 import { UserError } from '../../../utils/errors';
 import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
@@ -124,6 +124,11 @@ const parseCatalogFilter = (args: {
 // ── RESOLVERS ─────────────────────────────────────────────────────────────────
 
 export const resolvers = {
+    // qty — вычисляемая колонка listItems (SUM приходит строкой), не атрибут модели
+    CatalogItem: {
+        qty: (item: Item) => Number(item.get('qty') ?? 0),
+    },
+
     SyncRun: {
         marketCode: async (run: SyncRun, _1: unknown, { repositories }: ApolloContext) => {
             if (run.marketId === null || run.marketId === undefined) {
