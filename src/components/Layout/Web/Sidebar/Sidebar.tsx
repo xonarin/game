@@ -21,6 +21,7 @@ const Sidebar: React.FC = () => {
                 <SidebarNavigationItem to="/" icon="sword" iconHover="swordWhite" title="Casino" />
                 <SidebarNavigationItem to="/classic" icon="sword" iconHover="swordWhite" title="Classic" />
                 <SidebarNavigationItem to="/mines" icon="bomb" iconHover="bombWhite" title="Mines" />
+                <SidebarNavigationItem to="/upgrade" icon="sword" iconHover="swordWhite" title="Upgrade" />
             </nav>
         </aside>
     );

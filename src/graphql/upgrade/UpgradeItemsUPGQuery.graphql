@@ -1,0 +1,8 @@
+query UpgradeItemsUPG($filter: ItemsFilterUPG!) {
+    upgradeItemsUPG(filter: $filter) {
+        items {
+            ...ItemUPG
+        }
+        total
+    }
+}

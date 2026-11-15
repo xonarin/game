@@ -1,0 +1,96 @@
+@import '../../../../assets/styles/vars';
+
+.ItemCardUPG {
+    --rarity: #4b69ff;
+
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(255 255 255 / 8%);
+    border-bottom: 2px solid var(--rarity);
+    border-radius: 6px;
+    background: linear-gradient(180deg, #1c1f26, #15171c);
+    overflow: hidden;
+    min-width: 0;
+
+    &-Body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        width: 100%;
+        padding: 6px 8px 8px;
+        border: none;
+        background: none;
+        color: $color-white;
+        text-align: center;
+        cursor: default;
+    }
+
+    &_clickable &-Body {
+        cursor: pointer;
+    }
+
+    &_clickable:hover {
+        border-color: rgb(254 186 29 / 50%);
+    }
+
+    &_selected {
+        border-color: $color-gold;
+        background: linear-gradient(180deg, #4a3c10, #2a2412);
+    }
+
+    &-Top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        min-height: 16px;
+    }
+
+    &-Exterior {
+        font-size: 10px;
+        color: rgb(255 255 255 / 50%);
+    }
+
+    &-Image {
+        width: 100%;
+        height: 64px;
+        object-fit: contain;
+        margin: 4px 0;
+    }
+
+    &-Subtitle {
+        max-width: 100%;
+        font-size: 9px;
+        color: rgb(255 255 255 / 50%);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &-Title {
+        max-width: 100%;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &-Footer {
+        padding: 0 8px 8px;
+    }
+
+    &_size_l &-Image {
+        height: 160px;
+    }
+
+    &_size_l &-Title {
+        font-size: 18px;
+        white-space: normal;
+    }
+
+    &_size_l &-Subtitle {
+        font-size: 12px;
+    }
+}

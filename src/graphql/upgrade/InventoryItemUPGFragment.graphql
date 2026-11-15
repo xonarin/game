@@ -1,0 +1,9 @@
+fragment InventoryItemUPG on InventoryItemUPG {
+    id
+    value
+    priceAtAcquisition
+    locked
+    item {
+        ...ItemUPG
+    }
+}

@@ -17,6 +17,8 @@ import SyncRunsRepository from './syncRuns';
 import CronJobsRepository from './cronJobs';
 import MarketsRepository from './markets';
 import MarketPricesRepository from './marketPrices';
+import UpgradeGamesRepository from './upgradeGames';
+import InventoryRepository from './inventory';
 
 export interface Repositories {
     settings: SettingsRepository;
@@ -36,6 +38,8 @@ export interface Repositories {
     cronJobs: CronJobsRepository;
     markets: MarketsRepository;
     marketPrices: MarketPricesRepository;
+    upgradeGames: UpgradeGamesRepository;
+    inventory: InventoryRepository;
 }
 
 const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Repositories => {
@@ -58,6 +62,8 @@ const initRepositories = (db: Database, sequelizeContext?: SequelizeContext): Re
     repositories.cronJobs = new CronJobsRepository(db, repositories, sequelizeContext);
     repositories.markets = new MarketsRepository(db, repositories, sequelizeContext);
     repositories.marketPrices = new MarketPricesRepository(db, repositories, sequelizeContext);
+    repositories.upgradeGames = new UpgradeGamesRepository(db, repositories, sequelizeContext);
+    repositories.inventory = new InventoryRepository(db, repositories, sequelizeContext);
 
     return repositories;
 };

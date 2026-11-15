@@ -31,6 +31,8 @@ import catalogSyncTypeDefs from './catalogSync/schema.graphql';
 import { rules as catalogSyncRules, resolvers as catalogSyncResolvers } from './catalogSync/resolvers';
 import marketsTypeDefs from './markets/schema.graphql';
 import { rules as marketsRules, resolvers as marketsResolvers } from './markets/resolvers';
+import upgradeGameTypeDefs from './upgradeGame/schema.graphql';
+import { rules as upgradeGameRules, resolvers as upgradeGameResolvers } from './upgradeGame/resolvers';
 import shieldConfig from '../../utils/graphql-shield/config';
 
 const typeDefs = mergeTypeDefs([
@@ -48,6 +50,7 @@ const typeDefs = mergeTypeDefs([
     serviceTypeDefs,
     catalogSyncTypeDefs,
     marketsTypeDefs,
+    upgradeGameTypeDefs,
 ]);
 
 const resolvers = mergeResolvers([
@@ -65,6 +68,7 @@ const resolvers = mergeResolvers([
     serviceResolvers,
     catalogSyncResolvers,
     marketsResolvers,
+    upgradeGameResolvers,
 ]);
 
 const schema = applyMiddleware(
@@ -74,6 +78,7 @@ const schema = applyMiddleware(
     shield(chatRules, shieldConfig),
     shield(announcementsRules, shieldConfig),
     shield(minesGameRules, shieldConfig),
+    shield(upgradeGameRules, shieldConfig),
     shield(classicGameRules, shieldConfig),
     shield(paymentRules, shieldConfig),
     shield(bonusRules, shieldConfig),

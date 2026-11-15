@@ -1,0 +1,9 @@
+fragment ItemUPG on ItemUPG {
+    id
+    name
+    imageUrl
+    price
+    type
+    exterior
+    rarityColor
+}

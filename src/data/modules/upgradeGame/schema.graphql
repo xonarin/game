@@ -1,0 +1,144 @@
+# Режим «Апгрейд». Исход — только из provably fair броска (serverSeed, clientSeed, nonce)
+# и окна выигрыша, посчитанного до броска; проверка — services/upgrade/game.ts.
+
+type Query {
+    upgradeConfigUPG: UpgradeConfigUPG!
+    inventoryUPG: [InventoryItemUPG!]!
+    # Предметы магазина / цели апгрейда: поиск, цена от/до, сортировка, страница
+    upgradeItemsUPG(filter: ItemsFilterUPG!): ItemsPageUPG!
+    # Один предмет с текущей ценой (null — нет в продаже): свежая цена выбранной цели
+    upgradeItemUPG(id: ID!): ItemUPG
+    # История апгрейдов игрока, новые первыми
+    upgradeHistoryUPG(limit: Int, offset: Int): [UpgradeGameUPG!]!
+}
+
+type Mutation {
+    playGameUPG(input: PlayGameUPGInput!): PlayGameUPGPayload!
+    # Покупка нескольких скинов: всего не больше upgradeConfigUPG.maxBuyUnits единиц
+    buyItemsUPG(items: [BuyItemUPGInput!]!): [InventoryItemUPG!]!
+}
+
+type UpgradeConfigUPG {
+    # Шанс = (1 / множитель) × frontendCoef
+    frontendCoef: Float!
+    # Пределы стоимости ставки (монеты + скин)
+    minBet: Float!
+    maxBet: Float!
+    # Нижняя граница списка целей: от стоимости ставки × targetItemMarkup (игру не ограничивает)
+    targetItemMarkup: Float!
+    # Пределы шанса: игра разрешена при minChance <= шанс <= maxChance
+    minChance: Float!
+    maxChance: Float!
+    # Шкала броска: 0 … rollRange - 1
+    rollRange: Int!
+    # Сколько единиц можно купить за раз (сумма количеств)
+    maxBuyUnits: Int!
+    # Сколько своих скинов можно поставить в одну игру
+    maxBetItems: Int!
+}
+
+enum ItemsSortUPG {
+    PRICE_ASC
+    PRICE_DESC
+}
+
+input ItemsFilterUPG {
+    # Слова названия, без учёта регистра
+    search: String
+    minPrice: Float
+    maxPrice: Float
+    sort: ItemsSortUPG
+    # По умолчанию 20, не больше 60
+    limit: Int
+    offset: Int
+}
+
+type ItemsPageUPG {
+    items: [ItemUPG!]!
+    # Сколько всего предметов подходит под фильтр
+    total: Int!
+}
+
+input BuyItemUPGInput {
+    itemId: ID!
+    quantity: Int!
+}
+
+type ItemUPG {
+    id: ID!
+    name: String!
+    imageUrl: String!
+    # Монеты (1 монета = 1 USD)
+    price: Float!
+    type: String!
+    exterior: String
+    rarityColor: String
+}
+
+type InventoryItemUPG {
+    id: ID!
+    item: ItemUPG!
+    priceAtAcquisition: Float!
+    # Сколько скин стоит в ставке сейчас
+    value: Float!
+    # Скин занят (на выводе или в другом режиме): поставить нельзя
+    locked: Boolean!
+}
+
+input PlayGameUPGInput {
+    # Монеты к ставке, может быть 0, если ставится скин
+    betAmount: Float!
+    # Свои скины в ставку (id из inventoryUPG), не больше maxBetItems
+    betItemIds: [ID!]
+    targetItemId: ID!
+    # Множитель, который видел игрок; сервер считает свой по ценам и отклоняет при расхождении
+    targetMultiplier: Float!
+}
+
+type PlayGameUPGPayload {
+    win: Boolean!
+    roll: Int!
+    winStart: Int!
+    winEnd: Int!
+    chance: Float!
+    multiplier: Float!
+    # Хэш серверного сида (sha256): сам сид раскрывается только при смене (updateServerSeed)
+    serverSeedHash: String!
+    clientSeed: String!
+    nonce: Int!
+    gameId: ID!
+    # Новый скин в инвентаре при победе
+    wonItemId: ID
+    wonItem: InventoryItemUPG
+    # Скины ставки: ушли из инвентаря в любом исходе (обменяны на выигрыш или сгорели)
+    spentItemIds: [ID!]!
+}
+
+# Сыгранный апгрейд: снимок ставки и цели на момент игры и данные для проверки исхода
+type UpgradeGameUPG {
+    id: ID!
+    createdAt: DateTime!
+    betAmount: Float!
+    # Поставленные скины: предмет и стоимость в ставке на момент игры
+    betItems: [UpgradeBetItemUPG!]!
+    betItemsValue: Float!
+    betValue: Float!
+    targetItem: ItemUPG!
+    targetPrice: Float!
+    multiplier: Float!
+    chance: Float!
+    roll: Int!
+    winStart: Int!
+    winEnd: Int!
+    win: Boolean!
+    clientSeed: String!
+    serverSeedHash: String!
+    # Раскрывается, когда игрок сменил серверный сид (updateServerSeed); до этого null
+    serverSeed: String
+    nonce: Int!
+}
+
+type UpgradeBetItemUPG {
+    item: ItemUPG!
+    value: Float!
+}

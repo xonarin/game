@@ -52,6 +52,13 @@ const AllGames: React.FC<AllGamesProps> = ({ chatId }) => {
                             <h2 className={cnAllGames('Title')}>Mines</h2>
                         </Link>
                     </div>
+
+                    <div className={cnAllGames('Game')}>
+                        <Link to="/upgrade">
+                            <img src="/classicback.png" alt="" />
+                            <h2 className={cnAllGames('Title')}>Upgrade</h2>
+                        </Link>
+                    </div>
                 </div>
             }
         />

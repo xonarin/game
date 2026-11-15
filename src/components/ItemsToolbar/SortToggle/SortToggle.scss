@@ -1,0 +1,25 @@
+@import '../../../assets/styles/vars';
+
+.SortToggle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 6px;
+    background: #1c1f26;
+    cursor: pointer;
+
+    &-Arrow {
+        font-size: 8px;
+        line-height: 10px;
+        color: rgb(255 255 255 / 30%);
+    }
+
+    &_direction_asc &-Arrow_up,
+    &_direction_desc &-Arrow_down {
+        color: $color-gold;
+    }
+}

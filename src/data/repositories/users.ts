@@ -371,14 +371,34 @@ class UsersRepository extends BaseRepository {
     }
 
     async generateRandomNumbers(userId: string, count: number): Promise<number[]> {
-        return this.db.sequelize.transaction(async transaction => {
-            const user = await this.getUserByIdStrict(userId, transaction);
-            const { nonce } = user;
+        return (await this.generateRandomNumbersWithSeeds(userId, count)).numbers;
+    }
 
-            await user.update({ nonce: nonce + 1 }, { transaction });
+    /**
+     * Provably fair: числа из сидов пользователя и текущего nonce, nonce += 1.
+     * Возвращает и сиды/nonce, по которым посчитаны числа, — их сохраняют в игре для проверки.
+     * С transaction работает внутри неё (строка пользователя блокируется FOR UPDATE).
+     */
+    async generateRandomNumbersWithSeeds(
+        userId: string,
+        count: number,
+        transaction?: Transaction,
+    ): Promise<{ numbers: number[]; serverSeed: string; clientSeed: string; nonce: number }> {
+        const f = async (tr: Transaction) => {
+            const user = await this.getUserByIdStrict(userId, tr);
+            const { nonce, serverSeed, clientSeed } = user;
 
-            return generateRandomNumbers(user.serverSeed, user.clientSeed, nonce, count);
-        });
+            await user.update({ nonce: nonce + 1 }, { transaction: tr });
+
+            return {
+                numbers: generateRandomNumbers(serverSeed, clientSeed, nonce, count),
+                serverSeed,
+                clientSeed,
+                nonce,
+            };
+        };
+
+        return transaction ? f(transaction) : this.db.sequelize.transaction(f);
     }
 
     async warnChat(userId: string): Promise<User> {

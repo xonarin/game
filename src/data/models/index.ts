@@ -28,6 +28,9 @@ import { initMarket, MarketStatic } from './Market';
 import { initMarketPrice, MarketPriceStatic } from './MarketPrice';
 import { initMarketPriceStaging, MarketPriceStagingStatic } from './MarketPriceStaging';
 import { initUnmatchedName, UnmatchedNameStatic } from './UnmatchedName';
+import { initInventoryItem, InventoryItemStatic } from './InventoryItem';
+import { initUpgradeGame, UpgradeGameStatic } from './UpgradeGame';
+import { initUpgradeGameBetItem, UpgradeGameBetItemStatic } from './UpgradeGameBetItem';
 
 export type ModelStatic<M extends Model> = typeof Model & (new () => M);
 
@@ -75,6 +78,11 @@ export interface Database {
     MarketPrice: MarketPriceStatic;
     MarketPriceStaging: MarketPriceStagingStatic;
     UnmatchedName: UnmatchedNameStatic;
+
+    // Апгрейд
+    InventoryItem: InventoryItemStatic;
+    UpgradeGame: UpgradeGameStatic;
+    UpgradeGameBetItem: UpgradeGameBetItemStatic;
 }
 
 export const initDatabase = (sequelize: Sequelize): Database => {
@@ -110,6 +118,10 @@ export const initDatabase = (sequelize: Sequelize): Database => {
         MarketPrice: initMarketPrice(sequelize),
         MarketPriceStaging: initMarketPriceStaging(sequelize),
         UnmatchedName: initUnmatchedName(sequelize),
+
+        InventoryItem: initInventoryItem(sequelize),
+        UpgradeGame: initUpgradeGame(sequelize),
+        UpgradeGameBetItem: initUpgradeGameBetItem(sequelize),
     };
 
     forEach(database, model => {

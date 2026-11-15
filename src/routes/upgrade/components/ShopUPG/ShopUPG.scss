@@ -1,0 +1,53 @@
+@import '../../../../assets/styles/vars';
+
+.ShopUPG {
+    &-Cart {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: rgb(255 255 255 / 70%);
+    }
+
+    &-Units_full {
+        color: $color-gold;
+        font-weight: 700;
+    }
+
+    &-Cost {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+
+        &_short {
+            color: $color-red;
+        }
+    }
+
+    &-Clear,
+    &-Buy {
+        height: 32px;
+        padding: 0 14px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+    }
+
+    &-Clear {
+        background: rgb(255 255 255 / 8%);
+        color: $color-white;
+    }
+
+    &-Buy {
+        background: $color-gold;
+        color: $color-black;
+    }
+}

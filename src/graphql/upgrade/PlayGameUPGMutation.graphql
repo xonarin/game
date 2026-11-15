@@ -1,0 +1,19 @@
+mutation PlayGameUPG($input: PlayGameUPGInput!) {
+    playGameUPG(input: $input) {
+        gameId
+        win
+        roll
+        winStart
+        winEnd
+        chance
+        multiplier
+        serverSeedHash
+        clientSeed
+        nonce
+        wonItemId
+        spentItemIds
+        wonItem {
+            ...InventoryItemUPG
+        }
+    }
+}

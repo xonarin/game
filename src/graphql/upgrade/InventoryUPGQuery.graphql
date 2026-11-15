@@ -1,0 +1,5 @@
+query InventoryUPG {
+    inventoryUPG {
+        ...InventoryItemUPG
+    }
+}

@@ -50,7 +50,15 @@ export type CatalogSettings = 'catalog::sourceUrl';
 export type PricesSettings = 'prices::markup';
 
 export type UpgradeSettings =
-    'upgrade::hiddenRTP' | 'upgrade::frontendCoef' | 'upgrade::minBet' | 'upgrade::maxBet' | 'upgrade::houseEdge';
+    | 'upgrade::hiddenRTP'
+    | 'upgrade::frontendCoef'
+    | 'upgrade::minBet'
+    | 'upgrade::maxBet'
+    | 'upgrade::houseEdge'
+    | 'upgrade::targetItemMarkup'
+    | 'upgrade::minChance'
+    | 'upgrade::maxChance'
+    | 'upgrade::maxBetItems';
 
 export type SettingName =
     | CatalogSettings

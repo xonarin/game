@@ -1,0 +1,5 @@
+query UpgradeItemUPG($id: ID!) {
+    upgradeItemUPG(id: $id) {
+        ...ItemUPG
+    }
+}

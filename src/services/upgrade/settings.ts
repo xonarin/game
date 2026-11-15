@@ -22,10 +22,14 @@ interface Rule {
 
 const RULES: Record<UpgradeSettings, Rule> = {
     'upgrade::hiddenRTP': { scale: 4, min: 0, max: 1, minExclusive: true, label: 'Скрытый RTP — доля от 0 до 1' },
-    'upgrade::frontendCoef': { scale: 4, min: 0, minExclusive: true, label: 'Коэффициент для фронтенда — больше 0' },
+    'upgrade::frontendCoef': { scale: 4, min: 0, minExclusive: true, label: 'Коэффициент шанса — больше 0' },
     'upgrade::minBet': { scale: 2, min: 0, minExclusive: true, label: 'Минимальная ставка — больше 0' },
     'upgrade::maxBet': { scale: 2, min: 0, minExclusive: true, label: 'Максимальная ставка — больше 0' },
     'upgrade::houseEdge': { scale: 4, min: 0, max: 1, label: 'Маржа казино — доля от 0 до 1' },
+    'upgrade::minChance': { scale: 4, min: 0, max: 1, minExclusive: true, label: 'Минимальный шанс — доля от 0 до 1' },
+    'upgrade::maxChance': { scale: 4, min: 0, max: 1, minExclusive: true, label: 'Максимальный шанс — доля от 0 до 1' },
+    'upgrade::maxBetItems': { scale: 0, min: 1, max: 100, label: 'Скинов в ставке — целое от 1 до 100' },
+    'upgrade::targetItemMarkup': { scale: 2, min: 1, label: 'Минимальный множитель цели — не меньше 1' },
 };
 
 // ── VALIDATION ────────────────────────────────────────────────────────────────
@@ -36,8 +40,9 @@ export const isUpgradeSetting = (name: string): name is UpgradeSettings => name 
 export const checkUpgradeSetting = (name: UpgradeSettings, raw: string): { value: string } | { problem: string } => {
     const rule = RULES[name];
     const value = raw.trim().replace(',', '.');
-    const re = new RegExp(`^\\d+(\\.\\d{1,${rule.scale}})?$`);
-    const fail = { problem: `${rule.label}, не больше ${rule.scale} знаков после точки; получено «${raw}»` };
+    const re = rule.scale > 0 ? new RegExp(`^\\d+(\\.\\d{1,${rule.scale}})?$`) : /^\d+$/;
+    const precision = rule.scale > 0 ? `, не больше ${rule.scale} знаков после точки` : '';
+    const fail = { problem: `${rule.label}${precision}; получено «${raw}»` };
 
     if (!re.test(value)) {
         return fail;

@@ -55,6 +55,10 @@ const routes: Route<RouteResult, AppContextTypes> = {
             load: () => import(/* webpackChunkName: 'mines' */ './mines'),
         },
         {
+            path: '/upgrade',
+            load: () => import(/* webpackChunkName: 'upgrade' */ './upgrade'),
+        },
+        {
             path: '/classic',
             load: () => import(/* webpackChunkName: 'classic' */ './classic'),
         },

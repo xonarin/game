@@ -20,6 +20,19 @@ type TranslationCode =
     | 'CLASSIC_GAME_IN_PROGRESS_ERROR'
     | 'CLASSIC_GAME_ENDED_ERROR'
     | 'MINES_GAME_BET_TOO_HIGH'
+    | 'UPGRADE_INVALID_BET'
+    | 'UPGRADE_TOO_MANY_BET_ITEMS'
+    | 'SHOP_INVALID_QUANTITY'
+    | 'SHOP_EMPTY_CART'
+    | 'SHOP_TOO_MANY_ITEMS'
+    | 'UPGRADE_CHANCE_TOO_LOW'
+    | 'INVENTORY_ITEM_BUSY'
+    | 'UPGRADE_BET_OUT_OF_RANGE'
+    | 'UPGRADE_BET_ITEM_NOT_FOUND'
+    | 'UPGRADE_ITEM_NOT_AVAILABLE'
+    | 'UPGRADE_CHANCE_TOO_HIGH'
+    | 'UPGRADE_CHANCE_OUT_OF_RANGE'
+    | 'UPGRADE_PRICE_CHANGED'
     | 'PROMO_CODE_BUSIED'
     | 'BAD_PROMO_CODE'
     | 'NO_PROMO_CODE'
@@ -105,6 +118,45 @@ const translations: Record<TranslationCode, Translation> = {
     },
     CLASSIC_GAME_ENDED_ERROR: {
         ru: 'Игры уже закончилась',
+    },
+    INVENTORY_ITEM_BUSY: {
+        ru: 'Скин уже используется в другой игре или на выводе',
+    },
+    UPGRADE_CHANCE_TOO_LOW: {
+        ru: 'Слишком низкий шанс: выберите скин дешевле или увеличьте ставку',
+    },
+    SHOP_INVALID_QUANTITY: {
+        ru: 'Неверное количество скинов',
+    },
+    SHOP_EMPTY_CART: {
+        ru: 'Выберите скины для покупки',
+    },
+    SHOP_TOO_MANY_ITEMS: {
+        ru: 'За один раз можно купить не больше 50 скинов',
+    },
+    UPGRADE_TOO_MANY_BET_ITEMS: {
+        ru: 'Слишком много скинов в ставке',
+    },
+    UPGRADE_INVALID_BET: {
+        ru: 'Неверная ставка',
+    },
+    UPGRADE_BET_OUT_OF_RANGE: {
+        ru: 'Ставка (скин + монеты) вне допустимых пределов',
+    },
+    UPGRADE_BET_ITEM_NOT_FOUND: {
+        ru: 'Скин недоступен: его нет в инвентаре или он уже используется',
+    },
+    UPGRADE_ITEM_NOT_AVAILABLE: {
+        ru: 'Скин сейчас недоступен',
+    },
+    UPGRADE_CHANCE_TOO_HIGH: {
+        ru: 'Слишком высокий шанс: выберите скин дороже или уменьшите ставку',
+    },
+    UPGRADE_CHANCE_OUT_OF_RANGE: {
+        ru: 'Шанс вне допустимого диапазона',
+    },
+    UPGRADE_PRICE_CHANGED: {
+        ru: 'Цены изменились, проверьте шанс и попробуйте ещё раз',
     },
     MINES_GAME_BET_TOO_HIGH: {
         ru: 'Максимальная ставка не более 100 рублей.',

@@ -1,0 +1,111 @@
+@import '../../../../assets/styles/vars';
+
+.BetPanelUPG {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #17191e 60%, rgb(254 186 29 / 8%));
+
+    &-Row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    &-Slot {
+        min-width: 0;
+    }
+
+    &-Placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 140px;
+        padding: 12px;
+        border: 1px dashed rgb(255 255 255 / 15%);
+        border-radius: 6px;
+        color: rgb(255 255 255 / 50%);
+        font-size: 13px;
+        text-align: center;
+    }
+
+    &_burned &-Placeholder {
+        border-color: $color-red;
+        color: $color-red;
+        font-weight: 700;
+    }
+
+    &-Stack {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        height: 100%;
+        min-height: 140px;
+    }
+
+    &-Mini {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border: 1px solid $color-gold;
+        border-radius: 6px;
+        background: linear-gradient(180deg, #4a3c10, #2a2412);
+        cursor: pointer;
+    }
+
+    &-MiniImage {
+        width: 100%;
+        height: 52px;
+        object-fit: contain;
+    }
+
+    &-More {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: rgb(0 0 0 / 60%);
+        color: $color-white;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    &-Count {
+        font-size: 12px;
+        color: rgb(255 255 255 / 60%);
+    }
+
+    &-Coins {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 6px;
+        background: #1c1f26;
+    }
+
+    &-CoinsTitle {
+        font-size: 20px;
+        font-weight: 700;
+        color: $color-white;
+    }
+
+    &-CoinsValue {
+        padding: 6px 10px;
+        border: 1px solid rgb(255 255 255 / 15%);
+        border-radius: 6px;
+    }
+
+    &-Total {
+        text-align: center;
+    }
+}

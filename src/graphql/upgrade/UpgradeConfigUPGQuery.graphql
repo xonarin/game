@@ -1,0 +1,13 @@
+query UpgradeConfigUPG {
+    upgradeConfigUPG {
+        frontendCoef
+        minBet
+        maxBet
+        targetItemMarkup
+        minChance
+        maxChance
+        rollRange
+        maxBuyUnits
+        maxBetItems
+    }
+}

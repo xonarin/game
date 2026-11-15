@@ -81,6 +81,17 @@ export interface CatalogItemsFilter {
 // LIKE: %, _ и \ в запросе — буквально
 const likeEscape = (word: string) => word.replace(/[\\%_]/g, char => `\\${char}`);
 
+/**
+ * Поиск предметов по словам названия: каждое слово — подстрока, без учёта регистра.
+ * market_hash_name хранится в utf8mb4_bin, поэтому сравнивается в utf8mb4_unicode_ci.
+ */
+export const itemNameSearchConditions = (words: string[]): WhereOptions[] =>
+    words.map(word =>
+        Sequelize.where(literal('`market_hash_name` COLLATE utf8mb4_unicode_ci'), {
+            [Op.like]: `%${likeEscape(word)}%`,
+        }),
+    );
+
 // Предметы без цены / без износа — в конце при любом направлении
 const NULLS_LAST = (column: string) => literal(`\`${column}\` IS NULL`);
 const EXTERIOR_ORDER = literal("FIELD(`exterior`, 'FN', 'MW', 'FT', 'WW', 'BS')");
@@ -215,11 +226,7 @@ class CatalogRepository extends BaseRepository {
      * сравнивается в utf8mb4_unicode_ci (полный просмотр ~45 000 строк — допустимо для админки).
      */
     public async listItems(filter: CatalogItemsFilter): Promise<{ total: number; items: Item[] }> {
-        const conditions: WhereOptions[] = filter.search.map(word =>
-            Sequelize.where(literal('`market_hash_name` COLLATE utf8mb4_unicode_ci'), {
-                [Op.like]: `%${likeEscape(word)}%`,
-            }),
-        );
+        const conditions: WhereOptions[] = itemNameSearchConditions(filter.search);
         if (filter.exteriors.length) {
             conditions.push({ exterior: { [Op.in]: filter.exteriors } });
         }

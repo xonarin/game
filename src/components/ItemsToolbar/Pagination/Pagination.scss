@@ -1,0 +1,37 @@
+@import '../../../assets/styles/vars';
+
+.Pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    &-Button {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 6px;
+        border: 1px solid rgb(255 255 255 / 12%);
+        border-radius: 6px;
+        background: #1c1f26;
+        color: $color-white;
+        font-size: 13px;
+        cursor: pointer;
+
+        &_active {
+            border-color: $color-gold;
+            background: $color-gold;
+            color: $color-black;
+            font-weight: 700;
+        }
+
+        &:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+    }
+
+    &-Gap {
+        color: rgb(255 255 255 / 40%);
+    }
+}

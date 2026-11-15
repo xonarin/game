@@ -1,0 +1,29 @@
+@import '../../../assets/styles/vars';
+
+.PriceRangeFilter {
+    display: flex;
+
+    &-Input {
+        width: 72px;
+        height: 36px;
+        padding: 0 8px;
+        border: 1px solid rgb(255 255 255 / 12%);
+        background: #1c1f26;
+        color: $color-white;
+        font-size: 13px;
+        outline: none;
+
+        &:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        &:last-child {
+            border-left: none;
+            border-radius: 0 6px 6px 0;
+        }
+
+        &:focus {
+            border-color: $color-gold;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+mutation BuyItemsUPG($items: [BuyItemUPGInput!]!) {
+    buyItemsUPG(items: $items) {
+        ...InventoryItemUPG
+    }
+}

@@ -1,0 +1,29 @@
+query UpgradeHistoryUPG($limit: Int, $offset: Int) {
+    upgradeHistoryUPG(limit: $limit, offset: $offset) {
+        id
+        createdAt
+        betAmount
+        betItems {
+            item {
+                ...ItemUPG
+            }
+            value
+        }
+        betItemsValue
+        betValue
+        targetItem {
+            ...ItemUPG
+        }
+        targetPrice
+        multiplier
+        chance
+        roll
+        winStart
+        winEnd
+        win
+        clientSeed
+        serverSeedHash
+        serverSeed
+        nonce
+    }
+}

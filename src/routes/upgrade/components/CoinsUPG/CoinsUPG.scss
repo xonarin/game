@@ -1,0 +1,31 @@
+@import '../../../../assets/styles/vars';
+
+.CoinsUPG {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    color: $color-gold;
+    white-space: nowrap;
+
+    &-Icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #ffe27a, $color-gold 60%, #c98a00);
+        box-shadow: inset 0 0 0 2px rgb(0 0 0 / 15%);
+    }
+
+    &_size_s {
+        font-size: 12px;
+    }
+
+    &_size_m {
+        font-size: 16px;
+    }
+
+    &_size_l {
+        font-size: 22px;
+    }
+}
