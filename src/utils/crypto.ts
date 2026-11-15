@@ -40,10 +40,6 @@ export const generateRandomNumbers = (
     });
 };
 
-const generateRandomHexString = (size: number) =>
-    new Array(size)
-        .fill(0)
-        .map(() => Math.floor(Math.random() * 16).toString(16))
-        .join('');
-
-export const generateSeed = (): string => generateRandomHexString(64);
+// CSPRNG: серверный сид не должен быть предсказуем (Math.random восстанавливается по выдаче).
+// 32 байта = 64 hex-символа — формат прежний.
+export const generateSeed = (): string => crypto.randomBytes(32).toString('hex');
