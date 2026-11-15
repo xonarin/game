@@ -49,9 +49,13 @@ export type CatalogSettings = 'catalog::sourceUrl';
 
 export type PricesSettings = 'prices::markup';
 
+export type UpgradeSettings =
+    'upgrade::hiddenRTP' | 'upgrade::frontendCoef' | 'upgrade::minBet' | 'upgrade::maxBet' | 'upgrade::houseEdge';
+
 export type SettingName =
     | CatalogSettings
     | PricesSettings
+    | UpgradeSettings
     | ClassicGameSettingName
     | ChatSettingName
     | ReferralsSettingName

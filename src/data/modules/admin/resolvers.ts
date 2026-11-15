@@ -11,6 +11,7 @@ import { isValidOrigin } from '../../repositories/authClients';
 import { CATALOG_SOURCE_SETTING, checkCatalogSourceUrl } from '../../../services/catalogSync/sourceUrl';
 import { checkMarkup, PRICE_MARKUP_SETTING } from '../../../services/marketPrices/markup';
 import { repriceAll } from '../../../services/marketPrices/service';
+import { checkUpgradeBetRange, checkUpgradeSetting, isUpgradeSetting } from '../../../services/upgrade/settings';
 import { isAdmin } from '../rules';
 
 const num = (value: number | null | undefined): number => value || 0;
@@ -142,6 +143,20 @@ export const resolvers = {
                     throw new UserError(checked.problem, { field: 'value' });
                 }
                 newValue = checked.value;
+            }
+
+            // Апгрейд: десятичные значения в своих пределах, minBet ≤ maxBet
+            if (isUpgradeSetting(name)) {
+                const checked = checkUpgradeSetting(name, value);
+                if ('problem' in checked) {
+                    throw new UserError(checked.problem, { field: 'value' });
+                }
+                newValue = checked.value;
+
+                const rangeProblem = await checkUpgradeBetRange(repositories, name, newValue);
+                if (rangeProblem) {
+                    throw new UserError(rangeProblem, { field: 'value' });
+                }
             }
 
             const current = await repositories.settings.getAllSettings();
