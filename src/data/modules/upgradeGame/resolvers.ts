@@ -14,11 +14,21 @@ import {
     PlayUpgradeResult,
 } from '../../repositories/upgradeGames';
 import { ROLL_RANGE } from '../../../services/upgrade/game';
+import {
+    MAX_PLAYERS_SIMULATION_BETS,
+    PlayersBetMode,
+    simulateByChance,
+    simulatePlayers,
+    simulateUpgrades,
+} from '../../../services/upgrade/simulate';
+import { UserError } from '../../../utils/errors';
 import { sha256Hash } from '../../../utils/crypto';
-import { isAuth } from '../rules';
+import { isAdmin, isAuth } from '../rules';
 import {
     checkBuyItemsUPGArgs,
     checkPlayGameUPGArgs,
+    checkSimulatePlayersArgs,
+    checkSimulateUpgradeArgs,
     checkUpgradeHistoryUPGArgs,
     checkUpgradeItemsUPGArgs,
 } from './rules';
@@ -29,6 +39,9 @@ export const rules: IRules = {
         inventoryUPG: isAuth,
         upgradeItemsUPG: and(isAuth, checkUpgradeItemsUPGArgs),
         upgradeItemUPG: isAuth,
+        adminUpgradeStats: isAdmin,
+        adminSimulateUpgrade: and(isAdmin, checkSimulateUpgradeArgs),
+        adminSimulateUpgradePlayers: and(isAdmin, checkSimulatePlayersArgs),
         upgradeHistoryUPG: and(isAuth, checkUpgradeHistoryUPGArgs),
     },
     Mutation: {
@@ -55,6 +68,79 @@ export const resolvers = {
 
         upgradeItemUPG: (_0: unknown, { id }: { id: string }, { repositories }: ApolloContext) =>
             repositories.upgradeGames.getAvailableItem(id),
+
+        adminUpgradeStats: (
+            _0: unknown,
+            { from, to }: { from?: Date | null; to?: Date | null },
+            { repositories }: ApolloContext,
+        ) => repositories.upgradeGames.getStats(from ?? null, to ?? null),
+
+        adminSimulateUpgrade: async (
+            _0: unknown,
+            {
+                input,
+            }: {
+                input: {
+                    games: number;
+                    bet: number;
+                    chanceFrom: number;
+                    chanceTo: number;
+                    frontendCoef?: number | null;
+                };
+            },
+            { repositories }: ApolloContext,
+        ) => {
+            if (input.chanceFrom > input.chanceTo) {
+                throw new UserError('Шанс «от» больше шанса «до»');
+            }
+            const frontendCoef = input.frontendCoef ?? (await repositories.upgradeGames.getConfig()).frontendCoef;
+            const simulationInput = { ...input, frontendCoef };
+            return {
+                ...simulateUpgrades(simulationInput),
+                frontendCoef,
+                byChance: simulateByChance(simulationInput),
+            };
+        },
+
+        adminSimulateUpgradePlayers: async (
+            _0: unknown,
+            {
+                input,
+            }: {
+                input: {
+                    players: number;
+                    startBalance: number;
+                    rounds: number;
+                    betMode: PlayersBetMode;
+                    bet?: number | null;
+                    chanceFrom: number;
+                    chanceTo: number;
+                    frontendCoef?: number | null;
+                    cashOutGrowth?: number | null;
+                };
+            },
+            { repositories }: ApolloContext,
+        ) => {
+            if (input.chanceFrom > input.chanceTo) {
+                throw new UserError('Шанс «от» больше шанса «до»');
+            }
+            if (input.players * input.rounds > MAX_PLAYERS_SIMULATION_BETS) {
+                throw new UserError('Игроки × раунды — не больше 5 000 000');
+            }
+            if (input.betMode === 'FIXED' && !input.bet) {
+                throw new UserError('Укажите ставку за раунд');
+            }
+            const config = await repositories.upgradeGames.getConfig();
+            const frontendCoef = input.frontendCoef ?? config.frontendCoef;
+            const result = simulatePlayers({
+                ...input,
+                bet: input.bet ?? 0,
+                frontendCoef,
+                minBet: config.minBet,
+                cashOutGrowth: input.cashOutGrowth ?? null,
+            });
+            return { ...result, frontendCoef, minBet: config.minBet };
+        },
 
         upgradeHistoryUPG: (
             _0: unknown,

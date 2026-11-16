@@ -8,6 +8,12 @@ type Query {
     upgradeItemsUPG(filter: ItemsFilterUPG!): ItemsPageUPG!
     # Один предмет с текущей ценой (null — нет в продаже): свежая цена выбранной цели
     upgradeItemUPG(id: ID!): ItemUPG
+    # Админка: статистика за период [from, to); без границ — за всё время
+    adminUpgradeStats(from: DateTime, to: DateTime): AdminUpgradeStats!
+    # Админка: симуляция апгрейдов теми же функциями, что игра; без базы и денег
+    adminSimulateUpgrade(input: AdminSimulateUpgradeInput!): AdminUpgradeSimulation!
+    # Админка: игроки с начальным балансом играют раунды, ставя из остатка
+    adminSimulateUpgradePlayers(input: AdminSimulateUpgradePlayersInput!): AdminUpgradePlayersSimulation!
     # История апгрейдов игрока, новые первыми
     upgradeHistoryUPG(limit: Int, offset: Int): [UpgradeGameUPG!]!
 }
@@ -141,4 +147,119 @@ type UpgradeGameUPG {
 type UpgradeBetItemUPG {
     item: ItemUPG!
     value: Float!
+}
+
+# Статистика апгрейда за период. Суммы в монетах; ставка включает стоимость поставленных скинов
+type AdminUpgradeStats {
+    # Сколько разных игроков сыграло
+    players: Int!
+    games: Int!
+    wins: Int!
+    losses: Int!
+    betTotal: Float!
+    # Цена выигранных скинов
+    payoutTotal: Float!
+    # Доход сайта: betTotal - payoutTotal
+    profit: Float!
+    # Фактический RTP: payoutTotal / betTotal; null — ставок не было
+    rtp: Float
+}
+
+input AdminSimulateUpgradeInput {
+    # 1 … 1 000 000
+    games: Int!
+    # Стоимость ставки, монеты
+    bet: Float!
+    # Шанс каждой игры — случайный в [chanceFrom, chanceTo] (доли 0…1); равные — фиксированный
+    chanceFrom: Float!
+    chanceTo: Float!
+    # Коэффициент шанса (RTP); по умолчанию — из настроек
+    frontendCoef: Float
+}
+
+type AdminUpgradeSimulation {
+    games: Int!
+    wins: Int!
+    losses: Int!
+    betTotal: Float!
+    payoutTotal: Float!
+    profit: Float!
+    # RTP симуляции и ожидаемый (без случайности)
+    rtp: Float!
+    expectedRtp: Float!
+    frontendCoef: Float!
+    durationMs: Int!
+    # Те же ставки, если бы все играли с одним шансом: 80 %, 70 % … 10 %
+    byChance: [AdminUpgradeSimulationChance!]!
+}
+
+type AdminUpgradeSimulationChance {
+    chance: Float!
+    wins: Int!
+    payoutTotal: Float!
+    profit: Float!
+    rtp: Float!
+}
+
+enum AdminSimulationBetMode {
+    # Фиксированная ставка за раунд (или остаток баланса, если меньше)
+    FIXED
+    # Весь баланс каждый раунд
+    ALL_IN
+    # Случайная сумма от минимальной ставки до всего баланса, каждый раунд заново
+    RANDOM
+}
+
+input AdminSimulateUpgradePlayersInput {
+    # 1 … 1 000 000; игроки × раунды — не больше 5 000 000
+    players: Int!
+    startBalance: Float!
+    rounds: Int!
+    betMode: AdminSimulationBetMode!
+    # Только для FIXED
+    bet: Float
+    chanceFrom: Float!
+    chanceTo: Float!
+    # По умолчанию — из настроек
+    frontendCoef: Float
+    # Вывод при росте баланса (доля): 0.5 — игрок выводит всё и уходит при балансе ≥ начальный × 1.5; null — не выводит
+    cashOutGrowth: Float
+}
+
+type AdminUpgradePlayersRound {
+    round: Int!
+    activePlayers: Int!
+    turnover: Float!
+    payout: Float!
+    profit: Float!
+    cumulativeProfit: Float!
+    # У ещё играющих (выведенное не входит)
+    playersBalance: Float!
+    # Вывели к концу раунда, всего: игроков и монет
+    cashedOutPlayers: Int!
+    withdrawn: Float!
+}
+
+type AdminUpgradePlayersSimulation {
+    players: Int!
+    rounds: Int!
+    # Сколько игроки принесли
+    deposited: Float!
+    # Сумма всех ставок
+    turnover: Float!
+    payout: Float!
+    profit: Float!
+    profitShareOfDeposits: Float!
+    profitShareOfTurnover: Float!
+    rtp: Float!
+    # Сколько осталось у тех, кто не вывел
+    playersBalance: Float!
+    brokePlayers: Int!
+    # Сколько игроков вывели и сколько монет ушло выводами
+    cashedOutPlayers: Int!
+    withdrawn: Float!
+    byRound: [AdminUpgradePlayersRound!]!
+    frontendCoef: Float!
+    minBet: Float!
+    durationMs: Int!
 }

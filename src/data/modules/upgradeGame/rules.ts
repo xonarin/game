@@ -22,6 +22,56 @@ export const checkUpgradeItemsUPGArgs = inputRule()(yup =>
     }),
 );
 
+export const checkSimulateUpgradeArgs = inputRule()(yup =>
+    yup.object({
+        input: yup.object({
+            games: yup
+                .number()
+                .required()
+                .integer('Количество игр — целое число')
+                .min(1, 'Количество игр — от 1')
+                .max(1000000, 'Количество игр — не больше 1 000 000'),
+            bet: yup.number().required().min(0.01, 'Ставка — от 0.01').max(1000000, 'Ставка — не больше 1 000 000'),
+            chanceFrom: yup.number().required().moreThan(0, 'Шанс — больше 0 %').lessThan(1, 'Шанс — меньше 100 %'),
+            chanceTo: yup.number().required().moreThan(0, 'Шанс — больше 0 %').lessThan(1, 'Шанс — меньше 100 %'),
+            frontendCoef: yup.number().moreThan(0, 'RTP — больше 0 %').max(2, 'RTP — не больше 200 %').nullable(),
+        }),
+    }),
+);
+
+export const checkSimulatePlayersArgs = inputRule()(yup =>
+    yup.object({
+        input: yup.object({
+            players: yup
+                .number()
+                .required()
+                .integer('Игроков — целое число')
+                .min(1, 'Игроков — от 1')
+                .max(1000000, 'Игроков — не больше 1 000 000'),
+            rounds: yup
+                .number()
+                .required()
+                .integer('Раундов — целое число')
+                .min(1, 'Раундов — от 1')
+                .max(1000, 'Раундов — не больше 1000'),
+            startBalance: yup
+                .number()
+                .required()
+                .min(0.01, 'Баланс — от 0.01')
+                .max(1000000, 'Баланс — не больше 1 000 000'),
+            bet: yup.number().min(0.01, 'Ставка — от 0.01').max(1000000, 'Ставка — не больше 1 000 000').nullable(),
+            chanceFrom: yup.number().required().moreThan(0, 'Шанс — больше 0 %').lessThan(1, 'Шанс — меньше 100 %'),
+            chanceTo: yup.number().required().moreThan(0, 'Шанс — больше 0 %').lessThan(1, 'Шанс — меньше 100 %'),
+            frontendCoef: yup.number().moreThan(0, 'RTP — больше 0 %').max(2, 'RTP — не больше 200 %').nullable(),
+            cashOutGrowth: yup
+                .number()
+                .moreThan(0, 'Рост для вывода — больше 0 %')
+                .max(1000, 'Рост для вывода — не больше 100 000 %')
+                .nullable(),
+        }),
+    }),
+);
+
 export const checkBuyItemsUPGArgs = inputRule()(yup =>
     yup.object({
         items: yup

@@ -1,4 +1,4 @@
-import { Op, WhereOptions } from 'sequelize';
+import { fn, col, literal, Op, WhereOptions } from 'sequelize';
 
 import BaseRepository from './base';
 import { InventoryItem } from '../models/InventoryItem';
@@ -46,6 +46,22 @@ export interface PlayUpgradeResult {
     game: UpgradeGame;
     /** Выигранный скин в инвентаре (null — проигрыш). */
     wonInventoryItem: InventoryItem | null;
+}
+
+/** Статистика апгрейда за период (админка). Суммы — в монетах; ставка включает стоимость скинов. */
+export interface UpgradeStats {
+    players: number;
+    games: number;
+    wins: number;
+    losses: number;
+    /** Сколько поставлено (монеты + скины). */
+    betTotal: number;
+    /** Сколько выдано выигрышами (цена выигранных скинов). */
+    payoutTotal: number;
+    /** Доход сайта: betTotal − payoutTotal. */
+    profit: number;
+    /** Фактический RTP: payoutTotal / betTotal; null — ставок не было. */
+    rtp: number | null;
 }
 
 export interface UpgradeConfig {
@@ -98,6 +114,42 @@ class UpgradeGamesRepository extends BaseRepository {
             maxChance,
             maxBuyUnits: MAX_BUY_UNITS,
             maxBetItems,
+        };
+    }
+
+    /** Статистика за период [from, to) (любая граница может отсутствовать). */
+    async getStats(from: Date | null, to: Date | null): Promise<UpgradeStats> {
+        const createdAt: Record<symbol, Date> = {};
+        if (from) createdAt[Op.gte] = from;
+        if (to) createdAt[Op.lt] = to;
+
+        const [row] = (await this.db.UpgradeGame.findAll({
+            attributes: [
+                [fn('COUNT', col('id')), 'games'],
+                [fn('COUNT', fn('DISTINCT', col('userId'))), 'players'],
+                [fn('COALESCE', fn('SUM', literal('`win`')), 0), 'wins'],
+                [fn('COALESCE', fn('SUM', col('betValue')), 0), 'betTotal'],
+                [fn('COALESCE', fn('SUM', literal('CASE WHEN `win` THEN `targetPrice` ELSE 0 END')), 0), 'payoutTotal'],
+            ],
+            where: from || to ? { createdAt } : {},
+            raw: true,
+        })) as unknown as Array<Record<'games' | 'players' | 'wins' | 'betTotal' | 'payoutTotal', string | number>>;
+
+        const games = Number(row.games);
+        const wins = Number(row.wins);
+        // Деньги — в центах, чтобы доход не получил хвост плавающей точки
+        const betCents = toCents(row.betTotal);
+        const payoutCents = toCents(row.payoutTotal);
+
+        return {
+            players: Number(row.players),
+            games,
+            wins,
+            losses: games - wins,
+            betTotal: fromCents(betCents),
+            payoutTotal: fromCents(payoutCents),
+            profit: fromCents(betCents - payoutCents),
+            rtp: betCents > 0 ? payoutCents / betCents : null,
         };
     }
 

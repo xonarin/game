@@ -86,7 +86,11 @@ export const initUpgradeGame = (sequelize: Sequelize): UpgradeGameStatic => {
         {
             tableName: 'UpgradeGame',
             updatedAt: false,
-            indexes: [{ name: 'idx_upgrade_game_user', fields: ['userId', 'id'] }],
+            indexes: [
+                { name: 'idx_upgrade_game_user', fields: ['userId', 'id'] },
+                // Статистика админки за период
+                { name: 'idx_upgrade_game_created', fields: ['createdAt'] },
+            ],
         },
     ) as UpgradeGameStatic;
 
